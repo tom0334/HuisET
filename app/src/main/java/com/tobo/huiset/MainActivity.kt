@@ -7,14 +7,34 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.tobo.huiset.realmModels.Person
+import io.realm.Realm
+import io.realm.RealmConfiguration
+
+
 
 
 class MainActivity : AppCompatActivity() {
-    
+
+    val realm : Realm = Realm.getDefaultInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         setupBottomTabs()
+
+        realm.executeTransaction {
+            val person = Person.create("botjo")
+            realm.copyToRealm(person)
+        }
+        Toast.makeText(this, "aantal personen ${realm.where(Person::class.java).count()}", Toast.LENGTH_LONG).show()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        realm.close()
     }
 
     // create an action bar button
@@ -46,4 +66,5 @@ class MainActivity : AppCompatActivity() {
         val bottomView  = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomView.inflateMenu(R.menu.menu_bottom_navigation)
     }
+
 }
