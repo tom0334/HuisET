@@ -6,6 +6,7 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setupBottomTabs()
     }
 
     // create an action bar button
@@ -40,4 +42,8 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun setupBottomTabs(){
+        val bottomView  = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        bottomView.inflateMenu(R.menu.menu_bottom_navigation)
+    }
 }
