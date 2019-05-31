@@ -24,6 +24,8 @@
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        app:itemTextColor="#fff"
+        android:background="@color/primaryDarkColor"
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
