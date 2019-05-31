@@ -13,14 +13,16 @@ import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 
+/**
+ * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
+ *
+ */
 class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val realmInstance: Realm, autoUpdate: Boolean)
     : RealmRecyclerViewAdapter<Person, PersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.person_rec_item, parent, false)
-
-        println(data?.get(0)!!.name)
         return PersonViewHolder(view)
     }
 

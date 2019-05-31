@@ -17,9 +17,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 
 
-class MainActivity : AppCompatActivity() {
-
-    val realm : Realm = Realm.getDefaultInstance()
+class MainActivity : HuisEtActivity() {
 
     lateinit var fragments: List<Fragment>
     lateinit var activeFragment: Fragment
@@ -35,13 +33,8 @@ class MainActivity : AppCompatActivity() {
             realm.copyToRealm(person)
         }
         Toast.makeText(this, "aantal personen ${realm.where(Person::class.java).count()}", Toast.LENGTH_LONG).show()
-
     }
 
-    override fun onStop() {
-        super.onStop()
-        realm.close()
-    }
 
     // create an action bar button
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
