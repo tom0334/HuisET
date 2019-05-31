@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public class Person extends RealmObject {
 
     private String id = UUID.randomUUID().toString();
-    private int balance = -13;
+    private int balance = 0;
     private String name;
     private String color;
 
@@ -36,7 +36,7 @@ public class Person extends RealmObject {
         int abscents = Math.abs(balance % 100);
         String cents = (abscents < 10) ? "0" : "";
         cents += Integer.toString(abscents);
-        return "€" +signed + euros + "," + cents;
+        return "€" + signed + euros + "," + cents;
     }
 
     public String getBalanceColor() {
