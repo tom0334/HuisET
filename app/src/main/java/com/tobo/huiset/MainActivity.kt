@@ -15,6 +15,8 @@ import FragmentProfiles
 import android.util.Log
 
 import androidx.fragment.app.Fragment
+import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.realmModels.Transaction
 
 
 class MainActivity : HuisEtActivity() {
@@ -80,6 +82,9 @@ class MainActivity : HuisEtActivity() {
         activeFragment = fragments[0]
 
         bottomView.setOnNavigationItemSelectedListener {
+
+            if(it.itemId == R.id.action_main) addTransaction()
+
             val fragToShow = when(it.itemId){
                 R.id.action_main -> fragments[0]
                 R.id.action_ET -> fragments[1]
@@ -91,6 +96,16 @@ class MainActivity : HuisEtActivity() {
             }
             showFragment(fragToShow)
             return@setOnNavigationItemSelectedListener true
+        }
+    }
+
+    private fun addTransaction() {
+        val aPerson = realm.where(Person::class.java).findFirst()
+        val aProduct= realm.where(Product::class.java).findFirst()
+        realm.executeTransaction {
+
+            val t = Transaction.create(aPerson!!, aProduct!!)
+            realm.copyToRealm(t)
         }
     }
 

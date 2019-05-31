@@ -40,4 +40,8 @@ public class Product extends RealmObject {
         return item;
     }
 
+
+    public String getName() {
+        return name;
+    }
 }
