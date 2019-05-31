@@ -1,7 +1,6 @@
 package com.tobo.huiset.realmModels;
 
 import io.realm.RealmObject;
-
 import java.util.UUID;
 
 public class Person extends RealmObject {

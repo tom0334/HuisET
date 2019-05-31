@@ -5,7 +5,7 @@
 
     <item
         android:icon="@drawable/ic_bottle_wine_white_24dp"
-        android:id="@+id/action_beer"
+        android:id="@+id/action_main"
         android:enabled="true"
         android:title="Bier"
         app:showAsAction="always" />

@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setupBottomTabs()
 
         realm.executeTransaction {
-            val person = Person.create("botjo")
+            val person = Person.create("botjo", "#ff00ff")
             realm.copyToRealm(person)
         }
         Toast.makeText(this, "aantal personen ${realm.where(Person::class.java).count()}", Toast.LENGTH_LONG).show()
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomView.setOnNavigationItemSelectedListener {
             val fragToShow = when(it.itemId){
-                R.id.action_beer -> fragments[0]
+                R.id.action_main -> fragments[0]
                 R.id.action_ET -> fragments[1]
                 R.id.action_profiles -> fragments[2]
                 else -> {
