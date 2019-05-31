@@ -22,8 +22,6 @@ class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val re
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.person_rec_item, parent, false)
-
-        println(data?.get(0)!!.name!!)
         return PersonViewHolder(view)
     }
 
