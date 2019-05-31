@@ -11,8 +11,11 @@ import com.tobo.huiset.realmModels.Person
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
-import kotlinx.android.synthetic.main.person_rec_item.view.*
 
+/**
+ * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
+ *
+ */
 class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val realmInstance: Realm, autoUpdate: Boolean)
     : RealmRecyclerViewAdapter<Person, PersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
