@@ -1,6 +1,7 @@
 package com.tobo.huiset.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import com.tobo.huiset.realmModels.Person
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
-import kotlinx.android.synthetic.main.person_rec_item.view.*
 
 class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val realmInstance: Realm, autoUpdate: Boolean)
     : RealmRecyclerViewAdapter<Person, PersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
@@ -26,7 +26,9 @@ class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val re
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         holder.nameTv.text = data?.get(position)?.name
-        holder.balanceTv.text = data?.get(position)?.getBalance().toString()
+        holder.balanceTv.text = data?.get(position)?.balanceAsString.toString()
+        val colorString = data?.get(position)?.balanceColor
+        holder.balanceTv.setTextColor(Color.parseColor(colorString))
     }
 
     override fun getItemCount(): Int {

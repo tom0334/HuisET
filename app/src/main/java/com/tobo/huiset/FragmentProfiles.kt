@@ -9,6 +9,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.adapters.PersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import io.realm.Realm
+import io.realm.Sort
 import java.util.*
 
 
@@ -26,7 +27,7 @@ class FragmentProfiles : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val persons = realm.where(Person::class.java).findAll()
+        val persons = realm.where(Person::class.java).sort("balance", Sort.DESCENDING).findAll()
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.adapter = PersonRecAdapter(this.context!!, persons,realm, true)
         rec.layoutManager = LinearLayoutManager(this.context)
