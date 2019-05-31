@@ -2,6 +2,7 @@ package com.tobo.huiset.realmModels;
 
 import io.realm.RealmObject;
 import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 
 public class Person extends RealmObject {
 
@@ -20,4 +21,12 @@ public class Person extends RealmObject {
         return p;
     }
 
+    @NotNull
+    public String getName() {
+        return this.name;
+    }
+
+    public int getBalance() {
+        return balans;
+    }
 }
