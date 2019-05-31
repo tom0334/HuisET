@@ -18,6 +18,3 @@ class MainActivity : AppCompatActivity() {
         bottomView.inflateMenu(R.menu.menu_bottom_navigation)
     }
 }
-
-        val bottomView  = findViewById<BottomNavigationView>(R.id.bottomNavigation)
-        bottomView.inflateMenu(R.menu.menu_bottom_navigation)
