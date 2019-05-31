@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tobo.huiset.HuisEtActivity
+import com.tobo.huiset.HuisEtFragment
 import com.tobo.huiset.R
 import com.tobo.huiset.adapters.PersonRecAdapter
 import com.tobo.huiset.realmModels.Person
@@ -12,14 +14,12 @@ import io.realm.Realm
 import java.util.*
 
 
-class FragmentProfiles : Fragment() {
+class FragmentProfiles : HuisEtFragment() {
 
 
-    lateinit var realm: Realm
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_profiles, container, false)
-        realm = Realm.getDefaultInstance()
         return view
     }
 
