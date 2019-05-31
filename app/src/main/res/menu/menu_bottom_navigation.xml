@@ -4,6 +4,7 @@
 
 
     <item
+        android:icon="@drawable/ic_bottle_wine_white_24dp"
         android:id="@+id/action_beer"
         android:enabled="true"
         android:title="Bier"
@@ -11,12 +12,14 @@
 
 
     <item
+        android:icon="@drawable/ic_cash_register_white_24dp"
         android:id="@+id/action_ET"
         android:enabled="true"
         android:title="ET"
         app:showAsAction="always" />
 
     <item
+        android:icon="@drawable/baseline_timeline_white_24"
         android:id="@+id/action_stats"
         android:enabled="true"
         android:title="Stats"
