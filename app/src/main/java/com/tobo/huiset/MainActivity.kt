@@ -15,10 +15,7 @@ import androidx.fragment.app.Fragment
 class MainActivity : AppCompatActivity() {
 
 
-    lateinit var mainFrag: FragmentMain
-    lateinit var etFrag:FragmentET
-    lateinit var statsFrag:FragmentStats
-
+    lateinit var fragments: List<Fragment>
     lateinit var activeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,37 +24,35 @@ class MainActivity : AppCompatActivity() {
         setupBottomTabs()
     }
 
+
+
+
     private fun setupBottomTabs(){
         val bottomView  = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomView.inflateMenu(R.menu.menu_bottom_navigation)
 
-        mainFrag = FragmentMain()
-        etFrag = FragmentET()
-        statsFrag = FragmentStats()
+        fragments = listOf(
+            FragmentMain(),
+            FragmentET(),
+            FragmentStats()
+        )
 
-        activeFragment = mainFrag
-
-        supportFragmentManager.beginTransaction().add(R.id.main_container, statsFrag, "3").hide(statsFrag).commit()
-        supportFragmentManager.beginTransaction().add(R.id.main_container, etFrag, "2").hide(etFrag).commit()
-        supportFragmentManager.beginTransaction().add(R.id.main_container,mainFrag, "1").commit()
-
-
-
-        fun showFragment(newFrag: Fragment){
-            supportFragmentManager.beginTransaction().hide(activeFragment).show(newFrag).commit()
-            activeFragment = newFrag
+        for(i in fragments.indices){
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.add(R.id.main_container, fragments[i], i.toString())
+            if(i != 0) transaction.hide(fragments[i])
+            transaction.commit()
         }
-
+        activeFragment = fragments[0]
 
         bottomView.setOnNavigationItemSelectedListener {
-            println(it.itemId)
             val fragToShow = when(it.itemId){
-                R.id.action_beer -> mainFrag
-                R.id.action_ET -> etFrag
-                R.id.action_stats -> statsFrag
+                R.id.action_beer -> fragments[0]
+                R.id.action_ET -> fragments[1]
+                R.id.action_stats -> fragments[2]
                 else -> {
                     Log.e("Mainactivity", "Unknown action id")
-                    mainFrag
+                    fragments[0]
                 }
             }
             showFragment(fragToShow)
@@ -65,6 +60,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showFragment(newFrag: Fragment){
+        supportFragmentManager.beginTransaction().hide(activeFragment).show(newFrag).commit()
+        activeFragment = newFrag
+    }
 
 
 
