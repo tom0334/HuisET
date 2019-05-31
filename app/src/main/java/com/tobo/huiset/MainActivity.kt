@@ -9,10 +9,6 @@ import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.realmModels.Person
 import io.realm.Realm
-import io.realm.RealmConfiguration
-
-
-
 import FragmentMain
 import FragmentET
 import FragmentProfiles
