@@ -66,5 +66,5 @@ fastlane/readme.md
 
 .idea
 gradlew.bat
-
 gradle/
+gradlew
