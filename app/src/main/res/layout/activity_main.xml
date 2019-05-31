@@ -6,20 +6,4 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recentRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/personsRecyclerView"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent">
-
-
-    </androidx.recyclerview.widget.RecyclerView>
-
 </LinearLayout>
