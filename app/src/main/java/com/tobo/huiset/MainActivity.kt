@@ -10,7 +10,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import FragmentMain
 import FragmentET
-import FragmentStats
+import FragmentProfiles
 import android.util.Log
 
 import androidx.fragment.app.Fragment
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         fragments = listOf(
             FragmentMain(),
             FragmentET(),
-            FragmentStats()
+            FragmentProfiles()
         )
 
         for(i in fragments.indices){
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             val fragToShow = when(it.itemId){
                 R.id.action_beer -> fragments[0]
                 R.id.action_ET -> fragments[1]
-                R.id.action_stats -> fragments[2]
+                R.id.action_profiles -> fragments[2]
                 else -> {
                     Log.e("Mainactivity", "Unknown action id")
                     fragments[0]

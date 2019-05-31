@@ -19,10 +19,10 @@
         app:showAsAction="always" />
 
     <item
-        android:icon="@drawable/baseline_timeline_white_24"
-        android:id="@+id/action_stats"
+        android:icon="@drawable/baseline_group_white_24"
+        android:id="@+id/action_profiles"
         android:enabled="true"
-        android:title="Stats"
+        android:title="Gebruikers"
         app:showAsAction="always" />
 
 </menu>
