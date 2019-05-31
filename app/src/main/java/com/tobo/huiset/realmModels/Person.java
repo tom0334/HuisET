@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public class Person extends RealmObject {
 
     private String id = UUID.randomUUID().toString();
-    private int balans = 0;
+    private int balance = 0;
     private String name;
     private String color;
 
@@ -27,6 +27,6 @@ public class Person extends RealmObject {
     }
 
     public int getBalance() {
-        return balans;
+        return balance;
     }
 }
