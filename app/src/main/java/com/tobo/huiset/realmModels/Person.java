@@ -1,6 +1,7 @@
 package com.tobo.huiset.realmModels;
 
 import io.realm.RealmObject;
+import org.jetbrains.annotations.NotNull;
 
 public class Person extends RealmObject {
 
@@ -17,5 +18,14 @@ public class Person extends RealmObject {
         p.name = name;
 
         return p;
+    }
+
+    @NotNull
+    public String getName() {
+        return this.name;
+    }
+
+    public int getBalance() {
+        return balans;
     }
 }
