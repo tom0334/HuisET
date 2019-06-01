@@ -11,6 +11,8 @@ import com.tobo.huiset.adapters.TransactionRecAdapter
 import com.tobo.huiset.adapters.TurfRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.toPixel
+import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 
 
 class FragmentMain : HuisEtFragment() {
@@ -37,13 +39,21 @@ class FragmentMain : HuisEtFragment() {
 
 
     private fun setupTurfRec(view: View) {
-        val profiles = realm.where(Person::class.java).findAll()
 
+        val columns = 2
+
+
+        val profiles = realm.where(Person::class.java).findAll()
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
-        turfRec.layoutManager = GridLayoutManager(this.context, 2)
+        turfRec.layoutManager = GridLayoutManager(this.context, columns)
+
+        val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!),16.toPixel(this.context!!),columns)
+        turfRec.addItemDecoration(spacer)
 
     }
 
 
 }
+
+
