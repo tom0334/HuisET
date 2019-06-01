@@ -16,6 +16,8 @@
         </activity>
         <activity android:name="com.tobo.huiset.gui.activies.EditProfileActivity">
         </activity>
+        <activity android:name="com.tobo.huiset.gui.activies.EditProductActivity">
+        </activity>
         <activity android:name="com.tobo.huiset.gui.activies.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
