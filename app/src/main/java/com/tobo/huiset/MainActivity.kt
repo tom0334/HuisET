@@ -3,18 +3,18 @@ package com.tobo.huiset
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.realmModels.Person
-import io.realm.Realm
 import FragmentMain
 import FragmentET
 import FragmentProfiles
 import android.util.Log
 
 import androidx.fragment.app.Fragment
+import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.realmModels.Transaction
 
 
 class MainActivity : HuisEtActivity() {
@@ -80,6 +80,9 @@ class MainActivity : HuisEtActivity() {
         activeFragment = fragments[0]
 
         bottomView.setOnNavigationItemSelectedListener {
+
+            if(it.itemId == R.id.action_main) addTransaction()
+
             val fragToShow = when(it.itemId){
                 R.id.action_main -> fragments[0]
                 R.id.action_ET -> fragments[1]
@@ -91,6 +94,17 @@ class MainActivity : HuisEtActivity() {
             }
             showFragment(fragToShow)
             return@setOnNavigationItemSelectedListener true
+        }
+    }
+
+    private fun addTransaction() {
+        //todo do this with the correct person
+        val aPerson = realm.where(Person::class.java).findFirst()
+
+
+        realm.executeTransaction {
+            val t = Transaction.create(aPerson!!, realm.getBeerProduct())
+            realm.copyToRealm(t)
         }
     }
 

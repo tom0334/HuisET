@@ -1,6 +1,7 @@
 package com.tobo.huiset
 
 import android.app.Application
+import com.tobo.huiset.realmModels.HuisETSettings
 import com.tobo.huiset.realmModels.Product
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -10,7 +11,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         setupRealm()
-        createStandardProductsIfNeeded()
+        createHuisEtSettingsNeeded()
     }
 
     private fun setupRealm() {
@@ -27,21 +28,22 @@ class MyApplication : Application() {
         Realm.setDefaultConfiguration(config)
     }
 
-    private fun createStandardProductsIfNeeded() {
+    private fun createHuisEtSettingsNeeded() {
         val realm = Realm.getDefaultInstance()
 
-        val builtIn = realm.where(Product::class.java)
-            .equalTo("builtIn", true)
+        val settings = realm.where(HuisETSettings::class.java)
 
-        if(builtIn.count()  > 0L) return
-
+        if(settings.count() > 0) return
 
         realm.executeTransaction {
-            val beer = Product.createBuiltInProduct(Product.ID_BEER,"Bier",Product.STANDARD_PRICE_BEER)
+            val beer = Product.create("Bier",Product.STANDARD_PRICE_BEER)
             realm.copyToRealm(beer)
 
-            val crate = Product.createBuiltInProduct(Product.ID_CRATE,"Kratje",Product.STANDARD_PRICE_CRATE)
+            val crate = Product.create("Kratje",Product.STANDARD_PRICE_CRATE)
             realm.copyToRealm(crate)
+
+            val newSettingsObj = HuisETSettings.create(beer, crate)
+            realm.copyToRealm(newSettingsObj)
         }
 
     }
