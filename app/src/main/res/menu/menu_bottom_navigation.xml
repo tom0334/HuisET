@@ -7,15 +7,28 @@
         android:icon="@drawable/ic_bottle_wine_white_24dp"
         android:id="@+id/action_main"
         android:enabled="true"
-        android:title="Bier"
+        android:title="Betalen"
         app:showAsAction="always" />
 
+    <item
+        android:icon="@drawable/baseline_shopping_cart_white_24"
+        android:id="@+id/action_purchases"
+        android:enabled="true"
+        android:title="inkopen"
+        app:showAsAction="always" />
 
     <item
-        android:icon="@drawable/ic_cash_register_white_24dp"
-        android:id="@+id/action_ET"
+        android:icon="@drawable/baseline_format_list_bulleted_white_24"
+        android:id="@+id/action_products"
         android:enabled="true"
-        android:title="ET"
+        android:title="producten"
+        app:showAsAction="always" />
+
+    <item
+        android:icon="@drawable/baseline_history_white_24"
+        android:id="@+id/action_history"
+        android:enabled="true"
+        android:title="geschiedenis"
         app:showAsAction="always" />
 
     <item

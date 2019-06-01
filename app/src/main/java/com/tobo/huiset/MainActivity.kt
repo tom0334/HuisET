@@ -9,13 +9,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.realmModels.Person
 import FragmentMain
 import FragmentET
+import FragmentPurchases
+import FragmentProducts
 import FragmentProfiles
 import android.util.Log
 
 import androidx.fragment.app.Fragment
 import com.tobo.huiset.realmModels.Transaction
 
-
+private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
 
 class MainActivity : HuisEtActivity() {
@@ -37,7 +39,7 @@ class MainActivity : HuisEtActivity() {
 
     // create an action bar button
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.mymenu, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -68,8 +70,10 @@ class MainActivity : HuisEtActivity() {
 
             val fragToShow = when(it.itemId){
                 R.id.action_main -> 0
-                R.id.action_ET -> 1
-                R.id.action_profiles -> 2
+                R.id.action_purchases -> 1
+                R.id.action_products -> 2
+                R.id.action_history -> 3
+                R.id.action_profiles -> 4
                 else -> {
                     Log.e("Mainactivity", "Unknown action id")
                     0
@@ -89,17 +93,16 @@ class MainActivity : HuisEtActivity() {
             //create new fragments
             fragments = listOf(
                 FragmentMain(),
+                FragmentPurchases(),
+                FragmentProducts(),
                 FragmentET(),
                 FragmentProfiles()
             )
             //currentFragIndex is 0 by default
         }else{
             //restore them by finding them by tag
-            fragments = listOf(
-                supportFragmentManager.findFragmentByTag( getFragTagFromIndex(0))!!,
-                supportFragmentManager.findFragmentByTag( getFragTagFromIndex(1))!!,
-                supportFragmentManager.findFragmentByTag( getFragTagFromIndex(2))!!
-            )
+            fragments = (0 until NUM_FRAGMENTS)
+                .map { supportFragmentManager.findFragmentByTag(getFragTagFromIndex(it))!!}
             currentFragmentIndex = savedInstanceState.getInt(OUTSTATE_CURRENTFRAGINDEX)
         }
 
