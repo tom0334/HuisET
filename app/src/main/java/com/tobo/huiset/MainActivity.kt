@@ -13,19 +13,24 @@ import FragmentProfiles
 import android.util.Log
 
 import androidx.fragment.app.Fragment
-import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 
 
+private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
+
 class MainActivity : HuisEtActivity() {
 
-    lateinit var fragments: List<Fragment>
-    lateinit var activeFragment: Fragment
+
+    private lateinit var fragments: List<Fragment>
+    private var currentFragmentIndex = 0
+
+    private fun getFragTagFromIndex(index:Int) = "MAIN_ACTIVITY_FRAG_$index"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+        setupFragments(savedInstanceState)
         setupBottomTabs()
 
         realm.executeTransaction {
@@ -65,31 +70,17 @@ class MainActivity : HuisEtActivity() {
         val bottomView  = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomView.inflateMenu(R.menu.menu_bottom_navigation)
 
-        fragments = listOf(
-            FragmentMain(),
-            FragmentET(),
-            FragmentProfiles()
-        )
-
-        for(i in fragments.indices){
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.add(R.id.main_container, fragments[i], i.toString())
-            if(i != 0) transaction.hide(fragments[i])
-            transaction.commit()
-        }
-        activeFragment = fragments[0]
-
         bottomView.setOnNavigationItemSelectedListener {
 
             if(it.itemId == R.id.action_main) addTransaction()
 
             val fragToShow = when(it.itemId){
-                R.id.action_main -> fragments[0]
-                R.id.action_ET -> fragments[1]
-                R.id.action_profiles -> fragments[2]
+                R.id.action_main -> 0
+                R.id.action_ET -> 1
+                R.id.action_profiles -> 2
                 else -> {
                     Log.e("Mainactivity", "Unknown action id")
-                    fragments[0]
+                    0
                 }
             }
             showFragment(fragToShow)
@@ -97,10 +88,53 @@ class MainActivity : HuisEtActivity() {
         }
     }
 
+    /**
+     * This function restores or creates the needed fragments. It needs to be called BEFORE the setupBottomTabs
+     * method!
+     */
+    private fun setupFragments(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            //create new fragments
+            fragments = listOf(
+                FragmentMain(),
+                FragmentET(),
+                FragmentProfiles()
+            )
+            //currentFragIndex is 0 by default
+        }else{
+            //restore them by finding them by tag
+            fragments = listOf(
+                supportFragmentManager.findFragmentByTag( getFragTagFromIndex(0))!!,
+                supportFragmentManager.findFragmentByTag( getFragTagFromIndex(1))!!,
+                supportFragmentManager.findFragmentByTag( getFragTagFromIndex(2))!!
+            )
+            currentFragmentIndex = savedInstanceState.getInt(OUTSTATE_CURRENTFRAGINDEX)
+        }
+
+        for (i in fragments.indices) {
+            val transaction = supportFragmentManager.beginTransaction()
+
+            // add them only if they weren't added yet.
+            if(savedInstanceState == null) transaction.add(R.id.main_container, fragments[i], getFragTagFromIndex(i))
+
+            //hide all but the current one
+            if (i != currentFragmentIndex) transaction.hide(fragments[i])
+            transaction.commit()
+        }
+    }
+
+    private fun showFragment(newFragIndex: Int) {
+        supportFragmentManager.beginTransaction()
+            .hide(fragments[currentFragmentIndex])
+            .show(fragments[newFragIndex])
+            .commit()
+        currentFragmentIndex = newFragIndex
+
+    }
+
     private fun addTransaction() {
         //todo do this with the correct person
         val aPerson = realm.where(Person::class.java).findFirst()
-
 
         realm.executeTransaction {
             val t = Transaction.create(aPerson!!, realm.getBeerProduct())
@@ -108,9 +142,10 @@ class MainActivity : HuisEtActivity() {
         }
     }
 
-    private fun showFragment(newFrag: Fragment){
-        supportFragmentManager.beginTransaction().hide(activeFragment).show(newFrag).commit()
-        activeFragment = newFrag
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState!!.putInt( OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex )
     }
 
 }
