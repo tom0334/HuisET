@@ -11,14 +11,16 @@ public class Person extends RealmObject {
     private int balance = 0;
     private String name;
     private String color;
+    private boolean guest;
     private RealmList<Transaction> transactions = new RealmList<>();
 
     public Person() {}
 
-    static public Person create(String name, String color) {
+    static public Person create(String name, String color, boolean guest) {
         Person p = new Person();
         p.name = name;
         p.color = color;
+        p.guest = guest;
 
         return p;
     }
@@ -40,7 +42,7 @@ public class Person extends RealmObject {
 
     public String getBalanceAsString() {
         String signed = (balance < 0) ? "-" : "";
-        String euros = Integer.toString(balance / 100);
+        String euros = Integer.toString(Math.abs(balance / 100));
         int abscents = Math.abs(balance % 100);
         String cents = (abscents < 10) ? "0" : "";
         cents += Integer.toString(abscents);

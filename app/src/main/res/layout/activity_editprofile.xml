@@ -24,7 +24,7 @@
 
 
     <RadioGroup
-            android:id="@+id/radioSex"
+            android:id="@+id/radiogroup_guest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
