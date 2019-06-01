@@ -51,7 +51,7 @@
 
 
     <ImageButton
-
+        android:id="@+id/main_transactionRec_deleteButton"
         android:background="#fff"
         android:src="@drawable/baseline_delete_outline_black_36"
         android:layout_gravity="center_vertical"

@@ -1,6 +1,8 @@
 package com.tobo.huiset.realmModels;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 import java.util.UUID;
 
 public class Product extends RealmObject {
@@ -8,6 +10,7 @@ public class Product extends RealmObject {
     public static final int STANDARD_PRICE_BEER = 44;
     public static final int STANDARD_PRICE_CRATE = -1050;
 
+    @PrimaryKey
     private String id = UUID.randomUUID().toString();
     private String name;
     private int price;
@@ -29,5 +32,9 @@ public class Product extends RealmObject {
 
     public int getPrice() {
         return price;
+    }
+
+    public String getId() {
+        return this.id;
     }
 }

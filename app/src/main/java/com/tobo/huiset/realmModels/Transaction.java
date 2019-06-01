@@ -1,35 +1,30 @@
 package com.tobo.huiset.realmModels;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class Transaction extends RealmObject {
 
+    @PrimaryKey
     private String id = UUID.randomUUID().toString();
-    private long time = System.currentTimeMillis();
 
-    private Person person;
-    private Product product;
+    private long time = System.currentTimeMillis();
+    private String personId;
+    private String productId;
 
     public Transaction() {}
 
     static public Transaction create(Person person, Product product) {
         Transaction t = new Transaction();
-        t.person = person;
-        t.product = product;
+        t.personId = person.getId();
+        t.productId = product.getId();
 
         return t;
     }
-
-    public Product getProduct() {
-        return this.product;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
 
     public String getTimeString(){
         long secondsAgo = (System.currentTimeMillis() - time ) / 1000;
@@ -59,6 +54,24 @@ public class Transaction extends RealmObject {
             return yearsAgo + " jaar\ngeleden";
         }
 
+    }
+
+    public String getPersonId() {
+        return personId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+
+
+    public Person getPerson(Realm realm){
+        return realm.where(Person.class).equalTo("id", this.personId).findFirst();
+    }
+
+    public Product getProduct(Realm realm){
+        return realm.where(Product.class).equalTo("id", this.productId).findFirst();
     }
 
 }
