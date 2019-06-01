@@ -12,3 +12,12 @@ fun Int.toPixel(context: Context) :Int{
 }
 
 fun TextView.setTextColorFromHex(hex:String) = this.setTextColor(Color.parseColor(hex))
+
+fun Int.toCurrencyString(): String {
+    val signed = if (this < 0) "-" else ""
+    val euros = Integer.toString(this / 100)
+    val abscents = Math.abs(this % 100)
+    var cents = if (abscents < 10) "0" else ""
+    cents += Integer.toString(abscents)
+    return "€$signed$euros,$cents"
+}

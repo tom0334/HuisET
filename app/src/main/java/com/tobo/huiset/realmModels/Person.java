@@ -40,15 +40,6 @@ public class Person extends RealmObject {
         return balance;
     }
 
-    public String getBalanceAsString() {
-        String signed = (balance < 0) ? "-" : "";
-        String euros = Integer.toString(Math.abs(balance / 100));
-        int abscents = Math.abs(balance % 100);
-        String cents = (abscents < 10) ? "0" : "";
-        cents += Integer.toString(abscents);
-        return "€" + signed + euros + "," + cents;
-    }
-
     public String getBalanceColor() {
         if (balance > 0) {
             return "#388e3c";

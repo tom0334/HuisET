@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
+import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
@@ -27,8 +28,10 @@ class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val re
     }
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
-        holder.nameTv.text = data?.get(position)?.name
-        holder.balanceTv.text = data?.get(position)?.balanceAsString.toString()
+        val person = data?.get(position) ?: return
+
+        holder.nameTv.text = person.name
+        holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balanceColor
         holder.balanceTv.setTextColorFromHex(colorString)
     }
