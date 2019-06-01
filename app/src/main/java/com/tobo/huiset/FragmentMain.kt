@@ -31,14 +31,17 @@ class FragmentMain : HuisEtFragment() {
             updateTransactionRec(this)
         }
     }
-
+    /**
+     * This function is run every TRANSACTION_VIEW_REFRESH_TIME milliseconds. It updates the time ago texts in the
+     * transactionview.
+     */
     fun updateTransactionRec(parentRunnable: Runnable){
         val rec = this.view?.findViewById<RecyclerView>(R.id.recentRecyclerView) ?: return
         rec.adapter?.notifyDataSetChanged()
         transactionTimeRefreshHandler!!.postDelayed(parentRunnable, TRANSACTION_VIEW_REFRESH_TIME)
     }
 
-
+    
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         return view
@@ -51,6 +54,11 @@ class FragmentMain : HuisEtFragment() {
         setupTurfRec(view, transActionRec)
     }
 
+    /**
+     * This sets up the transactionsrec on the left side that shows the previous beers.
+     *
+     * It is updated automatically
+     */
     private fun setupTransactionsRec(view: View) : RecyclerView{
         val transactions = realm.where(Transaction::class.java)
             .sort("time", Sort.DESCENDING)
@@ -61,14 +69,17 @@ class FragmentMain : HuisEtFragment() {
         transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions,realm, true)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
 
+        //init the periodic refresh
         transactionTimeRefreshHandler = Handler()
         transactionTimeRefreshHandler!!.postDelayed(updateTransactionRecRunnable, 0)
-
 
         return transActionRec
     }
 
 
+    /**
+     * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
+     */
     private fun setupTurfRec(view: View, transitionRec:RecyclerView) {
         val columns = 2
 
@@ -89,11 +100,11 @@ class FragmentMain : HuisEtFragment() {
                 realm.executeTransaction {
                     val t = Transaction.create(person, realm.getBeerProduct())
                     realm.copyToRealm(t)
+                    //scroll to the top, because the item is added at the top
                     transitionRec.scrollToPosition(0)
                 }
             }
         }
-
     }
 
     override fun onDestroy() {
