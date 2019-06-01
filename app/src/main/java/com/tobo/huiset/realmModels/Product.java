@@ -1,7 +1,6 @@
 package com.tobo.huiset.realmModels;
 
 import io.realm.RealmObject;
-
 import java.util.UUID;
 
 public class Product extends RealmObject {
@@ -12,7 +11,6 @@ public class Product extends RealmObject {
     private String id = UUID.randomUUID().toString();
     private String name;
     private int price;
-
 
     public Product() {}
 
