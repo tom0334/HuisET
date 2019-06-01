@@ -1,4 +1,4 @@
-package com.tobo.huiset
+package com.tobo.huiset.gui.activies
 
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.tobo.huiset.realmModels.Person
 import android.widget.EditText
+import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.R
 
 /**
  * Edit profile

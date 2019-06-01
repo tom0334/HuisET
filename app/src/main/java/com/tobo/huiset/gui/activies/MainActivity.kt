@@ -1,4 +1,4 @@
-package com.tobo.huiset
+package com.tobo.huiset.gui.activies
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.tobo.huiset.realmModels.Person
 import FragmentMain
 import FragmentET
 import FragmentPurchases
@@ -15,7 +14,8 @@ import FragmentProfiles
 import android.util.Log
 
 import androidx.fragment.app.Fragment
-import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.R
+import com.tobo.huiset.extendables.HuisEtActivity
 
 private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
@@ -130,7 +130,7 @@ class MainActivity : HuisEtActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState!!.putInt( OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex )
+        outState!!.putInt(OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex )
     }
 
 }

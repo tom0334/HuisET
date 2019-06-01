@@ -1,6 +1,7 @@
-package com.tobo.huiset
+package com.tobo.huiset.extendables
 
 import androidx.fragment.app.Fragment
+import com.tobo.huiset.extendables.HuisEtActivity
 
 
 /**

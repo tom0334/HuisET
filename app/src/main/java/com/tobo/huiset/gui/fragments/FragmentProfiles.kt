@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tobo.huiset.HuisEtFragment
+import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
-import com.tobo.huiset.adapters.PersonRecAdapter
+import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import io.realm.Sort
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.tobo.huiset.EditProfileActivity
+import com.tobo.huiset.gui.activies.EditProfileActivity
 
 
 /**

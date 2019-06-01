@@ -1,4 +1,4 @@
-package com.tobo.huiset.adapters
+package com.tobo.huiset.gui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

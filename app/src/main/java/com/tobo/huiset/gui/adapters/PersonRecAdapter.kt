@@ -1,7 +1,6 @@
-package com.tobo.huiset.adapters
+package com.tobo.huiset.gui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.setTextColorFromHex
+import com.tobo.huiset.utils.extensions.setTextColorFromHex
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
