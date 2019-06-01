@@ -7,42 +7,55 @@
     android:layout_margin="16dp"
     android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="32dp">
+    android:layout_height="wrap_content">
 
 
-    <TextView
-        android:id="@+id/main_transactionRec_name"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="16sp"
-        android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:text="Bobbert"
-        />
-
-
-    <View
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
 
+        <TextView
+            android:maxLines="1"
+            android:id="@+id/main_transactionRec_name"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Bobbert"
+            />
+
+        <TextView
+            android:maxLines="1"
+            android:fontFamily="sans-serif-medium"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:id="@+id/main_transactionRec_productName"
+            android:gravity="center_vertical"
+            tools:text ="4 bier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/main_transactionRec_productName"
-        android:gravity="center_vertical"
-        tools:text ="4 bier"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
-
-    <View
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"/>
-
-    <TextView
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="sans-serif-condensed"
         android:id="@+id/main_transactionRec_timeSince"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="2 weken geleden" />
+
+
+    <ImageButton
+
+        android:background="#fff"
+        android:src="@drawable/baseline_delete_outline_black_36"
+        android:layout_gravity="center_vertical"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
 
 </LinearLayout>
