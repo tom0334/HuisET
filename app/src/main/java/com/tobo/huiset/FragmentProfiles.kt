@@ -49,7 +49,6 @@ class FragmentProfiles : HuisEtFragment() {
 
         // opens EditProfileActivity when fab add_profile is clicked
         fab.setOnClickListener {
-            Toast.makeText(this.activity, "add profile screen", Toast.LENGTH_SHORT).show()
             val intent = Intent(this.activity, EditProfileActivity::class.java)
             startActivity(intent)
         }

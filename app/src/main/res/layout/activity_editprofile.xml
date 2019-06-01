@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:layout_margin="@dimen/activity_horizontal_margin"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:onClick="fabClicked"
-            android:backgroundTint="@color/secondaryColor"
-            android:src="@drawable/baseline_done_black_48"/>
-
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameWrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/secondaryDarkColor">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/name"
@@ -53,7 +44,5 @@
                 android:text="huisgenoot" />
 
     </RadioGroup>
-
-
 
 </LinearLayout>
