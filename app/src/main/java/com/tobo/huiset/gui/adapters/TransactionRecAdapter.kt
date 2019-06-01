@@ -4,10 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
@@ -26,9 +28,22 @@ class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        holder.nameTv.text = data?.get(position)?.person?.name
-        holder.productTv.text = data?.get(position)?.product?.name
-        holder.timeAgo.text = data?.get(position)?.getTimeString()
+        val trans = data?.get(position) ?: return
+
+        val person  = trans.getPerson(realmInstance)
+
+        holder.nameTv.text = person?.name
+        holder.productTv.text = trans.getProduct(realmInstance).name
+        holder.timeAgo.text = trans.getTimeString()
+
+
+        holder.deleteButton.setOnClickListener {
+            realmInstance.executeSafe {
+                person.undoTransaction(trans, realmInstance)
+                trans.deleteFromRealm()
+            }
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -39,6 +54,6 @@ class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction
         val nameTv = itemView.findViewById<TextView>(R.id.main_transactionRec_name)
         val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)
         val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)
-
+        val deleteButton = itemView.findViewById<ImageButton>(R.id.main_transactionRec_deleteButton)
     }
 }

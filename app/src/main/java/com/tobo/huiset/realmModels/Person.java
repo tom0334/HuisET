@@ -1,18 +1,21 @@
 package com.tobo.huiset.realmModels;
 
-import io.realm.RealmList;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import java.util.UUID;
+
+import io.realm.annotations.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
 
 public class Person extends RealmObject {
 
+    @PrimaryKey
     private String id = UUID.randomUUID().toString();
+
     private int balance = 0;
     private String name;
     private String color;
     private boolean guest;
-    private RealmList<Transaction> transactions = new RealmList<>();
 
     public Person() {}
 
@@ -31,9 +34,8 @@ public class Person extends RealmObject {
     }
 
 
-    public void addTransaction(Transaction t){
-        this.transactions.add(t);
-        this.balance -= t.getProduct().getPrice();
+    public void addTransaction(Transaction t, Realm realm){
+        this.balance -= t.getProduct(realm).getPrice();
     }
 
     public int getBalance() {
@@ -59,4 +61,11 @@ public class Person extends RealmObject {
         }
     }
 
+    public String getId() {
+        return this.id;
+    }
+
+    public void undoTransaction(Transaction trans, Realm realm) {
+        this.balance += trans.getProduct(realm).getPrice();
+    }
 }
