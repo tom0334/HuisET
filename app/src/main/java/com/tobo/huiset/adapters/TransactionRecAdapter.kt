@@ -28,6 +28,7 @@ class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         holder.nameTv.text = data?.get(position)?.person?.name
         holder.productTv.text = data?.get(position)?.product?.name
+        holder.timeAgo.text = data?.get(position)?.getTimeString()
     }
 
     override fun getItemCount(): Int {
@@ -37,5 +38,7 @@ class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction
     class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val nameTv = itemView.findViewById<TextView>(R.id.main_transactionRec_name)
         val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)
+        val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)
+
     }
 }

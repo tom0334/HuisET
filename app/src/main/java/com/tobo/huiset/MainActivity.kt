@@ -66,8 +66,6 @@ class MainActivity : HuisEtActivity() {
 
         bottomView.setOnNavigationItemSelectedListener {
 
-            if(it.itemId == R.id.action_main) addTransaction()
-
             val fragToShow = when(it.itemId){
                 R.id.action_main -> 0
                 R.id.action_ET -> 1
@@ -124,16 +122,6 @@ class MainActivity : HuisEtActivity() {
             .commit()
         currentFragmentIndex = newFragIndex
 
-    }
-
-    private fun addTransaction() {
-        //todo do this with the correct person
-        val aPerson = realm.where(Person::class.java).findFirst()
-
-        realm.executeTransaction {
-            val t = Transaction.create(aPerson!!, realm.getBeerProduct())
-            realm.copyToRealm(t)
-        }
     }
 
 
