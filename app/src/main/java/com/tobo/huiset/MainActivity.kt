@@ -3,12 +3,10 @@ package com.tobo.huiset
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.realmModels.Person
-import io.realm.Realm
 import FragmentMain
 import FragmentET
 import FragmentProfiles
@@ -100,11 +98,12 @@ class MainActivity : HuisEtActivity() {
     }
 
     private fun addTransaction() {
+        //todo do this with the correct person
         val aPerson = realm.where(Person::class.java).findFirst()
-        val aProduct= realm.where(Product::class.java).findFirst()
-        realm.executeTransaction {
 
-            val t = Transaction.create(aPerson!!, aProduct!!)
+
+        realm.executeTransaction {
+            val t = Transaction.create(aPerson!!, realm.getBeerProduct())
             realm.copyToRealm(t)
         }
     }
