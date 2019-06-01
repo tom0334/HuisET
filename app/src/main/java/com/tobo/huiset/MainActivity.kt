@@ -13,6 +13,7 @@ import FragmentProfiles
 import android.util.Log
 
 import androidx.fragment.app.Fragment
+import com.tobo.huiset.realmModels.Transaction
 
 
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
@@ -70,6 +71,9 @@ class MainActivity : HuisEtActivity() {
         bottomView.inflateMenu(R.menu.menu_bottom_navigation)
 
         bottomView.setOnNavigationItemSelectedListener {
+
+            if(it.itemId == R.id.action_main) addTransaction()
+
             val fragToShow = when(it.itemId){
                 R.id.action_main -> 0
                 R.id.action_ET -> 1
@@ -119,19 +123,29 @@ class MainActivity : HuisEtActivity() {
         }
     }
 
-
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState!!.putInt( OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex )
-    }
-
-    private fun showFragment(newFragIndex: Int){
+    private fun showFragment(newFragIndex: Int) {
         supportFragmentManager.beginTransaction()
             .hide(fragments[currentFragmentIndex])
             .show(fragments[newFragIndex])
             .commit()
         currentFragmentIndex = newFragIndex
+
+    }
+
+    private fun addTransaction() {
+        //todo do this with the correct person
+        val aPerson = realm.where(Person::class.java).findFirst()
+
+        realm.executeTransaction {
+            val t = Transaction.create(aPerson!!, realm.getBeerProduct())
+            realm.copyToRealm(t)
+        }
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState!!.putInt( OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex )
     }
 
 }

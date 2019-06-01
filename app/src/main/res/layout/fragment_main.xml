@@ -3,15 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="#f00"
         android:id="@+id/recentRecyclerView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1">
     </androidx.recyclerview.widget.RecyclerView>
 
+    <View
+        android:background="#333333"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:background="#0f0"
         android:id="@+id/mainPersonRec"
         android:layout_weight="2"
         android:layout_width="0dp"
