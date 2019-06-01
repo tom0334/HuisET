@@ -46,12 +46,12 @@ public class Transaction extends RealmObject {
             return minutesAgo + " minuten\ngeleden";
         }
         else if (hoursAgo < 24 ){
-            return hoursAgo + " uur\n geleden";
+            return hoursAgo + " uur\ngeleden";
         }
         else if (monthsAgo < 30){
-            return monthsAgo + "maanden\n geleden";
+            return monthsAgo + "maanden\ngeleden";
         }else{
-            return yearsAgo + " jaar\n geleden";
+            return yearsAgo + " jaar\ngeleden";
         }
 
     }
