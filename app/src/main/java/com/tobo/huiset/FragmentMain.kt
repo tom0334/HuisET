@@ -15,6 +15,7 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
+import io.realm.Sort
 
 
 class FragmentMain : HuisEtFragment() {
@@ -27,25 +28,30 @@ class FragmentMain : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupTransactionsRec(view)
-        setupTurfRec(view)
+        val transActionRec = setupTransactionsRec(view)
+        setupTurfRec(view, transActionRec)
     }
 
-    private fun setupTransactionsRec(view: View){
-        val transactions = realm.where(Transaction::class.java).findAll()
+    private fun setupTransactionsRec(view: View) : RecyclerView{
+        val transactions = realm.where(Transaction::class.java)
+            .sort("time", Sort.DESCENDING)
+            .findAll()
 
         val transActionRec = view.findViewById<RecyclerView>(R.id.recentRecyclerView)
         transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions,realm, true)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
+        return transActionRec
     }
 
 
-    private fun setupTurfRec(view: View) {
+    private fun setupTurfRec(view: View, transitionRec:RecyclerView) {
         val columns = 2
 
         val profiles = realm.where(Person::class.java).findAll()
         val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
-        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
+        val adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
+
+        turfRec.adapter = adapter
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
         val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!),16.toPixel(this.context!!),columns)
@@ -58,10 +64,10 @@ class FragmentMain : HuisEtFragment() {
                 realm.executeTransaction {
                     val t = Transaction.create(person, realm.getBeerProduct())
                     realm.copyToRealm(t)
+                    transitionRec.scrollToPosition(0)
                 }
             }
         }
-
 
     }
 

@@ -20,6 +20,7 @@ class TurfRecAdapter(val context: Context, data: RealmResults<Person>?, val real
     : RealmRecyclerViewAdapter<Person, TurfRecAdapter.TurfRecViewHolder>(data, autoUpdate) {
 
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TurfRecViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.turf_rec_item, parent, false)
         return TurfRecViewHolder(view)
