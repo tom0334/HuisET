@@ -60,4 +60,5 @@ public class Transaction extends RealmObject {
         }
 
     }
+
 }

@@ -1,4 +1,4 @@
-package com.tobo.huiset
+package com.tobo.huiset.gui.activies
 
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.tobo.huiset.realmModels.Person
 import android.widget.EditText
+import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.R
 
 /**
  * Edit profile
@@ -45,7 +47,7 @@ class EditProfileActivity : HuisEtActivity() {
                 val person = Person.create(name, "#0000ff")
                 realm.copyToRealm(person)
             }
-            Toast.makeText(this, "profile $name added", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Profile $name added", Toast.LENGTH_SHORT).show()
             this.finish()
 
         }
@@ -59,18 +61,18 @@ class EditProfileActivity : HuisEtActivity() {
     private fun nameValidate(name: String, editText: EditText): Boolean {
         // empty fields are not accepted
         if (name == "") {
-            editText.error = "vul een naam in"
+            editText.error = "Vul een naam in"
             return false
         }
         // duplicate names are not accepted
         if (realm.where(Person::class.java).equalTo("name", name).count() > 0) {
-            editText.error = "naam bestaat al"
+            editText.error = "Naam bestaat al"
             return false
         }
         // name is too long
         val maxNameLength = 12
         if (name.length > maxNameLength) {
-            editText.error = "naam mag niet langer dan $maxNameLength tekens"
+            editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
             return false
         }
         return true

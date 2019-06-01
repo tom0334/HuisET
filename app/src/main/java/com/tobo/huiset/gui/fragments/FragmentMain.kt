@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tobo.huiset.HuisEtFragment
+import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
-import com.tobo.huiset.adapters.TransactionRecAdapter
-import com.tobo.huiset.adapters.TurfRecAdapter
-import com.tobo.huiset.getBeerProduct
-import com.tobo.huiset.helpers.ItemClickSupport
+import com.tobo.huiset.gui.adapters.TransactionRecAdapter
+import com.tobo.huiset.gui.adapters.TurfRecAdapter
+import com.tobo.huiset.utils.extensions.getBeerProduct
+import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
-import com.tobo.huiset.toPixel
+import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
 

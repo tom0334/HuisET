@@ -1,4 +1,4 @@
-package com.tobo.huiset
+package com.tobo.huiset.utils.extensions
 
 import com.tobo.huiset.realmModels.HuisETSettings
 import com.tobo.huiset.realmModels.Product

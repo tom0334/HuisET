@@ -1,7 +1,8 @@
-package com.tobo.huiset
+package com.tobo.huiset.gui.activies
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.tobo.huiset.R
+import com.tobo.huiset.extendables.HuisEtActivity
 
 
 class SettingsActivity : HuisEtActivity() {
