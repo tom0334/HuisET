@@ -28,6 +28,7 @@ class TurfRecAdapter(val context: Context, data: RealmResults<Person>?, val real
     override fun onBindViewHolder(holder: TurfRecViewHolder, position: Int) {
         holder.nameTv.text = data?.get(position)?.name
         holder.balanceTv.text = data?.get(position)?.getBalance().toString()
+
     }
 
     override fun getItemCount(): Int {

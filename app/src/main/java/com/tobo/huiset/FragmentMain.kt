@@ -69,7 +69,10 @@ class FragmentMain : HuisEtFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        ItemClickSupport.removeFrom(view?.findViewById(R.id.mainPersonRec))
+        val rec: RecyclerView? = view?.findViewById(R.id.mainPersonRec)
+        if(rec != null){
+            ItemClickSupport.removeFrom(rec)
+        }
     }
 
 
