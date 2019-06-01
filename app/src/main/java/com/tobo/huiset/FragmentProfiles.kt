@@ -36,15 +36,18 @@ class FragmentProfiles : HuisEtFragment() {
         rec.adapter = PersonRecAdapter(this.context!!, persons,realm, true)
         rec.layoutManager = LinearLayoutManager(this.context)
         val fab = view.findViewById<FloatingActionButton>(R.id.add_profile)
+
+        // hides the fab add_profile when scrolling down
         rec.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0)
+                if (dy > 2)
                     fab.hide()
-                else if (dy < 0)
+                else if (dy <= 2)
                     fab.show()
             }
         })
 
+        // opens EditProfileActivity when fab add_profile is clicked
         fab.setOnClickListener {
             Toast.makeText(this.activity, "add profile screen", Toast.LENGTH_SHORT).show()
             val intent = Intent(this.activity, EditProfileActivity::class.java)
