@@ -55,8 +55,8 @@ class EditProfileActivity : HuisEtActivity() {
                 realm.copyToRealm(person)
             }
             Toast.makeText(this, "Profile $name added, guest $guestBool", Toast.LENGTH_SHORT).show()
-            this.finish()
 
+            this.finish()
         }
 
         return super.onOptionsItemSelected(item)

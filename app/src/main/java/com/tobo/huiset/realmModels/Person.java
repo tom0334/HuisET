@@ -42,7 +42,7 @@ public class Person extends RealmObject {
 
     public String getBalanceAsString() {
         String signed = (balance < 0) ? "-" : "";
-        String euros = Integer.toString(balance / 100);
+        String euros = Integer.toString(Math.abs(balance / 100));
         int abscents = Math.abs(balance % 100);
         String cents = (abscents < 10) ? "0" : "";
         cents += Integer.toString(abscents);
