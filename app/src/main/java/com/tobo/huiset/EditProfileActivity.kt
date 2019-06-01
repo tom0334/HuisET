@@ -18,13 +18,16 @@ class EditProfileActivity : HuisEtActivity() {
         val editText= findViewById<EditText>(R.id.name)
         val name = editText.text.toString()
         Toast.makeText(this, "done button clicked $name", Toast.LENGTH_SHORT).show()
-        realm.executeTransaction {
-            val person = Person.create(name, "#0000ff")
-            realm.copyToRealm(person)
+        if (name == "") {
+            editText.error = "vul een naam in"
+        } else {
+            realm.executeTransaction {
+                val person = Person.create(name, "#0000ff")
+                realm.copyToRealm(person)
+            }
+            this.finish()
         }
-
-
-        this.finish()
+        
     }
 
 }
