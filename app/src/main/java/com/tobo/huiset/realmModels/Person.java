@@ -11,14 +11,16 @@ public class Person extends RealmObject {
     private int balance = 0;
     private String name;
     private String color;
+    private boolean guest;
     private RealmList<Transaction> transactions = new RealmList<>();
 
     public Person() {}
 
-    static public Person create(String name, String color) {
+    static public Person create(String name, String color, boolean guest) {
         Person p = new Person();
         p.name = name;
         p.color = color;
+        p.guest = guest;
 
         return p;
     }

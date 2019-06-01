@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.tobo.huiset.realmModels.Person
 import android.widget.EditText
+import android.widget.RadioGroup
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 
@@ -43,11 +44,17 @@ class EditProfileActivity : HuisEtActivity() {
                 return false
             }
 
+            val radioGuestGroup = findViewById<RadioGroup>(R.id.radiogroup_guest).checkedRadioButtonId
+            var guestBool = false
+            if (radioGuestGroup == R.id.radioGuest) {
+                guestBool = true
+            }
+
             realm.executeTransaction {
-                val person = Person.create(name, "#0000ff")
+                val person = Person.create(name, "#0000ff", guestBool)
                 realm.copyToRealm(person)
             }
-            Toast.makeText(this, "Profile $name added", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Profile $name added, guest $guestBool", Toast.LENGTH_SHORT).show()
             this.finish()
 
         }
