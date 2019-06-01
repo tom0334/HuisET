@@ -1,5 +1,6 @@
 package com.tobo.huiset.realmModels;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ public class Person extends RealmObject {
     private int balance = 0;
     private String name;
     private String color;
+    private RealmList<Transaction> transactions = new RealmList<>();
 
     public Person() {}
 
@@ -24,6 +26,12 @@ public class Person extends RealmObject {
     @NotNull
     public String getName() {
         return this.name;
+    }
+
+
+    public void addTransaction(Transaction t){
+        this.transactions.add(t);
+        this.balance -= t.getProduct().getPrice();
     }
 
     public int getBalance() {

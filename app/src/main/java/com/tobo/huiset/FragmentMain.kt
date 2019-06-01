@@ -99,7 +99,7 @@ class FragmentMain : HuisEtFragment() {
             if(person != null){
                 realm.executeTransaction {
                     val t = Transaction.create(person, realm.getBeerProduct())
-                    realm.copyToRealm(t)
+                    person.addTransaction(t)
                     //scroll to the top, because the item is added at the top
                     transitionRec.scrollToPosition(0)
                 }

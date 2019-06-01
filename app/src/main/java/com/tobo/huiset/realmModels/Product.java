@@ -26,4 +26,8 @@ public class Product extends RealmObject {
     public String getName() {
         return name;
     }
+
+    public int getPrice() {
+        return price;
+    }
 }

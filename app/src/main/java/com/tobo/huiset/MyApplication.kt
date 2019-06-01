@@ -37,11 +37,9 @@ class MyApplication : Application() {
 
         realm.executeTransaction {
             val beer = Product.create("Bier",Product.STANDARD_PRICE_BEER)
-            realm.copyToRealm(beer)
-
+            //no need copy, it is copy with the settings
             val crate = Product.create("Kratje",Product.STANDARD_PRICE_CRATE)
-            realm.copyToRealm(crate)
-
+            //no need to copy, it is copied with the settings
             val newSettingsObj = HuisETSettings.create(beer, crate)
             realm.copyToRealm(newSettingsObj)
         }
