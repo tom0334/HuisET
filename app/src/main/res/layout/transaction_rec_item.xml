@@ -53,19 +53,9 @@
     <ImageButton
 
         android:background="#fff"
-        android:src="@android:drawable/ic_menu_delete"
+        android:src="@drawable/baseline_delete_outline_black_36"
         android:layout_gravity="center_vertical"
-        android:layout_width="48dp"
-        android:layout_height="48dp" />
-
-
-
-
-
-
-
-
-
-
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
 
 </LinearLayout>
