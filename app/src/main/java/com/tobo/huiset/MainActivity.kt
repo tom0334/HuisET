@@ -27,12 +27,6 @@ class MainActivity : HuisEtActivity() {
 
         setContentView(R.layout.activity_main)
         setupBottomTabs()
-
-        realm.executeTransaction {
-            val person = Person.create("botjo", "#ff00ff")
-            realm.copyToRealm(person)
-        }
-        Toast.makeText(this, "aantal personen ${realm.where(Person::class.java).count()}", Toast.LENGTH_LONG).show()
     }
 
 
