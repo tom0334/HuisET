@@ -41,8 +41,11 @@ public class Transaction extends RealmObject {
         long yearsAgo = monthsAgo / 12;
 
 
-        if(secondsAgo < 60){
+        if(secondsAgo < 10){
             return "Nu";
+        }
+        else if(secondsAgo < 60){
+            return "Zojuist";
         }
         else if (minutesAgo < 60){
             return minutesAgo + " minuten geleden";

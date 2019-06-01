@@ -1,4 +1,5 @@
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,24 @@ import io.realm.Sort
 
 class FragmentMain : HuisEtFragment() {
 
+    private val TRANSACTION_VIEW_REFRESH_TIME = 5000L
+
+    private var transactionTimeRefreshHandler: Handler?  = null
+
+
+    val updateTransactionRecRunnable = object : Runnable {
+        override fun run() {
+            updateTransactionRec(this)
+        }
+    }
+
+    fun updateTransactionRec(parentRunnable: Runnable){
+        val rec = this.view?.findViewById<RecyclerView>(R.id.recentRecyclerView) ?: return
+        rec.adapter?.notifyDataSetChanged()
+        transactionTimeRefreshHandler!!.postDelayed(parentRunnable, TRANSACTION_VIEW_REFRESH_TIME)
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         return view
@@ -37,9 +56,15 @@ class FragmentMain : HuisEtFragment() {
             .sort("time", Sort.DESCENDING)
             .findAll()
 
+
         val transActionRec = view.findViewById<RecyclerView>(R.id.recentRecyclerView)
         transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions,realm, true)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
+
+        transactionTimeRefreshHandler = Handler()
+        transactionTimeRefreshHandler!!.postDelayed(updateTransactionRecRunnable, 0)
+
+
         return transActionRec
     }
 
@@ -76,6 +101,10 @@ class FragmentMain : HuisEtFragment() {
         val rec: RecyclerView? = view?.findViewById(R.id.mainPersonRec)
         if(rec != null){
             ItemClickSupport.removeFrom(rec)
+        }
+        if(transactionTimeRefreshHandler != null){
+            transactionTimeRefreshHandler!!.removeCallbacks(updateTransactionRecRunnable)
+
         }
     }
 
