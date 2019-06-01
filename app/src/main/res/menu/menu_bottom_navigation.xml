@@ -7,15 +7,14 @@
         android:icon="@drawable/ic_bottle_wine_white_24dp"
         android:id="@+id/action_main"
         android:enabled="true"
-        android:title="Bier"
+        android:title="Betalen"
         app:showAsAction="always" />
-
 
     <item
         android:icon="@drawable/ic_cash_register_white_24dp"
-        android:id="@+id/action_ET"
+        android:id="@+id/overzicht"
         android:enabled="true"
-        android:title="ET"
+        android:title="overzicht"
         app:showAsAction="always" />
 
     <item

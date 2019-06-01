@@ -70,7 +70,7 @@ class MainActivity : HuisEtActivity() {
 
             val fragToShow = when(it.itemId){
                 R.id.action_main -> 0
-                R.id.action_ET -> 1
+                R.id.overzicht -> 1
                 R.id.action_profiles -> 2
                 else -> {
                     Log.e("Mainactivity", "Unknown action id")

@@ -1,8 +1,11 @@
 package com.tobo.huiset
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.tobo.huiset.realmModels.Person
 import android.widget.EditText
@@ -31,10 +34,10 @@ class EditProfileActivity : HuisEtActivity() {
         // profile edit/add done
         if (id == R.id.profiledone) {
 
-            val editText= findViewById<EditText>(R.id.name)
-            val name = editText.text.toString()
+            val nameEditText= findViewById<EditText>(R.id.name)
+            val name = nameEditText.text.toString()
 
-            if (!nameValidate(name, editText)) {
+            if (!nameValidate(name, nameEditText)) {
                 return false
             }
 
@@ -73,4 +76,9 @@ class EditProfileActivity : HuisEtActivity() {
         return true
     }
 
+    fun hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+    }
+    
 }
