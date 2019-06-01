@@ -1,10 +1,9 @@
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.HuisEtFragment
@@ -33,6 +32,7 @@ class FragmentProfiles : HuisEtFragment() {
         val persons = realm.where(Person::class.java).sort("balance", Sort.DESCENDING).findAll()
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
+        rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
         rec.adapter = PersonRecAdapter(this.context!!, persons,realm, true)
         rec.layoutManager = LinearLayoutManager(this.context)
         val fab = view.findViewById<FloatingActionButton>(R.id.add_profile)
