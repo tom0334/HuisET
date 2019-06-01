@@ -7,7 +7,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 
-
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -26,18 +25,17 @@ android {
     }
 }
 
+// NO ANDROID.SUPPORT ALLOWED!!!
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
     implementation 'io.realm:android-adapters:3.1.0'
     implementation 'com.github.tom0334:ConsistentSpacingDecoration:1.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.google.android.material:material:1.0.0'
 }

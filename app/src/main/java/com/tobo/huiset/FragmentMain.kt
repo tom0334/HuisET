@@ -17,8 +17,6 @@ import com.tobo.huiset.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 
 
-
-
 class FragmentMain : HuisEtFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
