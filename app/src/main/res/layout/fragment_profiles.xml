@@ -9,7 +9,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:backgroundTint="@color/secondaryColor"
-            android:src="@drawable/baseline_person_add_black_48"/>
+            android:src="@drawable/baseline_person_add_white_48"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profilesTabRec"

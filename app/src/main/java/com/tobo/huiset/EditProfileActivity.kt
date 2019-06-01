@@ -64,6 +64,12 @@ class EditProfileActivity : HuisEtActivity() {
             editText.error = "naam bestaat al"
             return false
         }
+        // name is too long
+        val maxNameLength = 12
+        if (name.length > maxNameLength) {
+            editText.error = "naam mag niet langer dan $maxNameLength tekens"
+            return false
+        }
         return true
     }
 
