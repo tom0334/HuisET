@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
@@ -33,10 +35,14 @@ class ProductMainRecAdapter(val context: Context, data: RealmResults<Product>?, 
         holder.priceTv.text = product.price.toCurrencyString()
 
         if (product.isSelected) {
-            holder.nameTv.setBackgroundColor(Color.GREEN)
+            holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.secondaryDarkColor))
+            holder.nameTv.setTextColor(Color.WHITE)
+            holder.priceTv.setTextColor(Color.WHITE)
         }
         else {
-            holder.nameTv.setBackgroundColor(Color.YELLOW)
+            holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.primaryDarkColor))
+            holder.nameTv.setTextColor(Color.WHITE)
+            holder.priceTv.setTextColor(Color.WHITE)
         }
     }
 
@@ -45,7 +51,8 @@ class ProductMainRecAdapter(val context: Context, data: RealmResults<Product>?, 
     }
 
     class ProductMainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val nameTv = itemView.findViewById<TextView>(R.id.productMainRecItem_name)
-        val priceTv = itemView.findViewById<TextView>(R.id.productMainRecItem_price)
+        val card: CardView = itemView.findViewById(R.id.productMainRecItem)
+        val nameTv: TextView = itemView.findViewById(R.id.productMainRecItem_name)
+        val priceTv: TextView = itemView.findViewById(R.id.productMainRecItem_price)
     }
 }
