@@ -3,7 +3,6 @@ package com.tobo.huiset.realmModels;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -16,13 +15,15 @@ public class Transaction extends RealmObject {
     private String personId;
     private String productId;
 
+    private boolean buy;
+
     public Transaction() {}
 
-    static public Transaction create(Person person, Product product) {
+    static public Transaction create(Person person, Product product,boolean buy) {
         Transaction t = new Transaction();
         t.personId = person.getId();
         t.productId = product.getId();
-
+        t.buy = buy;
         return t;
     }
 
@@ -65,6 +66,9 @@ public class Transaction extends RealmObject {
     }
 
 
+    public boolean isBuy() {
+        return buy;
+    }
 
     public Person getPerson(Realm realm){
         return realm.where(Person.class).equalTo("id", this.personId).findFirst();
@@ -74,4 +78,7 @@ public class Transaction extends RealmObject {
         return realm.where(Product.class).equalTo("id", this.productId).findFirst();
     }
 
+    public String getId() {
+        return id;
+    }
 }

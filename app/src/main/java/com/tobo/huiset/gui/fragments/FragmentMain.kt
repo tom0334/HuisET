@@ -98,7 +98,7 @@ class FragmentMain : HuisEtFragment() {
             val person = profiles.get(position)
             if(person != null){
                 realm.executeTransaction {
-                    val t = Transaction.create(person, realm.getBeerProduct())
+                    val t = Transaction.create(person, realm.getBeerProduct(), false)
                     realm.copyToRealmOrUpdate(t)
                     person.addTransaction(t,realm)
                 }

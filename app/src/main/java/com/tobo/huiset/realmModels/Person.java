@@ -35,8 +35,23 @@ public class Person extends RealmObject {
 
 
     public void addTransaction(Transaction t, Realm realm){
-        this.balance -= t.getProduct(realm).getPrice();
+        int price =  t.getProduct(realm).getPrice();
+        if(t.isBuy()){
+            this.balance += price;
+        }else{
+            this.balance -= price;
+        }
     }
+
+    public void undoTransaction(Transaction t, Realm realm) {
+        int price =  t.getProduct(realm).getPrice();
+        if(t.isBuy()){
+            this.balance -= price;
+        }else{
+            this.balance += price;
+        }
+    }
+
 
     public int getBalance() {
         return balance;
@@ -56,7 +71,5 @@ public class Person extends RealmObject {
         return this.id;
     }
 
-    public void undoTransaction(Transaction trans, Realm realm) {
-        this.balance += trans.getProduct(realm).getPrice();
-    }
+
 }
