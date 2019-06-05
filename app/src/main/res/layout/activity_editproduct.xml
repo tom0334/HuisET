@@ -38,4 +38,28 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <RadioGroup
+        android:id="@+id/radiogroup_showprod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioShowProd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Tonen" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioHideProd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Verbergen" />
+
+    </RadioGroup>
+
 </LinearLayout>

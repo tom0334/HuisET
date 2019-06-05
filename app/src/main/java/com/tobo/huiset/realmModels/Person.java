@@ -16,14 +16,16 @@ public class Person extends RealmObject {
     private String name;
     private String color;
     private boolean guest;
+    private boolean show;
 
     public Person() {}
 
-    static public Person create(String name, String color, boolean guest) {
+    static public Person create(String name, String color, boolean guest, boolean show) {
         Person p = new Person();
         p.name = name;
         p.color = color;
         p.guest = guest;
+        p.show = show;
 
         return p;
     }

@@ -83,7 +83,7 @@ class FragmentMain : HuisEtFragment() {
     private fun setupTurfRec(view: View, transitionRec:RecyclerView) {
         val columns = 2
 
-        val profiles = realm.where(Person::class.java).findAll()
+        val profiles = realm.where(Person::class.java).equalTo("show", true).findAll()
         val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
         val adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
 

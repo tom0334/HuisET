@@ -14,14 +14,17 @@ public class Product extends RealmObject {
     private String id = UUID.randomUUID().toString();
     private String name;
     private int price;
+    private boolean show;
 
     public Product() {}
 
 
-    static public Product create(String name, int price) {
+    static public Product create(String name, int price, boolean show) {
         Product item = new Product();
         item.name = name;
         item.price = price;
+        item.show = show;
+
         return item;
     }
 

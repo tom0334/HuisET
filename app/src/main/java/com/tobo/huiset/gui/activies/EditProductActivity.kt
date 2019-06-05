@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import android.widget.EditText
+import android.widget.RadioGroup
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
@@ -43,17 +44,26 @@ class EditProductActivity : HuisEtActivity() {
 
             val priceEditText = findViewById<EditText>(R.id.price)
             val priceString = priceEditText.text.toString()
-            val price = Integer.parseInt(priceString)
 
             if (!nameValidate(name, nameEditText) || !priceValidate(priceString, priceEditText)) {
                 return false
             }
 
+            val price = Integer.parseInt(priceString)
+
+
+
+            val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
+            var showBool = false
+            if (radioShowGroup == R.id.radioShowProd) {
+                showBool = true
+            }
+
             realm.executeTransaction {
-                val product = Product.create(name, price)
+                val product = Product.create(name, price, showBool)
                 realm.copyToRealm(product)
             }
-            Toast.makeText(this, "Product $name of $price cents added", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Product $name of $price cents added, show $showBool", Toast.LENGTH_SHORT).show()
             this.finish()
 
         }
@@ -67,6 +77,8 @@ class EditProductActivity : HuisEtActivity() {
      */
     private fun priceValidate(price: String, editText: EditText): Boolean {
         // empty fields are not accepted
+        println("$price")
+
         if (price == "") {
             editText.error = "Vul een prijs in"
             return false
