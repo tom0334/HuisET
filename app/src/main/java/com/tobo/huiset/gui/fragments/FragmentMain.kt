@@ -3,16 +3,20 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
+import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
+import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
 import com.tobo.huiset.utils.extensions.getBeerProduct
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
@@ -52,6 +56,27 @@ class FragmentMain : HuisEtFragment() {
 
         val transActionRec = setupTransactionsRec(view)
         setupTurfRec(view, transActionRec)
+
+        setupProductRec(view)
+    }
+
+    private fun setupProductRec(view: View) : RecyclerView {
+        val products = realm.where(Product::class.java).equalTo("show", true).findAll()
+
+        // this sets up the recyclerview to show the products
+        val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
+        prodRec.adapter = ProductMainRecAdapter(this.context!!, products, realm, true)
+        prodRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
+
+        ItemClickSupport.addTo(prodRec).setOnItemClickListener { prodRec, position, v ->
+            realm.executeTransaction {
+                realm.where(Product::class.java).equalTo("selected", true).findAll().forEach {
+                    it.isSelected = false
+                }
+                products.get(position)?.isSelected = true
+            }
+        }
+        return prodRec
     }
 
     /**
@@ -83,22 +108,26 @@ class FragmentMain : HuisEtFragment() {
     private fun setupTurfRec(view: View, transitionRec:RecyclerView) {
         val columns = 2
 
-        val profiles = realm.where(Person::class.java).findAll()
-        val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
-        val adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
+        val profiles = realm.where(Person::class.java).equalTo("show", true).findAll()
 
-        turfRec.adapter = adapter
+        val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
+        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
         val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!),16.toPixel(this.context!!),columns)
         turfRec.addItemDecoration(spacer)
 
-
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { recyclerView, position, v ->
             val person = profiles.get(position)
             if(person != null){
                 realm.executeTransaction {
-                    val t = Transaction.create(person, realm.getBeerProduct(), false)
+                    val selectedProduct = realm.where(Product::class.java).equalTo("selected", true).findFirst()
+                    val t = Transaction.create(person, selectedProduct, false)
+
+                    // select beer again
+                    selectedProduct?.isSelected = false
+                    realm.getBeerProduct().isSelected = true
+
                     realm.copyToRealmOrUpdate(t)
                     person.addTransaction(t,realm)
                 }

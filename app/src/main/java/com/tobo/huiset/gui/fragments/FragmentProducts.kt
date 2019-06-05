@@ -11,9 +11,8 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.activies.EditProductActivity
 import com.tobo.huiset.gui.activies.EditProfileActivity
-import com.tobo.huiset.gui.adapters.PersonRecAdapter
+import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
-import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import io.realm.Sort
 
@@ -30,7 +29,7 @@ public class FragmentProducts : HuisEtFragment() {
 
         val products = realm.where(Product::class.java).findAll()
 
-        // this sets up the recyclerview to show the persons
+        // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
         rec.adapter = ProductRecAdapter(this.context!!, products, realm, true)

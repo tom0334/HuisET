@@ -50,11 +50,18 @@ class EditProfileActivity : HuisEtActivity() {
                 guestBool = true
             }
 
+            val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_show).checkedRadioButtonId
+            var showBool = false
+            if (radioShowGroup == R.id.radioShow) {
+                showBool = true
+            }
+
             realm.executeTransaction {
-                val person = Person.create(name, "#0000ff", guestBool)
+                val person = Person.create(name, "#0000ff", guestBool, showBool)
                 realm.copyToRealm(person)
             }
-            Toast.makeText(this, "Profile $name added, guest $guestBool", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this, "Profile $name added, guest $guestBool, show $showBool", Toast.LENGTH_SHORT).show()
 
             this.finish()
         }

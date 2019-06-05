@@ -47,4 +47,28 @@
 
     </RadioGroup>
 
+    <RadioGroup
+        android:id="@+id/radiogroup_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioShow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Tonen" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioHide"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Verbergen" />
+
+    </RadioGroup>
+
 </LinearLayout>
