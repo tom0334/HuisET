@@ -37,6 +37,7 @@ class MyApplication : Application() {
 
         realm.executeTransaction {
             val beer = Product.create("Bier",Product.STANDARD_PRICE_BEER, true)
+            beer.setSelected(true);
             //no need copy, it is copy with the settings
             val crate = Product.create("Kratje",Product.STANDARD_PRICE_CRATE, true)
             //no need to copy, it is copied with the settings

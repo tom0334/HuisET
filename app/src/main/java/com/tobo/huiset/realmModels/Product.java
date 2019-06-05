@@ -15,6 +15,7 @@ public class Product extends RealmObject {
     private String name;
     private int price;
     private boolean show;
+    private boolean selected = false;
 
     public Product() {}
 
@@ -38,6 +39,12 @@ public class Product extends RealmObject {
     }
 
     public String getId() {
-        return this.id;
+        return id;
+    }
+
+    public boolean isSelected() { return selected; }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }
