@@ -1,6 +1,67 @@
 <LinearLayout android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="#f00"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/pickUserLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:paddingBottom="32sp"
+            android:paddingTop="32sp"
+            android:paddingLeft="16sp"
+            android:paddingRight="16sp"
+            android:background="@color/primaryDarkColor"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Wie heeft inkopen gedaan?"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pickUserRec"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/pickProductLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/whatHaveYouBoughtText"
+            android:paddingBottom="32sp"
+            android:paddingTop="32sp"
+            android:paddingLeft="16sp"
+            android:paddingRight="16sp"
+            android:background="@color/secondaryColor"
+            android:textColor="#000"
+            android:textSize="30sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Wat heb je gekocht?"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pickProductsRec"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
 
 </LinearLayout>

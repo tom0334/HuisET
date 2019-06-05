@@ -8,7 +8,7 @@ import java.util.UUID;
 public class Product extends RealmObject {
 
     public static final int STANDARD_PRICE_BEER = 44;
-    public static final int STANDARD_PRICE_CRATE = -1050;
+    public static final int STANDARD_PRICE_CRATE = 1050;
 
     @PrimaryKey
     private String id = UUID.randomUUID().toString();

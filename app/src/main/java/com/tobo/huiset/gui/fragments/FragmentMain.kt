@@ -122,7 +122,7 @@ class FragmentMain : HuisEtFragment() {
             if(person != null){
                 realm.executeTransaction {
                     val selectedProduct = realm.where(Product::class.java).equalTo("selected", true).findFirst()
-                    val t = Transaction.create(person, selectedProduct)
+                    val t = Transaction.create(person, selectedProduct, false)
 
                     // select beer again
                     selectedProduct?.isSelected = false
