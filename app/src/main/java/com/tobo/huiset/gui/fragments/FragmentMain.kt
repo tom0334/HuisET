@@ -109,7 +109,6 @@ class FragmentMain : HuisEtFragment() {
         val columns = 2
 
         val profiles = realm.where(Person::class.java).equalTo("show", true).findAll()
-        val products = realm.where(Product::class.java).equalTo("show", true).findAll()
 
         val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
@@ -122,7 +121,7 @@ class FragmentMain : HuisEtFragment() {
             val person = profiles.get(position)
             if(person != null){
                 realm.executeTransaction {
-                    val t = Transaction.create(person, realm.getBeerProduct())
+                    val t = Transaction.create(person, realm.where(Product::class.java).equalTo("selected", true).findFirst())
                     realm.copyToRealmOrUpdate(t)
                     person.addTransaction(t,realm)
                 }
