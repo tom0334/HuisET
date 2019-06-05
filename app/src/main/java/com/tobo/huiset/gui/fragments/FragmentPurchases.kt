@@ -2,6 +2,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.extendables.HuisEtFragment
@@ -98,6 +99,9 @@ class FragmentPurchases : HuisEtFragment() {
             userLayout.visibility = View.VISIBLE
             productLayout.visibility = View.GONE
         }else{
+            val person = realm.where(Person::class.java).equalTo("id", pickedPersonId).findFirst()
+            val boughtWhatTv = view.findViewById<TextView>(R.id.whatHaveYouBoughtText)
+            boughtWhatTv.text = "${person!!.name}, Wat heb je gekocht?"
             userLayout.visibility = View.GONE
             productLayout.visibility = View.VISIBLE
         }

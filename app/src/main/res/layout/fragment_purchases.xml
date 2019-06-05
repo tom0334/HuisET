@@ -43,12 +43,13 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/whatHaveYouBoughtText"
             android:paddingBottom="32sp"
             android:paddingTop="32sp"
             android:paddingLeft="16sp"
             android:paddingRight="16sp"
-            android:background="@color/primaryDarkColor"
-            android:textColor="#fff"
+            android:background="@color/secondaryColor"
+            android:textColor="#000"
             android:textSize="30sp"
             android:fontFamily="sans-serif-medium"
             android:text="Wat heb je gekocht?"
