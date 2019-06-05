@@ -13,6 +13,7 @@ import android.widget.RadioGroup
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.extensions.euroToCent
 import kotlinx.android.synthetic.main.activity_editproduct.*
 
 /**
@@ -28,7 +29,7 @@ class EditProductActivity : HuisEtActivity() {
 
     // create an action bar button
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.menu_editprofile, menu);
+        getMenuInflater().inflate(R.menu.menu_editprofile, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -48,10 +49,7 @@ class EditProductActivity : HuisEtActivity() {
             if (!nameValidate(name, nameEditText) || !priceValidate(priceString, priceEditText)) {
                 return false
             }
-
-            val price = Integer.parseInt(priceString)
-
-
+            val price = priceString.euroToCent()
 
             val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
             var showBool = false
@@ -84,11 +82,13 @@ class EditProductActivity : HuisEtActivity() {
             return false
         }
 
-//        // format should be _,cc
-//        if (price.split(',' + 1).size != 2) {
-//            editText.error = "Er moeten 2 getallen achter de comma"
-//            return false
-//        }
+        // format should be _,cc
+        if (price.contains('.')) {
+            if (price.split('.')[1].length != 2) {
+                editText.error = "Er moeten 2 getallen achter de comma"
+                return false
+            }
+        }
 
         return true
     }
