@@ -121,7 +121,13 @@ class FragmentMain : HuisEtFragment() {
             val person = profiles.get(position)
             if(person != null){
                 realm.executeTransaction {
-                    val t = Transaction.create(person, realm.where(Product::class.java).equalTo("selected", true).findFirst())
+                    val selectedProduct = realm.where(Product::class.java).equalTo("selected", true).findFirst()
+                    val t = Transaction.create(person, selectedProduct)
+
+                    // select beer again
+                    selectedProduct?.isSelected = false
+                    realm.getBeerProduct().isSelected = true
+
                     realm.copyToRealmOrUpdate(t)
                     person.addTransaction(t,realm)
                 }
