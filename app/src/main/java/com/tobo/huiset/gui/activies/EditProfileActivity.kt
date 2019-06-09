@@ -79,31 +79,30 @@ class EditProfileActivity : HuisEtActivity() {
     }
 
     private fun deleteClicked() {
-        // if profile isn't new, then ask "are you sure?
-        if (!new) {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
-                .setPositiveButton("verwijderen") { dialog, id ->
-                    realm.executeTransaction {
-                        if (realm.where(Transaction::class.java).equalTo("personId", oldProfile!!.id).findFirst() == null) {
-                            // Actually delete the product from the realm if it isn't involved in any transactions
-                            oldProfile!!.deleteFromRealm()
-                        } else {
-                            // fake delete product from the realm
-                            oldProfile!!.isDeleted = true
-                        }
-                    }
-                    this.finish()
-                }
-                .setNegativeButton("annuleren") { dialog, id ->
-                    // User cancelled the dialog, do nothing
-                }
-            // Create the AlertDialog object and return it
-            builder.create().show()
-        }
-        else {
+        if (new) {
             this.finish()
+            return
         }
+        // if profile isn't new, then ask "are you sure?
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
+            .setPositiveButton("verwijderen") { dialog, id ->
+                realm.executeTransaction {
+                    if (realm.where(Transaction::class.java).equalTo("personId", oldProfile!!.id).findFirst() == null) {
+                        // Actually delete the product from the realm if it isn't involved in any transactions
+                        oldProfile!!.deleteFromRealm()
+                    } else {
+                        // fake delete product from the realm
+                        oldProfile!!.isDeleted = true
+                    }
+                }
+                this.finish()
+            }
+            .setNegativeButton("annuleren") { dialog, id ->
+                // User cancelled the dialog, do nothing
+            }
+        // Create the AlertDialog object and return it
+        builder.create().show()
     }
 
     private fun doneClicked() {

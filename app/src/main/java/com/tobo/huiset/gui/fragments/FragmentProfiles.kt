@@ -31,7 +31,9 @@ class FragmentProfiles : HuisEtFragment() {
 
         // delete the ItemClickSupport
         val rec = view?.findViewById<RecyclerView>(R.id.profilesTabRec)
-        ItemClickSupport.removeFrom(rec)
+        if (rec != null) {
+            ItemClickSupport.removeFrom(rec)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

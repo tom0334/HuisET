@@ -75,31 +75,31 @@ class EditProductActivity : HuisEtActivity() {
     }
 
     private fun deleteClicked() {
-        // if product isn't new, then ask "are you sure?
-        if (!new) {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
-                .setPositiveButton("verwijderen") { dialog, id ->
-                    realm.executeTransaction {
-                        if (realm.where(Transaction::class.java).equalTo("productId", oldProduct!!.id).findFirst() == null) {
-                            // Actually delete the profile from the realm if it isn't involved in any transactions
-                            oldProduct!!.deleteFromRealm()
-                        } else {
-                            // fake delete profile from the realm
-                            oldProduct!!.isDeleted = true
-                        }
-                    }
-                    this.finish()
-                }
-                .setNegativeButton("annuleren") { dialog, id ->
-                    // User cancelled the dialog, do nothing
-                }
-            // Create the AlertDialog object and return it
-            builder.create().show()
-        }
-        else {
+        if (new) {
             this.finish()
+            return
         }
+
+        // if product isn't new, then ask "are you sure?
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
+            .setPositiveButton("verwijderen") { dialog, id ->
+                realm.executeTransaction {
+                    if (realm.where(Transaction::class.java).equalTo("productId", oldProduct!!.id).findFirst() == null) {
+                        // Actually delete the profile from the realm if it isn't involved in any transactions
+                        oldProduct!!.deleteFromRealm()
+                    } else {
+                        // fake delete profile from the realm
+                        oldProduct!!.isDeleted = true
+                    }
+                }
+                this.finish()
+            }
+            .setNegativeButton("annuleren") { dialog, id ->
+                // User cancelled the dialog, do nothing
+            }
+        // Create the AlertDialog object and return it
+        builder.create().show()
     }
 
     private fun doneClicked() {

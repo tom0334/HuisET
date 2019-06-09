@@ -27,7 +27,9 @@ public class FragmentProducts : HuisEtFragment() {
 
         // delete the ItemClickSupport
         val rec = view?.findViewById<RecyclerView>(R.id.productsTabRec)
-        ItemClickSupport.removeFrom(rec)
+        if (rec != null) {
+            ItemClickSupport.removeFrom(rec)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
