@@ -1,7 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,16 +33,8 @@ class ProductMainRecAdapter(val context: Context, data: RealmResults<Product>?, 
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
 
-        if (product.isSelected) {
-            holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.secondaryDarkColor))
-            holder.nameTv.setTextColor(Color.WHITE)
-            holder.priceTv.setTextColor(Color.WHITE)
-        }
-        else {
-            holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.primaryDarkColor))
-            holder.nameTv.setTextColor(Color.WHITE)
-            holder.priceTv.setTextColor(Color.WHITE)
-        }
+        val colorResId = if (product.isSelected) R.color.secondaryDarkColor else R.color.primaryDarkColor
+        holder.card.setBackgroundColor(ContextCompat.getColor(context, colorResId))
     }
 
     override fun getItemCount(): Int {
