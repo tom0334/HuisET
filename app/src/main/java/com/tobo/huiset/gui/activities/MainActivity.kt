@@ -1,4 +1,4 @@
-package com.tobo.huiset.gui.activies
+package com.tobo.huiset.gui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -45,17 +45,23 @@ class MainActivity : HuisEtActivity() {
 
     // handle button activities
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.getItemId()
+        val id = item.itemId
 
-        if (id == R.id.settings) {
-            Toast.makeText(this, "settings clicked", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, SettingsActivity::class.java)
+        if (id == R.id.stats) {
+            Toast.makeText(this, "stats clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, StatsActivity::class.java)
             startActivity(intent)
         }
 
         if (id == R.id.achievements) {
             Toast.makeText(this, "achievements clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, AchievementsActivity::class.java)
+            startActivity(intent)
+        }
+
+        if (id == R.id.settings) {
+            Toast.makeText(this, "settings clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
 

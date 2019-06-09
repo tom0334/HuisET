@@ -9,12 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.activies.EditProductActivity
-import com.tobo.huiset.gui.activies.EditProfileActivity
-import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
+import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.realmModels.Product
-import io.realm.Sort
 
 public class FragmentProducts : HuisEtFragment() {
 

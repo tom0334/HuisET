@@ -1,8 +1,7 @@
-package com.tobo.huiset.gui.activies
+package com.tobo.huiset.gui.activities
 
 import android.content.Context
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,7 +13,6 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.euroToCent
-import kotlinx.android.synthetic.main.activity_editproduct.*
 
 /**
  * Edit product

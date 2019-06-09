@@ -10,15 +10,17 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="com.tobo.huiset.gui.activies.AchievementsActivity">
+        <activity android:name="com.tobo.huiset.gui.activities.SettingsActivity">
         </activity>
-        <activity android:name="com.tobo.huiset.gui.activies.SettingsActivity">
+        <activity android:name="com.tobo.huiset.gui.activities.AchievementsActivity">
         </activity>
-        <activity android:name="com.tobo.huiset.gui.activies.EditProfileActivity">
+        <activity android:name="com.tobo.huiset.gui.activities.StatsActivity">
         </activity>
-        <activity android:name="com.tobo.huiset.gui.activies.EditProductActivity">
+        <activity android:name="com.tobo.huiset.gui.activities.EditProfileActivity">
         </activity>
-        <activity android:name="com.tobo.huiset.gui.activies.MainActivity">
+        <activity android:name="com.tobo.huiset.gui.activities.EditProductActivity">
+        </activity>
+        <activity android:name="com.tobo.huiset.gui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
