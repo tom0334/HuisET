@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
+import com.tobo.huiset.realmModels.Transaction
 
 /**
  * Edit profile
@@ -83,9 +84,14 @@ class EditProfileActivity : HuisEtActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
                 .setPositiveButton("verwijderen") { dialog, id ->
-                    // Delete the profile from the realm
                     realm.executeTransaction {
-                        oldProfile!!.deleteFromRealm()
+                        if (realm.where(Transaction::class.java).equalTo("personId", oldProfile!!.id).findFirst() == null) {
+                            // Actually delete the product from the realm if it isn't involved in any transactions
+                            oldProfile!!.deleteFromRealm()
+                        } else {
+                            // fake delete product from the realm
+                            oldProfile!!.isDeleted = true
+                        }
                     }
                     this.finish()
                 }
@@ -148,8 +154,11 @@ class EditProfileActivity : HuisEtActivity() {
             editText.error = "Vul een naam in"
             return false
         }
-        // duplicate names are not accepted
-        if (realm.where(Person::class.java).equalTo("name", name).count() > 0) {
+        // duplicate names are not accepted, except if the old person is deleted
+        if (realm.where(Person::class.java)
+                .equalTo("deleted", false)
+                .equalTo("name", name)
+                .count() > 0) {
             if (new) {
                 editText.error = "Naam bestaat al"
                 return false

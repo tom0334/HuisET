@@ -13,6 +13,7 @@ import android.widget.RadioGroup
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
@@ -79,9 +80,14 @@ class EditProductActivity : HuisEtActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
                 .setPositiveButton("verwijderen") { dialog, id ->
-                    // Delete the product from the realm
                     realm.executeTransaction {
-                        oldProduct!!.deleteFromRealm()
+                        if (realm.where(Transaction::class.java).equalTo("productId", oldProduct!!.id).findFirst() == null) {
+                            // Actually delete the profile from the realm if it isn't involved in any transactions
+                            oldProduct!!.deleteFromRealm()
+                        } else {
+                            // fake delete profile from the realm
+                            oldProduct!!.isDeleted = true
+                        }
                     }
                     this.finish()
                 }
@@ -165,8 +171,11 @@ class EditProductActivity : HuisEtActivity() {
             editText.error = "Vul een naam in"
             return false
         }
-        // duplicate names are not accepted
-        if (realm.where(Product::class.java).equalTo("name", name).count() > 0) {
+        // duplicate names are not accepted, except if the old product is deleted
+        if (realm.where(Product::class.java)
+                .equalTo("deleted", false)
+                .equalTo("name", name)
+                .count() > 0) {
             if (new) {
                 editText.error = "Naam bestaat al"
                 return false

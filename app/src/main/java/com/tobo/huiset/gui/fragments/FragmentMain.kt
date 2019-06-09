@@ -61,7 +61,10 @@ class FragmentMain : HuisEtFragment() {
     }
 
     private fun setupProductRec(view: View) : RecyclerView {
-        val products = realm.where(Product::class.java).equalTo("show", true).findAll()
+        val products = realm.where(Product::class.java)
+            .equalTo("deleted", false)
+            .equalTo("show", true)
+            .findAll()
 
         // this sets up the recyclerview to show the products
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
@@ -70,8 +73,12 @@ class FragmentMain : HuisEtFragment() {
 
         ItemClickSupport.addTo(prodRec).setOnItemClickListener { prodRec, position, v ->
             realm.executeTransaction {
-                realm.where(Product::class.java).equalTo("selected", true).findAll().forEach {
-                    it.isSelected = false
+                realm.where(Product::class.java)
+                    .equalTo("deleted", false)
+                    .equalTo("selected", true)
+                    .findAll()
+                    .forEach {
+                        it.isSelected = false
                 }
                 products.get(position)?.isSelected = true
             }
@@ -101,14 +108,16 @@ class FragmentMain : HuisEtFragment() {
         return transActionRec
     }
 
-
     /**
      * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
      */
     private fun setupTurfRec(view: View, transitionRec:RecyclerView) {
         val columns = 2
 
-        val profiles = realm.where(Person::class.java).equalTo("show", true).findAll()
+        val profiles = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("show", true)
+            .findAll()
 
         val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
@@ -121,7 +130,10 @@ class FragmentMain : HuisEtFragment() {
             val person = profiles.get(position)
             if(person != null){
                 realm.executeTransaction {
-                    val selectedProduct = realm.where(Product::class.java).equalTo("selected", true).findFirst()
+                    val selectedProduct = realm.where(Product::class.java)
+                        .equalTo("deleted", false)
+                        .equalTo("selected", true)
+                        .findFirst()
                     val t = Transaction.create(person, selectedProduct, false)
 
                     // select beer again

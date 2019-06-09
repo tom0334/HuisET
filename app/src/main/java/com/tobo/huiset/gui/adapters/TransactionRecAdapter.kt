@@ -34,7 +34,7 @@ class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction
 
         holder.nameTv.text = person?.name
         holder.productTv.text = trans.getProduct(realmInstance).name
-        holder.timeAgo.text = trans.getTimeString()
+        holder.timeAgo.text = trans.timeString
 
 
         holder.deleteButton.setOnClickListener {
