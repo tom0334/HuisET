@@ -18,6 +18,7 @@ import com.tobo.huiset.utils.extensions.getProductWithId
 import java.util.*
 import java.text.SimpleDateFormat
 import android.content.DialogInterface
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 
 class FragmentHistory : HuisEtFragment() {
@@ -61,6 +62,13 @@ class FragmentHistory : HuisEtFragment() {
         }
 
         view.findViewById<Button>(R.id.historyGoFowardsButton).setOnClickListener {
+            val newLate = getAdvancedTime(lateTimePoint,backwards = false)
+
+            if(newLate > System.currentTimeMillis()){
+                Toast.makeText(this.context!!, "Verder gaat in de toekomst. Daar heb je nog niks geturft!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             this.lateTimePoint =  getAdvancedTime(lateTimePoint, backwards = false)
             this.earlyTimePoint = getAdvancedTime(earlyTimePoint, backwards = false)
             updateHistory()
@@ -115,8 +123,26 @@ class FragmentHistory : HuisEtFragment() {
     }
 
     private fun updateHistory() {
+        val newData = findHistoryItems()
+        val historyRec = view!!.findViewById<RecyclerView>(R.id.historyRecyclerView)
+        val noDataView = view!!.findViewById<View>(R.id.history_nodata_view)
+
+        val noDataTextView = view!!.findViewById<TextView>(R.id.text_nothing_turfed)
         this.historyAdapter.items.clear()
-        this.historyAdapter.items.addAll(findHistoryItems())
+        if(newData.isEmpty()){
+            historyRec.visibility = View.GONE
+            noDataView.visibility = View.VISIBLE
+
+            val selectedPerson = getSelectedPerson()
+            val name =  if(selectedPerson == null) "Niemand" else selectedPerson.name
+            noDataTextView.text = "$name heeft niets geturft deze periode!"
+
+        }else{
+            this.historyAdapter.items.addAll(newData)
+            historyRec.visibility = View.VISIBLE
+            noDataView.visibility = View.GONE
+        }
+
         this.historyAdapter.notifyDataSetChanged()
     }
 
@@ -129,10 +155,14 @@ class FragmentHistory : HuisEtFragment() {
         historyRec.layoutManager = LinearLayoutManager(this.context!!)
     }
 
+    private fun getSelectedPerson(): Person? {
+        return realm.where(Person::class.java).equalTo("selectedInHistoryView",true).findFirst()
+    }
+
 
 
     private fun findHistoryItems(): List<HistoryItem>{
-        val selectedPerson = realm.where(Person::class.java).equalTo("selectedInHistoryView",true).findFirst()
+        val selectedPerson = getSelectedPerson()
 
         val transactions = when (selectedPerson) {
             null -> realm.where(Transaction::class.java).findAll()
@@ -140,7 +170,7 @@ class FragmentHistory : HuisEtFragment() {
         }
 
 
-        val inTimeSpan = transactions.where().between("time", earlyTimePoint!!, lateTimePoint!!).findAll()
+        val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
         return  inTimeSpan
             .groupBy { it.productId}
@@ -192,11 +222,11 @@ class FragmentHistory : HuisEtFragment() {
         val timeDifTv = view.findViewById<TextView>(R.id.timeDiffText)
         timeDifTv.text = timeNames[timeDiffSelected]
 
-        earlyTimePointDay.text = dateFormat.format(Date(earlyTimePoint!!))
-        lateTimepointDay.text = dateFormat.format(Date(lateTimePoint!!))
+        earlyTimePointDay.text = dateFormat.format(Date(earlyTimePoint))
+        lateTimepointDay.text = dateFormat.format(Date(lateTimePoint))
 
-        earlyTimePointTime.text = timeFormat.format(Date(earlyTimePoint!!))
-        lateTimePointtime.text =timeFormat.format(Date(lateTimePoint!!))
+        earlyTimePointTime.text = timeFormat.format(Date(earlyTimePoint))
+        lateTimePointtime.text =timeFormat.format(Date(lateTimePoint))
 
     }
 
