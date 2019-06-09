@@ -1,4 +1,4 @@
-package com.tobo.huiset.gui.activies
+package com.tobo.huiset.gui.activities
 
 import android.content.Context
 import android.os.Bundle
