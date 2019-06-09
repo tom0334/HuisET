@@ -17,6 +17,7 @@ fun Realm.getCrateProduct() : Product{
     return this.where(HuisETSettings::class.java).findFirst()!!.beerProduct
 }
 
+
 fun Realm.executeSafe(transaction: (Realm) -> Unit){
     try{
         this.executeTransaction(transaction)

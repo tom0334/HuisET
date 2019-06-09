@@ -18,6 +18,8 @@ public class Person extends RealmObject {
     private boolean guest;
     private boolean show;
 
+    private boolean selectedInHistoryView;
+
     public Person() {}
 
     static public Person create(String name, String color, boolean guest, boolean show) {
@@ -26,6 +28,7 @@ public class Person extends RealmObject {
         p.color = color;
         p.guest = guest;
         p.show = show;
+        p.selectedInHistoryView = false;
 
         return p;
     }
@@ -73,5 +76,11 @@ public class Person extends RealmObject {
         return this.id;
     }
 
+    public boolean isSelectedInHistoryView() {
+        return selectedInHistoryView;
+    }
 
+    public void setSelectedInHistoryView(boolean selectedInHistoryView) {
+        this.selectedInHistoryView = selectedInHistoryView;
+    }
 }
