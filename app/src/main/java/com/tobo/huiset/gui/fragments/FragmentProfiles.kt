@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.extendables.HuisEtFragment
-import com.tobo.huiset.R
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import io.realm.Sort
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.tobo.huiset.R
 import com.tobo.huiset.gui.activies.EditProfileActivity
+import com.tobo.huiset.utils.ItemClickSupport
 
 
 /**
@@ -23,6 +24,14 @@ class FragmentProfiles : HuisEtFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_profiles, container, false)
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // delete the ItemClickSupport
+        val rec = view?.findViewById<RecyclerView>(R.id.profilesTabRec)
+        ItemClickSupport.removeFrom(rec)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,6 +61,12 @@ class FragmentProfiles : HuisEtFragment() {
             val intent = Intent(this.activity, EditProfileActivity::class.java)
             startActivity(intent)
         }
+
+        ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
+            val intent = Intent(this.activity, EditProfileActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
 }

@@ -14,6 +14,7 @@ import com.tobo.huiset.gui.activies.EditProfileActivity
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.ItemClickSupport
 import io.realm.Sort
 
 public class FragmentProducts : HuisEtFragment() {
@@ -22,6 +23,14 @@ public class FragmentProducts : HuisEtFragment() {
         val view = inflater.inflate(R.layout.fragment_products, container, false)
 
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // delete the ItemClickSupport
+        val rec = view?.findViewById<RecyclerView>(R.id.productsTabRec)
+        ItemClickSupport.removeFrom(rec)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,6 +59,11 @@ public class FragmentProducts : HuisEtFragment() {
 
         // opens EditProfileActivity when fab add_profile is clicked
         fab.setOnClickListener {
+            val intent = Intent(this.activity, EditProductActivity::class.java)
+            startActivity(intent)
+        }
+
+        ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
             val intent = Intent(this.activity, EditProductActivity::class.java)
             startActivity(intent)
         }
