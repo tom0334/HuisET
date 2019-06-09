@@ -1,5 +1,6 @@
 package com.tobo.huiset.gui.activities
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
@@ -12,7 +13,11 @@ import android.widget.RadioGroup
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.euroToCent
+import com.tobo.huiset.utils.extensions.toCurrencyString
+import com.tobo.huiset.utils.extensions.toNumberDecimal
+
 
 /**
  * Edit product
@@ -20,67 +25,133 @@ import com.tobo.huiset.utils.extensions.euroToCent
  */
 class EditProductActivity : HuisEtActivity() {
 
+    private var oldProduct : Product? = null
+    private var new : Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editproduct)
+
+        // reset old values of product is edited
+        val extras = intent.extras
+        if (extras != null) {
+            val oldId = extras.getString("PRODUCT_ID")
+            oldProduct = realm.where(Product::class.java).equalTo("id", oldId).findFirst()!!
+            findViewById<EditText>(R.id.name).setText(oldProduct!!.name)
+            findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
+
+            val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod)
+            if (oldProduct!!.show) {
+                showRadioGroup.check(R.id.radioShowProd)
+            }
+            else {
+                showRadioGroup.check(R.id.radioHideProd)
+            }
+
+            new = false
+        }
     }
 
     // create an action bar button
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.menu_editprofile, menu)
+        menuInflater.inflate(R.menu.menu_editprofile, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     // handle button activities
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.getItemId()
+        val id = item.itemId
 
         // product edit/add done
-        if (id == R.id.profiledone) {
-
-            val nameEditText = findViewById<EditText>(R.id.name)
-            val name = nameEditText.text.toString()
-
-            val priceEditText = findViewById<EditText>(R.id.price)
-            val priceString = priceEditText.text.toString()
-
-            if (!nameValidate(name, nameEditText) || !priceValidate(priceString, priceEditText)) {
-                return false
-            }
-            val price = priceString.euroToCent()
-
-            val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
-            var showBool = false
-            if (radioShowGroup == R.id.radioShowProd) {
-                showBool = true
-            }
-
-            realm.executeTransaction {
-                val product = Product.create(name, price, showBool)
-                realm.copyToRealm(product)
-            }
-            Toast.makeText(this, "Product $name of $price cents added, show $showBool", Toast.LENGTH_SHORT).show()
-            this.finish()
-
+        if (id == R.id.unitDone) {
+            doneClicked()
+        }
+        // product delete
+        if (id == R.id.unitDelete) {
+            deleteClicked()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
+    private fun deleteClicked() {
+        if (new) {
+            this.finish()
+            return
+        }
+
+        // if product isn't new, then ask "are you sure?
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
+            .setPositiveButton("verwijderen") { dialog, id ->
+                realm.executeTransaction {
+                    if (realm.where(Transaction::class.java).equalTo("productId", oldProduct!!.id).findFirst() == null) {
+                        // Actually delete the profile from the realm if it isn't involved in any transactions
+                        oldProduct!!.deleteFromRealm()
+                    } else {
+                        // fake delete profile from the realm
+                        oldProduct!!.isDeleted = true
+                    }
+                }
+                this.finish()
+            }
+            .setNegativeButton("annuleren") { dialog, id ->
+                // User cancelled the dialog, do nothing
+            }
+        // Create the AlertDialog object and return it
+        builder.create().show()
+    }
+
+    private fun doneClicked() {
+        val nameEditText = findViewById<EditText>(R.id.name)
+        val newName = nameEditText.text.toString()
+
+        val priceEditText = findViewById<EditText>(R.id.price)
+        val priceString = priceEditText.text.toString()
+
+        if (!nameValidate(newName, nameEditText) || !priceValidate(priceString, priceEditText)) {
+            return
+        }
+        val newPrice = priceString.euroToCent()
+
+        val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
+        var showBool = false
+        if (radioShowGroup == R.id.radioShowProd) {
+            showBool = true
+        }
+
+        realm.executeTransaction {
+            if (new) {
+                val product = Product.create(newName, newPrice, showBool)
+                realm.copyToRealm(product)
+            }
+            else {
+                oldProduct!!.name = newName
+                oldProduct!!.price = newPrice
+                oldProduct!!.show = showBool
+            }
+        }
+
+        Toast.makeText(this, "Product $newName of ${newPrice.toCurrencyString()} added/edited, shown $showBool", Toast.LENGTH_SHORT).show()
+        this.finish()
+    }
+
     /**
      * Validates the input price
-     * TODO: implement this function
      */
     private fun priceValidate(price: String, editText: EditText): Boolean {
         // empty fields are not accepted
-        println("$price")
-
         if (price == "") {
             editText.error = "Vul een prijs in"
             return false
         }
-
-        // format should be _,cc
+        // name is too long
+        val maxPriceLength = 8
+        if (price.split('.')[0].length > maxPriceLength) {
+            editText.error = "Er mogen niet meer dan $maxPriceLength voor de comma staan"
+            return false
+        }
+        // format should be _.cc
         if (price.contains('.')) {
             if (price.split('.')[1].length != 2) {
                 editText.error = "Er moeten 2 getallen achter de comma"
@@ -100,13 +171,18 @@ class EditProductActivity : HuisEtActivity() {
             editText.error = "Vul een naam in"
             return false
         }
-        // duplicate names are not accepted
-        if (realm.where(Product::class.java).equalTo("name", name).count() > 0) {
-            editText.error = "Naam bestaat al"
-            return false
+        // duplicate names are not accepted, except if the old product is deleted
+        if (realm.where(Product::class.java)
+                .equalTo("deleted", false)
+                .equalTo("name", name)
+                .count() > 0) {
+            if (new) {
+                editText.error = "Naam bestaat al"
+                return false
+            }
         }
         // name is too long
-        val maxNameLength = 12
+        val maxNameLength = 20
         if (name.length > maxNameLength) {
             editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
             return false

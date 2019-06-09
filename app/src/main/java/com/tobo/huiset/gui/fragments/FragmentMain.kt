@@ -3,21 +3,20 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
-import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
-import com.tobo.huiset.utils.extensions.getBeerProduct
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.utils.extensions.executeSafe
+import com.tobo.huiset.utils.extensions.getFirstProduct
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
@@ -29,8 +28,7 @@ class FragmentMain : HuisEtFragment() {
 
     private var transactionTimeRefreshHandler: Handler?  = null
 
-
-    val updateTransactionRecRunnable = object : Runnable {
+    private val updateTransactionRecRunnable = object : Runnable {
         override fun run() {
             updateTransactionRec(this)
         }
@@ -47,8 +45,7 @@ class FragmentMain : HuisEtFragment() {
 
     
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,7 +58,10 @@ class FragmentMain : HuisEtFragment() {
     }
 
     private fun setupProductRec(view: View) : RecyclerView {
-        val products = realm.where(Product::class.java).equalTo("show", true).findAll()
+        val products = realm.where(Product::class.java)
+            .equalTo("deleted", false)
+            .equalTo("show", true)
+            .findAll()
 
         // this sets up the recyclerview to show the products
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
@@ -70,8 +70,12 @@ class FragmentMain : HuisEtFragment() {
 
         ItemClickSupport.addTo(prodRec).setOnItemClickListener { prodRec, position, v ->
             realm.executeTransaction {
-                realm.where(Product::class.java).equalTo("selected", true).findAll().forEach {
-                    it.isSelected = false
+                realm.where(Product::class.java)
+                    .equalTo("deleted", false)
+                    .equalTo("selected", true)
+                    .findAll()
+                    .forEach {
+                        it.isSelected = false
                 }
                 products.get(position)?.isSelected = true
             }
@@ -101,14 +105,16 @@ class FragmentMain : HuisEtFragment() {
         return transActionRec
     }
 
-
     /**
      * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
      */
     private fun setupTurfRec(view: View, transitionRec:RecyclerView) {
         val columns = 2
 
-        val profiles = realm.where(Person::class.java).equalTo("show", true).findAll()
+        val profiles = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("show", true)
+            .findAll()
 
         val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
@@ -120,17 +126,26 @@ class FragmentMain : HuisEtFragment() {
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { recyclerView, position, v ->
             val person = profiles.get(position)
             if(person != null){
-                realm.executeTransaction {
-                    val selectedProduct = realm.where(Product::class.java).equalTo("selected", true).findFirst()
+                realm.executeSafe {
+                    val selectedProduct = realm.where(Product::class.java)
+                        .equalTo("deleted", false)
+                        .equalTo("selected", true)
+                        .findFirst()
                     val t = Transaction.create(person, selectedProduct, false)
-
-                    // select beer again
                     selectedProduct?.isSelected = false
-                    realm.getBeerProduct().isSelected = true
 
                     realm.copyToRealmOrUpdate(t)
                     person.addTransaction(t,realm)
                 }
+
+                realm.executeTransaction {
+                    val firstProd = realm.getFirstProduct()
+                    // select 1st product
+                    if (firstProd != null) {
+                        firstProd.isSelected = true
+                    }
+                }
+
                 //scroll to the top, because the item is added at the top
                 transitionRec.scrollToPosition(0)
             }

@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.extendables.HuisEtFragment
-import com.tobo.huiset.R
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import io.realm.Sort
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.tobo.huiset.R
+import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.gui.activities.EditProfileActivity
 
 
@@ -25,11 +26,24 @@ class FragmentProfiles : HuisEtFragment() {
         return view
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // delete the ItemClickSupport
+        val rec = view?.findViewById<RecyclerView>(R.id.profilesTabRec)
+        if (rec != null) {
+            ItemClickSupport.removeFrom(rec)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         //this sets up the recyclerview to show the persons
-        val persons = realm.where(Person::class.java).sort("balance", Sort.DESCENDING).findAll()
+        val persons = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .sort("balance", Sort.DESCENDING)
+            .findAll()
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
@@ -50,6 +64,14 @@ class FragmentProfiles : HuisEtFragment() {
         // opens EditProfileActivity when fab add_profile is clicked
         fab.setOnClickListener {
             val intent = Intent(this.activity, EditProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+        // opens EditProfileActivity on the correct profile if a profile is clicked
+        ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
+            val person = persons[position]
+            val intent = Intent(this.activity, EditProfileActivity::class.java)
+                .putExtra("PERSON_ID", person?.id)
             startActivity(intent)
         }
     }

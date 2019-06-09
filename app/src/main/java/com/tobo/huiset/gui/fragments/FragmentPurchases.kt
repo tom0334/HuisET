@@ -16,6 +16,7 @@ import com.tobo.huiset.utils.ItemClickSupport
 import io.realm.Sort
 import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.utils.extensions.executeSafe
+import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 
 
 class FragmentPurchases : HuisEtFragment() {
@@ -39,7 +40,11 @@ class FragmentPurchases : HuisEtFragment() {
     private fun initProfileRec(view:View){
         val pickUserRec = view.findViewById<RecyclerView>( R.id.pickUserRec)
 
-        val profiles = realm.where(Person::class.java).sort("balance", Sort.ASCENDING).findAll()
+        val profiles = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("show", true)
+            .sort("balance", Sort.ASCENDING)
+            .findAll()
 
         pickUserRec.adapter = PersonRecAdapter(context!!,profiles,realm,true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
@@ -53,7 +58,7 @@ class FragmentPurchases : HuisEtFragment() {
         val pickProductsRec = view.findViewById<RecyclerView>(R.id.pickProductsRec)
         pickProductsRec.visibility = View.VISIBLE
 
-        val products = realm.where(Product::class.java).findAll()
+        val products = realm.findAllCurrentProducts()
 
         // this sets up the recyclerview to show the persons
         pickProductsRec.adapter = ProductRecAdapter(this.context!!, products, realm, true)
@@ -61,8 +66,11 @@ class FragmentPurchases : HuisEtFragment() {
 
         ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { recyclerView, position, v ->
 
-            val person = realm.where(Person::class.java).equalTo("id", pickedPersonId).findFirst() ?: return@setOnItemClickListener
-            val product = products.get(position) ?:return@setOnItemClickListener
+            val person = realm.where(Person::class.java)
+                .equalTo("deleted", false)
+                .equalTo("id", pickedPersonId)
+                .findFirst() ?: return@setOnItemClickListener
+            val product = products!!.get(position) ?: return@setOnItemClickListener
 
             var doneTransaction:Transaction?= null
             realm.executeTransaction {
@@ -99,7 +107,10 @@ class FragmentPurchases : HuisEtFragment() {
             userLayout.visibility = View.VISIBLE
             productLayout.visibility = View.GONE
         }else{
-            val person = realm.where(Person::class.java).equalTo("id", pickedPersonId).findFirst()
+            val person = realm.where(Person::class.java)
+                .equalTo("deleted", false)
+                .equalTo("id", pickedPersonId)
+                .findFirst()
             val boughtWhatTv = view.findViewById<TextView>(R.id.whatHaveYouBoughtText)
             boughtWhatTv.text = "${person!!.name}, Wat heb je gekocht?"
             userLayout.visibility = View.GONE
