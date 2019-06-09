@@ -1,5 +1,6 @@
 package com.tobo.huiset.gui.activies
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
@@ -52,47 +53,74 @@ class EditProductActivity : HuisEtActivity() {
 
         // product edit/add done
         if (id == R.id.profiledone) {
-
-            val nameEditText = findViewById<EditText>(R.id.name)
-            val newName = nameEditText.text.toString()
-
-            val priceEditText = findViewById<EditText>(R.id.price)
-            val priceString = priceEditText.text.toString()
-
-            if (!nameValidate(newName, nameEditText) || !priceValidate(priceString, priceEditText)) {
-                return false
-            }
-            val newPrice = priceString.euroToCent()
-
-            val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
-            var showBool = false
-            if (radioShowGroup == R.id.radioShowProd) {
-                showBool = true
-            }
-
-            realm.executeTransaction {
-                if (new) {
-                    val product = Product.create(newName, newPrice, showBool)
-                    realm.copyToRealm(product)
-                }
-                else {
-                    oldProduct!!.name = newName
-                    oldProduct!!.price = newPrice
-                    oldProduct!!.isSelected = showBool
-                }
-            }
-
-            Toast.makeText(this, "Product $newName of $newPrice cents added, show $showBool", Toast.LENGTH_SHORT).show()
-            this.finish()
-
+            doneClicked()
+        }
+        if (id == R.id.profiledelete) {
+            deleteClicked()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
+    private fun deleteClicked() {
+        // if product isn't new, then ask "are you sure?
+        if (!new) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
+                .setPositiveButton("verwijderen") { dialog, id ->
+                    // Delete the product from the realm
+                    realm.executeTransaction {
+                        oldProduct!!.deleteFromRealm()
+                    }
+                    this.finish()
+                }
+                .setNegativeButton("annuleren") { dialog, id ->
+                    // User cancelled the dialog, do nothing
+                }
+            // Create the AlertDialog object and return it
+            builder.create().show()
+        }
+        else {
+            this.finish()
+        }
+    }
+
+    private fun doneClicked() {
+        val nameEditText = findViewById<EditText>(R.id.name)
+        val newName = nameEditText.text.toString()
+
+        val priceEditText = findViewById<EditText>(R.id.price)
+        val priceString = priceEditText.text.toString()
+
+        if (!nameValidate(newName, nameEditText) || !priceValidate(priceString, priceEditText)) {
+            return
+        }
+        val newPrice = priceString.euroToCent()
+
+        val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
+        var showBool = false
+        if (radioShowGroup == R.id.radioShowProd) {
+            showBool = true
+        }
+
+        realm.executeTransaction {
+            if (new) {
+                val product = Product.create(newName, newPrice, showBool)
+                realm.copyToRealm(product)
+            }
+            else {
+                oldProduct!!.name = newName
+                oldProduct!!.price = newPrice
+                oldProduct!!.show = showBool
+            }
+        }
+
+        Toast.makeText(this, "Product $newName of ${newPrice.toCurrencyString()} added/edited, shown $showBool", Toast.LENGTH_SHORT).show()
+        this.finish()
+    }
+
     /**
      * Validates the input price
-     * TODO: implement this function
      */
     private fun priceValidate(price: String, editText: EditText): Boolean {
         // empty fields are not accepted
@@ -100,7 +128,12 @@ class EditProductActivity : HuisEtActivity() {
             editText.error = "Vul een prijs in"
             return false
         }
-
+        // name is too long
+        val maxPriceLength = 8
+        if (price.split('.')[0].length > maxPriceLength) {
+            editText.error = "Er mogen niet meer dan $maxPriceLength voor de comma staan"
+            return false
+        }
         // format should be _.cc
         if (price.contains('.')) {
             if (price.split('.')[1].length != 2) {
@@ -129,7 +162,7 @@ class EditProductActivity : HuisEtActivity() {
             }
         }
         // name is too long
-        val maxNameLength = 12
+        val maxNameLength = 20
         if (name.length > maxNameLength) {
             editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
             return false

@@ -48,7 +48,17 @@ public class Product extends RealmObject {
         return id;
     }
 
-    public boolean isSelected() { return selected; }
+    public boolean getShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
