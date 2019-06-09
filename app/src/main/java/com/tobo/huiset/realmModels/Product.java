@@ -19,7 +19,6 @@ public class Product extends RealmObject {
 
     public Product() {}
 
-
     static public Product create(String name, int price, boolean show) {
         Product item = new Product();
         item.name = name;
@@ -29,13 +28,20 @@ public class Product extends RealmObject {
         return item;
     }
 
-
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getPrice() {
         return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getId() {

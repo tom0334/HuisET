@@ -35,3 +35,12 @@ fun String.euroToCent(): Int {
     }
     return result
 }
+
+fun Int.toNumberDecimal(): String {
+    val signed = if (this < 0) "-" else ""
+    val euros = Integer.toString(this / 100)
+    val abscents = Math.abs(this % 100)
+    var cents = if (abscents < 10) "0" else ""
+    cents += Integer.toString(abscents)
+    return "$signed$euros.$cents"
+}

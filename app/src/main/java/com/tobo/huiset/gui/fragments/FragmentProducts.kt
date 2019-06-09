@@ -64,7 +64,9 @@ public class FragmentProducts : HuisEtFragment() {
         }
 
         ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
+            val product = products[position]
             val intent = Intent(this.activity, EditProductActivity::class.java)
+                .putExtra("PRODUCT_ID", product?.id)
             startActivity(intent)
         }
     }

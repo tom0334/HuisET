@@ -2,7 +2,6 @@ package com.tobo.huiset.gui.activies
 
 import android.content.Context
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,7 +13,9 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.euroToCent
-import kotlinx.android.synthetic.main.activity_editproduct.*
+import com.tobo.huiset.utils.extensions.toCurrencyString
+import com.tobo.huiset.utils.extensions.toNumberDecimal
+
 
 /**
  * Edit product
@@ -22,9 +23,21 @@ import kotlinx.android.synthetic.main.activity_editproduct.*
  */
 class EditProductActivity : HuisEtActivity() {
 
+    private var oldProduct : Product? = null
+    private var new : Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editproduct)
+
+        val extras = intent.extras
+        if (extras != null) {
+            val oldId = extras.getString("PRODUCT_ID")
+            oldProduct = realm.where(Product::class.java).equalTo("id", oldId).findFirst()!!
+            findViewById<EditText>(R.id.name).setText(oldProduct!!.name)
+            findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
+            new = false
+        }
     }
 
     // create an action bar button
@@ -41,15 +54,15 @@ class EditProductActivity : HuisEtActivity() {
         if (id == R.id.profiledone) {
 
             val nameEditText = findViewById<EditText>(R.id.name)
-            val name = nameEditText.text.toString()
+            val newName = nameEditText.text.toString()
 
             val priceEditText = findViewById<EditText>(R.id.price)
             val priceString = priceEditText.text.toString()
 
-            if (!nameValidate(name, nameEditText) || !priceValidate(priceString, priceEditText)) {
+            if (!nameValidate(newName, nameEditText) || !priceValidate(priceString, priceEditText)) {
                 return false
             }
-            val price = priceString.euroToCent()
+            val newPrice = priceString.euroToCent()
 
             val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
             var showBool = false
@@ -58,10 +71,18 @@ class EditProductActivity : HuisEtActivity() {
             }
 
             realm.executeTransaction {
-                val product = Product.create(name, price, showBool)
-                realm.copyToRealm(product)
+                if (new) {
+                    val product = Product.create(newName, newPrice, showBool)
+                    realm.copyToRealm(product)
+                }
+                else {
+                    oldProduct!!.name = newName
+                    oldProduct!!.price = newPrice
+                    oldProduct!!.isSelected = showBool
+                }
             }
-            Toast.makeText(this, "Product $name of $price cents added, show $showBool", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this, "Product $newName of $newPrice cents added, show $showBool", Toast.LENGTH_SHORT).show()
             this.finish()
 
         }
@@ -75,14 +96,12 @@ class EditProductActivity : HuisEtActivity() {
      */
     private fun priceValidate(price: String, editText: EditText): Boolean {
         // empty fields are not accepted
-        println("$price")
-
         if (price == "") {
             editText.error = "Vul een prijs in"
             return false
         }
 
-        // format should be _,cc
+        // format should be _.cc
         if (price.contains('.')) {
             if (price.split('.')[1].length != 2) {
                 editText.error = "Er moeten 2 getallen achter de comma"
@@ -104,8 +123,10 @@ class EditProductActivity : HuisEtActivity() {
         }
         // duplicate names are not accepted
         if (realm.where(Product::class.java).equalTo("name", name).count() > 0) {
-            editText.error = "Naam bestaat al"
-            return false
+            if (new) {
+                editText.error = "Naam bestaat al"
+                return false
+            }
         }
         // name is too long
         val maxNameLength = 12
