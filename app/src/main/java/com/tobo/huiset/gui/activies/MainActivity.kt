@@ -7,7 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import FragmentMain
-import FragmentET
+import FragmentHistory
 import FragmentPurchases
 import FragmentProducts
 import FragmentProfiles
@@ -95,7 +95,7 @@ class MainActivity : HuisEtActivity() {
                 FragmentMain(),
                 FragmentPurchases(),
                 FragmentProducts(),
-                FragmentET(),
+                FragmentHistory(),
                 FragmentProfiles()
             )
             //currentFragIndex is 0 by default
