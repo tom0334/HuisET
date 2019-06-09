@@ -17,22 +17,32 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.getProductWithId
 import java.util.*
 import java.text.SimpleDateFormat
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
 
-
-public class FragmentHistory : HuisEtFragment() {
+class FragmentHistory : HuisEtFragment() {
 
     lateinit var historyAdapter:HistoryAdapter
     var lateTimePoint:Long = 0
     var earlyTimePoint:Long = 0
 
 
-    //24h in millis
-    var timeDiff = 86400000
+    val timeNames = arrayOf<CharSequence>( "1 uur", "8 uur", "1 Dag", "1 week", "1 maand","3 maanden", "Half jaar", "1 Jaar")
+
+    private val TIMEDIFF_ONE_HOUR = 0
+    private val TIMEDIFF_EIGHT_HOURS =1
+    private val TIMEDIFF_ONE_DAY = 2
+    private val TIMEDIFF_ONE_WEEK = 3
+    private val TIMEDIFF_ONE_MONTH = 4
+    private val TIMEDIFF_THREE_MONTHS = 5
+    private val TIMEDIFF_HALF_YEAR = 6
+    private val TIMEDIFF_YEAR = 7
+
+    private var timeDiffSelected:Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_history, container, false)
         return view
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,20 +53,43 @@ public class FragmentHistory : HuisEtFragment() {
 
 
         view.findViewById<Button>(R.id.historyGoBackwardsButton).setOnClickListener {
-            this.earlyTimePoint -= timeDiff
-            this.lateTimePoint-= timeDiff
+            this.lateTimePoint =  getAdvancedTime(lateTimePoint, backwards = true)
+            this.earlyTimePoint = getAdvancedTime(earlyTimePoint, backwards = true)
             updateHistory()
-            updateTimePointsText(view)
+            updateTimePointsText()
 
         }
 
         view.findViewById<Button>(R.id.historyGoFowardsButton).setOnClickListener {
-            this.earlyTimePoint += timeDiff
-            this.lateTimePoint+= timeDiff
+            this.lateTimePoint =  getAdvancedTime(lateTimePoint, backwards = false)
+            this.earlyTimePoint = getAdvancedTime(earlyTimePoint, backwards = false)
             updateHistory()
-            updateTimePointsText(view)
+            updateTimePointsText()
         }
+        view.findViewById<Button>(R.id.pickPeriodButton).setOnClickListener {
+            showPickPeriodDialog()
+        }
+    }
 
+    private fun showPickPeriodDialog(){
+
+        // Creating and Building the Dialog
+        val builder = AlertDialog.Builder(this.context!!)
+        builder.setTitle("Kies tijdperiode")
+
+
+        builder.setSingleChoiceItems(timeNames, timeDiffSelected,
+            DialogInterface.OnClickListener { dialog, item: Int ->
+                timeDiffSelected = item
+
+                lateTimePoint = System.currentTimeMillis()
+                earlyTimePoint = getAdvancedTime(lateTimePoint, true)
+
+                updateTimePointsText()
+                updateHistory()
+                dialog.dismiss()
+            })
+        builder.show()
     }
 
     private fun setupPersonRec(view:View){
@@ -118,11 +151,35 @@ public class FragmentHistory : HuisEtFragment() {
 
     private fun initTimePoints(view: View){
         lateTimePoint = System.currentTimeMillis()
-        earlyTimePoint = lateTimePoint!! - timeDiff
-        updateTimePointsText(view)
+        earlyTimePoint = getAdvancedTime(lateTimePoint, backwards = true)
+        updateTimePointsText()
     }
 
-    private fun updateTimePointsText(view: View) {
+
+    private fun getAdvancedTime(from:Long, backwards:Boolean): Long{
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = from
+
+        val multiplier = if(backwards) -1 else 1
+
+        when(timeDiffSelected){
+            TIMEDIFF_ONE_HOUR -> cal.add(Calendar.HOUR, multiplier * 1)
+            TIMEDIFF_EIGHT_HOURS -> cal.add(Calendar.HOUR, multiplier *8)
+            TIMEDIFF_ONE_DAY -> cal.add(Calendar.DAY_OF_YEAR, multiplier *1)
+            TIMEDIFF_ONE_WEEK -> cal.add(Calendar.WEEK_OF_YEAR, multiplier *1)
+            TIMEDIFF_ONE_MONTH ->  cal.add(Calendar.MONTH, multiplier *1)
+            TIMEDIFF_THREE_MONTHS ->  cal.add(Calendar.MONTH, multiplier *3)
+            TIMEDIFF_HALF_YEAR ->  cal.add(Calendar.MONTH, multiplier *6)
+            TIMEDIFF_YEAR -> cal.add(Calendar.YEAR, multiplier *1)
+        }
+        return cal.time.time
+    }
+
+
+
+
+    private fun updateTimePointsText() {
+        val view = this.view!!
         val timeFormat =  SimpleDateFormat("HH:mm")
         val dateFormat = SimpleDateFormat("dd-MM-yyyy")
 
@@ -131,6 +188,9 @@ public class FragmentHistory : HuisEtFragment() {
         val lateTimePointtime = view.findViewById<TextView>(R.id.lateTimePointTime)
         val earlyTimePointDay = view.findViewById<TextView>(R.id.earlyTimePointDate)
         val earlyTimePointTime = view.findViewById<TextView>(R.id.earlyTimePointTime)
+
+        val timeDifTv = view.findViewById<TextView>(R.id.timeDiffText)
+        timeDifTv.text = timeNames[timeDiffSelected]
 
         earlyTimePointDay.text = dateFormat.format(Date(earlyTimePoint!!))
         lateTimepointDay.text = dateFormat.format(Date(lateTimePoint!!))
