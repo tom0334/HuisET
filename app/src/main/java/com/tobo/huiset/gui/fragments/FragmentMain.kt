@@ -132,17 +132,20 @@ class FragmentMain : HuisEtFragment() {
                         .equalTo("selected", true)
                         .findFirst()
                     val t = Transaction.create(person, selectedProduct, false)
-
-                    val firstProd = realm.getFirstProduct()
-                    // select beer again
                     selectedProduct?.isSelected = false
-                    if (firstProd != null) {
-                        firstProd.isSelected = true
-                    }
 
                     realm.copyToRealmOrUpdate(t)
                     person.addTransaction(t,realm)
                 }
+
+                realm.executeTransaction {
+                    val firstProd = realm.getFirstProduct()
+                    // select 1st product
+                    if (firstProd != null) {
+                        firstProd.isSelected = true
+                    }
+                }
+
                 //scroll to the top, because the item is added at the top
                 transitionRec.scrollToPosition(0)
             }
