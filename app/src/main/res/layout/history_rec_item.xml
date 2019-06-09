@@ -11,7 +11,13 @@
         android:id="@+id/historyView_product_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        />
     <TextView
+        tools:text = "5"
         android:id="@+id/historyView_productAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
