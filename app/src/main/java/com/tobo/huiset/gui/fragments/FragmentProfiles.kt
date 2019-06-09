@@ -12,8 +12,8 @@ import com.tobo.huiset.realmModels.Person
 import io.realm.Sort
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.activies.EditProfileActivity
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.gui.activities.EditProfileActivity
 
 
 /**
