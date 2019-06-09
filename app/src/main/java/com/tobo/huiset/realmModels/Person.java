@@ -40,7 +40,7 @@ public class Person extends RealmObject {
 
 
     public void addTransaction(Transaction t, Realm realm){
-        int price =  t.getProduct(realm).getPrice();
+        int price =  t.getPrice();
         if(t.isBuy()){
             this.balance += price;
         }else{
@@ -49,7 +49,7 @@ public class Person extends RealmObject {
     }
 
     public void undoTransaction(Transaction t, Realm realm) {
-        int price =  t.getProduct(realm).getPrice();
+        int price =  t.getPrice();
         if(t.isBuy()){
             this.balance -= price;
         }else{

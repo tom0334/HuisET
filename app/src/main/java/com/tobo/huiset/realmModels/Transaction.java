@@ -14,6 +14,7 @@ public class Transaction extends RealmObject {
     private long time = System.currentTimeMillis();
     private String personId;
     private String productId;
+    private int price;
 
     private boolean buy;
 
@@ -24,6 +25,7 @@ public class Transaction extends RealmObject {
         t.personId = person.getId();
         t.productId = product.getId();
         t.buy = buy;
+        t.price = product.getPrice();
         return t;
     }
 
@@ -58,6 +60,10 @@ public class Transaction extends RealmObject {
             return yearsAgo + " jaar\ngeleden";
         }
 
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public String getPersonId() {

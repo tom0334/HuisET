@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.extensions.toCurrencyString
 
-data class HistoryItem(val product:Product,val amount: Int)
+data class HistoryItem(val product:Product,val amount: Int, val price: Int)
 
 
 class HistoryAdapter(val items : MutableList<HistoryItem>, val context: Context) : RecyclerView.Adapter<HistoryViewholder>() {
@@ -22,6 +23,7 @@ class HistoryAdapter(val items : MutableList<HistoryItem>, val context: Context)
         val item = items[position]
         holder.amountTv.text = item.amount.toString()
         holder.productNameTv.text = item.product.name
+        holder.priceTv.text = item.price.toCurrencyString()
     }
 
     // Gets the number of animals in the list
@@ -34,4 +36,5 @@ class HistoryAdapter(val items : MutableList<HistoryItem>, val context: Context)
 class HistoryViewholder (view: View) : RecyclerView.ViewHolder(view) {
     val productNameTv = view.findViewById<TextView>(R.id.historyView_product_name)
     val amountTv = view.findViewById<TextView>(R.id.historyView_productAmount)
+    val priceTv = view.findViewById<TextView>(R.id.historyView_total_price)
 }
