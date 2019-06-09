@@ -19,6 +19,7 @@
         >
 
         <TextView
+            android:textColor="@android:color/white"
             android:id="@+id/productMainRecItem_name"
             android:fontFamily="sans-serif-medium"
             android:textSize="16sp"
@@ -30,6 +31,7 @@
             />
 
         <TextView
+            android:textColor="@android:color/white"
             android:id="@+id/productMainRecItem_price"
             android:gravity="center_vertical"
             tools:text ="€4.00"

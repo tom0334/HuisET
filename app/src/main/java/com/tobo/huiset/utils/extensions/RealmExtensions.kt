@@ -6,6 +6,7 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import io.realm.Realm
+import io.realm.RealmResults
 import java.lang.Exception
 
 fun Realm.getBeerProduct() : Product{
@@ -16,6 +17,12 @@ fun Realm.getBeerProduct() : Product{
 fun Realm.getCrateProduct() : Product{
     return this.where(HuisETSettings::class.java).findFirst()!!.beerProduct
 }
+
+fun Realm.getProductWithId(productId: String): Product? {
+    return this.where(Product::class.java).equalTo("id", productId).findFirst()
+}
+
+
 
 
 fun Realm.executeSafe(transaction: (Realm) -> Unit){

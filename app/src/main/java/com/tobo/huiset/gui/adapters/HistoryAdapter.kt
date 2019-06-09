@@ -12,7 +12,7 @@ import com.tobo.huiset.realmModels.Product
 data class HistoryItem(val product:Product,val amount: Int)
 
 
-class HistoryAdapter(val items : MutableList<HistoryItem>, val context: Context) : RecyclerView.Adapter<HistoryViewholder>() {
+class HistoryAdapter(var items : List<HistoryItem>, val context: Context) : RecyclerView.Adapter<HistoryViewholder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewholder {
         return HistoryViewholder(LayoutInflater.from(context).inflate(R.layout.history_rec_item, parent, false))
