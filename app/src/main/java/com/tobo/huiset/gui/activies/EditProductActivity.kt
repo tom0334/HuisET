@@ -31,31 +31,42 @@ class EditProductActivity : HuisEtActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editproduct)
 
+        // reset old values of product is edited
         val extras = intent.extras
         if (extras != null) {
             val oldId = extras.getString("PRODUCT_ID")
             oldProduct = realm.where(Product::class.java).equalTo("id", oldId).findFirst()!!
             findViewById<EditText>(R.id.name).setText(oldProduct!!.name)
             findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
+
+            val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod)
+            if (oldProduct!!.show) {
+                showRadioGroup.check(R.id.radioShowProd)
+            }
+            else {
+                showRadioGroup.check(R.id.radioHideProd)
+            }
+
             new = false
         }
     }
 
     // create an action bar button
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.menu_editprofile, menu)
+        menuInflater.inflate(R.menu.menu_editprofile, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     // handle button activities
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.getItemId()
+        val id = item.itemId
 
         // product edit/add done
-        if (id == R.id.profiledone) {
+        if (id == R.id.unitDone) {
             doneClicked()
         }
-        if (id == R.id.profiledelete) {
+        // product delete
+        if (id == R.id.unitDelete) {
             deleteClicked()
         }
 

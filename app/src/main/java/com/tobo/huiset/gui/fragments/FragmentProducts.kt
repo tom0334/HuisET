@@ -63,6 +63,7 @@ public class FragmentProducts : HuisEtFragment() {
             startActivity(intent)
         }
 
+        // opens EditProductActivity on the correct product if a product is clicked
         ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
             val product = products[position]
             val intent = Intent(this.activity, EditProductActivity::class.java)

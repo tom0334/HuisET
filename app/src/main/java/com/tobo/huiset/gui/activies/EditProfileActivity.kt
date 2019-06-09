@@ -1,5 +1,6 @@
 package com.tobo.huiset.gui.activies
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
@@ -19,55 +20,124 @@ import com.tobo.huiset.R
  */
 class EditProfileActivity : HuisEtActivity() {
 
+    private var oldProfile : Person? = null
+    private var new : Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editprofile)
+
+        // reset old values of product is edited
+        val extras = intent.extras
+        if (extras != null) {
+            val oldId = extras.getString("PERSON_ID")
+            oldProfile = realm.where(Person::class.java).equalTo("id", oldId).findFirst()!!
+            findViewById<EditText>(R.id.name).setText(oldProfile!!.name)
+
+            val guestRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_guest)
+            if (oldProfile!!.isGuest) {
+                guestRadioGroup.check(R.id.radioGuest)
+            }
+            else {
+                guestRadioGroup.check(R.id.radioRoommate)
+            }
+
+            val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showPerson)
+            if (oldProfile!!.isShow) {
+                showRadioGroup.check(R.id.radioShowPerson)
+            }
+            else {
+                showRadioGroup.check(R.id.radioHidePerson)
+            }
+
+            new = false
+        }
+
     }
 
     // create an action bar button
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.menu_editprofile, menu);
+        menuInflater.inflate(R.menu.menu_editprofile, menu)
+
         return super.onCreateOptionsMenu(menu)
     }
 
     // handle button activities
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.getItemId()
+        val id = item.itemId
 
-        // profile edit/add done
-        if (id == R.id.profiledone) {
-
-            val nameEditText= findViewById<EditText>(R.id.name)
-            val name = nameEditText.text.toString()
-
-            if (!nameValidate(name, nameEditText)) {
-                return false
-            }
-
-            val radioGuestGroup = findViewById<RadioGroup>(R.id.radiogroup_guest).checkedRadioButtonId
-            var guestBool = false
-            if (radioGuestGroup == R.id.radioGuest) {
-                guestBool = true
-            }
-
-            val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_show).checkedRadioButtonId
-            var showBool = false
-            if (radioShowGroup == R.id.radioShow) {
-                showBool = true
-            }
-
-            realm.executeTransaction {
-                val person = Person.create(name, "#0000ff", guestBool, showBool)
-                realm.copyToRealm(person)
-            }
-
-            Toast.makeText(this, "Profile $name added, guest $guestBool, show $showBool", Toast.LENGTH_SHORT).show()
-
-            this.finish()
+        // product edit/add done
+        if (id == R.id.unitDone) {
+            doneClicked()
+        }
+        if (id == R.id.unitDelete) {
+            deleteClicked()
         }
 
         return super.onOptionsItemSelected(item)
     }
+
+    private fun deleteClicked() {
+        // if profile isn't new, then ask "are you sure?
+        if (!new) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
+                .setPositiveButton("verwijderen") { dialog, id ->
+                    // Delete the profile from the realm
+                    realm.executeTransaction {
+                        oldProfile!!.deleteFromRealm()
+                    }
+                    this.finish()
+                }
+                .setNegativeButton("annuleren") { dialog, id ->
+                    // User cancelled the dialog, do nothing
+                }
+            // Create the AlertDialog object and return it
+            builder.create().show()
+        }
+        else {
+            this.finish()
+        }
+    }
+
+    private fun doneClicked() {
+        // profile edit/add done
+        val nameEditText= findViewById<EditText>(R.id.name)
+        val newName = nameEditText.text.toString()
+
+        if (!nameValidate(newName, nameEditText)) {
+            return
+        }
+
+        val radioGuestGroup = findViewById<RadioGroup>(R.id.radiogroup_guest).checkedRadioButtonId
+        var guestBool = false
+        if (radioGuestGroup == R.id.radioGuest) {
+            guestBool = true
+        }
+
+        val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showPerson).checkedRadioButtonId
+        var showBool = false
+        if (radioShowGroup == R.id.radioShowPerson) {
+            showBool = true
+        }
+
+        realm.executeTransaction {
+            val newColorString = "#0000ff"
+            if (new) {
+                val person = Person.create(newName, newColorString, guestBool, showBool)
+                realm.copyToRealm(person)
+            }
+            else {
+                oldProfile!!.name = newName
+                oldProfile!!.color = newColorString
+                oldProfile!!.isGuest = guestBool
+                oldProfile!!.isShow = showBool
+            }
+        }
+
+        Toast.makeText(this, "Profile $newName added/edited, guest $guestBool, show $showBool", Toast.LENGTH_SHORT).show()
+
+        this.finish()    }
 
     /**
      * Validates the input name
@@ -80,8 +150,10 @@ class EditProfileActivity : HuisEtActivity() {
         }
         // duplicate names are not accepted
         if (realm.where(Person::class.java).equalTo("name", name).count() > 0) {
-            editText.error = "Naam bestaat al"
-            return false
+            if (new) {
+                editText.error = "Naam bestaat al"
+                return false
+            }
         }
         // name is too long
         val maxNameLength = 12

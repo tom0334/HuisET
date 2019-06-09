@@ -16,6 +16,8 @@ public class Product extends RealmObject {
     private int price;
     private boolean show;
     private boolean selected = false;
+    //TODO: implement deleted functionality
+    private boolean deleted = false;
 
     public Product() {}
 
@@ -62,5 +64,13 @@ public class Product extends RealmObject {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

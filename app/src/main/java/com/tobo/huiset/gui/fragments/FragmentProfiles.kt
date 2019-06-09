@@ -62,11 +62,13 @@ class FragmentProfiles : HuisEtFragment() {
             startActivity(intent)
         }
 
+        // opens EditProfileActivity on the correct profile if a profile is clicked
         ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
+            val person = persons[position]
             val intent = Intent(this.activity, EditProfileActivity::class.java)
+                .putExtra("PERSON_ID", person?.id)
             startActivity(intent)
         }
-
     }
 
 }
