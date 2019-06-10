@@ -27,13 +27,17 @@ class FragmentPurchases : HuisEtFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_purchases, container, false)
         return view
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
         initProducsRec(view)
+    }
+
+    override fun onTabReactivated(){
+        // this resets the chosen person to none, putting you back to the pick person screen
+        setPersonAndUpdate(null)
     }
 
     private fun initProfileRec(view: View) {
