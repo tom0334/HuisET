@@ -47,6 +47,11 @@ class FragmentHistory : HuisEtFragment() {
         return view
     }
 
+    override fun onTabReactivated(){
+        initTimePoints(view!!)
+        updateHistory()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initTimePoints(view)

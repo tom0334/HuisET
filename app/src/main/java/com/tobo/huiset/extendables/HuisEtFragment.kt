@@ -21,4 +21,10 @@ abstract class HuisEtFragment : Fragment() {
         if (this.activity == null) throw Exception("HuisEtFragment: Error: tried to access realm before activity was attached!")
         (this.activity as HuisEtActivity).realm
     }
+
+    /**
+     * Does nothing by default, but can be overridden by subclasses to update data for example.
+     */
+    open fun onTabReactivated(){
+    }
 }
