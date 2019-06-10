@@ -84,7 +84,7 @@ class EditProfileActivity : HuisEtActivity() {
         // if profile isn't new, then ask "are you sure?
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
-            .setPositiveButton("verwijderen") { dialog, id ->
+            .setPositiveButton("verwijderen") { _, _ ->
                 realm.executeTransaction {
                     if (realm.where(Transaction::class.java).equalTo("personId", oldProfile!!.id).findFirst() == null) {
                         // Actually delete the product from the realm if it isn't involved in any transactions
@@ -96,7 +96,7 @@ class EditProfileActivity : HuisEtActivity() {
                 }
                 this.finish()
             }
-            .setNegativeButton("annuleren") { dialog, id ->
+            .setNegativeButton("annuleren") { _, _ ->
                 // User cancelled the dialog, do nothing
             }
         // Create the AlertDialog object and return it
@@ -172,6 +172,10 @@ class EditProfileActivity : HuisEtActivity() {
         return true
     }
 
+    /**
+     * Hides keyboard when something else is clicked
+     * param view is needed
+     */
     fun hideKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)

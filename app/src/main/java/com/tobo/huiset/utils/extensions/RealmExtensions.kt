@@ -1,10 +1,8 @@
 package com.tobo.huiset.utils.extensions
 
 import android.util.Log
-import com.tobo.huiset.realmModels.HuisETSettings
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
-import com.tobo.huiset.realmModels.Transaction
 import io.realm.Realm
 import io.realm.RealmResults
 import java.lang.Exception

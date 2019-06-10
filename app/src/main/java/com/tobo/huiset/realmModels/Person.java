@@ -1,12 +1,10 @@
 package com.tobo.huiset.realmModels;
 
-import io.realm.Realm;
 import io.realm.RealmObject;
-
-import java.util.UUID;
-
 import io.realm.annotations.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 public class Person extends RealmObject {
 
@@ -43,7 +41,7 @@ public class Person extends RealmObject {
     }
 
 
-    public void addTransaction(Transaction t, Realm realm) {
+    public void addTransaction(Transaction t) {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance += price;
@@ -52,7 +50,7 @@ public class Person extends RealmObject {
         }
     }
 
-    public void undoTransaction(Transaction t, Realm realm) {
+    public void undoTransaction(Transaction t) {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance -= price;

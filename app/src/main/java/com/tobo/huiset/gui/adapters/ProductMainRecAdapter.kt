@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
-import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 
@@ -21,7 +20,6 @@ import io.realm.RealmResults
 class ProductMainRecAdapter(
     val context: Context,
     data: RealmResults<Product>?,
-    val realmInstance: Realm,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Product, ProductMainRecAdapter.ProductMainViewHolder>(data, autoUpdate) {
 
