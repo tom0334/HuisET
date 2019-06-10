@@ -18,8 +18,12 @@ import io.realm.RealmResults
  * Shows Transactions in a recyclerview. These should be updated automatically when the objects are changed in realm
  *
  */
-class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction>?, val realmInstance: Realm, autoUpdate: Boolean)
-    : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(data, autoUpdate) {
+class TransactionRecAdapter(
+    val context: Context,
+    data: RealmResults<Transaction>?,
+    val realmInstance: Realm,
+    autoUpdate: Boolean
+) : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(data, autoUpdate) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -30,7 +34,7 @@ class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val trans = data?.get(position) ?: return
 
-        val person  = trans.getPerson(realmInstance)
+        val person = trans.getPerson(realmInstance)
 
         holder.nameTv.text = person?.name
         holder.productTv.text = trans.getProduct(realmInstance).name
@@ -50,7 +54,7 @@ class TransactionRecAdapter(val context: Context, data: RealmResults<Transaction
         return if (data == null) 0 else data!!.size
     }
 
-    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.main_transactionRec_name)
         val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)
         val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)

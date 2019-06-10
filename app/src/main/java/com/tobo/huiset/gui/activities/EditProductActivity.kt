@@ -25,8 +25,8 @@ import com.tobo.huiset.utils.extensions.toNumberDecimal
  */
 class EditProductActivity : HuisEtActivity() {
 
-    private var oldProduct : Product? = null
-    private var new : Boolean = true
+    private var oldProduct: Product? = null
+    private var new: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +43,7 @@ class EditProductActivity : HuisEtActivity() {
             val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod)
             if (oldProduct!!.show) {
                 showRadioGroup.check(R.id.radioShowProd)
-            }
-            else {
+            } else {
                 showRadioGroup.check(R.id.radioHideProd)
             }
 
@@ -85,7 +84,11 @@ class EditProductActivity : HuisEtActivity() {
         builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { dialog, id ->
                 realm.executeTransaction {
-                    if (realm.where(Transaction::class.java).equalTo("productId", oldProduct!!.id).findFirst() == null) {
+                    if (realm.where(Transaction::class.java).equalTo(
+                            "productId",
+                            oldProduct!!.id
+                        ).findFirst() == null
+                    ) {
                         // Actually delete the profile from the realm if it isn't involved in any transactions
                         oldProduct!!.deleteFromRealm()
                     } else {
@@ -124,15 +127,18 @@ class EditProductActivity : HuisEtActivity() {
             if (new) {
                 val product = Product.create(newName, newPrice, showBool)
                 realm.copyToRealm(product)
-            }
-            else {
+            } else {
                 oldProduct!!.name = newName
                 oldProduct!!.price = newPrice
                 oldProduct!!.show = showBool
             }
         }
 
-        Toast.makeText(this, "Product $newName of ${newPrice.toCurrencyString()} added/edited, shown $showBool", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this,
+            "Product $newName of ${newPrice.toCurrencyString()} added/edited, shown $showBool",
+            Toast.LENGTH_SHORT
+        ).show()
         this.finish()
     }
 
@@ -175,7 +181,8 @@ class EditProductActivity : HuisEtActivity() {
         if (realm.where(Product::class.java)
                 .equalTo("deleted", false)
                 .equalTo("name", name)
-                .count() > 0) {
+                .count() > 0
+        ) {
             if (new) {
                 editText.error = "Naam bestaat al"
                 return false

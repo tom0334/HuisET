@@ -47,7 +47,7 @@ class FragmentProfiles : HuisEtFragment() {
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
-        rec.adapter = PersonRecAdapter(this.context!!, persons,realm, true)
+        rec.adapter = PersonRecAdapter(this.context!!, persons, realm, true)
         rec.layoutManager = LinearLayoutManager(this.context)
         val fab = view.findViewById<FloatingActionButton>(R.id.add_profile)
 

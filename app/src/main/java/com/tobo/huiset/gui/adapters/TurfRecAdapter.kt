@@ -18,9 +18,8 @@ import io.realm.RealmResults
  * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
  *
  */
-class TurfRecAdapter(val context: Context, data: RealmResults<Person>?, val realmInstance: Realm, autoUpdate: Boolean)
-    : RealmRecyclerViewAdapter<Person, TurfRecAdapter.TurfRecViewHolder>(data, autoUpdate) {
-
+class TurfRecAdapter(val context: Context, data: RealmResults<Person>?, val realmInstance: Realm, autoUpdate: Boolean) :
+    RealmRecyclerViewAdapter<Person, TurfRecAdapter.TurfRecViewHolder>(data, autoUpdate) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TurfRecViewHolder {
@@ -41,7 +40,7 @@ class TurfRecAdapter(val context: Context, data: RealmResults<Person>?, val real
         return if (data == null) 0 else data!!.size
     }
 
-    class TurfRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class TurfRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.turfRecItem_name)
         val balanceTv = itemView.findViewById<TextView>(R.id.turfRecItem_balance)
     }

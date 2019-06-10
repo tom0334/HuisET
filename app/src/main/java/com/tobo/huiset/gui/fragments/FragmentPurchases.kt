@@ -22,7 +22,6 @@ import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 class FragmentPurchases : HuisEtFragment() {
 
 
-
     var pickedPersonId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,8 +36,8 @@ class FragmentPurchases : HuisEtFragment() {
         initProducsRec(view)
     }
 
-    private fun initProfileRec(view:View){
-        val pickUserRec = view.findViewById<RecyclerView>( R.id.pickUserRec)
+    private fun initProfileRec(view: View) {
+        val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
 
         val profiles = realm.where(Person::class.java)
             .equalTo("deleted", false)
@@ -46,7 +45,7 @@ class FragmentPurchases : HuisEtFragment() {
             .sort("balance", Sort.ASCENDING)
             .findAll()
 
-        pickUserRec.adapter = PersonRecAdapter(context!!,profiles,realm,true)
+        pickUserRec.adapter = PersonRecAdapter(context!!, profiles, realm, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
 
         ItemClickSupport.addTo(pickUserRec).setOnItemClickListener { recyclerView, position, v ->
@@ -54,7 +53,7 @@ class FragmentPurchases : HuisEtFragment() {
         }
     }
 
-    private fun initProducsRec(view:View){
+    private fun initProducsRec(view: View) {
         val pickProductsRec = view.findViewById<RecyclerView>(R.id.pickProductsRec)
         pickProductsRec.visibility = View.VISIBLE
 
@@ -72,9 +71,9 @@ class FragmentPurchases : HuisEtFragment() {
                 .findFirst() ?: return@setOnItemClickListener
             val product = products!!.get(position) ?: return@setOnItemClickListener
 
-            var doneTransaction:Transaction?= null
+            var doneTransaction: Transaction? = null
             realm.executeTransaction {
-                val trans = Transaction.create(person,product,true)
+                val trans = Transaction.create(person, product, true)
                 person.addTransaction(trans, realm)
                 doneTransaction = realm.copyToRealmOrUpdate(trans)
 
@@ -95,18 +94,17 @@ class FragmentPurchases : HuisEtFragment() {
     }
 
 
-
-    fun setPersonAndUpdate(newPickedId:String?){
+    fun setPersonAndUpdate(newPickedId: String?) {
         this.pickedPersonId = newPickedId
         val view = this.view ?: return
 
         val userLayout = view.findViewById<View>(R.id.pickUserLayout)
         val productLayout = view.findViewById<View>(R.id.pickProductLayout)
 
-        if(pickedPersonId == null){
+        if (pickedPersonId == null) {
             userLayout.visibility = View.VISIBLE
             productLayout.visibility = View.GONE
-        }else{
+        } else {
             val person = realm.where(Person::class.java)
                 .equalTo("deleted", false)
                 .equalTo("id", pickedPersonId)
@@ -123,8 +121,6 @@ class FragmentPurchases : HuisEtFragment() {
         super.onResume()
         setPersonAndUpdate(null)
     }
-
-
 
 
 }

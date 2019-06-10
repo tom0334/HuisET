@@ -9,7 +9,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import java.lang.Exception
 
-fun Realm.getFirstProduct() : Product? {
+fun Realm.getFirstProduct(): Product? {
     return this.where(Product::class.java)
         .equalTo("deleted", false)
         .equalTo("show", true)
@@ -21,13 +21,11 @@ fun Realm.getProductWithId(productId: String): Product? {
 }
 
 
-
-
-fun Realm.executeSafe(transaction: (Realm) -> Unit){
-    try{
+fun Realm.executeSafe(transaction: (Realm) -> Unit) {
+    try {
         this.executeTransaction(transaction)
-    }catch (e:Exception){
-        Log.e("REALMTRANSACTION", "RealmTransaction failed",e)
+    } catch (e: Exception) {
+        Log.e("REALMTRANSACTION", "RealmTransaction failed", e)
     }
 
 }

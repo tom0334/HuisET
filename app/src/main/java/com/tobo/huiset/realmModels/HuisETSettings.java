@@ -7,9 +7,10 @@ public class HuisETSettings extends RealmObject {
     private Product beerProduct;
     private Product crateProduct;
 
-    public HuisETSettings(){}
+    public HuisETSettings() {
+    }
 
-    public static HuisETSettings create(Product beerProduct, Product crateProduct ){
+    public static HuisETSettings create(Product beerProduct, Product crateProduct) {
         HuisETSettings settings = new HuisETSettings();
         settings.beerProduct = beerProduct;
         settings.crateProduct = crateProduct;

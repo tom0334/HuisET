@@ -16,7 +16,7 @@ import io.realm.Realm
 abstract class HuisEtActivity : AppCompatActivity() {
 
     //by lazy only creates it when needed, then keeps the same object
-     val realm:Realm by lazy { Realm.getDefaultInstance() }
+    val realm: Realm by lazy { Realm.getDefaultInstance() }
 
     override fun onDestroy() {
         super.onDestroy()

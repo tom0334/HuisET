@@ -18,8 +18,12 @@ import io.realm.RealmResults
 /**
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
  */
-class ProductMainRecAdapter(val context: Context, data: RealmResults<Product>?, val realmInstance: Realm, autoUpdate: Boolean)
-    : RealmRecyclerViewAdapter<Product, ProductMainRecAdapter.ProductMainViewHolder>(data, autoUpdate) {
+class ProductMainRecAdapter(
+    val context: Context,
+    data: RealmResults<Product>?,
+    val realmInstance: Realm,
+    autoUpdate: Boolean
+) : RealmRecyclerViewAdapter<Product, ProductMainRecAdapter.ProductMainViewHolder>(data, autoUpdate) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductMainViewHolder {
@@ -41,7 +45,7 @@ class ProductMainRecAdapter(val context: Context, data: RealmResults<Product>?, 
         return if (data == null) 0 else data!!.size
     }
 
-    class ProductMainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class ProductMainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val card: CardView = itemView.findViewById(R.id.productMainRecItem)
         val nameTv: TextView = itemView.findViewById(R.id.productMainRecItem_name)
         val priceTv: TextView = itemView.findViewById(R.id.productMainRecItem_price)

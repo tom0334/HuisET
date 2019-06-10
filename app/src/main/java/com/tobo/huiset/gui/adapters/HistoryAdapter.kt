@@ -10,10 +10,11 @@ import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
-data class HistoryItem(val product:Product,val amount: Int, val price: Int)
+data class HistoryItem(val product: Product, val amount: Int, val price: Int)
 
 
-class HistoryAdapter(val items : MutableList<HistoryItem>, val context: Context) : RecyclerView.Adapter<HistoryViewholder>() {
+class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) :
+    RecyclerView.Adapter<HistoryViewholder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewholder {
         return HistoryViewholder(LayoutInflater.from(context).inflate(R.layout.history_rec_item, parent, false))
@@ -33,7 +34,7 @@ class HistoryAdapter(val items : MutableList<HistoryItem>, val context: Context)
 
 }
 
-class HistoryViewholder (view: View) : RecyclerView.ViewHolder(view) {
+class HistoryViewholder(view: View) : RecyclerView.ViewHolder(view) {
     val productNameTv = view.findViewById<TextView>(R.id.historyView_product_name)
     val amountTv = view.findViewById<TextView>(R.id.historyView_productAmount)
     val priceTv = view.findViewById<TextView>(R.id.historyView_total_price)
