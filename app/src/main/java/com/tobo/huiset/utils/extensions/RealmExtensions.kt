@@ -9,13 +9,11 @@ import io.realm.Realm
 import io.realm.RealmResults
 import java.lang.Exception
 
-fun Realm.getBeerProduct() : Product{
-    return this.where(HuisETSettings::class.java).findFirst()!!.beerProduct
-
-}
-
-fun Realm.getCrateProduct() : Product{
-    return this.where(HuisETSettings::class.java).findFirst()!!.beerProduct
+fun Realm.getFirstProduct() : Product? {
+    return this.where(Product::class.java)
+        .equalTo("deleted", false)
+        .equalTo("show", true)
+        .findFirst()
 }
 
 fun Realm.getProductWithId(productId: String): Product? {
@@ -34,3 +32,10 @@ fun Realm.executeSafe(transaction: (Realm) -> Unit){
 
 }
 
+fun Realm.findAllCurrentProducts(): RealmResults<Product>? {
+    return this.where(Product::class.java).equalTo("deleted", false).findAll()
+}
+
+fun Realm.findAllCurrentPersons(): RealmResults<Person>? {
+    return this.where(Person::class.java).equalTo("deleted", false).findAll()
+}

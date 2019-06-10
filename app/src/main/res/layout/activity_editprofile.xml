@@ -31,6 +31,13 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioRoommate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Huisgenoot" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/radioGuest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,24 +45,17 @@
             android:checked="true"
             android:text="Gast" />
 
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/radioRoommate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Huisgenoot" />
-
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radiogroup_show"
+        android:id="@+id/radiogroup_showPerson"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/radioShow"
+            android:id="@+id/radioShowPerson"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,7 +63,7 @@
             android:text="Tonen" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/radioHide"
+            android:id="@+id/radioHidePerson"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

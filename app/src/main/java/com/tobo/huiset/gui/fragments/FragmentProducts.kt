@@ -9,12 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.activies.EditProductActivity
-import com.tobo.huiset.gui.activies.EditProfileActivity
-import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
+import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
-import com.tobo.huiset.realmModels.Product
-import io.realm.Sort
+import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 
 public class FragmentProducts : HuisEtFragment() {
 
@@ -24,10 +22,20 @@ public class FragmentProducts : HuisEtFragment() {
         return view
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // delete the ItemClickSupport
+        val rec = view?.findViewById<RecyclerView>(R.id.productsTabRec)
+        if (rec != null) {
+            ItemClickSupport.removeFrom(rec)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val products = realm.where(Product::class.java).findAll()
+        val products = realm.findAllCurrentProducts()
 
         // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)
@@ -51,6 +59,14 @@ public class FragmentProducts : HuisEtFragment() {
         // opens EditProfileActivity when fab add_profile is clicked
         fab.setOnClickListener {
             val intent = Intent(this.activity, EditProductActivity::class.java)
+            startActivity(intent)
+        }
+
+        // opens EditProductActivity on the correct product if a product is clicked
+        ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
+            val product = products!![position]
+            val intent = Intent(this.activity, EditProductActivity::class.java)
+                .putExtra("PRODUCT_ID", product?.id)
             startActivity(intent)
         }
     }

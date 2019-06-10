@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".gui.activities.SettingsActivity">
+    tools:context=".gui.activities.StatsActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:background="@color/primaryColor"
+        android:background="@color/primaryLightColor"
         android:layout_height="48dp"
         android:layout_width="48dp"
-        android:src="@drawable/round_settings_white_48" />
+        android:src="@drawable/baseline_timeline_white_48"/>
 
 </LinearLayout>
