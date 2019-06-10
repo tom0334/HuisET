@@ -125,9 +125,11 @@ class FragmentHistory : HuisEtFragment() {
     private fun updateHistory() {
         val newData = findHistoryItems()
         val historyRec = view!!.findViewById<RecyclerView>(R.id.historyRecyclerView)
-        val noDataView = view!!.findViewById<View>(R.id.history_nodata_view)
 
+        //the views to show if there is no data
+        val noDataView = view!!.findViewById<View>(R.id.history_nodata_view)
         val noDataTextView = view!!.findViewById<TextView>(R.id.text_nothing_turfed)
+
         this.historyAdapter.items.clear()
         if(newData.isEmpty()){
             historyRec.visibility = View.GONE
@@ -149,10 +151,10 @@ class FragmentHistory : HuisEtFragment() {
     private fun setupHistoryRec(view:View){
         val historyRec= view.findViewById<RecyclerView>(R.id.historyRecyclerView)
         val data =mutableListOf<HistoryItem>()
-        data.addAll(findHistoryItems())
         this.historyAdapter = HistoryAdapter(data, this.context!!)
         historyRec.adapter = historyAdapter
         historyRec.layoutManager = LinearLayoutManager(this.context!!)
+        updateHistory()
     }
 
     private fun getSelectedPerson(): Person? {
@@ -168,7 +170,6 @@ class FragmentHistory : HuisEtFragment() {
             null -> realm.where(Transaction::class.java).findAll()
             else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id).findAll()
         }
-
 
         val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
