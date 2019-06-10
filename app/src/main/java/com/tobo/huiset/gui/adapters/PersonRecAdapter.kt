@@ -10,7 +10,6 @@ import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
 import com.tobo.huiset.utils.extensions.toCurrencyString
-import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 
@@ -21,7 +20,6 @@ import io.realm.RealmResults
 class PersonRecAdapter(
     val context: Context,
     data: RealmResults<Person>?,
-    val realmInstance: Realm,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Person, PersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
@@ -45,7 +43,7 @@ class PersonRecAdapter(
     }
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTv = itemView.findViewById<TextView>(R.id.personRecItem_name)
-        val balanceTv = itemView.findViewById<TextView>(R.id.personRecItem_balance)
+        val nameTv = itemView.findViewById<TextView>(R.id.personRecItem_name)!!
+        val balanceTv = itemView.findViewById<TextView>(R.id.personRecItem_balance)!!
     }
 }

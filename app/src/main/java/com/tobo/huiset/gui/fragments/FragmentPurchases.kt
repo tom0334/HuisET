@@ -10,7 +10,6 @@ import com.tobo.huiset.R
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
 import io.realm.Sort
@@ -22,11 +21,10 @@ import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 class FragmentPurchases : HuisEtFragment() {
 
 
-    var pickedPersonId: String? = null
+    private var pickedPersonId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_purchases, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_purchases, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,11 +55,11 @@ class FragmentPurchases : HuisEtFragment() {
             .sort("balance", Sort.ASCENDING)
             .findAll()
 
-        pickUserRec.adapter = PersonRecAdapter(context!!, profiles, realm, true)
+        pickUserRec.adapter = PersonRecAdapter(context!!, profiles, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
 
-        ItemClickSupport.addTo(pickUserRec).setOnItemClickListener { recyclerView, position, v ->
-            setPersonAndUpdate(profiles.get(position)?.id)
+        ItemClickSupport.addTo(pickUserRec).setOnItemClickListener { _, position, _ ->
+            setPersonAndUpdate(profiles[position]?.id)
         }
     }
 
@@ -72,21 +70,21 @@ class FragmentPurchases : HuisEtFragment() {
         val products = realm.findAllCurrentProducts()
 
         // this sets up the recyclerview to show the persons
-        pickProductsRec.adapter = ProductRecAdapter(this.context!!, products, realm, true)
+        pickProductsRec.adapter = ProductRecAdapter(this.context!!, products, true)
         pickProductsRec.layoutManager = LinearLayoutManager(this.context)
 
-        ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { recyclerView, position, v ->
+        ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { _, position, _ ->
 
             val person = realm.where(Person::class.java)
                 .equalTo("deleted", false)
                 .equalTo("id", pickedPersonId)
                 .findFirst() ?: return@setOnItemClickListener
-            val product = products!!.get(position) ?: return@setOnItemClickListener
+            val product = products!![position] ?: return@setOnItemClickListener
 
             var doneTransaction: Transaction? = null
             realm.executeTransaction {
                 val trans = Transaction.create(person, product, true)
-                person.addTransaction(trans, realm)
+                person.addTransaction(trans)
                 doneTransaction = realm.copyToRealmOrUpdate(trans)
 
 
@@ -97,14 +95,15 @@ class FragmentPurchases : HuisEtFragment() {
                 .make(view, "${product.name} gekocht door ${person.name}", 4000)
                 .setAction("Undo") {
                     realm.executeSafe {
-                        person.undoTransaction(doneTransaction, realm)
+                        person.undoTransaction(doneTransaction)
                         doneTransaction?.deleteFromRealm()
                     }
                 }.show()
         }
     }
 
-    fun setPersonAndUpdate(newPickedId: String?) {
+
+    private fun setPersonAndUpdate(newPickedId: String?) {
         this.pickedPersonId = newPickedId
         val view = this.view ?: return
 

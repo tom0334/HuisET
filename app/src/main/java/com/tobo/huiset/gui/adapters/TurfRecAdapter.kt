@@ -10,7 +10,6 @@ import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
 import com.tobo.huiset.utils.extensions.toCurrencyString
-import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 
@@ -18,7 +17,11 @@ import io.realm.RealmResults
  * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
  *
  */
-class TurfRecAdapter(val context: Context, data: RealmResults<Person>?, val realmInstance: Realm, autoUpdate: Boolean) :
+class TurfRecAdapter(
+    val context: Context,
+    data: RealmResults<Person>?,
+    autoUpdate: Boolean
+) :
     RealmRecyclerViewAdapter<Person, TurfRecAdapter.TurfRecViewHolder>(data, autoUpdate) {
 
 
@@ -41,7 +44,7 @@ class TurfRecAdapter(val context: Context, data: RealmResults<Person>?, val real
     }
 
     class TurfRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTv = itemView.findViewById<TextView>(R.id.turfRecItem_name)
-        val balanceTv = itemView.findViewById<TextView>(R.id.turfRecItem_balance)
+        val nameTv = itemView.findViewById<TextView>(R.id.turfRecItem_name)!!
+        val balanceTv = itemView.findViewById<TextView>(R.id.turfRecItem_balance)!!
     }
 }

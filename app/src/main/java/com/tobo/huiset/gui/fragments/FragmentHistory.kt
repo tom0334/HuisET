@@ -28,7 +28,7 @@ class FragmentHistory : HuisEtFragment() {
     var earlyTimePoint: Long = 0
 
 
-    val timeNames =
+    private val timeNames =
         arrayOf<CharSequence>("1 uur", "8 uur", "1 Dag", "1 week", "1 maand", "3 maanden", "Half jaar", "1 Jaar")
 
     private val TIMEDIFF_ONE_HOUR = 0
@@ -96,17 +96,17 @@ class FragmentHistory : HuisEtFragment() {
         builder.setTitle("Kies tijdperiode")
 
 
-        builder.setSingleChoiceItems(timeNames, timeDiffSelected,
-            DialogInterface.OnClickListener { dialog, item: Int ->
-                timeDiffSelected = item
+        builder.setSingleChoiceItems(timeNames, timeDiffSelected
+        ) { dialog, item: Int ->
+            timeDiffSelected = item
 
-                lateTimePoint = System.currentTimeMillis()
-                earlyTimePoint = getAdvancedTime(lateTimePoint, true)
+            lateTimePoint = System.currentTimeMillis()
+            earlyTimePoint = getAdvancedTime(lateTimePoint, true)
 
-                updateTimePointsText()
-                updateHistory()
-                dialog.dismiss()
-            })
+            updateTimePointsText()
+            updateHistory()
+            dialog.dismiss()
+        }
         builder.show()
     }
 
@@ -120,7 +120,7 @@ class FragmentHistory : HuisEtFragment() {
         historyPersonRec.adapter = adapter
         historyPersonRec.layoutManager = LinearLayoutManager(this.context!!)
 
-        ItemClickSupport.addTo(historyPersonRec).setOnItemClickListener { recyclerView, position, v ->
+        ItemClickSupport.addTo(historyPersonRec).setOnItemClickListener { _, position, _ ->
             if (position == -1) return@setOnItemClickListener // this happens when clicking 2 at the same time
             val p = persons[position]
             realm.executeTransaction {
@@ -146,7 +146,7 @@ class FragmentHistory : HuisEtFragment() {
             noDataView.visibility = View.VISIBLE
 
             val selectedPerson = getSelectedPerson()
-            val name = if (selectedPerson == null) "Niemand" else selectedPerson.name
+            val name = selectedPerson?.name ?: "Niemand"
             noDataTextView.text = "$name heeft niets geturft deze periode!"
 
         } else {
@@ -173,9 +173,8 @@ class FragmentHistory : HuisEtFragment() {
 
 
     private fun findHistoryItems(): List<HistoryItem> {
-        val selectedPerson = getSelectedPerson()
 
-        val transactions = when (selectedPerson) {
+        val transactions = when (val selectedPerson = getSelectedPerson()) {
             null -> realm.where(Transaction::class.java).findAll()
             else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id).findAll()
         }
@@ -189,6 +188,9 @@ class FragmentHistory : HuisEtFragment() {
 
     }
 
+    /**
+     * param view is mandatory
+     */
     private fun initTimePoints(view: View) {
         lateTimePoint = System.currentTimeMillis()
         earlyTimePoint = getAdvancedTime(lateTimePoint, backwards = true)

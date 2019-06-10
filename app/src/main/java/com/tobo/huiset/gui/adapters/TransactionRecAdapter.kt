@@ -21,7 +21,7 @@ import io.realm.RealmResults
 class TransactionRecAdapter(
     val context: Context,
     data: RealmResults<Transaction>?,
-    val realmInstance: Realm,
+    private val realmInstance: Realm,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(data, autoUpdate) {
 
@@ -43,7 +43,7 @@ class TransactionRecAdapter(
 
         holder.deleteButton.setOnClickListener {
             realmInstance.executeSafe {
-                person.undoTransaction(trans, realmInstance)
+                person.undoTransaction(trans)
                 trans.deleteFromRealm()
             }
         }
@@ -55,9 +55,9 @@ class TransactionRecAdapter(
     }
 
     class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTv = itemView.findViewById<TextView>(R.id.main_transactionRec_name)
-        val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)
-        val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)
-        val deleteButton = itemView.findViewById<ImageButton>(R.id.main_transactionRec_deleteButton)
+        val nameTv = itemView.findViewById<TextView>(R.id.main_transactionRec_name)!!
+        val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)!!
+        val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)!!
+        val deleteButton = itemView.findViewById<ImageButton>(R.id.main_transactionRec_deleteButton)!!
     }
 }
