@@ -65,7 +65,7 @@ class FragmentHistory : HuisEtFragment() {
             val newLate = getAdvancedTime(lateTimePoint,backwards = false)
 
             if(newLate > System.currentTimeMillis()){
-                Toast.makeText(this.context!!, "Verder gaat in de toekomst. Daar heb je nog niks geturft!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.context!!, "Je probeert de toekomst te bekijken. Daar is nog niks geturft!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
