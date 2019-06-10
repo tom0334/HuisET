@@ -40,6 +40,14 @@ class FragmentPurchases : HuisEtFragment() {
         setPersonAndUpdate(null)
     }
 
+    override fun onBackButtonPressed(): Boolean {
+        //if we are already on the profiles screen, the activity must handle the back button
+        if(pickedPersonId == null) return false
+        //else we will handle it here
+        setPersonAndUpdate(null)
+        return true
+    }
+
     private fun initProfileRec(view: View) {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
 
@@ -94,9 +102,7 @@ class FragmentPurchases : HuisEtFragment() {
                     }
                 }.show()
         }
-
     }
-
 
     fun setPersonAndUpdate(newPickedId: String?) {
         this.pickedPersonId = newPickedId

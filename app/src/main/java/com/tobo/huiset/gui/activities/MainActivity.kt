@@ -136,6 +136,13 @@ class MainActivity : HuisEtActivity() {
     }
 
 
+    override fun onBackPressed() {
+        val handled = fragments[currentFragmentIndex].onBackButtonPressed()
+        if(handled) return
+        super.onBackPressed()
+
+    }
+
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState!!.putInt(OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex)
