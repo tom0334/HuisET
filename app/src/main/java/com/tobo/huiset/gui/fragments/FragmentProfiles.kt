@@ -22,8 +22,8 @@ import com.tobo.huiset.gui.activities.EditProfileActivity
 class FragmentProfiles : HuisEtFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_profiles, container, false)
-        return view
+
+        return inflater.inflate(R.layout.fragment_profiles, container, false)
     }
 
     override fun onDestroy() {
@@ -47,7 +47,7 @@ class FragmentProfiles : HuisEtFragment() {
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
-        rec.adapter = PersonRecAdapter(this.context!!, persons, realm, true)
+        rec.adapter = PersonRecAdapter(this.context!!, persons, true)
         rec.layoutManager = LinearLayoutManager(this.context)
         val fab = view.findViewById<FloatingActionButton>(R.id.add_profile)
 
@@ -68,7 +68,7 @@ class FragmentProfiles : HuisEtFragment() {
         }
 
         // opens EditProfileActivity on the correct profile if a profile is clicked
-        ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
+        ItemClickSupport.addTo(rec).setOnItemClickListener { _, position, _ ->
             val person = persons[position]
             val intent = Intent(this.activity, EditProfileActivity::class.java)
                 .putExtra("PERSON_ID", person?.id)

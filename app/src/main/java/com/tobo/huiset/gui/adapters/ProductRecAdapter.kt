@@ -8,9 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
-import com.tobo.huiset.utils.extensions.setTextColorFromHex
 import com.tobo.huiset.utils.extensions.toCurrencyString
-import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 
@@ -20,7 +18,6 @@ import io.realm.RealmResults
 class ProductRecAdapter(
     val context: Context,
     data: RealmResults<Product>?,
-    val realmInstance: Realm,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Product, ProductRecAdapter.ProductViewHolder>(data, autoUpdate) {
 
@@ -42,7 +39,7 @@ class ProductRecAdapter(
     }
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTv = itemView.findViewById<TextView>(R.id.productRecItem_name)
-        val priceTv = itemView.findViewById<TextView>(R.id.productRecItem_price)
+        val nameTv = itemView.findViewById<TextView>(R.id.productRecItem_name)!!
+        val priceTv = itemView.findViewById<TextView>(R.id.productRecItem_price)!!
     }
 }

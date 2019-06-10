@@ -82,7 +82,7 @@ class EditProductActivity : HuisEtActivity() {
         // if product isn't new, then ask "are you sure?
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
-            .setPositiveButton("verwijderen") { dialog, id ->
+            .setPositiveButton("verwijderen") { _, _ ->
                 realm.executeTransaction {
                     if (realm.where(Transaction::class.java).equalTo(
                             "productId",
@@ -98,7 +98,7 @@ class EditProductActivity : HuisEtActivity() {
                 }
                 this.finish()
             }
-            .setNegativeButton("annuleren") { dialog, id ->
+            .setNegativeButton("annuleren") { _, _ ->
                 // User cancelled the dialog, do nothing
             }
         // Create the AlertDialog object and return it
@@ -197,6 +197,10 @@ class EditProductActivity : HuisEtActivity() {
         return true
     }
 
+    /**
+     * hides keyboard when something else is clicked
+     * param view is needed.
+     */
     fun hideKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)

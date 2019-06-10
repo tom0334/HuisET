@@ -35,7 +35,7 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
 }
 
 class HistoryViewholder(view: View) : RecyclerView.ViewHolder(view) {
-    val productNameTv = view.findViewById<TextView>(R.id.historyView_product_name)
-    val amountTv = view.findViewById<TextView>(R.id.historyView_productAmount)
-    val priceTv = view.findViewById<TextView>(R.id.historyView_total_price)
+    val productNameTv = view.findViewById<TextView>(R.id.historyView_product_name)!!
+    val amountTv = view.findViewById<TextView>(R.id.historyView_productAmount)!!
+    val priceTv = view.findViewById<TextView>(R.id.historyView_total_price)!!
 }

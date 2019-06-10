@@ -14,12 +14,11 @@ import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 
-public class FragmentProducts : HuisEtFragment() {
+class FragmentProducts : HuisEtFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_products, container, false)
 
-        return view
+        return inflater.inflate(R.layout.fragment_products, container, false)
     }
 
     override fun onDestroy() {
@@ -40,7 +39,7 @@ public class FragmentProducts : HuisEtFragment() {
         // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
-        rec.adapter = ProductRecAdapter(this.context!!, products, realm, true)
+        rec.adapter = ProductRecAdapter(this.context!!, products, true)
         rec.layoutManager = LinearLayoutManager(this.context)
 
 
@@ -63,7 +62,7 @@ public class FragmentProducts : HuisEtFragment() {
         }
 
         // opens EditProductActivity on the correct product if a product is clicked
-        ItemClickSupport.addTo(rec).setOnItemClickListener { recyc, position, v ->
+        ItemClickSupport.addTo(rec).setOnItemClickListener { _, position, _ ->
             val product = products!![position]
             val intent = Intent(this.activity, EditProductActivity::class.java)
                 .putExtra("PRODUCT_ID", product?.id)

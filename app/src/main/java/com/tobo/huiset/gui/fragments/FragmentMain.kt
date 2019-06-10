@@ -66,10 +66,10 @@ class FragmentMain : HuisEtFragment() {
 
         // this sets up the recyclerview to show the products
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
-        prodRec.adapter = ProductMainRecAdapter(this.context!!, products, realm, true)
+        prodRec.adapter = ProductMainRecAdapter(this.context!!, products, true)
         prodRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
 
-        ItemClickSupport.addTo(prodRec).setOnItemClickListener { prodRec, position, v ->
+        ItemClickSupport.addTo(prodRec).setOnItemClickListener { _, position, _ ->
             realm.executeTransaction {
                 realm.where(Product::class.java)
                     .equalTo("deleted", false)
@@ -78,7 +78,7 @@ class FragmentMain : HuisEtFragment() {
                     .forEach {
                         it.isSelected = false
                     }
-                products.get(position)?.isSelected = true
+                products[position]?.isSelected = true
             }
         }
         return prodRec
@@ -117,15 +117,15 @@ class FragmentMain : HuisEtFragment() {
             .equalTo("show", true)
             .findAll()
 
-        val turfRec = view.findViewById<RecyclerView>(com.tobo.huiset.R.id.mainPersonRec)
-        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
+        val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
+        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
         val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!), 16.toPixel(this.context!!), columns)
         turfRec.addItemDecoration(spacer)
 
-        ItemClickSupport.addTo(turfRec).setOnItemClickListener { recyclerView, position, v ->
-            val person = profiles.get(position)
+        ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
+            val person = profiles[position]
             if (person != null) {
                 realm.executeSafe {
                     val selectedProduct = realm.where(Product::class.java)
@@ -136,7 +136,7 @@ class FragmentMain : HuisEtFragment() {
                     selectedProduct?.isSelected = false
 
                     realm.copyToRealmOrUpdate(t)
-                    person.addTransaction(t, realm)
+                    person.addTransaction(t)
                 }
 
                 realm.executeTransaction {

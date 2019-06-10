@@ -1,7 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import com.tobo.huiset.realmModels.Person
 import io.realm.Realm
 
 
-class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Context, val realm: Realm) :
+class HistoryPersonRecAdapter(private val items: MutableList<Person?>, val context: Context, val realm: Realm) :
     RecyclerView.Adapter<HistoryPersonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryPersonViewHolder {
@@ -31,9 +30,9 @@ class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Cont
 
         fun setColors(selected: Boolean) {
             if (selected) {
-                holder.rootv.setBackgroundColor(ContextCompat.getColor(context, R.color.secondaryDarkColor))
+                holder.rootV.setBackgroundColor(ContextCompat.getColor(context, R.color.secondaryDarkColor))
             } else {
-                holder.rootv.setBackgroundColor(ContextCompat.getColor(context, R.color.primaryDarkColor))
+                holder.rootV.setBackgroundColor(ContextCompat.getColor(context, R.color.primaryDarkColor))
             }
         }
 
@@ -55,6 +54,6 @@ class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Cont
 }
 
 class HistoryPersonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val personNameTv = view.findViewById<TextView>(R.id.historyPersonRec_name)
-    val rootv = view.findViewById<View>(R.id.historyPersonRec_rootView)
+    val personNameTv = view.findViewById<TextView>(R.id.historyPersonRec_name)!!
+    val rootV = view.findViewById<View>(R.id.historyPersonRec_rootView)!!
 }
