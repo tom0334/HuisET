@@ -21,8 +21,8 @@ import com.tobo.huiset.realmModels.Transaction
  */
 class EditProfileActivity : HuisEtActivity() {
 
-    private var oldProfile : Person? = null
-    private var new : Boolean = true
+    private var oldProfile: Person? = null
+    private var new: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,16 +38,14 @@ class EditProfileActivity : HuisEtActivity() {
             val guestRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_guest)
             if (oldProfile!!.isGuest) {
                 guestRadioGroup.check(R.id.radioGuest)
-            }
-            else {
+            } else {
                 guestRadioGroup.check(R.id.radioRoommate)
             }
 
             val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showPerson)
             if (oldProfile!!.isShow) {
                 showRadioGroup.check(R.id.radioShowPerson)
-            }
-            else {
+            } else {
                 showRadioGroup.check(R.id.radioHidePerson)
             }
 
@@ -107,7 +105,7 @@ class EditProfileActivity : HuisEtActivity() {
 
     private fun doneClicked() {
         // profile edit/add done
-        val nameEditText= findViewById<EditText>(R.id.name)
+        val nameEditText = findViewById<EditText>(R.id.name)
         val newName = nameEditText.text.toString()
 
         if (!nameValidate(newName, nameEditText)) {
@@ -131,8 +129,7 @@ class EditProfileActivity : HuisEtActivity() {
             if (new) {
                 val person = Person.create(newName, newColorString, guestBool, showBool)
                 realm.copyToRealm(person)
-            }
-            else {
+            } else {
                 oldProfile!!.name = newName
                 oldProfile!!.color = newColorString
                 oldProfile!!.isGuest = guestBool
@@ -140,9 +137,11 @@ class EditProfileActivity : HuisEtActivity() {
             }
         }
 
-        Toast.makeText(this, "Profile $newName added/edited, guest $guestBool, show $showBool", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Profile $newName added/edited, guest $guestBool, show $showBool", Toast.LENGTH_SHORT)
+            .show()
 
-        this.finish()    }
+        this.finish()
+    }
 
     /**
      * Validates the input name
@@ -157,7 +156,8 @@ class EditProfileActivity : HuisEtActivity() {
         if (realm.where(Person::class.java)
                 .equalTo("deleted", false)
                 .equalTo("name", name)
-                .count() > 0) {
+                .count() > 0
+        ) {
             if (new) {
                 editText.error = "Naam bestaat al"
                 return false

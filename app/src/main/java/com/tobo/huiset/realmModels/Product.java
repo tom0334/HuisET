@@ -19,7 +19,8 @@ public class Product extends RealmObject {
     //TODO: implement deleted functionality
     private boolean deleted = false;
 
-    public Product() {}
+    public Product() {
+    }
 
     static public Product create(String name, int price, boolean show) {
         Product item = new Product();

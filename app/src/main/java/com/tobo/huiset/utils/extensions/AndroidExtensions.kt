@@ -5,13 +5,13 @@ import android.graphics.Color
 import android.util.TypedValue
 import android.widget.TextView
 
-fun Int.toPixel(context: Context) :Int{
+fun Int.toPixel(context: Context): Int {
     val r = context.resources
-    val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,this.toFloat(), r.getDisplayMetrics())
-    return  pixels.toInt()
+    val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), r.getDisplayMetrics())
+    return pixels.toInt()
 }
 
-fun TextView.setTextColorFromHex(hex:String) = this.setTextColor(Color.parseColor(hex))
+fun TextView.setTextColorFromHex(hex: String) = this.setTextColor(Color.parseColor(hex))
 
 fun Int.toCurrencyString(): String {
     val signed = if (this < 0) "-" else ""
@@ -29,8 +29,7 @@ fun String.euroToCent(): Int {
         val split = this.split('.')
         result += Integer.parseInt(split[0]) * 100
         result += Integer.parseInt(split[1])
-    }
-    else {
+    } else {
         result += Integer.parseInt(this) * 100
     }
     return result

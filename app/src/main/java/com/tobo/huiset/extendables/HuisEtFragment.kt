@@ -14,11 +14,11 @@ import com.tobo.huiset.extendables.HuisEtActivity
  * The realm field in here can be freely acessed. It is managed by the activity, so don't close it.
  */
 
-abstract class HuisEtFragment: Fragment() {
+abstract class HuisEtFragment : Fragment() {
 
     //ONLY WORKS WHEN THE FRAGMENT IS ATTACHED TO THE PARENT ACTIVITY!
-    val realm by lazy{
+    val realm by lazy {
         if (this.activity == null) throw Exception("HuisEtFragment: Error: tried to access realm before activity was attached!")
-        (this.activity  as HuisEtActivity).realm
+        (this.activity as HuisEtActivity).realm
     }
 }

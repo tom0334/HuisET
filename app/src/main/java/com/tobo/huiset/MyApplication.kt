@@ -33,13 +33,13 @@ class MyApplication : Application() {
 
         val settings = realm.where(HuisETSettings::class.java)
 
-        if(settings.count() > 0) return
+        if (settings.count() > 0) return
 
         realm.executeTransaction {
-            val beer = Product.create("Bier",Product.STANDARD_PRICE_BEER, true)
+            val beer = Product.create("Bier", Product.STANDARD_PRICE_BEER, true)
             beer.setSelected(true);
             //no need copy, it is copy with the settings
-            val crate = Product.create("Kratje",Product.STANDARD_PRICE_CRATE, true)
+            val crate = Product.create("Kratje", Product.STANDARD_PRICE_CRATE, true)
             //no need to copy, it is copied with the settings
             val newSettingsObj = HuisETSettings.create(beer, crate)
             realm.copyToRealm(newSettingsObj)

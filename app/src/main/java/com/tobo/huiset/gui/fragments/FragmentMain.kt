@@ -26,24 +26,25 @@ class FragmentMain : HuisEtFragment() {
 
     private val TRANSACTION_VIEW_REFRESH_TIME = 5000L
 
-    private var transactionTimeRefreshHandler: Handler?  = null
+    private var transactionTimeRefreshHandler: Handler? = null
 
     private val updateTransactionRecRunnable = object : Runnable {
         override fun run() {
             updateTransactionRec(this)
         }
     }
+
     /**
      * This function is run every TRANSACTION_VIEW_REFRESH_TIME milliseconds. It updates the time ago texts in the
      * transactionview.
      */
-    fun updateTransactionRec(parentRunnable: Runnable){
+    fun updateTransactionRec(parentRunnable: Runnable) {
         val rec = this.view?.findViewById<RecyclerView>(R.id.recentRecyclerView) ?: return
         rec.adapter?.notifyDataSetChanged()
         transactionTimeRefreshHandler!!.postDelayed(parentRunnable, TRANSACTION_VIEW_REFRESH_TIME)
     }
 
-    
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
@@ -57,7 +58,7 @@ class FragmentMain : HuisEtFragment() {
         setupProductRec(view)
     }
 
-    private fun setupProductRec(view: View) : RecyclerView {
+    private fun setupProductRec(view: View): RecyclerView {
         val products = realm.where(Product::class.java)
             .equalTo("deleted", false)
             .equalTo("show", true)
@@ -76,7 +77,7 @@ class FragmentMain : HuisEtFragment() {
                     .findAll()
                     .forEach {
                         it.isSelected = false
-                }
+                    }
                 products.get(position)?.isSelected = true
             }
         }
@@ -88,14 +89,14 @@ class FragmentMain : HuisEtFragment() {
      *
      * It is updated automatically
      */
-    private fun setupTransactionsRec(view: View) : RecyclerView{
+    private fun setupTransactionsRec(view: View): RecyclerView {
         val transactions = realm.where(Transaction::class.java)
             .sort("time", Sort.DESCENDING)
             .findAll()
 
 
         val transActionRec = view.findViewById<RecyclerView>(R.id.recentRecyclerView)
-        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions,realm, true)
+        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, realm, true)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
 
         //init the periodic refresh
@@ -108,7 +109,7 @@ class FragmentMain : HuisEtFragment() {
     /**
      * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
      */
-    private fun setupTurfRec(view: View, transitionRec:RecyclerView) {
+    private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
         val columns = 2
 
         val profiles = realm.where(Person::class.java)
@@ -120,12 +121,12 @@ class FragmentMain : HuisEtFragment() {
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, realm, true)
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
-        val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!),16.toPixel(this.context!!),columns)
+        val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!), 16.toPixel(this.context!!), columns)
         turfRec.addItemDecoration(spacer)
 
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { recyclerView, position, v ->
             val person = profiles.get(position)
-            if(person != null){
+            if (person != null) {
                 realm.executeSafe {
                     val selectedProduct = realm.where(Product::class.java)
                         .equalTo("deleted", false)
@@ -135,7 +136,7 @@ class FragmentMain : HuisEtFragment() {
                     selectedProduct?.isSelected = false
 
                     realm.copyToRealmOrUpdate(t)
-                    person.addTransaction(t,realm)
+                    person.addTransaction(t, realm)
                 }
 
                 realm.executeTransaction {
@@ -155,10 +156,10 @@ class FragmentMain : HuisEtFragment() {
     override fun onDestroy() {
         super.onDestroy()
         val rec: RecyclerView? = view?.findViewById(R.id.mainPersonRec)
-        if(rec != null){
+        if (rec != null) {
             ItemClickSupport.removeFrom(rec)
         }
-        if(transactionTimeRefreshHandler != null){
+        if (transactionTimeRefreshHandler != null) {
             transactionTimeRefreshHandler!!.removeCallbacks(updateTransactionRecRunnable)
 
         }

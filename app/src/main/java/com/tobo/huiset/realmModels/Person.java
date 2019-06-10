@@ -2,6 +2,7 @@ package com.tobo.huiset.realmModels;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+
 import java.util.UUID;
 
 import io.realm.annotations.PrimaryKey;
@@ -20,7 +21,10 @@ public class Person extends RealmObject {
     //TODO: deleted implementation, can be done if no transactions exist yet
     private boolean deleted = false;
 
-    public Person() {}
+    private boolean selectedInHistoryView;
+
+    public Person() {
+    }
 
     static public Person create(String name, String color, boolean guest, boolean show) {
         Person p = new Person();
@@ -28,6 +32,7 @@ public class Person extends RealmObject {
         p.color = color;
         p.guest = guest;
         p.show = show;
+        p.selectedInHistoryView = false;
 
         return p;
     }
@@ -38,20 +43,20 @@ public class Person extends RealmObject {
     }
 
 
-    public void addTransaction(Transaction t, Realm realm){
-        int price =  t.getProduct(realm).getPrice();
-        if(t.isBuy()){
+    public void addTransaction(Transaction t, Realm realm) {
+        int price = t.getPrice();
+        if (t.isBuy()) {
             this.balance += price;
-        }else{
+        } else {
             this.balance -= price;
         }
     }
 
     public void undoTransaction(Transaction t, Realm realm) {
-        int price =  t.getProduct(realm).getPrice();
-        if(t.isBuy()){
+        int price = t.getPrice();
+        if (t.isBuy()) {
             this.balance -= price;
-        }else{
+        } else {
             this.balance += price;
         }
     }
@@ -75,6 +80,13 @@ public class Person extends RealmObject {
         return this.id;
     }
 
+    public boolean isSelectedInHistoryView() {
+        return selectedInHistoryView;
+    }
+
+    public void setSelectedInHistoryView(boolean selectedInHistoryView) {
+        this.selectedInHistoryView = selectedInHistoryView;
+    }
 
     public boolean isGuest() {
         return guest;

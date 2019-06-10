@@ -18,8 +18,12 @@ import io.realm.RealmResults
  * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
  *
  */
-class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val realmInstance: Realm, autoUpdate: Boolean)
-    : RealmRecyclerViewAdapter<Person, PersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
+class PersonRecAdapter(
+    val context: Context,
+    data: RealmResults<Person>?,
+    val realmInstance: Realm,
+    autoUpdate: Boolean
+) : RealmRecyclerViewAdapter<Person, PersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
@@ -40,7 +44,7 @@ class PersonRecAdapter(val context: Context, data: RealmResults<Person>?, val re
         return if (data == null) 0 else data!!.size
     }
 
-    class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.personRecItem_name)
         val balanceTv = itemView.findViewById<TextView>(R.id.personRecItem_balance)
     }

@@ -1,7 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +18,12 @@ import io.realm.RealmResults
 /**
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
  */
-class ProductMainRecAdapter(val context: Context, data: RealmResults<Product>?, val realmInstance: Realm, autoUpdate: Boolean)
-    : RealmRecyclerViewAdapter<Product, ProductMainRecAdapter.ProductMainViewHolder>(data, autoUpdate) {
+class ProductMainRecAdapter(
+    val context: Context,
+    data: RealmResults<Product>?,
+    val realmInstance: Realm,
+    autoUpdate: Boolean
+) : RealmRecyclerViewAdapter<Product, ProductMainRecAdapter.ProductMainViewHolder>(data, autoUpdate) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductMainViewHolder {
@@ -34,23 +37,15 @@ class ProductMainRecAdapter(val context: Context, data: RealmResults<Product>?, 
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
 
-        if (product.isSelected) {
-            holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.secondaryDarkColor))
-            holder.nameTv.setTextColor(Color.WHITE)
-            holder.priceTv.setTextColor(Color.WHITE)
-        }
-        else {
-            holder.card.setBackgroundColor(ContextCompat.getColor(context, R.color.primaryDarkColor))
-            holder.nameTv.setTextColor(Color.WHITE)
-            holder.priceTv.setTextColor(Color.WHITE)
-        }
+        val colorResId = if (product.isSelected) R.color.secondaryDarkColor else R.color.primaryDarkColor
+        holder.card.setBackgroundColor(ContextCompat.getColor(context, colorResId))
     }
 
     override fun getItemCount(): Int {
         return if (data == null) 0 else data!!.size
     }
 
-    class ProductMainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class ProductMainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val card: CardView = itemView.findViewById(R.id.productMainRecItem)
         val nameTv: TextView = itemView.findViewById(R.id.productMainRecItem_name)
         val priceTv: TextView = itemView.findViewById(R.id.productMainRecItem_price)

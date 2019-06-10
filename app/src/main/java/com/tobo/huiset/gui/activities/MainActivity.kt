@@ -7,7 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import FragmentMain
-import FragmentET
+import FragmentHistory
 import FragmentPurchases
 import FragmentProducts
 import FragmentProfiles
@@ -26,7 +26,7 @@ class MainActivity : HuisEtActivity() {
     private lateinit var fragments: List<Fragment>
     private var currentFragmentIndex = 0
 
-    private fun getFragTagFromIndex(index:Int) = "MAIN_ACTIVITY_FRAG_$index"
+    private fun getFragTagFromIndex(index: Int) = "MAIN_ACTIVITY_FRAG_$index"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,13 +68,13 @@ class MainActivity : HuisEtActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupBottomTabs(){
-        val bottomView  = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+    private fun setupBottomTabs() {
+        val bottomView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomView.inflateMenu(R.menu.menu_bottom_navigation)
 
         bottomView.setOnNavigationItemSelectedListener {
 
-            val fragToShow = when(it.itemId){
+            val fragToShow = when (it.itemId) {
                 R.id.action_main -> 0
                 R.id.action_purchases -> 1
                 R.id.action_products -> 2
@@ -101,14 +101,14 @@ class MainActivity : HuisEtActivity() {
                 FragmentMain(),
                 FragmentPurchases(),
                 FragmentProducts(),
-                FragmentET(),
+                FragmentHistory(),
                 FragmentProfiles()
             )
             //currentFragIndex is 0 by default
-        }else{
+        } else {
             //restore them by finding them by tag
             fragments = (0 until NUM_FRAGMENTS)
-                .map { supportFragmentManager.findFragmentByTag(getFragTagFromIndex(it))!!}
+                .map { supportFragmentManager.findFragmentByTag(getFragTagFromIndex(it))!! }
             currentFragmentIndex = savedInstanceState.getInt(OUTSTATE_CURRENTFRAGINDEX)
         }
 
@@ -116,7 +116,7 @@ class MainActivity : HuisEtActivity() {
             val transaction = supportFragmentManager.beginTransaction()
 
             // add them only if they weren't added yet.
-            if(savedInstanceState == null) transaction.add(R.id.main_container, fragments[i], getFragTagFromIndex(i))
+            if (savedInstanceState == null) transaction.add(R.id.main_container, fragments[i], getFragTagFromIndex(i))
 
             //hide all but the current one
             if (i != currentFragmentIndex) transaction.hide(fragments[i])
@@ -136,7 +136,7 @@ class MainActivity : HuisEtActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState!!.putInt(OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex )
+        outState!!.putInt(OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex)
     }
 
 }
