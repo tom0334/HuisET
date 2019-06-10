@@ -174,7 +174,7 @@ class FragmentHistory : HuisEtFragment() {
 
         return  inTimeSpan
             .groupBy { it.productId}
-            .map { (id, values) -> HistoryItem(realm.getProductWithId(id)!!, values.size, transactions.sumBy { it.price }) }
+            .map { (key, values) -> HistoryItem(realm.getProductWithId(key)!!, values.size, values.sumBy { it.price }) }
             .sortedByDescending { it.amount }
 
     }
