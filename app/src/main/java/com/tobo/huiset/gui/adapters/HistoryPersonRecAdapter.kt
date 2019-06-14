@@ -1,5 +1,5 @@
 package com.tobo.huiset.gui.adapters
-import io.realm.Realm
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,28 +9,24 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
-import io.realm.RealmRecyclerViewAdapter
-import io.realm.RealmResults
+import io.realm.Realm
 
-/**
- * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
- *
- */
-class HistoryPersonRecAdapter(
-    val context: Context,
-    data: RealmResults<Person>?,
-    autoUpdate: Boolean,
-    val realm: Realm
-) : RealmRecyclerViewAdapter<Person, HistoryPersonViewHolder>(data, autoUpdate) {
 
+class HistoryPersonRecAdapter(private val items: MutableList<Person?>, val context: Context, val realm: Realm) :
+    RecyclerView.Adapter<HistoryPersonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryPersonViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.history_person_rec_item, parent, false)
-        return HistoryPersonViewHolder(view)
+        return HistoryPersonViewHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.history_person_rec_item,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: HistoryPersonViewHolder, position: Int) {
-        val p = data?.get(position) ?: return
+        val p = items[position]
 
         fun setColors(selected: Boolean) {
             if (selected) {
@@ -50,10 +46,10 @@ class HistoryPersonRecAdapter(
         }
     }
 
+    // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return if (data == null) 0 else data!!.size
+        return items.size
     }
-
 
 }
 
@@ -61,5 +57,3 @@ class HistoryPersonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val personNameTv = view.findViewById<TextView>(R.id.historyPersonRec_name)!!
     val rootV = view.findViewById<View>(R.id.historyPersonRec_rootView)!!
 }
-
-

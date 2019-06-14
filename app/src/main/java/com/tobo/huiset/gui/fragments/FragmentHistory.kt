@@ -112,9 +112,11 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun setupPersonRec(view: View) {
         val historyPersonRec = view.findViewById<RecyclerView>(R.id.historyPersonRec)
-        val persons = realm.where(Person::class.java).findAll()
 
-        val adapter = HistoryPersonRecAdapter(context!!, persons,true,realm)
+        val persons = mutableListOf<Person?>(null)
+        persons.addAll(realm.where(Person::class.java).findAll())
+
+        val adapter = HistoryPersonRecAdapter(persons, this.context!!, realm)
         historyPersonRec.adapter = adapter
         historyPersonRec.layoutManager = LinearLayoutManager(this.context!!)
 
