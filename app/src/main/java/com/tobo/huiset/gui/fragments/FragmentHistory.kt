@@ -20,9 +20,11 @@ import java.text.SimpleDateFormat
 import android.content.DialogInterface
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.tobo.huiset.gui.adapters.PersonRecAdapter
 
 class FragmentHistory : HuisEtFragment() {
 
+    lateinit var personAdap: HistoryPersonRecAdapter
     lateinit var historyAdapter: HistoryAdapter
     var lateTimePoint: Long = 0
     var earlyTimePoint: Long = 0
@@ -49,6 +51,7 @@ class FragmentHistory : HuisEtFragment() {
 
     override fun onTabReactivated(){
         initTimePoints(view!!)
+        updatePersons()
         updateHistory()
     }
 
@@ -64,7 +67,6 @@ class FragmentHistory : HuisEtFragment() {
             this.earlyTimePoint = getAdvancedTime(earlyTimePoint, backwards = true)
             updateHistory()
             updateTimePointsText()
-
         }
 
         view.findViewById<Button>(R.id.historyGoFowardsButton).setOnClickListener {
@@ -112,24 +114,21 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun setupPersonRec(view: View) {
         val historyPersonRec = view.findViewById<RecyclerView>(R.id.historyPersonRec)
-
-        val persons = mutableListOf<Person?>(null)
-        persons.addAll(realm.where(Person::class.java).findAll())
-
-        val adapter = HistoryPersonRecAdapter(persons, this.context!!, realm)
-        historyPersonRec.adapter = adapter
+        personAdap = HistoryPersonRecAdapter(mutableListOf(), this.context!!, realm)
+        historyPersonRec.adapter = personAdap
         historyPersonRec.layoutManager = LinearLayoutManager(this.context!!)
 
         ItemClickSupport.addTo(historyPersonRec).setOnItemClickListener { _, position, _ ->
             if (position == -1) return@setOnItemClickListener // this happens when clicking 2 at the same time
-            val p = persons[position]
+            val p = personAdap.items[position]
             realm.executeTransaction {
                 realm.where(Person::class.java).findAll().forEach { it.isSelectedInHistoryView = false }
                 if (p != null) p.isSelectedInHistoryView = true
             }
-            adapter.notifyDataSetChanged()
+            personAdap.notifyDataSetChanged()
             updateHistory()
         }
+        updatePersons()
     }
 
     private fun updateHistory() {
@@ -156,6 +155,14 @@ class FragmentHistory : HuisEtFragment() {
         }
 
         this.historyAdapter.notifyDataSetChanged()
+    }
+
+    private fun updatePersons(){
+        val persons = mutableListOf<Person?>(null)
+        persons.addAll(realm.where(Person::class.java).findAll())
+        personAdap.items.clear()
+        personAdap.items.addAll(persons)
+        personAdap.notifyDataSetChanged()
     }
 
     private fun setupHistoryRec(view: View) {

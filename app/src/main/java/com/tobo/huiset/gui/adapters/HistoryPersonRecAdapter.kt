@@ -12,7 +12,7 @@ import com.tobo.huiset.realmModels.Person
 import io.realm.Realm
 
 
-class HistoryPersonRecAdapter(private val items: MutableList<Person?>, val context: Context, val realm: Realm) :
+class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Context, val realm: Realm) :
     RecyclerView.Adapter<HistoryPersonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryPersonViewHolder {
