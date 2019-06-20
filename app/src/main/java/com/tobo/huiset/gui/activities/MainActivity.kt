@@ -20,13 +20,6 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import android.view.MotionEvent
 import android.os.Handler
 
-
-
-
-
-
-
-
 private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
 private const val MAINACTIVITY_REQUESTCODE_SETTINGS = 1
@@ -61,7 +54,6 @@ class MainActivity : HuisEtActivity() {
             setSystemUIListener()
         } else {
             systemUIHandler.removeCallbacks(null);
-            showSystemUI()
         }
     }
 
@@ -258,13 +250,5 @@ class MainActivity : HuisEtActivity() {
             systemUIHandler.postDelayed(hideSysRunnable, 1000)
         }
     }
-
-    // Shows the system bars by removing all the flags
-// except for the ones that make the content appear under the system bars.
-    private fun showSystemUI() {
-//        supportActionBar?.show()
-    }
-
-
 
 }

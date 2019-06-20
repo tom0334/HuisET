@@ -20,7 +20,7 @@
         </activity>
         <activity android:name="com.tobo.huiset.gui.activities.EditProductActivity">
         </activity>
-        <activity android:name="com.tobo.huiset.gui.activities.MainActivity" android:theme="@style/AppThemeNoActionBar">
+        <activity android:name="com.tobo.huiset.gui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
