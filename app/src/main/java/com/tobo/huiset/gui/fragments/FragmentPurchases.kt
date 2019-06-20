@@ -52,7 +52,7 @@ class FragmentPurchases : HuisEtFragment() {
         val profiles = realm.where(Person::class.java)
             .equalTo("deleted", false)
             .equalTo("show", true)
-            .sort("balance", Sort.ASCENDING)
+            .sort("row", Sort.ASCENDING)
             .findAll()
 
         pickUserRec.adapter = PersonRecAdapter(context!!, realm, profiles, true)

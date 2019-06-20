@@ -41,18 +41,26 @@ class PersonRecAdapter(
         val colorString = data?.get(position)!!.balanceColor
         holder.balanceTv.setTextColorFromHex(colorString)
 
+        // make item go up
         holder.upIv.setOnClickListener {
             realm.executeTransaction {
-                person.row -= 1
+                val other = realm.where(Person::class.java).equalTo("row", person.row - 1).findFirst()
+                if (other != null) {
+                    other.row += 1
+                    person.row -= 1
+                }
             }
-            Toast.makeText(this.context, "up to row ${person.row}", Toast.LENGTH_SHORT).show()
         }
 
+        // make item go down
         holder.downIv.setOnClickListener {
             realm.executeTransaction {
-                person.row += 1
+                val other = realm.where(Person::class.java).equalTo("row", person.row + 1).findFirst()
+                if (other != null) {
+                    other.row -= 1
+                    person.row += 1
+                }
             }
-            Toast.makeText(this.context, "down to row ${person.row}", Toast.LENGTH_SHORT).show()
         }
 
     }
