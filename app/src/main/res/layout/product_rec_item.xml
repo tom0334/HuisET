@@ -41,12 +41,21 @@
     />
 
     <ImageView
-            android:id="@+id/productRecItem_handle"
+            android:id="@+id/productRecItem_up"
             android:layout_width="?listPreferredItemHeight"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_gravity="center_vertical|right"
+            android:scaleType="center"
+            android:src="@drawable/baseline_keyboard_arrow_up_black_24" />
+
+    <ImageView
+            android:id="@+id/productRecItem_down"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|right"
             android:scaleType="center"
-            android:src="@drawable/baseline_drag_handle_black_24" />
+            android:src="@drawable/baseline_keyboard_arrow_down_black_24" />
 
 
 </LinearLayout>

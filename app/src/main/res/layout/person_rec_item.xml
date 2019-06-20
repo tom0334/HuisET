@@ -36,16 +36,25 @@
         android:layout_height="match_parent" />
 
     <View
-            android:layout_width="25dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
     />
 
     <ImageView
-            android:id="@+id/personRecItem_handle"
+            android:id="@+id/personRecItem_up"
             android:layout_width="?listPreferredItemHeight"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_gravity="center_vertical|right"
+            android:scaleType="center"
+            android:src="@drawable/baseline_keyboard_arrow_up_black_24" />
+
+    <ImageView
+            android:id="@+id/personRecItem_down"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|right"
             android:scaleType="center"
-            android:src="@drawable/baseline_drag_handle_black_24" />
+            android:src="@drawable/baseline_keyboard_arrow_down_black_24" />
 
 </LinearLayout>
