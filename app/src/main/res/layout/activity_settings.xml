@@ -48,6 +48,40 @@
                     android:layout_height="wrap_content" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_margin="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/primaryTextColor"
+                    android:id="@+id/hideAppBarSettingText"
+                    android:layout_alignParentLeft="true"
+                    android:text="Verberg ook app balk in fullscreen mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="2dp"
+                    android:id="@+id/hideAppBarSettingExplain"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/hideAppBarSettingText"
+                    android:text="Verbergt naast de statusbalk en de navigatiebalk ook de bovenste app balk. Veeg omlaag om weer te zien."
+                    android:layout_width="wrap_content"
+                    android:layout_toLeftOf="@id/hideAppBarSwitch"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/hideAppBarSwitch"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
 
         </LinearLayout>
 

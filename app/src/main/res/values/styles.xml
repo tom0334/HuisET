@@ -8,6 +8,14 @@
         <item name="colorAccent">@color/secondaryColor</item>
     </style>
 
+    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+    </style>
+
+
     <style name="HeaderBar">
         <item name="android:background">@color/primaryColor</item>
     </style>

@@ -9,6 +9,7 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.utils.extensions.edit
 
 const val PREFS_FULLSCREEN_ID = "FullscreenEnabled"
+const val PREFS_HIDEAPPBAR_ID = "HideAppBarEnabled"
 
 class SettingsActivity : HuisEtActivity() {
 
@@ -23,13 +24,19 @@ class SettingsActivity : HuisEtActivity() {
 
     fun showStatus() {
         val fullscreenSwitch = findViewById<SwitchCompat>(R.id.fullScreenSwitch)
+        val hideAppBarSwitch = findViewById<SwitchCompat>(R.id.hideAppBarSwitch)
+
         fullscreenSwitch.isChecked = prefs.getBoolean(PREFS_FULLSCREEN_ID, false)
+        hideAppBarSwitch.isChecked = prefs.getBoolean(PREFS_HIDEAPPBAR_ID, false)
+
     }
 
     private fun saveChanges() {
         val fullscreenSwitch = findViewById<SwitchCompat>(R.id.fullScreenSwitch)
+        val hideAppBarSwitch = findViewById<SwitchCompat>(R.id.hideAppBarSwitch)
         prefs.edit {
             it.putBoolean(PREFS_FULLSCREEN_ID, fullscreenSwitch.isChecked)
+            it.putBoolean(PREFS_HIDEAPPBAR_ID, hideAppBarSwitch.isChecked)
         }
 
     }

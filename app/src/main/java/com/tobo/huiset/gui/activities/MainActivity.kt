@@ -38,8 +38,9 @@ class MainActivity : HuisEtActivity() {
     private var currentFragmentIndex = 0
 
 
-    private val fullScreenMode get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-        PREFS_FULLSCREEN_ID,false)
+    private val fullScreenMode get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_FULLSCREEN_ID,false)
+
+    private val hideAppBar get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_HIDEAPPBAR_ID,false)
 
     // for hiding the appbar and navbar in fullscreen mode
     private val systemUIHandler = Handler()
@@ -52,14 +53,9 @@ class MainActivity : HuisEtActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        supportActionBar?.elevation = 0.0f
-
         setupFragments(savedInstanceState)
         setupBottomTabs()
-    }
 
-    override fun onResume() {
-        super.onResume()
         if (fullScreenMode) {
             hideSystemUI()
             setSystemUIListener()
@@ -229,22 +225,35 @@ class MainActivity : HuisEtActivity() {
 
     private fun hideSystemUI() {
         val decorView = window.decorView
-        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+        if(hideAppBar){
+            supportActionBar!!.hide()
+            decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
 
-                or View.SYSTEM_UI_FLAG_FULLSCREEN// hide status bar
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN// hide status bar
+                            or View.SYSTEM_UI_FLAG_IMMERSIVE
+                    )
+        }else{
+            //same but without stable
+            decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN// hide status bar
+                            or View.SYSTEM_UI_FLAG_IMMERSIVE
+                    )
+        }
 
-                or View.SYSTEM_UI_FLAG_IMMERSIVE)
-        supportActionBar?.hide()
 
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (fullScreenMode) {
-            supportActionBar!!.show()
+            if(hideAppBar) supportActionBar!!.hide() else supportActionBar!!.show()
             systemUIHandler.removeCallbacks(hideSysRunnable)
             systemUIHandler.postDelayed(hideSysRunnable, 1000)
         }
@@ -253,7 +262,7 @@ class MainActivity : HuisEtActivity() {
     // Shows the system bars by removing all the flags
 // except for the ones that make the content appear under the system bars.
     private fun showSystemUI() {
-        supportActionBar?.show()
+//        supportActionBar?.show()
     }
 
 
