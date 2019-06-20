@@ -17,10 +17,8 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.getProductWithId
 import java.util.*
 import java.text.SimpleDateFormat
-import android.content.DialogInterface
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.tobo.huiset.gui.adapters.PersonRecAdapter
 
 class FragmentHistory : HuisEtFragment() {
 
@@ -28,6 +26,8 @@ class FragmentHistory : HuisEtFragment() {
     lateinit var historyAdapter: HistoryAdapter
     var lateTimePoint: Long = 0
     var earlyTimePoint: Long = 0
+
+    val showBuy = false
 
 
     private val timeNames =
@@ -188,9 +188,16 @@ class FragmentHistory : HuisEtFragment() {
 
         val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
-        val res =  inTimeSpan
-            .groupBy { it.productId }
-            .map { (key, values) -> HistoryItem(realm.getProductWithId(key)!!.name, values.size, values.sumBy { it.price }, false) }
+
+        data class key(val productId: String, val price: Int)
+        fun Transaction.tokey(): key{
+            return key(this.productId, this.saldoImpact)
+        }
+        val res = inTimeSpan
+            .asSequence()
+            .filter { it.isBuy == showBuy}
+            .groupBy { it.tokey()}
+            .map { (key, values) -> HistoryItem(realm.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
             .sortedByDescending { it.amount }.toMutableList()
 
 
