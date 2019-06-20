@@ -146,7 +146,7 @@ class FragmentHistory : HuisEtFragment() {
 
             val selectedPerson = getSelectedPerson()
             val name = selectedPerson?.name ?: "Niemand"
-            noDataTextView.text = "$name heeft niets geturft deze periode!"
+            noDataTextView.text = "$name heeft iets geturft deze periode!"
 
         } else {
             this.historyAdapter.items.addAll(newData)
