@@ -24,7 +24,6 @@ class FragmentPurchases : HuisEtFragment() {
     private var pickedPersonId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         return inflater.inflate(R.layout.fragment_purchases, container, false)
     }
 
@@ -32,6 +31,19 @@ class FragmentPurchases : HuisEtFragment() {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
         initProducsRec(view)
+    }
+
+    override fun onTabReactivated(){
+        // this resets the chosen person to none, putting you back to the pick person screen
+        setPersonAndUpdate(null)
+    }
+
+    override fun onBackButtonPressed(): Boolean {
+        //if we are already on the profiles screen, the activity must handle the back button
+        if(pickedPersonId == null) return false
+        //else we will handle it here
+        setPersonAndUpdate(null)
+        return true
     }
 
     private fun initProfileRec(view: View) {
@@ -88,7 +100,6 @@ class FragmentPurchases : HuisEtFragment() {
                     }
                 }.show()
         }
-
     }
 
 

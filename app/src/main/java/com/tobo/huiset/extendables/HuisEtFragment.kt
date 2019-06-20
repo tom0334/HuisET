@@ -20,4 +20,19 @@ abstract class HuisEtFragment : Fragment() {
         if (this.activity == null) throw Exception("HuisEtFragment: Error: tried to access realm before activity was attached!")
         (this.activity as HuisEtActivity).realm
     }
+
+    /**
+     * Does nothing by default, but can be overridden by subclasses to update data for example.
+     */
+    open fun onTabReactivated(){}
+
+    /**
+     * Allows the fragment to respond to back button presses. Returns wheter the action was consumed by the fragment.
+     * So: return false when you want the activity to handle it.
+     */
+    open fun onBackButtonPressed():Boolean{
+        return false
+    }
+
+
 }

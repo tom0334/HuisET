@@ -13,9 +13,9 @@ import FragmentProducts
 import FragmentProfiles
 import android.util.Log
 
-import androidx.fragment.app.Fragment
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.extendables.HuisEtFragment
 
 private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
@@ -23,7 +23,7 @@ private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
 class MainActivity : HuisEtActivity() {
 
 
-    private lateinit var fragments: List<Fragment>
+    private lateinit var fragments: List<HuisEtFragment>
     private var currentFragmentIndex = 0
 
     private fun getFragTagFromIndex(index: Int) = "MAIN_ACTIVITY_FRAG_$index"
@@ -108,7 +108,7 @@ class MainActivity : HuisEtActivity() {
         } else {
             //restore them by finding them by tag
             fragments = (0 until NUM_FRAGMENTS)
-                .map { supportFragmentManager.findFragmentByTag(getFragTagFromIndex(it))!! }
+                .map { supportFragmentManager.findFragmentByTag(getFragTagFromIndex(it))!! as HuisEtFragment }
             currentFragmentIndex = savedInstanceState.getInt(OUTSTATE_CURRENTFRAGINDEX)
         }
 
@@ -130,9 +130,18 @@ class MainActivity : HuisEtActivity() {
             .show(fragments[newFragIndex])
             .commit()
         currentFragmentIndex = newFragIndex
+        // tell the fragment that is is shown again
+        fragments[newFragIndex].onTabReactivated()
 
     }
 
+
+    override fun onBackPressed() {
+        val handled = fragments[currentFragmentIndex].onBackButtonPressed()
+        if(handled) return
+        super.onBackPressed()
+
+    }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
