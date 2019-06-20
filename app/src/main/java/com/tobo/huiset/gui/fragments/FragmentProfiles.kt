@@ -42,12 +42,12 @@ class FragmentProfiles : HuisEtFragment() {
         //this sets up the recyclerview to show the persons
         val persons = realm.where(Person::class.java)
             .equalTo("deleted", false)
-            .sort("balance", Sort.DESCENDING)
+            .sort("row", Sort.ASCENDING)
             .findAll()
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
-        rec.adapter = PersonRecAdapter(this.context!!, persons, true)
+        rec.adapter = PersonRecAdapter(this.context!!, realm, persons, true)
         rec.layoutManager = LinearLayoutManager(this.context)
         val fab = view.findViewById<FloatingActionButton>(R.id.add_profile)
 

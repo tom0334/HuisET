@@ -14,6 +14,7 @@ import android.widget.RadioGroup
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.utils.extensions.findAllCurrentPersons
 
 /**
  * Edit profile
@@ -124,10 +125,12 @@ class EditProfileActivity : HuisEtActivity() {
             showBool = true
         }
 
+        val row = realm.findAllCurrentPersons()!!.size
+
         realm.executeTransaction {
             val newColorString = "#0000ff"
             if (new) {
-                val person = Person.create(newName, newColorString, guestBool, showBool)
+                val person = Person.create(newName, newColorString, guestBool, showBool, row)
                 realm.copyToRealm(person)
             } else {
                 oldProfile!!.name = newName
@@ -137,7 +140,7 @@ class EditProfileActivity : HuisEtActivity() {
             }
         }
 
-        Toast.makeText(this, "Profile $newName added/edited, guest $guestBool, show $showBool", Toast.LENGTH_SHORT)
+        Toast.makeText(this, "Profile $newName added/edited", Toast.LENGTH_SHORT)
             .show()
 
         this.finish()

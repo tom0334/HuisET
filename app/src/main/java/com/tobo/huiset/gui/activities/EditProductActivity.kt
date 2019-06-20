@@ -15,6 +15,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.euroToCent
+import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
 
@@ -123,9 +124,11 @@ class EditProductActivity : HuisEtActivity() {
             showBool = true
         }
 
+        val row = realm.findAllCurrentProducts()!!.size
+
         realm.executeTransaction {
             if (new) {
-                val product = Product.create(newName, newPrice, showBool)
+                val product = Product.create(newName, newPrice, showBool, row)
                 realm.copyToRealm(product)
             } else {
                 oldProduct!!.name = newName
@@ -136,7 +139,7 @@ class EditProductActivity : HuisEtActivity() {
 
         Toast.makeText(
             this,
-            "Product $newName of ${newPrice.toCurrencyString()} added/edited, shown $showBool",
+            "Product $newName of ${newPrice.toCurrencyString()} added/edited",
             Toast.LENGTH_SHORT
         ).show()
         this.finish()

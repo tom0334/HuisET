@@ -39,7 +39,7 @@ class FragmentProducts : HuisEtFragment() {
         // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
-        rec.adapter = ProductRecAdapter(this.context!!, products, true)
+        rec.adapter = ProductRecAdapter(this.context!!, realm, products, true)
         rec.layoutManager = LinearLayoutManager(this.context)
 
 

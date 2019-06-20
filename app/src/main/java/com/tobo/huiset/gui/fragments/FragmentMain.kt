@@ -58,10 +58,32 @@ class FragmentMain : HuisEtFragment() {
         setupProductRec(view)
     }
 
+    override fun onTabReactivated() {
+        realm.executeTransaction {
+
+            // deselect selected product
+            realm.where(Product::class.java)
+                .equalTo("deleted", false)
+                .equalTo("selected", true)
+                .sort("row", Sort.ASCENDING)
+                .findAll()
+                .forEach {
+                    it.isSelected = false
+                }
+
+            val firstProd = realm.getFirstProduct()
+            // select 1st product
+            if (firstProd != null) {
+                firstProd.isSelected = true
+            }
+
+        }
+    }
     private fun setupProductRec(view: View): RecyclerView {
         val products = realm.where(Product::class.java)
             .equalTo("deleted", false)
             .equalTo("show", true)
+            .sort("row", Sort.ASCENDING)
             .findAll()
 
         // this sets up the recyclerview to show the products
@@ -94,7 +116,6 @@ class FragmentMain : HuisEtFragment() {
             .sort("time", Sort.DESCENDING)
             .findAll()
 
-
         val transActionRec = view.findViewById<RecyclerView>(R.id.recentRecyclerView)
         transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, realm, true)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
@@ -115,6 +136,7 @@ class FragmentMain : HuisEtFragment() {
         val profiles = realm.where(Person::class.java)
             .equalTo("deleted", false)
             .equalTo("show", true)
+            .sort("row", Sort.ASCENDING)
             .findAll()
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
@@ -131,6 +153,7 @@ class FragmentMain : HuisEtFragment() {
                     val selectedProduct = realm.where(Product::class.java)
                         .equalTo("deleted", false)
                         .equalTo("selected", true)
+                        .sort("row", Sort.ASCENDING)
                         .findFirst()
                     val t = Transaction.create(person, selectedProduct, false)
                     selectedProduct?.isSelected = false
@@ -139,6 +162,7 @@ class FragmentMain : HuisEtFragment() {
                     person.addTransaction(t)
                 }
 
+                // select 1st product again
                 realm.executeTransaction {
                     val firstProd = realm.getFirstProduct()
                     // select 1st product

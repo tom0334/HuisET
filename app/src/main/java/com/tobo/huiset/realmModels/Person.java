@@ -16,7 +16,7 @@ public class Person extends RealmObject {
     private String color;
     private boolean guest;
     private boolean show;
-    //TODO: deleted implementation, can be done if no transactions exist yet
+    private int row;
     private boolean deleted = false;
 
     private boolean selectedInHistoryView;
@@ -24,12 +24,13 @@ public class Person extends RealmObject {
     public Person() {
     }
 
-    static public Person create(String name, String color, boolean guest, boolean show) {
+    static public Person create(String name, String color, boolean guest, boolean show, int row) {
         Person p = new Person();
         p.name = name;
         p.color = color;
         p.guest = guest;
         p.show = show;
+        p.row = row;
         p.selectedInHistoryView = false;
 
         return p;
@@ -120,5 +121,13 @@ public class Person extends RealmObject {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
     }
 }

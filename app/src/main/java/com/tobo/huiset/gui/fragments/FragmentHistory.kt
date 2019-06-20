@@ -20,6 +20,7 @@ import java.util.*
 import java.text.SimpleDateFormat
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import io.realm.Sort
 
 class FragmentHistory : HuisEtFragment() {
 
@@ -172,7 +173,7 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun updatePersons(){
         val persons = mutableListOf<Person?>(null)
-        persons.addAll(realm.where(Person::class.java).findAll())
+        persons.addAll(realm.where(Person::class.java).sort("row", Sort.ASCENDING).findAll())
         personAdap.items.clear()
         personAdap.items.addAll(persons)
         personAdap.notifyDataSetChanged()

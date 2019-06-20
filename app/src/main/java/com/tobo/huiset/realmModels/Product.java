@@ -15,20 +15,21 @@ public class Product extends RealmObject {
     private String name;
     private int price;
     private boolean show;
+    private int row;    // geeft row aan
     private boolean selected = false;
-    //TODO: implement deleted functionality
     private boolean deleted = false;
 
     public Product() {
     }
 
-    static public Product create(String name, int price, boolean show) {
-        Product item = new Product();
-        item.name = name;
-        item.price = price;
-        item.show = show;
+    static public Product create(String name, int price, boolean show, int row) {
+        Product p = new Product();
+        p.name = name;
+        p.price = price;
+        p.show = show;
+        p.row = row;
 
-        return item;
+        return p;
     }
 
     public String getName() {
@@ -73,5 +74,13 @@ public class Product extends RealmObject {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
     }
 }
