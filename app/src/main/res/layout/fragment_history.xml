@@ -120,6 +120,32 @@
 
         </LinearLayout>
 
+        <RadioGroup
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/radiogroup_history_bought"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioHistoryBought"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gekocht" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioHistoryGeturft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="Geturft" />
+
+        </RadioGroup>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/historyRecyclerView"

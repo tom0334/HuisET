@@ -3,6 +3,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +28,7 @@ class FragmentHistory : HuisEtFragment() {
     var lateTimePoint: Long = 0
     var earlyTimePoint: Long = 0
 
-    val showBuy = false
+    var showBuy = false
 
 
     private val timeNames =
@@ -89,6 +90,16 @@ class FragmentHistory : HuisEtFragment() {
         view.findViewById<Button>(R.id.pickPeriodButton).setOnClickListener {
             showPickPeriodDialog()
         }
+
+        val radioGroup = view.findViewById<RadioGroup>(R.id.radiogroup_history_bought)
+
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            showBuy = checkedId == R.id.radioHistoryBought
+            updateHistory()
+            updateTimePointsText()
+        }
+
+
     }
 
     private fun showPickPeriodDialog() {
@@ -206,7 +217,7 @@ class FragmentHistory : HuisEtFragment() {
 
         val totalAmount = res.sumBy { it.amount }
         val totalPrice = res.sumBy { it.price }
-        res.add(HistoryItem("TOTAAL", totalAmount, totalPrice, true))
+        res.add(HistoryItem("Totaal", totalAmount, totalPrice, true))
         return res.toList()
 
     }
