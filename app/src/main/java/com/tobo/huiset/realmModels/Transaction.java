@@ -70,6 +70,11 @@ public class Transaction extends RealmObject {
         return productId;
     }
 
+    public int getSaldoImpact(){
+        if(isBuy()) return price;
+        else return -1 * price;
+    }
+
 
     public boolean isBuy() {
         return buy;

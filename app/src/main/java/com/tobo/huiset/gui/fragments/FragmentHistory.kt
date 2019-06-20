@@ -3,6 +3,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,10 +18,8 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.getProductWithId
 import java.util.*
 import java.text.SimpleDateFormat
-import android.content.DialogInterface
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import io.realm.Sort
 
 class FragmentHistory : HuisEtFragment() {
@@ -29,6 +28,8 @@ class FragmentHistory : HuisEtFragment() {
     lateinit var historyAdapter: HistoryAdapter
     var lateTimePoint: Long = 0
     var earlyTimePoint: Long = 0
+
+    var showBuy = false
 
 
     private val timeNames =
@@ -90,6 +91,16 @@ class FragmentHistory : HuisEtFragment() {
         view.findViewById<Button>(R.id.pickPeriodButton).setOnClickListener {
             showPickPeriodDialog()
         }
+
+        val radioGroup = view.findViewById<RadioGroup>(R.id.radiogroup_history_bought)
+
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            showBuy = checkedId == R.id.radioHistoryBought
+            updateHistory()
+            updateTimePointsText()
+        }
+
+
     }
 
     private fun showPickPeriodDialog() {
@@ -146,9 +157,11 @@ class FragmentHistory : HuisEtFragment() {
             noDataView.visibility = View.VISIBLE
 
             val selectedPerson = getSelectedPerson()
-            val name = selectedPerson?.name ?: "Niemand"
-            noDataTextView.text = "$name heeft niets geturft deze periode!"
-
+            if(selectedPerson == null){
+                noDataTextView.text = "Niemand heeft iets geturft deze periode!"
+            }else{
+                noDataTextView.text = "${selectedPerson.name} heeft niets geturft deze periode!"
+            }
         } else {
             this.historyAdapter.items.addAll(newData)
             historyRec.visibility = View.VISIBLE
@@ -189,10 +202,26 @@ class FragmentHistory : HuisEtFragment() {
 
         val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
-        return inTimeSpan
-            .groupBy { it.productId }
-            .map { (key, values) -> HistoryItem(realm.getProductWithId(key)!!, values.size, values.sumBy { it.price }) }
-            .sortedByDescending { it.amount }
+
+        data class key(val productId: String, val price: Int)
+        fun Transaction.tokey(): key{
+            return key(this.productId, this.saldoImpact)
+        }
+        val res = inTimeSpan
+            .asSequence()
+            .filter { it.isBuy == showBuy}
+            .groupBy { it.tokey()}
+            .map { (key, values) -> HistoryItem(realm.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
+            .sortedByDescending { it.amount }.toMutableList()
+
+
+        if(res.isEmpty()) return res.toList()
+
+
+        val totalAmount = res.sumBy { it.amount }
+        val totalPrice = res.sumBy { it.price }
+        res.add(HistoryItem("Totaal", totalAmount, totalPrice, true))
+        return res.toList()
 
     }
 
