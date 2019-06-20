@@ -1,6 +1,7 @@
 package com.tobo.huiset.utils.extensions
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.util.TypedValue
 import android.widget.TextView
@@ -42,4 +43,13 @@ fun Int.toNumberDecimal(): String {
     var cents = if (abscents < 10) "0" else ""
     cents += Integer.toString(abscents)
     return "$signed$euros.$cents"
+}
+
+/**
+ * Helper function that gets the editor and calls the sharedpreferences apply and
+ */
+inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit) {
+    val editor = this.edit()
+    operation(editor)
+    editor.apply()
 }

@@ -5,10 +5,51 @@
     android:layout_height="match_parent"
     tools:context=".gui.activities.SettingsActivity">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:background="@color/primaryColor"
-        android:layout_height="48dp"
-        android:layout_width="48dp"
-        android:src="@drawable/round_settings_white_48" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_margin="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/primaryTextColor"
+                    android:id="@+id/fullScreenSettingText"
+                    android:layout_alignParentLeft="true"
+                    android:text="Fullscreen mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="2dp"
+                    android:id="@+id/fullScreenSettingExplain"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/fullScreenSettingText"
+                    android:text="Verbergt de statusbar en de knoppenbalk onder aan uw scherm(home, terug en recents)."
+                    android:layout_width="wrap_content"
+                    android:layout_toLeftOf="@id/fullScreenSwitch"
+                    android:layout_height="wrap_content" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/fullScreenSwitch"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>
