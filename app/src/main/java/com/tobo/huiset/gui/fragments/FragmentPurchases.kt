@@ -55,7 +55,7 @@ class FragmentPurchases : HuisEtFragment() {
             .sort("balance", Sort.ASCENDING)
             .findAll()
 
-        pickUserRec.adapter = PersonRecAdapter(context!!, profiles, true)
+        pickUserRec.adapter = PersonRecAdapter(context!!, realm, profiles, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
 
         ItemClickSupport.addTo(pickUserRec).setOnItemClickListener { _, position, _ ->
@@ -70,7 +70,7 @@ class FragmentPurchases : HuisEtFragment() {
         val products = realm.findAllCurrentProducts()
 
         // this sets up the recyclerview to show the persons
-        pickProductsRec.adapter = ProductRecAdapter(this.context!!, products, true)
+        pickProductsRec.adapter = ProductRecAdapter(this.context!!, realm, products, true)
         pickProductsRec.layoutManager = LinearLayoutManager(this.context)
 
         ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { _, position, _ ->
