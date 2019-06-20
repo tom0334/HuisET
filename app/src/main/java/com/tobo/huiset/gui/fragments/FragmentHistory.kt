@@ -199,7 +199,7 @@ class FragmentHistory : HuisEtFragment() {
 
         val totalAmount = res.sumBy { it.amount }
         val totalPrice = res.sumBy { it.price }
-        res.add(HistoryItem("TOTAAL: $totalAmount", 0, totalPrice, true))
+        res.add(HistoryItem("TOTAAL", totalAmount, totalPrice, true))
         return res.toList()
 
     }

@@ -26,10 +26,11 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
         holder.priceTv.text = item.price.toCurrencyString()
 
         if(item.total) {
-            holder.amountTv.text = ""
+            holder.totalDivider.visibility = View.VISIBLE
         }else{
-            holder.amountTv.text = item.amount.toString()
+            holder.totalDivider.visibility = View.GONE
         }
+        holder.amountTv.text = item.amount.toString()
     }
 
     // Gets the number of animals in the list
@@ -43,4 +44,5 @@ class HistoryViewholder(view: View) : RecyclerView.ViewHolder(view) {
     val productNameTv = view.findViewById<TextView>(R.id.historyView_product_name)!!
     val amountTv = view.findViewById<TextView>(R.id.historyView_productAmount)!!
     val priceTv = view.findViewById<TextView>(R.id.historyView_total_price)!!
+    val totalDivider = view.findViewById<View>(R.id.historyView_item_divider)!!
 }
