@@ -188,10 +188,19 @@ class FragmentHistory : HuisEtFragment() {
 
         val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
-        return inTimeSpan
+        val res =  inTimeSpan
             .groupBy { it.productId }
-            .map { (key, values) -> HistoryItem(realm.getProductWithId(key)!!, values.size, values.sumBy { it.price }) }
-            .sortedByDescending { it.amount }
+            .map { (key, values) -> HistoryItem(realm.getProductWithId(key)!!.name, values.size, values.sumBy { it.price }, false) }
+            .sortedByDescending { it.amount }.toMutableList()
+
+
+        if(res.isEmpty()) return res.toList()
+
+
+        val totalAmount = res.sumBy { it.amount }
+        val totalPrice = res.sumBy { it.price }
+        res.add(HistoryItem("TOTAAL: $totalAmount", 0, totalPrice, true))
+        return res.toList()
 
     }
 

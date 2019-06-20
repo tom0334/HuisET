@@ -10,7 +10,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
-data class HistoryItem(val product: Product, val amount: Int, val price: Int)
+data class HistoryItem(val productName: String, val amount: Int, val price: Int, val total:Boolean)
 
 
 class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) :
@@ -22,9 +22,14 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
 
     override fun onBindViewHolder(holder: HistoryViewholder, position: Int) {
         val item = items[position]
-        holder.amountTv.text = item.amount.toString()
-        holder.productNameTv.text = item.product.name
+        holder.productNameTv.text = item.productName
         holder.priceTv.text = item.price.toCurrencyString()
+
+        if(item.total) {
+            holder.amountTv.text = ""
+        }else{
+            holder.amountTv.text = item.amount.toString()
+        }
     }
 
     // Gets the number of animals in the list
