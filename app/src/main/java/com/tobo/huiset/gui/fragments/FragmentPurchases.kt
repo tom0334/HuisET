@@ -3,6 +3,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.extendables.HuisEtFragment
@@ -49,6 +50,8 @@ class FragmentPurchases : HuisEtFragment() {
 
     private fun initProfileRec(view: View) {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
+        pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
+
 
         val profiles = realm.where(Person::class.java)
             .equalTo("deleted", false)
@@ -67,6 +70,8 @@ class FragmentPurchases : HuisEtFragment() {
     private fun initProductsRec(view: View) {
         val pickProductsRec = view.findViewById<RecyclerView>(R.id.pickProductsRec)
         pickProductsRec.visibility = View.VISIBLE
+        pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
+
 
         val products = realm.findAllCurrentProducts()
 
