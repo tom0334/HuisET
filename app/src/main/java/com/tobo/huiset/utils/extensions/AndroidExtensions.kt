@@ -29,7 +29,12 @@ fun String.euroToCent(): Int {
     if (this.contains('.')) {
         val split = this.split('.')
         result += Integer.parseInt(split[0]) * 100
-        result += Integer.parseInt(split[1])
+        if (split[1].length == 1) {
+            result += Integer.parseInt(split[1]) * 10
+        }
+        else if (split[1].length == 2) {
+            result += Integer.parseInt(split[1])
+        }
     } else {
         result += Integer.parseInt(this) * 100
     }

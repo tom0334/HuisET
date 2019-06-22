@@ -162,8 +162,8 @@ class EditProductActivity : HuisEtActivity() {
         }
         // format should be _.cc
         if (price.contains('.')) {
-            if (price.split('.')[1].length != 2) {
-                editText.error = "Er moeten 2 getallen achter de comma"
+            if (price.split('.')[1].length > 2) {
+                editText.error = "Er mogen maximaal 2 getallen achter de comma"
                 return false
             }
         }
