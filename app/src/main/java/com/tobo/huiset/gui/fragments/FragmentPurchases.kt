@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
 import io.realm.Sort
 import com.google.android.material.snackbar.Snackbar
+import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
+import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 
@@ -30,7 +31,7 @@ class FragmentPurchases : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
-        initProducsRec(view)
+        initProductsRec(view)
     }
 
     override fun onTabReactivated(){
@@ -55,7 +56,7 @@ class FragmentPurchases : HuisEtFragment() {
             .sort("row", Sort.ASCENDING)
             .findAll()
 
-        pickUserRec.adapter = PersonRecAdapter(context!!, realm, profiles, true)
+        pickUserRec.adapter = PurchasePersonRecAdapter(context!!, realm, profiles, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
 
         ItemClickSupport.addTo(pickUserRec).setOnItemClickListener { _, position, _ ->
@@ -63,14 +64,14 @@ class FragmentPurchases : HuisEtFragment() {
         }
     }
 
-    private fun initProducsRec(view: View) {
+    private fun initProductsRec(view: View) {
         val pickProductsRec = view.findViewById<RecyclerView>(R.id.pickProductsRec)
         pickProductsRec.visibility = View.VISIBLE
 
         val products = realm.findAllCurrentProducts()
 
         // this sets up the recyclerview to show the persons
-        pickProductsRec.adapter = ProductRecAdapter(this.context!!, realm, products, true)
+        pickProductsRec.adapter = PurchaseProductRecAdapter(this.context!!, realm, products, true)
         pickProductsRec.layoutManager = LinearLayoutManager(this.context)
 
         ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { _, position, _ ->

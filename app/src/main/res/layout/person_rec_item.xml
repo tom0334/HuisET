@@ -35,10 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 
-    <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-    />
 
     <ImageView
             android:id="@+id/personRecItem_up"
@@ -48,6 +44,7 @@
             android:layout_gravity="center_vertical|right"
             android:scaleType="center"
             android:src="@drawable/baseline_keyboard_arrow_up_black_24" />
+
 
     <ImageView
             android:id="@+id/personRecItem_down"
