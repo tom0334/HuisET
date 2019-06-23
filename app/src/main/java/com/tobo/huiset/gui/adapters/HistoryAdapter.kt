@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
-import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
 data class HistoryItem(val productName: String, val amount: Int, val price: Int, val total:Boolean)

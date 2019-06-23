@@ -4,25 +4,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tobo.huiset.extendables.HuisEtFragment
+import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.adapters.ProductRecAdapter
+import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
+import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import io.realm.Sort
-import com.google.android.material.snackbar.Snackbar
-import com.tobo.huiset.extendables.HuisEtActivity
-import com.tobo.huiset.gui.activities.MainActivity
-import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
-import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.findAllCurrentProducts
-import kotlinx.android.synthetic.main.activity_main.*
+import io.realm.Sort
 
 
 class FragmentPurchases : HuisEtFragment() {

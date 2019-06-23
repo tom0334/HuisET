@@ -1,6 +1,5 @@
 package com.tobo.huiset.gui.activities
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.appcompat.widget.SwitchCompat
@@ -22,7 +21,7 @@ class SettingsActivity : HuisEtActivity() {
     }
 
 
-    fun showStatus() {
+    private fun showStatus() {
         val fullscreenSwitch = findViewById<SwitchCompat>(R.id.fullScreenSwitch)
         val hideAppBarSwitch = findViewById<SwitchCompat>(R.id.hideAppBarSwitch)
 
