@@ -6,7 +6,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_width="0dp">
 
         <androidx.recyclerview.widget.RecyclerView
