@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
+import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.adapters.HistoryAdapter
 import com.tobo.huiset.gui.adapters.HistoryItem
 import com.tobo.huiset.gui.adapters.HistoryPersonRecAdapter
@@ -16,20 +18,18 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.getProductWithId
-import java.util.*
-import java.text.SimpleDateFormat
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import io.realm.Sort
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FragmentHistory : HuisEtFragment() {
 
-    lateinit var personAdap: HistoryPersonRecAdapter
-    lateinit var historyAdapter: HistoryAdapter
-    var lateTimePoint: Long = 0
-    var earlyTimePoint: Long = 0
+    private lateinit var personAdap: HistoryPersonRecAdapter
+    private lateinit var historyAdapter: HistoryAdapter
+    private var lateTimePoint: Long = 0
+    private var earlyTimePoint: Long = 0
 
-    var showBuy = false
+    private var showBuy = false
 
 
     private val timeNames =
@@ -47,8 +47,7 @@ class FragmentHistory : HuisEtFragment() {
     private var timeDiffSelected: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_history, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
     override fun onTabReactivated(){
@@ -157,10 +156,13 @@ class FragmentHistory : HuisEtFragment() {
             noDataView.visibility = View.VISIBLE
 
             val selectedPerson = getSelectedPerson()
-            if(selectedPerson == null){
-                noDataTextView.text = "Niemand heeft iets geturft deze periode!"
-            }else{
-                noDataTextView.text = "${selectedPerson.name} heeft niets geturft deze periode!"
+
+            noDataTextView.text = when{
+                selectedPerson != null && showBuy -> "${selectedPerson.name} heeft niets gekocht deze periode!"
+                selectedPerson != null && !showBuy -> "${selectedPerson.name} heeft niets geturft deze periode!"
+                selectedPerson == null && !showBuy -> "Niemand heeft iets geturft deze periode!"
+                else-> "Niemand heeft iets gekocht deze periode!"
+
             }
         } else {
             this.historyAdapter.items.addAll(newData)
@@ -202,7 +204,9 @@ class FragmentHistory : HuisEtFragment() {
 
         val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
-
+        /**
+         * class key starts with a lowercase letter, because it can't be found otherwise
+         */
         data class key(val productId: String, val price: Int)
         fun Transaction.tokey(): key{
             return key(this.productId, this.saldoImpact)

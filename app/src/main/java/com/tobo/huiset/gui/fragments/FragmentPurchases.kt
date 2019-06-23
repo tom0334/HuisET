@@ -2,22 +2,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tobo.huiset.extendables.HuisEtFragment
+import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.adapters.ProductRecAdapter
+import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
+import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import io.realm.Sort
-import com.google.android.material.snackbar.Snackbar
-import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
-import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.findAllCurrentProducts
+import io.realm.Sort
 
 
 class FragmentPurchases : HuisEtFragment() {
@@ -97,14 +98,25 @@ class FragmentPurchases : HuisEtFragment() {
             }
             setPersonAndUpdate(null)
 
-            Snackbar
+            val snackbar = Snackbar
                 .make(view, "${product.name} gekocht door ${person.name}", 4000)
                 .setAction("Undo") {
                     realm.executeSafe {
                         person.undoTransaction(doneTransaction)
                         doneTransaction?.deleteFromRealm()
                     }
-                }.show()
+                }
+
+
+            val marginBottom = (this.activity as HuisEtActivity).getSnackbarBottomMargin()
+            val layoutParams = snackbar.view.layoutParams as FrameLayout.LayoutParams
+            layoutParams.setMargins(
+                layoutParams.leftMargin,
+                layoutParams.topMargin,
+                layoutParams.rightMargin,
+                layoutParams.bottomMargin + marginBottom
+            )
+            snackbar.show()
         }
     }
 

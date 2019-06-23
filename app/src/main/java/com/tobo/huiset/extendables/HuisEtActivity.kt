@@ -23,4 +23,11 @@ abstract class HuisEtActivity : AppCompatActivity() {
         realm.close()
     }
 
+    /**
+     * Override this to add a custom margin to snackbars.
+     */
+    open fun getSnackbarBottomMargin(): Int{
+        return 0
+    }
+
 }

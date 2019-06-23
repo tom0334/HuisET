@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.R
+import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
-import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.getFirstProduct
 import com.tobo.huiset.utils.extensions.toPixel
@@ -23,6 +23,8 @@ import io.realm.Sort
 
 
 class FragmentMain : HuisEtFragment() {
+
+    private lateinit var spacer: ConsistentSpacingDecoration
 
     private val TRANSACTION_VIEW_REFRESH_TIME = 5000L
 
@@ -76,8 +78,13 @@ class FragmentMain : HuisEtFragment() {
             if (firstProd != null) {
                 firstProd.isSelected = true
             }
-
         }
+        val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
+        val adapter = turfRec!!.adapter as TurfRecAdapter
+
+        val columns = getNumOfColunns(adapter.itemCount)
+        turfRec.layoutManager = GridLayoutManager(this.context,columns)
+        setupSpacingForTurRec(columns)
     }
     private fun setupProductRec(view: View): RecyclerView {
         val products = realm.where(Product::class.java)
@@ -131,7 +138,6 @@ class FragmentMain : HuisEtFragment() {
      * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
      */
     private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
-        val columns = 2
 
         val profiles = realm.where(Person::class.java)
             .equalTo("deleted", false)
@@ -139,12 +145,13 @@ class FragmentMain : HuisEtFragment() {
             .sort("row", Sort.ASCENDING)
             .findAll()
 
+        val columns = getNumOfColunns(profiles.count())
+
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
-        val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!), 16.toPixel(this.context!!), columns)
-        turfRec.addItemDecoration(spacer)
+        setupSpacingForTurRec(columns)
 
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
             val person = profiles[position]
@@ -176,6 +183,30 @@ class FragmentMain : HuisEtFragment() {
             }
         }
     }
+
+    private fun getNumOfColunns(amountOfProfilesToShow: Int):Int{
+        val displayMetrics = context!!.getResources().displayMetrics
+        val dpHeight = displayMetrics.heightPixels / displayMetrics.density
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+        return when{
+            amountOfProfilesToShow >= 8 && dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
+            amountOfProfilesToShow >= 6 && dpWidth > 900 -> 3
+            amountOfProfilesToShow >= 4 && dpWidth > 600 -> 2 // 7 inch tablet in portrait
+            else -> 1
+        }
+    }
+
+    private fun setupSpacingForTurRec(columns :Int){
+        val turfRec = view!!.findViewById<RecyclerView>(R.id.mainPersonRec)
+        if(::spacer.isInitialized){
+            turfRec.removeItemDecoration(spacer)
+        }
+        spacer =  ConsistentSpacingDecoration(16.toPixel(this.context!!), 16.toPixel(this.context!!), columns)
+        turfRec.addItemDecoration(spacer)
+    }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
