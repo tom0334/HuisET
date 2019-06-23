@@ -157,10 +157,13 @@ class FragmentHistory : HuisEtFragment() {
             noDataView.visibility = View.VISIBLE
 
             val selectedPerson = getSelectedPerson()
-            if(selectedPerson == null){
-                noDataTextView.text = "Niemand heeft iets geturft deze periode!"
-            }else{
-                noDataTextView.text = "${selectedPerson.name} heeft niets geturft deze periode!"
+
+            noDataTextView.text = when{
+                selectedPerson != null && showBuy -> "${selectedPerson.name} heeft niets gekocht deze periode!"
+                selectedPerson != null && !showBuy -> "${selectedPerson.name} heeft niets geturft deze periode!"
+                selectedPerson == null && !showBuy -> "Niemand heeft iets geturft deze periode!"
+                else-> "Niemand heeft iets gekocht deze periode!"
+
             }
         } else {
             this.historyAdapter.items.addAll(newData)
