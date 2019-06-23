@@ -12,7 +12,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainProductRec"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/fragmentMain_product_height"
             />
 
         <androidx.recyclerview.widget.RecyclerView
