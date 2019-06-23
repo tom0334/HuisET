@@ -45,7 +45,7 @@ public class Transaction extends RealmObject {
         } else if (secondsAgo < 60) {
             return "Zojuist";
         } else if (minutesAgo < 60) {
-            return minutesAgo + " minuten\ngeleden";
+            return minutesAgo + " min.\ngeleden";
         } else if (hoursAgo < 24) {
             return hoursAgo + " uur\ngeleden";
         } else if (daysAgo < 7) {

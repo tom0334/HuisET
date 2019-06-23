@@ -17,9 +17,10 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:textColor="@color/primaryTextColor"
             android:maxLines="1"
             android:id="@+id/main_transactionRec_name"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-condensed-medium"
             android:textSize="20sp"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
