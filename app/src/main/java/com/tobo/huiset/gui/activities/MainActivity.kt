@@ -251,4 +251,12 @@ class MainActivity : HuisEtActivity() {
         }
     }
 
+    /**
+     * Snackbars must appear directly above the bottom bar
+     */
+    override fun getSnackbarBottomMargin(): Int {
+        return this.findViewById<View>(R.id.bottomNavigation).height
+    }
+
+
 }
