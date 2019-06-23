@@ -26,6 +26,8 @@ import io.realm.Sort
 
 class FragmentMain : HuisEtFragment() {
 
+    private lateinit var spacer: ConsistentSpacingDecoration
+
     private val TRANSACTION_VIEW_REFRESH_TIME = 5000L
 
     private var transactionTimeRefreshHandler: Handler? = null
@@ -79,14 +81,12 @@ class FragmentMain : HuisEtFragment() {
                 firstProd.isSelected = true
             }
         }
-
         val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
         val adapter = turfRec!!.adapter as TurfRecAdapter
 
-        turfRec.layoutManager = GridLayoutManager(this.context, getNumOfColunns(adapter.itemCount))
-
-
-
+        val columns = getNumOfColunns(adapter.itemCount)
+        turfRec.layoutManager = GridLayoutManager(this.context,columns)
+        setupSpacingForTurRec(columns)
     }
     private fun setupProductRec(view: View): RecyclerView {
         val products = realm.where(Product::class.java)
@@ -153,8 +153,7 @@ class FragmentMain : HuisEtFragment() {
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
-        val spacer = ConsistentSpacingDecoration(16.toPixel(this.context!!), 16.toPixel(this.context!!), columns)
-        turfRec.addItemDecoration(spacer)
+        setupSpacingForTurRec(columns)
 
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
             val person = profiles[position]
@@ -198,6 +197,15 @@ class FragmentMain : HuisEtFragment() {
             amountOfProfilesToShow >= 4 && dpWidth > 600 -> 2 // 7 inch tablet in portrait
             else -> 1
         }
+    }
+
+    private fun setupSpacingForTurRec(columns :Int){
+        val turfRec = view!!.findViewById<RecyclerView>(R.id.mainPersonRec)
+        if(::spacer.isInitialized){
+            turfRec.removeItemDecoration(spacer)
+        }
+        spacer =  ConsistentSpacingDecoration(16.toPixel(this.context!!), 16.toPixel(this.context!!), columns)
+        turfRec.addItemDecoration(spacer)
     }
 
 
