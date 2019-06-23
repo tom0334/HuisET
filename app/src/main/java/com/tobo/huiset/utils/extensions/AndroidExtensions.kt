@@ -16,7 +16,7 @@ fun TextView.setTextColorFromHex(hex: String) = this.setTextColor(Color.parseCol
 
 fun Int.toCurrencyString(): String {
     val signed = if (this < 0) "-" else ""
-    val euros = Integer.toString(this / 100)
+    val euros = Integer.toString(Math.abs(this / 100))
     val abscents = Math.abs(this % 100)
     var cents = if (abscents < 10) "0" else ""
     cents += Integer.toString(abscents)
@@ -29,7 +29,12 @@ fun String.euroToCent(): Int {
     if (this.contains('.')) {
         val split = this.split('.')
         result += Integer.parseInt(split[0]) * 100
-        result += Integer.parseInt(split[1])
+        if (split[1].length == 1) {
+            result += Integer.parseInt(split[1]) * 10
+        }
+        else if (split[1].length == 2) {
+            result += Integer.parseInt(split[1])
+        }
     } else {
         result += Integer.parseInt(this) * 100
     }
