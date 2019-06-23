@@ -22,6 +22,8 @@ import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
 
 
+
+
 class FragmentMain : HuisEtFragment() {
 
     private val TRANSACTION_VIEW_REFRESH_TIME = 5000L
@@ -76,8 +78,15 @@ class FragmentMain : HuisEtFragment() {
             if (firstProd != null) {
                 firstProd.isSelected = true
             }
-
         }
+
+        val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
+        val adapter = turfRec!!.adapter as TurfRecAdapter
+
+        turfRec.layoutManager = GridLayoutManager(this.context, getNumOfColunns(adapter.itemCount))
+
+
+
     }
     private fun setupProductRec(view: View): RecyclerView {
         val products = realm.where(Product::class.java)
@@ -131,13 +140,14 @@ class FragmentMain : HuisEtFragment() {
      * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
      */
     private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
-        val columns = 2
 
         val profiles = realm.where(Person::class.java)
             .equalTo("deleted", false)
             .equalTo("show", true)
             .sort("row", Sort.ASCENDING)
             .findAll()
+
+        val columns = getNumOfColunns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
@@ -176,6 +186,21 @@ class FragmentMain : HuisEtFragment() {
             }
         }
     }
+
+    private fun getNumOfColunns(amountOfProfilesToShow: Int):Int{
+        val displayMetrics = context!!.getResources().displayMetrics
+        val dpHeight = displayMetrics.heightPixels / displayMetrics.density
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+        return when{
+            amountOfProfilesToShow >= 8 && dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
+            amountOfProfilesToShow >= 6 && dpWidth > 900 -> 3
+            amountOfProfilesToShow >= 4 && dpWidth > 600 -> 2 // 7 inch tablet in portrait
+            else -> 1
+        }
+    }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
