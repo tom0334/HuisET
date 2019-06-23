@@ -1,24 +1,24 @@
 package com.tobo.huiset.gui.activities
 
-import android.content.Intent
-import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import FragmentMain
 import FragmentHistory
-import FragmentPurchases
+import FragmentMain
 import FragmentProducts
 import FragmentProfiles
+import FragmentPurchases
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
-import android.view.MotionEvent
-import android.os.Handler
 
 private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
@@ -53,7 +53,7 @@ class MainActivity : HuisEtActivity() {
             hideSystemUI()
             setSystemUIListener()
         } else {
-            systemUIHandler.removeCallbacks(null);
+            systemUIHandler.removeCallbacks(null)
         }
     }
 
@@ -84,22 +84,18 @@ class MainActivity : HuisEtActivity() {
         val id = item.itemId
 
         if (id == R.id.stats) {
-            Toast.makeText(this, "stats clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, StatsActivity::class.java)
             startActivity(intent)
         }
 
         if (id == R.id.achievements) {
-            Toast.makeText(this, "achievements clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, AchievementsActivity::class.java)
             startActivity(intent)
         }
 
         if (id == R.id.settings) {
-            Toast.makeText(this, "settings clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, SettingsActivity::class.java)
             startActivityForResult(intent, MAINACTIVITY_REQUESTCODE_SETTINGS)
-
         }
 
         return super.onOptionsItemSelected(item)
@@ -200,7 +196,7 @@ class MainActivity : HuisEtActivity() {
             systemUIHandler.postDelayed(hideSysRunnable, 2000)
         }
 
-        decorView.setOnTouchListener { v, event ->
+        decorView.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN,
 

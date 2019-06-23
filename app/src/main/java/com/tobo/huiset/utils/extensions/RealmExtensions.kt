@@ -6,7 +6,6 @@ import com.tobo.huiset.realmModels.Product
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
-import java.lang.Exception
 
 fun Realm.getFirstProduct(): Product? {
     return this.where(Product::class.java)
