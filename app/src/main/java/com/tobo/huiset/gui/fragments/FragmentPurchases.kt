@@ -98,25 +98,13 @@ class FragmentPurchases : HuisEtFragment() {
             }
             setPersonAndUpdate(null)
 
-            val snackbar = Snackbar
-                .make(view, "${product.name} gekocht door ${person.name}", 4000)
+            Snackbar.make(view.findViewById(R.id.purchasesContentView), "${product.name} gekocht door ${person.name}", 4000)
                 .setAction("Undo") {
                     realm.executeSafe {
                         person.undoTransaction(doneTransaction)
                         doneTransaction?.deleteFromRealm()
                     }
-                }
-
-
-            val marginBottom = (this.activity as HuisEtActivity).getSnackbarBottomMargin()
-            val layoutParams = snackbar.view.layoutParams as FrameLayout.LayoutParams
-            layoutParams.setMargins(
-                layoutParams.leftMargin,
-                layoutParams.topMargin,
-                layoutParams.rightMargin,
-                layoutParams.bottomMargin + marginBottom
-            )
-            snackbar.show()
+                }.show()
         }
     }
 
