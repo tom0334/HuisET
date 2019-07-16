@@ -15,8 +15,6 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.utils.extensions.executeSafe
-import com.tobo.huiset.utils.extensions.getFirstProduct
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
@@ -61,24 +59,7 @@ class FragmentMain : HuisEtFragment() {
     }
 
     override fun onTabReactivated() {
-        realm.executeTransaction {
-
-            // deselect selected product
-            realm.where(Product::class.java)
-                .equalTo("deleted", false)
-                .equalTo("selected", true)
-                .sort("row", Sort.ASCENDING)
-                .findAll()
-                .forEach {
-                    it.isSelected = false
-                }
-
-            val firstProd = realm.getFirstProduct()
-            // select 1st product
-            if (firstProd != null) {
-                firstProd.isSelected = true
-            }
-        }
+        db.selectFirstProduct()
         val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
         val adapter = turfRec!!.adapter as TurfRecAdapter
 
@@ -99,16 +80,7 @@ class FragmentMain : HuisEtFragment() {
         prodRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
 
         ItemClickSupport.addTo(prodRec).setOnItemClickListener { _, position, _ ->
-            realm.executeTransaction {
-                realm.where(Product::class.java)
-                    .equalTo("deleted", false)
-                    .equalTo("selected", true)
-                    .findAll()
-                    .forEach {
-                        it.isSelected = false
-                    }
-                products[position]?.isSelected = true
-            }
+            db.selectProduct(productToSelect = products[position])
         }
         return prodRec
     }
@@ -156,27 +128,8 @@ class FragmentMain : HuisEtFragment() {
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
             val person = profiles[position]
             if (person != null) {
-                realm.executeSafe {
-                    val selectedProduct = realm.where(Product::class.java)
-                        .equalTo("deleted", false)
-                        .equalTo("selected", true)
-                        .sort("row", Sort.ASCENDING)
-                        .findFirst()
-                    val t = Transaction.create(person, selectedProduct, false)
-                    selectedProduct?.isSelected = false
-
-                    realm.copyToRealmOrUpdate(t)
-                    person.addTransaction(t)
-                }
-
-                // select 1st product again
-                realm.executeTransaction {
-                    val firstProd = realm.getFirstProduct()
-                    // select 1st product
-                    if (firstProd != null) {
-                        firstProd.isSelected = true
-                    }
-                }
+               db.doTransaction(person)
+                db.selectFirstProduct()
 
                 //scroll to the top, because the item is added at the top
                 transitionRec.scrollToPosition(0)
