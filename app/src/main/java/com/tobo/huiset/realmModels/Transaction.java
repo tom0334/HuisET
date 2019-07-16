@@ -35,6 +35,7 @@ public class Transaction extends RealmObject {
         long minutesAgo = secondsAgo / 60;
         long hoursAgo = minutesAgo / 60;
         long daysAgo = hoursAgo / 24;
+        long weeksAgo = daysAgo / 7;
         //#yolo
         long monthsAgo = daysAgo / 30;
         long yearsAgo = monthsAgo / 12;
@@ -50,7 +51,9 @@ public class Transaction extends RealmObject {
             return hoursAgo + " uur\ngeleden";
         } else if (daysAgo < 7) {
             return daysAgo + " dagen\ngeleden";
-        } else if (monthsAgo < 30) {
+        } else if (daysAgo < 30) {
+            return weeksAgo + " weken\ngeleden";
+        } else if (monthsAgo < 12) {
             return monthsAgo + " maanden\ngeleden";
         } else {
             return yearsAgo + " jaar\ngeleden";
