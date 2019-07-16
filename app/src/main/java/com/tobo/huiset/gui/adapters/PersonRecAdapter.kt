@@ -36,9 +36,14 @@ class PersonRecAdapter(
         val person = data?.get(position) ?: return
 
         holder.nameTv.text = person.name
+
         holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balanceColor
         holder.balanceTv.setTextColorFromHex(colorString)
+
+        holder.hiddenTv.text = "verborgen"
+        if (!person.show)
+            holder.hiddenTv.visibility = View.VISIBLE
 
         // make item go up
         holder.upIv.setOnClickListener {
@@ -73,5 +78,6 @@ class PersonRecAdapter(
         val balanceTv = itemView.findViewById<TextView>(R.id.personRecItem_balance)!!
         val upIv = itemView.findViewById<ImageView>(R.id.personRecItem_up)!!
         val downIv = itemView.findViewById<ImageView>(R.id.personRecItem_down)!!
+        val hiddenTv = itemView.findViewById<TextView>(R.id.personRecItem_hidden)!!
     }
 }

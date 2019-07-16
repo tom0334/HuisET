@@ -44,7 +44,7 @@ class EditProfileActivity : HuisEtActivity() {
             }
 
             val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showPerson)
-            if (oldProfile!!.isShow) {
+            if (oldProfile!!.show) {
                 showRadioGroup.check(R.id.radioShowPerson)
             } else {
                 showRadioGroup.check(R.id.radioHidePerson)
@@ -136,7 +136,7 @@ class EditProfileActivity : HuisEtActivity() {
                 oldProfile!!.name = newName
                 oldProfile!!.color = newColorString
                 oldProfile!!.isGuest = guestBool
-                oldProfile!!.isShow = showBool
+                oldProfile!!.show = showBool
             }
         }
 

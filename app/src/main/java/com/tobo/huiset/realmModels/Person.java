@@ -95,7 +95,7 @@ public class Person extends RealmObject {
         this.guest = guest;
     }
 
-    public boolean isShow() {
+    public boolean getShow() {
         return show;
     }
 

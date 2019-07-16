@@ -34,7 +34,12 @@ class ProductRecAdapter(
         val product = data?.get(position) ?: return
 
         holder.nameTv.text = product.name
+
         holder.priceTv.text = product.price.toCurrencyString()
+
+        holder.hiddenTv.text = "verborgen"
+        if (!product.show)
+            holder.hiddenTv.visibility = View.VISIBLE
 
         // make item go up
         holder.upIv.setOnClickListener {
@@ -69,5 +74,6 @@ class ProductRecAdapter(
         val priceTv = itemView.findViewById<TextView>(R.id.productRecItem_price)!!
         val upIv = itemView.findViewById<ImageView>(R.id.productRecItem_up)!!
         val downIv = itemView.findViewById<ImageView>(R.id.productRecItem_down)!!
+        val hiddenTv = itemView.findViewById<TextView>(R.id.productRecItem_hidden)!!
     }
 }
