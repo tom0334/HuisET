@@ -94,4 +94,8 @@ public class Transaction extends RealmObject {
     public String getId() {
         return id;
     }
+
+    public long getTime() {
+        return time;
+    }
 }
