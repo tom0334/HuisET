@@ -66,7 +66,7 @@ class HuisETDB (private val realm: Realm){
      * Adds a new transaction on the selected product
      * @param person the person to put the transaction on
      */
-    fun doTransaction(person: Person) {
+    fun doTransactionWithSelectedProduct(person: Person) {
         realm.executeSafe {
             val selectedProduct = getSelectedProduct()
             val t = Transaction.create(person, selectedProduct, false)
@@ -76,6 +76,7 @@ class HuisETDB (private val realm: Realm){
             person.addTransaction(t)
         }
     }
+
 
     fun undoTransaction(doneTransaction: Transaction?, person: Person) {
         realm.executeSafe {
@@ -104,14 +105,32 @@ class HuisETDB (private val realm: Realm){
         return query.sort("row", Sort.ASCENDING).findAll()
     }
 
-    fun findAllCurrentPersons(): RealmResults<Person> {
-        return realm.where(Person::class.java)
+    fun findAllCurrentPersons(excludeHidden:Boolean = false): RealmResults<Person> {
+        val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
-            .sort("row", Sort.ASCENDING)
-            .findAll()
+        if (excludeHidden){
+            query.equalTo("show",true)
+        }
+        return query.sort("row", Sort.ASCENDING).findAll()
     }
 
+    fun getPersonWithId(pickedPersonId: String?): Person? {
+        if(pickedPersonId == null) return null
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("id", pickedPersonId)
+            .findFirst()
+    }
 
+    fun createAndSaveTransaction(person: Person, product: Product, buy: Boolean):Transaction{
+        var savedTrans:Transaction? = null
+        realm.executeTransaction{
+            val trans = Transaction.create(person, product, buy)
+            person.addTransaction(trans)
+            savedTrans = realm.copyToRealmOrUpdate(trans)
+        }
+        return savedTrans!!
+    }
 
 
 }

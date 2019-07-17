@@ -40,10 +40,7 @@ class FragmentProfiles : HuisEtFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //this sets up the recyclerview to show the persons
-        val persons = realm.where(Person::class.java)
-            .equalTo("deleted", false)
-            .sort("row", Sort.ASCENDING)
-            .findAll()
+        val persons = db.findAllCurrentPersons()
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))

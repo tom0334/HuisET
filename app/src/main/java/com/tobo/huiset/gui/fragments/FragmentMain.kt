@@ -12,7 +12,6 @@ import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toPixel
@@ -107,12 +106,7 @@ class FragmentMain : HuisEtFragment() {
      */
     private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
 
-        val profiles = realm.where(Person::class.java)
-            .equalTo("deleted", false)
-            .equalTo("show", true)
-            .sort("row", Sort.ASCENDING)
-            .findAll()
-
+        val profiles = db.findAllCurrentPersons(excludeHidden = true)
         val columns = getNumOfColunns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
@@ -124,7 +118,7 @@ class FragmentMain : HuisEtFragment() {
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
             val person = profiles[position]
             if (person != null) {
-               db.doTransaction(person)
+               db.doTransactionWithSelectedProduct(person)
                 db.selectFirstProduct()
 
                 //scroll to the top, because the item is added at the top

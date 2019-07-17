@@ -51,12 +51,7 @@ class FragmentPurchases : HuisEtFragment() {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
         pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
 
-
-        val profiles = realm.where(Person::class.java)
-            .equalTo("deleted", false)
-            .equalTo("show", true)
-            .sort("row", Sort.ASCENDING)
-            .findAll()
+        val profiles = db.findAllCurrentPersons(excludeHidden = false)
 
         pickUserRec.adapter = PurchasePersonRecAdapter(context!!, realm, profiles, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
@@ -80,20 +75,10 @@ class FragmentPurchases : HuisEtFragment() {
 
         ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { _, position, _ ->
 
-            val person = realm.where(Person::class.java)
-                .equalTo("deleted", false)
-                .equalTo("id", pickedPersonId)
-                .findFirst() ?: return@setOnItemClickListener
-            val product = products!![position] ?: return@setOnItemClickListener
+            val person = db.getPersonWithId(pickedPersonId) ?: return@setOnItemClickListener
+            val product = products[position] ?: return@setOnItemClickListener
 
-            var doneTransaction: Transaction? = null
-            realm.executeTransaction {
-                val trans = Transaction.create(person, product, true)
-                person.addTransaction(trans)
-                doneTransaction = realm.copyToRealmOrUpdate(trans)
-
-
-            }
+            val doneTransaction = db.createAndSaveTransaction(person,product, true)
             setPersonAndUpdate(null)
 
             val snackbar = Snackbar
@@ -127,10 +112,7 @@ class FragmentPurchases : HuisEtFragment() {
             userLayout.visibility = View.VISIBLE
             productLayout.visibility = View.GONE
         } else {
-            val person = realm.where(Person::class.java)
-                .equalTo("deleted", false)
-                .equalTo("id", pickedPersonId)
-                .findFirst()
+            val person = db.getPersonWithId(newPickedId)
             val boughtWhatTv = view.findViewById<TextView>(R.id.whatHaveYouBoughtText)
             boughtWhatTv.text = "${person!!.name}, Wat heb je gekocht?"
             userLayout.visibility = View.GONE
