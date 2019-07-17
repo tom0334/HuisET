@@ -69,5 +69,16 @@ class HuisETDB (private val realm: Realm){
         }
     }
 
+    fun undoTransaction(doneTransaction: Transaction?, person: Person) {
+        realm.executeSafe {
+            person.undoTransaction(doneTransaction)
+            doneTransaction?.deleteFromRealm()
+        }
+    }
+
+     fun getSelectedPersonInHistory(): Person? {
+        return realm.where(Person::class.java).equalTo("selectedInHistoryView", true).findFirst()
+    }
+
 
 }

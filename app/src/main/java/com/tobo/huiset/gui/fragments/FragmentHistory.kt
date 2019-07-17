@@ -155,7 +155,7 @@ class FragmentHistory : HuisEtFragment() {
             historyRec.visibility = View.GONE
             noDataView.visibility = View.VISIBLE
 
-            val selectedPerson = getSelectedPerson()
+            val selectedPerson = db.getSelectedPersonInHistory()
 
             noDataTextView.text = when{
                 selectedPerson != null && showBuy -> "${selectedPerson.name} heeft niets gekocht deze periode!"
@@ -190,14 +190,10 @@ class FragmentHistory : HuisEtFragment() {
         updateHistory()
     }
 
-    private fun getSelectedPerson(): Person? {
-        return realm.where(Person::class.java).equalTo("selectedInHistoryView", true).findFirst()
-    }
-
 
     private fun findHistoryItems(): List<HistoryItem> {
 
-        val transactions = when (val selectedPerson = getSelectedPerson()) {
+        val transactions = when (val selectedPerson = db.getSelectedPersonInHistory()) {
             null -> realm.where(Transaction::class.java).findAll()
             else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id).findAll()
         }

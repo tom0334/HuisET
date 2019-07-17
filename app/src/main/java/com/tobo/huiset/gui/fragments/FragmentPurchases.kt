@@ -101,10 +101,7 @@ class FragmentPurchases : HuisEtFragment() {
             val snackbar = Snackbar
                 .make(view, "${product.name} gekocht door ${person.name}", 4000)
                 .setAction("Undo") {
-                    realm.executeSafe {
-                        person.undoTransaction(doneTransaction)
-                        doneTransaction?.deleteFromRealm()
-                    }
+                    db.undoTransaction(doneTransaction,person)
                 }
 
 
