@@ -72,7 +72,7 @@ class FragmentPurchases : HuisEtFragment() {
         pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
 
 
-        val products = db.findAllCurrentProducts()
+        val products = db.findAllCurrentProducts(excludeHidden = true)
 
         // this sets up the recyclerview to show the persons
         pickProductsRec.adapter = PurchaseProductRecAdapter(this.context!!, realm, products, true)

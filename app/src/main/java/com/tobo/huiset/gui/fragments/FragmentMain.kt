@@ -68,11 +68,7 @@ class FragmentMain : HuisEtFragment() {
         setupSpacingForTurRec(columns)
     }
     private fun setupProductRec(view: View): RecyclerView {
-        val products = realm.where(Product::class.java)
-            .equalTo("deleted", false)
-            .equalTo("show", true)
-            .sort("row", Sort.ASCENDING)
-            .findAll()
+        val products = db.findAllCurrentProducts(excludeHidden = true)
 
         // this sets up the recyclerview to show the products
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)

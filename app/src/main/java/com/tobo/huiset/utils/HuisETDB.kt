@@ -55,6 +55,13 @@ class HuisETDB (private val realm: Realm){
 
     }
 
+    fun selectPersonInHistory(p: Person?) {
+        realm.executeTransaction {
+            realm.where(Person::class.java).findAll().forEach { it.isSelectedInHistoryView = false }
+            if (p != null) p.isSelectedInHistoryView = true
+        }
+    }
+
     /**
      * Adds a new transaction on the selected product
      * @param person the person to put the transaction on
@@ -88,11 +95,13 @@ class HuisETDB (private val realm: Realm){
             .findFirst()
     }
 
-    fun findAllCurrentProducts(): RealmResults<Product>? {
-        return realm.where(Product::class.java)
+    fun findAllCurrentProducts(excludeHidden:Boolean = false): RealmResults<Product> {
+        val query = realm.where(Product::class.java)
             .equalTo("deleted", false)
-            .sort("row", Sort.ASCENDING)
-            .findAll()
+        if (excludeHidden){
+            query.equalTo("show",true)
+        }
+        return query.sort("row", Sort.ASCENDING).findAll()
     }
 
     fun findAllCurrentPersons(): RealmResults<Person> {
@@ -101,6 +110,8 @@ class HuisETDB (private val realm: Realm){
             .sort("row", Sort.ASCENDING)
             .findAll()
     }
+
+
 
 
 }

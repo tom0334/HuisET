@@ -131,10 +131,7 @@ class FragmentHistory : HuisEtFragment() {
         ItemClickSupport.addTo(historyPersonRec).setOnItemClickListener { _, position, _ ->
             if (position == -1) return@setOnItemClickListener // this happens when clicking 2 at the same time
             val p = personAdap.items[position]
-            realm.executeTransaction {
-                realm.where(Person::class.java).findAll().forEach { it.isSelectedInHistoryView = false }
-                if (p != null) p.isSelectedInHistoryView = true
-            }
+            db.selectPersonInHistory(p)
             personAdap.notifyDataSetChanged()
             updateHistory()
         }
