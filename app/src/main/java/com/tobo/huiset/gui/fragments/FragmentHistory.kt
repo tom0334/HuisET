@@ -174,7 +174,7 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun updatePersons(){
         val persons = mutableListOf<Person?>(null)
-        persons.addAll(realm.where(Person::class.java).sort("row", Sort.ASCENDING).findAll())
+        persons.addAll(db.findAllCurrentPersons())
         personAdap.items.clear()
         personAdap.items.addAll(persons)
         personAdap.notifyDataSetChanged()

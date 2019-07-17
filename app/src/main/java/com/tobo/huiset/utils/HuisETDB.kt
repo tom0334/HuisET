@@ -95,7 +95,7 @@ class HuisETDB (private val realm: Realm){
             .findAll()
     }
 
-    fun findAllCurrentPersons(): RealmResults<Person>? {
+    fun findAllCurrentPersons(): RealmResults<Person> {
         return realm.where(Person::class.java)
             .equalTo("deleted", false)
             .sort("row", Sort.ASCENDING)
