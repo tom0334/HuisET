@@ -191,7 +191,7 @@ class EditProductActivity : HuisEtActivity() {
             }
         }
         // name is too long
-        val maxNameLength = 20
+        val maxNameLength = 12
         if (name.length > maxNameLength) {
             editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
             return false

@@ -1,39 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tool="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_margin="16dp"
+              android:layout_gravity="center_horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+>
 
-    android:layout_margin="16dp"
-    android:layout_gravity="center_horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="40dp"
-    >
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/personRecItem_name"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="16sp"
-        android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:text="Bobbert"
+        <TextView
+                android:id="@+id/personRecItem_name"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                tools:text="Bobbert"
         />
+
+        <TextView
+                android:id="@+id/personRecItem_hidden"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Verborgen"
+        />
+
+    </LinearLayout>
 
 
     <View
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        />
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+    />
 
 
     <TextView
-        android:id="@+id/personRecItem_balance"
-        android:gravity="center_vertical"
-        tools:text ="€4.00"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+            android:id="@+id/personRecItem_balance"
+            android:gravity="center_vertical"
+            tools:text="€4.00"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
 
 
     <ImageView
@@ -43,7 +59,7 @@
             android:layout_marginLeft="30dp"
             android:layout_gravity="center_vertical|right"
             android:scaleType="center"
-            android:src="@drawable/baseline_keyboard_arrow_up_black_24" />
+            android:src="@drawable/baseline_keyboard_arrow_up_black_24"/>
 
 
     <ImageView
@@ -52,6 +68,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|right"
             android:scaleType="center"
-            android:src="@drawable/baseline_keyboard_arrow_down_black_24" />
+            android:src="@drawable/baseline_keyboard_arrow_down_black_24"/>
 
 </LinearLayout>

@@ -13,10 +13,7 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
-import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import io.realm.Sort
 
 
 class FragmentPurchases : HuisEtFragment() {
@@ -81,22 +78,10 @@ class FragmentPurchases : HuisEtFragment() {
             val doneTransaction = db.createAndSaveTransaction(person,product, true)
             setPersonAndUpdate(null)
 
-            val snackbar = Snackbar
-                .make(view, "${product.name} gekocht door ${person.name}", 4000)
+            Snackbar.make(view.findViewById(R.id.purchasesContentView), "${product.name} gekocht door ${person.name}", 4000)
                 .setAction("Undo") {
                     db.undoTransaction(doneTransaction,person)
-                }
-
-
-            val marginBottom = (this.activity as HuisEtActivity).getSnackbarBottomMargin()
-            val layoutParams = snackbar.view.layoutParams as FrameLayout.LayoutParams
-            layoutParams.setMargins(
-                layoutParams.leftMargin,
-                layoutParams.topMargin,
-                layoutParams.rightMargin,
-                layoutParams.bottomMargin + marginBottom
-            )
-            snackbar.show()
+                }.show()
         }
     }
 

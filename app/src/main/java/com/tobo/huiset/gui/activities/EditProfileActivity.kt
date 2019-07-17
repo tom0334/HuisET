@@ -32,7 +32,7 @@ class EditProfileActivity : HuisEtActivity() {
         val extras = intent.extras
         if (extras != null) {
             val oldId = extras.getString("PERSON_ID")
-            oldProfile = realm.where(Person::class.java).equalTo("id", oldId).findFirst()!!
+            oldProfile = db.getPersonWithId(oldId)
             findViewById<EditText>(R.id.name).setText(oldProfile!!.name)
 
             val guestRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_guest)
@@ -43,7 +43,7 @@ class EditProfileActivity : HuisEtActivity() {
             }
 
             val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showPerson)
-            if (oldProfile!!.isShow) {
+            if (oldProfile!!.show) {
                 showRadioGroup.check(R.id.radioShowPerson)
             } else {
                 showRadioGroup.check(R.id.radioHidePerson)
@@ -135,7 +135,7 @@ class EditProfileActivity : HuisEtActivity() {
                 oldProfile!!.name = newName
                 oldProfile!!.color = newColorString
                 oldProfile!!.isGuest = guestBool
-                oldProfile!!.isShow = showBool
+                oldProfile!!.show = showBool
             }
         }
 
