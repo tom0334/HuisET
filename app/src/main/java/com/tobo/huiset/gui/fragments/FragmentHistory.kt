@@ -17,7 +17,6 @@ import com.tobo.huiset.gui.adapters.HistoryPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import io.realm.Sort
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -171,7 +170,7 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun updatePersons(){
         val persons = mutableListOf<Person?>(null)
-        persons.addAll(db.findAllCurrentPersons())
+        persons.addAll(db.findPersonsIncludingDeleted())
         personAdap.items.clear()
         personAdap.items.addAll(persons)
         personAdap.notifyDataSetChanged()

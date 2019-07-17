@@ -11,6 +11,9 @@ import io.realm.Sort
 class HuisETDB (private val realm: Realm){
 
 
+    /**
+     * Returns the highest priority product. Should be listed first in the mainactivity
+     */
     fun getFirstProduct(): Product? {
         return this.realm.where(Product::class.java)
             .equalTo("deleted", false)
@@ -46,6 +49,9 @@ class HuisETDB (private val realm: Realm){
 
     }
 
+    /**
+     * Gets the product that was selected in the main.
+     */
     fun getSelectedProduct():Product?{
         return realm.where(Product::class.java)
             .equalTo("deleted", false)
@@ -55,6 +61,9 @@ class HuisETDB (private val realm: Realm){
 
     }
 
+    /**
+     * Deselects all other persons in the history view, And selects the person supplied
+     */
     fun selectPersonInHistory(p: Person?) {
         realm.executeTransaction {
             realm.where(Person::class.java).findAll().forEach { it.isSelectedInHistoryView = false }
@@ -77,7 +86,9 @@ class HuisETDB (private val realm: Realm){
         }
     }
 
-
+    /**
+     * Undos and then deletes a transaction from realm
+     */
     fun undoTransaction(doneTransaction: Transaction?, person: Person) {
         realm.executeSafe {
             person.undoTransaction(doneTransaction)
@@ -85,17 +96,27 @@ class HuisETDB (private val realm: Realm){
         }
     }
 
+    /**
+     * Gets the person that is selected in history
+     */
      fun getSelectedPersonInHistory(): Person? {
-        return realm.where(Person::class.java).equalTo("selectedInHistoryView", true).findFirst()
+        return realm.where(Person::class.java)
+            .equalTo("selectedInHistoryView", true)
+            .findFirst()
     }
 
-
+    /**
+     * Simply gets a product with an id
+     */
     fun getProductWithId(productId: String): Product? {
         return realm.where(Product::class.java)
             .equalTo("id", productId)
             .findFirst()
     }
 
+    /**
+     * Find all products, exluding the deleted ones
+     */
     fun findAllCurrentProducts(excludeHidden:Boolean = false): RealmResults<Product> {
         val query = realm.where(Product::class.java)
             .equalTo("deleted", false)
@@ -105,6 +126,9 @@ class HuisETDB (private val realm: Realm){
         return query.sort("row", Sort.ASCENDING).findAll()
     }
 
+    /**
+     * Finds all persons that are not deleted
+     */
     fun findAllCurrentPersons(excludeHidden:Boolean = false): RealmResults<Person> {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
@@ -114,6 +138,18 @@ class HuisETDB (private val realm: Realm){
         return query.sort("row", Sort.ASCENDING).findAll()
     }
 
+    /**
+     * Finds all persons, even if they are hidden or deleted.
+     */
+    fun findPersonsIncludingDeleted(): RealmResults<Person> {
+        return realm.where(Person::class.java)
+            .sort("row", Sort.ASCENDING)
+            .findAll()
+    }
+
+    /**
+     * Find a person with given id. Returns null if argument is null
+     */
     fun getPersonWithId(pickedPersonId: String?): Person? {
         if(pickedPersonId == null) return null
         return realm.where(Person::class.java)
@@ -122,6 +158,9 @@ class HuisETDB (private val realm: Realm){
             .findFirst()
     }
 
+    /**
+     * Creates a new transaction with the supplied arguments and saves it in the database.
+     */
     fun createAndSaveTransaction(person: Person, product: Product, buy: Boolean):Transaction{
         var savedTrans:Transaction? = null
         realm.executeTransaction{

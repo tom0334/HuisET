@@ -124,7 +124,7 @@ class EditProfileActivity : HuisEtActivity() {
             showBool = true
         }
 
-        val row = db.findAllCurrentPersons()!!.size
+        val row = db.findAllCurrentPersons().size
 
         realm.executeTransaction {
             val newColorString = "#0000ff"
