@@ -11,10 +11,8 @@ import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProfileActivity
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
-import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.AchievementManager
 import com.tobo.huiset.utils.ItemClickSupport
-import io.realm.Sort
 
 
 /**
@@ -64,7 +62,7 @@ class FragmentProfiles : HuisEtFragment() {
             val intent = Intent(this.activity, EditProfileActivity::class.java)
             startActivity(intent)
 
-            db.findAllCurrentPersons(true).forEach { AchievementManager.update(it) }
+            db.findAllCurrentPersons(true).forEach { AchievementManager.updateForPerson(it) }
 
         }
 

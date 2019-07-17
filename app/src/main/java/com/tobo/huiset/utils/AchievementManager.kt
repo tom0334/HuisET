@@ -10,47 +10,44 @@ import java.util.*
 public val A_PILSBAAS = 1
 public val A_NICE = 2
 
+abstract class Achievement(){
+    abstract val id:Int
+    abstract val name:String
+    abstract val description:String
+    abstract fun isAchievedNow(person: Person):Boolean //returns if achieved now
+
+    fun update(person: Person){
+        if(wasAchieved(person)) return
+        if(isAchievedNow(person)){
+            person.realm.executeTransaction {
+                val comp = AchievementCompletion.create(this.id,System.currentTimeMillis(),person.id)
+                it.copyToRealm(comp)
+                person.addAchievement(comp)
+            }
+        }
+    }
+
+    fun wasAchieved(person: Person):Boolean{
+        return person.completions.find { it.achievement == this.id } != null
+    }
+}
 
 
 object AchievementManager {
 
-    public fun getAchvievementsForPerson(p: Person): List<Achievement>{
+    public fun getAchvievements(): List<Achievement>{
         return listOf(
-            PilsBaas(p)
+            PilsBaas()
         )
     }
 
-    public fun update(p:Person) = getAchvievementsForPerson(p).forEach { it.update() }
+    public fun updateForPerson(p:Person) = getAchvievements().forEach { it.update(p) }
 
-
-    abstract class Achievement(val person: Person){
-        abstract val id:Int
-        abstract val name:String
-        abstract val description:String
-        abstract fun isAchievedNow():Boolean //returns if achieved now
-
-        fun update(){
-            if(wasAchieved()) return
-            if(isAchievedNow()){
-                person.realm.executeTransaction {
-                    val comp = AchievementCompletion.create(this.id,System.currentTimeMillis(),person.id)
-                    it.copyToRealm(comp)
-                    person.addAchievement(comp)
-                }
-            }
-        }
-
-        fun wasAchieved():Boolean{
-            return person.completions.find { it.achievement == this.id } != null
-        }
-    }
-
-
-    class PilsBaas(person: Person) : Achievement(person) {
+    class PilsBaas() : Achievement() {
         override val id = A_PILSBAAS
         override val name = "Pilsbaas"
         override val description = "Drink 10 of meer pils op een dag"
-        override fun isAchievedNow(): Boolean {
+        override fun isAchievedNow(person:Person): Boolean {
             val realm = person.realm
 
             val transactions = realm.where(Transaction::class.java)
