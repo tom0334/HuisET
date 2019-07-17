@@ -21,6 +21,11 @@ abstract class HuisEtFragment : Fragment() {
         (this.activity as HuisEtActivity).realm
     }
 
+    val db by lazy{
+        if (this.activity == null) throw Exception("HuisEtFragment: Error: tried to access db before activity was attached!")
+        (this.activity as HuisEtActivity).db
+    }
+
     /**
      * Does nothing by default, but can be overridden by subclasses to update data for example.
      */

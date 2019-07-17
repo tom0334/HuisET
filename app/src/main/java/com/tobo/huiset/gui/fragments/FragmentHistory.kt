@@ -17,8 +17,6 @@ import com.tobo.huiset.gui.adapters.HistoryPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.utils.extensions.getProductWithId
-import io.realm.Sort
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -132,10 +130,7 @@ class FragmentHistory : HuisEtFragment() {
         ItemClickSupport.addTo(historyPersonRec).setOnItemClickListener { _, position, _ ->
             if (position == -1) return@setOnItemClickListener // this happens when clicking 2 at the same time
             val p = personAdap.items[position]
-            realm.executeTransaction {
-                realm.where(Person::class.java).findAll().forEach { it.isSelectedInHistoryView = false }
-                if (p != null) p.isSelectedInHistoryView = true
-            }
+            db.selectPersonInHistory(p)
             personAdap.notifyDataSetChanged()
             updateHistory()
         }
@@ -155,7 +150,7 @@ class FragmentHistory : HuisEtFragment() {
             historyRec.visibility = View.GONE
             noDataView.visibility = View.VISIBLE
 
-            val selectedPerson = getSelectedPerson()
+            val selectedPerson = db.getSelectedPersonInHistory()
 
             noDataTextView.text = when{
                 selectedPerson != null && showBuy -> "${selectedPerson.name} heeft niets gekocht deze periode!"
@@ -175,7 +170,7 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun updatePersons(){
         val persons = mutableListOf<Person?>(null)
-        persons.addAll(realm.where(Person::class.java).sort("row", Sort.ASCENDING).findAll())
+        persons.addAll(db.findPersonsIncludingDeleted())
         personAdap.items.clear()
         personAdap.items.addAll(persons)
         personAdap.notifyDataSetChanged()
@@ -190,14 +185,10 @@ class FragmentHistory : HuisEtFragment() {
         updateHistory()
     }
 
-    private fun getSelectedPerson(): Person? {
-        return realm.where(Person::class.java).equalTo("selectedInHistoryView", true).findFirst()
-    }
-
 
     private fun findHistoryItems(): List<HistoryItem> {
 
-        val transactions = when (val selectedPerson = getSelectedPerson()) {
+        val transactions = when (val selectedPerson = db.getSelectedPersonInHistory()) {
             null -> realm.where(Transaction::class.java).findAll()
             else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id).findAll()
         }
@@ -215,7 +206,7 @@ class FragmentHistory : HuisEtFragment() {
             .asSequence()
             .filter { it.isBuy == showBuy}
             .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(realm.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
+            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
             .sortedByDescending { it.amount }.toMutableList()
 
 

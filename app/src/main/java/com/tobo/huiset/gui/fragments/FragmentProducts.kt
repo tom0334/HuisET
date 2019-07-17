@@ -12,7 +12,6 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 
 class FragmentProducts : HuisEtFragment() {
 
@@ -34,7 +33,7 @@ class FragmentProducts : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val products = realm.findAllCurrentProducts()
+        val products = db.findAllCurrentProducts(includeHidden = true)
 
         // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)

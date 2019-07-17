@@ -13,12 +13,7 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
-import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.utils.extensions.executeSafe
-import com.tobo.huiset.utils.extensions.findAllCurrentProducts
-import io.realm.Sort
 
 
 class FragmentPurchases : HuisEtFragment() {
@@ -53,12 +48,7 @@ class FragmentPurchases : HuisEtFragment() {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
         pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
 
-
-        val profiles = realm.where(Person::class.java)
-            .equalTo("deleted", false)
-            .equalTo("show", true)
-            .sort("row", Sort.ASCENDING)
-            .findAll()
+        val profiles = db.findAllCurrentPersons(includeHidden = true)
 
         pickUserRec.adapter = PurchasePersonRecAdapter(context!!, realm, profiles, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
@@ -74,7 +64,7 @@ class FragmentPurchases : HuisEtFragment() {
         pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
 
 
-        val products = realm.findAllCurrentProducts()
+        val products = db.findAllCurrentProducts(includeHidden = true)
 
         // this sets up the recyclerview to show the persons
         pickProductsRec.adapter = PurchaseProductRecAdapter(this.context!!, realm, products, true)
@@ -82,28 +72,15 @@ class FragmentPurchases : HuisEtFragment() {
 
         ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { _, position, _ ->
 
-            val person = realm.where(Person::class.java)
-                .equalTo("deleted", false)
-                .equalTo("id", pickedPersonId)
-                .findFirst() ?: return@setOnItemClickListener
-            val product = products!![position] ?: return@setOnItemClickListener
+            val person = db.getPersonWithId(pickedPersonId) ?: return@setOnItemClickListener
+            val product = products[position] ?: return@setOnItemClickListener
 
-            var doneTransaction: Transaction? = null
-            realm.executeTransaction {
-                val trans = Transaction.create(person, product, true)
-                person.addTransaction(trans)
-                doneTransaction = realm.copyToRealmOrUpdate(trans)
-
-
-            }
+            val doneTransaction = db.createAndSaveTransaction(person,product, true)
             setPersonAndUpdate(null)
 
             Snackbar.make(view.findViewById(R.id.purchasesContentView), "${product.name} gekocht door ${person.name}", 4000)
                 .setAction("Undo") {
-                    realm.executeSafe {
-                        person.undoTransaction(doneTransaction)
-                        doneTransaction?.deleteFromRealm()
-                    }
+                    db.undoTransaction(doneTransaction,person)
                 }.show()
         }
     }
@@ -120,10 +97,7 @@ class FragmentPurchases : HuisEtFragment() {
             userLayout.visibility = View.VISIBLE
             productLayout.visibility = View.GONE
         } else {
-            val person = realm.where(Person::class.java)
-                .equalTo("deleted", false)
-                .equalTo("id", pickedPersonId)
-                .findFirst()
+            val person = db.getPersonWithId(newPickedId)
             val boughtWhatTv = view.findViewById<TextView>(R.id.whatHaveYouBoughtText)
             boughtWhatTv.text = "${person!!.name}, Wat heb je gekocht?"
             userLayout.visibility = View.GONE

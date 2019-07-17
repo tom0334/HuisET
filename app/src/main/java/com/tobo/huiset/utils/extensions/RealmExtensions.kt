@@ -7,19 +7,6 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 
-fun Realm.getFirstProduct(): Product? {
-    return this.where(Product::class.java)
-        .equalTo("deleted", false)
-        .equalTo("show", true)
-        .sort("row", Sort.ASCENDING)
-        .findFirst()
-}
-
-fun Realm.getProductWithId(productId: String): Product? {
-    return this.where(Product::class.java)
-        .equalTo("id", productId)
-        .findFirst()
-}
 
 fun Realm.executeSafe(transaction: (Realm) -> Unit) {
     try {
@@ -30,16 +17,3 @@ fun Realm.executeSafe(transaction: (Realm) -> Unit) {
 
 }
 
-fun Realm.findAllCurrentProducts(): RealmResults<Product>? {
-    return this.where(Product::class.java)
-        .equalTo("deleted", false)
-        .sort("row", Sort.ASCENDING)
-        .findAll()
-}
-
-fun Realm.findAllCurrentPersons(): RealmResults<Person>? {
-    return this.where(Person::class.java)
-        .equalTo("deleted", false)
-        .sort("row", Sort.ASCENDING)
-        .findAll()
-}
