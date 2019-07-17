@@ -14,7 +14,6 @@ import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
-import com.tobo.huiset.utils.extensions.findAllCurrentPersons
 
 /**
  * Edit profile
@@ -125,7 +124,7 @@ class EditProfileActivity : HuisEtActivity() {
             showBool = true
         }
 
-        val row = realm.findAllCurrentPersons()!!.size
+        val row = db.findAllCurrentPersons()!!.size
 
         realm.executeTransaction {
             val newColorString = "#0000ff"

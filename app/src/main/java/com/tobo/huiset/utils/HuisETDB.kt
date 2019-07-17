@@ -5,6 +5,7 @@ import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
+import io.realm.RealmResults
 import io.realm.Sort
 
 class HuisETDB (private val realm: Realm){
@@ -78,6 +79,27 @@ class HuisETDB (private val realm: Realm){
 
      fun getSelectedPersonInHistory(): Person? {
         return realm.where(Person::class.java).equalTo("selectedInHistoryView", true).findFirst()
+    }
+
+
+    fun getProductWithId(productId: String): Product? {
+        return realm.where(Product::class.java)
+            .equalTo("id", productId)
+            .findFirst()
+    }
+
+    fun findAllCurrentProducts(): RealmResults<Product>? {
+        return realm.where(Product::class.java)
+            .equalTo("deleted", false)
+            .sort("row", Sort.ASCENDING)
+            .findAll()
+    }
+
+    fun findAllCurrentPersons(): RealmResults<Person>? {
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .sort("row", Sort.ASCENDING)
+            .findAll()
     }
 
 

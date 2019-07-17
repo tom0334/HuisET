@@ -17,7 +17,6 @@ import com.tobo.huiset.gui.adapters.HistoryPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.utils.extensions.getProductWithId
 import io.realm.Sort
 import java.text.SimpleDateFormat
 import java.util.*
@@ -211,7 +210,7 @@ class FragmentHistory : HuisEtFragment() {
             .asSequence()
             .filter { it.isBuy == showBuy}
             .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(realm.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
+            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
             .sortedByDescending { it.amount }.toMutableList()
 
 
