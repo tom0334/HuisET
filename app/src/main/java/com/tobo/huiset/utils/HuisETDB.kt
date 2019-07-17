@@ -117,10 +117,10 @@ class HuisETDB (private val realm: Realm){
     /**
      * Find all products, exluding the deleted ones
      */
-    fun findAllCurrentProducts(excludeHidden:Boolean = false): RealmResults<Product> {
+    fun findAllCurrentProducts(includeHidden:Boolean = false): RealmResults<Product> {
         val query = realm.where(Product::class.java)
             .equalTo("deleted", false)
-        if (excludeHidden){
+        if (! includeHidden){
             query.equalTo("show",true)
         }
         return query.sort("row", Sort.ASCENDING).findAll()
@@ -129,10 +129,10 @@ class HuisETDB (private val realm: Realm){
     /**
      * Finds all persons that are not deleted
      */
-    fun findAllCurrentPersons(excludeHidden:Boolean = false): RealmResults<Person> {
+    fun findAllCurrentPersons(includeHidden:Boolean = false): RealmResults<Person> {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
-        if (excludeHidden){
+        if (! includeHidden){
             query.equalTo("show",true)
         }
         return query.sort("row", Sort.ASCENDING).findAll()

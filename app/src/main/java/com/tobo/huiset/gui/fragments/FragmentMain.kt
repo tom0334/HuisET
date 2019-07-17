@@ -67,7 +67,7 @@ class FragmentMain : HuisEtFragment() {
         setupSpacingForTurRec(columns)
     }
     private fun setupProductRec(view: View): RecyclerView {
-        val products = db.findAllCurrentProducts(excludeHidden = true)
+        val products = db.findAllCurrentProducts()
 
         // this sets up the recyclerview to show the products
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
@@ -106,7 +106,7 @@ class FragmentMain : HuisEtFragment() {
      */
     private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
 
-        val profiles = db.findAllCurrentPersons(excludeHidden = true)
+        val profiles = db.findAllCurrentPersons()
         val columns = getNumOfColunns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)

@@ -33,7 +33,7 @@ class FragmentProducts : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val products = db.findAllCurrentProducts()
+        val products = db.findAllCurrentProducts(includeHidden = true)
 
         // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)

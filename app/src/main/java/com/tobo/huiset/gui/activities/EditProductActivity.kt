@@ -123,7 +123,7 @@ class EditProductActivity : HuisEtActivity() {
             showBool = true
         }
 
-        val row = db.findAllCurrentProducts().size
+        val row = db.findAllCurrentProducts(includeHidden = true).size
 
         realm.executeTransaction {
             if (new) {
