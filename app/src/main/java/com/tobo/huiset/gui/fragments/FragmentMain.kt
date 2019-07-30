@@ -45,7 +45,6 @@ class FragmentMain : HuisEtFragment() {
         transactionTimeRefreshHandler!!.postDelayed(parentRunnable, TRANSACTION_VIEW_REFRESH_TIME)
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
@@ -59,6 +58,11 @@ class FragmentMain : HuisEtFragment() {
         val transActionRec = setupTransactionsRec(view)
         setupTurfRec(view, transActionRec)
 
+        if (savedInstanceState != null) {
+            val amountAdapter = view?.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
+            amountAdapter.selectedPos = savedInstanceState.getInt("selectedPos")
+            amountAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onTabReactivated() {
@@ -173,15 +177,13 @@ class FragmentMain : HuisEtFragment() {
         turfRec.addItemDecoration(spacer)
     }
 
-    // it doesn't save state when tablet is flipped
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//
-//        val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
-//        val adapter = turfRec!!.adapter as TurfRecAdapter
-//
-//        outState.putInt("selectedPos", adapter.)
-//    }
+    // it saves state when tablet is flipped
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        val amountAdapter = view?.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
+        outState.putInt("selectedPos", amountAdapter.selectedPos)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
