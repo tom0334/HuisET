@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.gui.adapters.AchievementsAdapter
-import com.tobo.huiset.Achievements.AchievementManager
+import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 

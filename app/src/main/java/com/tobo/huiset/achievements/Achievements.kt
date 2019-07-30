@@ -1,4 +1,4 @@
-package com.tobo.huiset.Achievements
+package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
@@ -6,6 +6,14 @@ import com.tobo.huiset.utils.ToboTime
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+/**
+ * To Add a new achievement, 3 things need to be done:
+ * 1-> craete UNIQUE const int to be used as ID in database
+ * 2-> make implementation of achievement class
+ * 3-> add it to the list of all achievements in the achievement manager
+ *
+ */
 
 const val A_PILSBAAS = 1
 const val A_NICE = 2
@@ -72,5 +80,20 @@ class CollegeWinnaar : BaseAchievement(){
 
         return collegeBeers.size > 0
     }
+
+}
+
+object AchievementManager {
+
+    fun getAchievements(): List<BaseAchievement>{
+        return listOf(
+            PilsBaas(),
+            Nice(),
+            CollegeWinnaar()
+        )
+    }
+
+    fun updateForPerson(p:Person) = getAchievements().forEach { it.update(p) }
+
 
 }

@@ -1,4 +1,4 @@
-package com.tobo.huiset.Achievements
+package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person

@@ -4,6 +4,12 @@ import java.lang.IllegalStateException
 import java.util.*
 
 
+/**
+ * Wrapper around the java calendar with the extra feature of being able to easily compare time of day(WITHOUT considering the date).
+ *
+ * To make this possible, there are 2 constuctors, one with millis to use with full time points, and one to use with only
+ * hours mins and seconds.
+ */
 class ToboTime{
 
     private val calendar: Calendar = Calendar.getInstance()
@@ -44,8 +50,10 @@ class ToboTime{
     }
 
 
-
-
+    /**
+     * The following functions can only be called if this toboTime was created using the millis from epoch, NOT if using
+     * the hours mins seconds.
+     */
 
     fun isWeekDay(): Boolean {
         if(this.unix == 0L) throw IllegalStateException("Moment used without setting unix timestamp.")

@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.Achievements.BaseAchievement
+import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.utils.extensions.toTimeAgoString
 
 
