@@ -96,7 +96,7 @@ class CollegeWinnaar : Achievement(){
 
         val collegeBeers = transactions
             .filter { it.getProduct(person.realm).isBeer  }
-            .filter { it.time.toToboTime().isWeekDay() && it.time.toToboTime().timeOfDayBetween(fiveOClock,collegeStartTime)}
+            .filter { it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(fiveOClock,collegeStartTime)}
 
         return collegeBeers.size > 0
     }
@@ -109,7 +109,7 @@ class CollegeWinnaar : Achievement(){
 object AchievementManager {
 
     public fun getAchievements(): List<Achievement>{
-        return listOf(
+        return listOf(toToboTime
             PilsBaas(),
             Nice(),
             CollegeWinnaar()

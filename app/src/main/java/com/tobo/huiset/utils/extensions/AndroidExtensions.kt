@@ -49,7 +49,7 @@ fun Long.toTimeAgoString(includeNewLine:Boolean):String{
         monthsAgo < 12 -> "$monthsAgo  maanden\ngeleden"
         else -> "$yearsAgo jaar\ngeleden"
     }
-    return if (includeNewLine) text else text.replace("\n", "")
+    return if (includeNewLine) text else text.replace("\n", " ")
 }
 
 

@@ -1,5 +1,6 @@
 package com.tobo.huiset.realmModels;
 
+import com.tobo.huiset.utils.ToboTime;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -66,5 +67,9 @@ public class Transaction extends RealmObject {
 
     public long getTime() {
         return time;
+    }
+
+    public ToboTime getToboTime(){
+        return new ToboTime(this.getTime());
     }
 }
