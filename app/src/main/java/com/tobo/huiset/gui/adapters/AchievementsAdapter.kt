@@ -9,11 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.utils.Achievement
+import com.tobo.huiset.Achievements.BaseAchievement
 import com.tobo.huiset.utils.extensions.toTimeAgoString
 
 
-class AchievementsAdapter(val items: List<Achievement>, val persons: List<Person>, val context: Context) :
+class AchievementsAdapter(val items: List<BaseAchievement>, val persons: List<Person>, val context: Context) :
     RecyclerView.Adapter<AchievementsAdapter.AchievementViewHolder>() {
 
 

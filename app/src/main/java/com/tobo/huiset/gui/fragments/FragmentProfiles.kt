@@ -11,7 +11,6 @@ import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProfileActivity
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
-import com.tobo.huiset.utils.AchievementManager
 import com.tobo.huiset.utils.ItemClickSupport
 
 
