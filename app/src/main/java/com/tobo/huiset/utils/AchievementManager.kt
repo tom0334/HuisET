@@ -37,7 +37,7 @@ abstract class Achievement(){
 }
 
 
-class PilsBaas() : Achievement() {
+class PilsBaas : Achievement() {
     override val id = A_PILSBAAS
     override val name = "Pilsbaas"
     override val description = "Drink 10 of meer pils op een dag"
@@ -59,15 +59,35 @@ class PilsBaas() : Achievement() {
     }
 }
 
+class Nice : Achievement() {
+    override val id = A_NICE
+    override val name = "Nice"
+    override val description = "Drink 69 of 420 bier"
+    override fun isAchievedNow(person: Person): Boolean {
+        val realm = person.realm
+
+        val transactions = realm.where(Transaction::class.java)
+            .equalTo("personId", person.id)
+            .findAll()
+
+        val totalBeer = transactions
+            .filter { it.getProduct(person.realm).isBeer  }.size
+
+        return totalBeer >= 69
+    }
+}
+
+
 object AchievementManager {
 
-    public fun getAchvievements(): List<Achievement>{
+    public fun getAchievements(): List<Achievement>{
         return listOf(
-            PilsBaas()
+            PilsBaas(),
+            Nice()
         )
     }
 
-    public fun updateForPerson(p:Person) = getAchvievements().forEach { it.update(p) }
+    public fun updateForPerson(p:Person) = getAchievements().forEach { it.update(p) }
 
 
 }

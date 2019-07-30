@@ -25,7 +25,7 @@ class AchievementsActivity : HuisEtActivity() {
         val persons = db.findAllCurrentPersons(includeHidden = false)
 
         val rec = findViewById<RecyclerView>(R.id.acievementsRec)
-        rec.adapter = AchievementsAdapter(AchievementManager.getAchvievements(),persons, this)
+        rec.adapter = AchievementsAdapter(AchievementManager.getAchievements(),persons, this)
 
         val displayMetrics = resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
