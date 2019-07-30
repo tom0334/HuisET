@@ -42,9 +42,9 @@ fun String.euroToCent(): Int {
 }
 
 /**
- * groen als positief
- * zwart als gelijk aan 0
- * rood als negatief
+ * green if positiv
+ * black if equal aan 0
+ * red if negativ
  */
 fun Int.getBalanceColorString(): String {
     return when {
