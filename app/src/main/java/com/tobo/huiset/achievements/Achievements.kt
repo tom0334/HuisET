@@ -2,6 +2,7 @@ package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.utils.ToboDay
 import com.tobo.huiset.utils.ToboTime
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,7 +18,8 @@ import java.util.*
 
 const val A_PILSBAAS = 1
 const val A_NICE = 2
-const val COLLEGE_WINNAAR = 5
+const val A_MVP = 3
+const val A_COLLEGE_WINNAAR = 6
 
 class PilsBaas : BaseAchievement() {
     override val id = A_PILSBAAS
@@ -44,7 +46,7 @@ class PilsBaas : BaseAchievement() {
 class Nice : BaseAchievement() {
     override val id = A_NICE
     override val name = "Nice"
-    override val description = "Drink 69 bier"
+    override val description = "Drink 69 bier."
     override fun isAchievedNow(person: Person): Boolean {
         val realm = person.realm
 
@@ -60,7 +62,7 @@ class Nice : BaseAchievement() {
 }
 
 class CollegeWinnaar : BaseAchievement(){
-    override val id = COLLEGE_WINNAAR
+    override val id = A_COLLEGE_WINNAAR
     override val name = "Collegewinnaar"
     override val description = "Drink een biertje op een doordeweekse dag voor 8:45.Telt vanaf 6 uur s'ochtends."
 
@@ -83,13 +85,46 @@ class CollegeWinnaar : BaseAchievement(){
 
 }
 
+class MVP: BaseAchievement() {
+    override val id = A_MVP
+    override val name = "MVP (Most Valuable Pilser"
+    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je dit echt niet hoor."
+
+    override fun isAchievedNow(person: Person): Boolean {
+        val realm = person.realm
+
+        val perDay = realm.where(Transaction::class.java)
+            .findAll()
+            .filter { it.toboTime.zuipDayHasEnded() }
+            .groupBy { it.toboTime.getZuipDay() }
+
+
+        for ((day, transactionsOnDay) in perDay) {
+            val amountOftransactionsOnDay = transactionsOnDay
+                .groupBy { it.personId }
+                .mapValues { it.value.count() }
+
+            val pair = amountOftransactionsOnDay.maxBy { it.value }!!
+
+            val mvpID = pair.key
+            val amount = pair.value
+
+            if (mvpID != person.id) continue
+
+            if (amount > 5) return true
+        }
+        return false
+    }
+}
+
 object AchievementManager {
 
     fun getAchievements(): List<BaseAchievement>{
         return listOf(
             PilsBaas(),
             Nice(),
-            CollegeWinnaar()
+            CollegeWinnaar(),
+            MVP()
         )
     }
 

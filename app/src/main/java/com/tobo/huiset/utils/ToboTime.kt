@@ -10,9 +10,10 @@ import java.util.*
  * To make this possible, there are 2 constuctors, one with millis to use with full time points, and one to use with only
  * hours mins and seconds.
  */
-class ToboTime{
 
-    private val calendar: Calendar = Calendar.getInstance()
+data class ToboDay(val dayOfYear:Int, val year:Int)
+
+data class ToboTime(private val calendar: Calendar){
 
     private val unix by lazy { calendar.timeInMillis }
 
@@ -20,20 +21,39 @@ class ToboTime{
     val hour by lazy { calendar.get(Calendar.HOUR_OF_DAY)}
     val min by lazy{ calendar.get(Calendar.MINUTE)}
     val sec by lazy{ calendar.get(Calendar.SECOND)}
+    val dayOfYear by lazy { calendar.get(Calendar.DAY_OF_YEAR) }
+    val year by lazy { calendar.get(Calendar.YEAR) }
+
+    val toboDay by lazy { ToboDay(this.dayOfYear, this.year) }
 
 
-
-    constructor(millis:Long){
+    constructor(millis:Long) : this(Calendar.getInstance()) {
         calendar.timeInMillis = millis
     }
 
-    constructor(hour:Int, min:Int, sec:Int){
+    constructor(hour:Int, min:Int, sec:Int) : this(Calendar.getInstance()) {
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, min)
         calendar.set(Calendar.SECOND, sec)
     }
 
 
+    fun getZuipDay():ToboDay{
+        val zuipTurnoverPoint = ToboTime(6,0,0)
+
+        if(this.timeOfDayBefore(zuipTurnoverPoint)){
+            val yesterday = ToboTime(this.calendar)
+            yesterday.calendar.set(Calendar.DAY_OF_YEAR, this.dayOfYear -1)
+            return yesterday.toboDay
+        }
+        else return this.toboDay
+
+    }
+
+    fun zuipDayHasEnded(): Boolean {
+        val now= ToboTime(System.currentTimeMillis())
+        return this.getZuipDay() != now.getZuipDay()
+    }
 
     fun timeOfDayBefore(other:ToboTime): Boolean {
         if(this.hour == other.hour && this.min == other.min) return this.sec < other.sec
@@ -71,5 +91,6 @@ class ToboTime{
         if(this.unix == 0L) throw IllegalStateException("Moment used without setting unix timestamp.")
         return this.calendar.after(other.calendar)
     }
+
 
 }
