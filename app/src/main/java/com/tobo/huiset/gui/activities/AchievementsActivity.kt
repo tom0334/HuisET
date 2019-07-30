@@ -13,13 +13,17 @@ class AchievementsActivity : HuisEtActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_achievements)
+
+        db.findAllCurrentPersons(true).forEach { AchievementManager.updateForPerson(it) }
         setupRec()
     }
 
 
     private fun setupRec(){
+        val persons = db.findAllCurrentPersons(includeHidden = false)
+
         val rec = findViewById<RecyclerView>(R.id.acievementsRec)
-        rec.adapter = AchievementsAdapter(AchievementManager.getAchvievements(), this)
+        rec.adapter = AchievementsAdapter(AchievementManager.getAchvievements(),persons, this)
         rec.layoutManager = GridLayoutManager(this,2)
     }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.executeSafe
+import com.tobo.huiset.utils.extensions.toTimeAgoString
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
@@ -38,7 +39,7 @@ class TransactionRecAdapter(
 
         holder.nameTv.text = person?.name
         holder.productTv.text = trans.getProduct(realmInstance).name
-        holder.timeAgo.text = trans.timeString
+        holder.timeAgo.text = trans.time.toTimeAgoString()
 
 
         holder.deleteButton.setOnClickListener {

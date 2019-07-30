@@ -8,11 +8,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.Achievement
+import com.tobo.huiset.utils.extensions.toTimeAgoString
 
 
-
-class AchievementsAdapter(val items: List<Achievement>, val context: Context) :
+class AchievementsAdapter(val items: List<Achievement>, val persons: List<Person>, val context: Context) :
     RecyclerView.Adapter<AchievementsAdapter.AchievementViewHolder>() {
 
 
@@ -32,9 +33,15 @@ class AchievementsAdapter(val items: List<Achievement>, val context: Context) :
         val placeHolder = holder.nameHolder
         placeHolder.removeAllViews()
 
-        for (i in 0 .. 5){
+        val personsThatArchievedThis = persons.filter { item.wasAchieved(it) }.sortedBy { it.row }
+
+        holder.noOneText.visibility = if(personsThatArchievedThis.isEmpty()) View.VISIBLE else View.GONE
+
+
+        for (p in personsThatArchievedThis){
             val child = View.inflate(context,R.layout.achievement_person,null)
-            child.findViewById<TextView>(R.id.achievement_person_name).text = "person $i"
+            child.findViewById<TextView>(R.id.achievement_person_name).text = p.name
+            child.findViewById<TextView>(R.id.achievement_person_date).text = item.getAchievemoment(p)?.timeStamp?.toTimeAgoString()
             placeHolder.addView(child)
         }
 
@@ -44,6 +51,7 @@ class AchievementsAdapter(val items: List<Achievement>, val context: Context) :
         val achievementName = view.findViewById<TextView>(R.id.achievement_name)
         val description = view.findViewById<TextView>(R.id.achievement_description)
         val nameHolder = view.findViewById<LinearLayout>(R.id.achivement_person_container)
+        val noOneText = view.findViewById<TextView>(R.id.achivement_noOneText)
 
     }
 }

@@ -61,9 +61,6 @@ class FragmentProfiles : HuisEtFragment() {
         fab.setOnClickListener {
             val intent = Intent(this.activity, EditProfileActivity::class.java)
             startActivity(intent)
-
-            db.findAllCurrentPersons(true).forEach { AchievementManager.updateForPerson(it) }
-
         }
 
         // opens EditProfileActivity on the correct profile if a profile is clicked

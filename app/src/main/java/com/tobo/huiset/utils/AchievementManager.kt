@@ -28,10 +28,36 @@ abstract class Achievement(){
     }
 
     fun wasAchieved(person: Person):Boolean{
-        return person.completions.find { it.achievement == this.id } != null
+        return getAchievemoment(person) != null
+    }
+
+    fun getAchievemoment(person: Person): AchievementCompletion? {
+        return person.completions.find { it.achievement == this.id }
     }
 }
 
+
+class PilsBaas() : Achievement() {
+    override val id = A_PILSBAAS
+    override val name = "Pilsbaas"
+    override val description = "Drink 10 of meer pils op een dag"
+    override fun isAchievedNow(person:Person): Boolean {
+        val realm = person.realm
+
+        val transactions = realm.where(Transaction::class.java)
+            .equalTo("personId", person.id)
+            .findAll()
+
+        val maxBeerOnADay = transactions
+            .filter { it.getProduct(person.realm).isBeer  }
+            .groupBy { SimpleDateFormat("yyyy-MM-dd")
+                .format(Date(it.time)) }
+            .values.maxBy { it.size }?.size
+
+        return maxBeerOnADay != null && maxBeerOnADay > 8
+
+    }
+}
 
 object AchievementManager {
 
@@ -42,29 +68,6 @@ object AchievementManager {
     }
 
     public fun updateForPerson(p:Person) = getAchvievements().forEach { it.update(p) }
-
-    class PilsBaas() : Achievement() {
-        override val id = A_PILSBAAS
-        override val name = "Pilsbaas"
-        override val description = "Drink 10 of meer pils op een dag"
-        override fun isAchievedNow(person:Person): Boolean {
-            val realm = person.realm
-
-            val transactions = realm.where(Transaction::class.java)
-                .equalTo("personId", person.id)
-                .findAll()
-
-            val maxBeerOnADay = transactions
-                .filter { it.getProduct(person.realm).isBeer  }
-                .groupBy { SimpleDateFormat("yyyy-MM-dd")
-                    .format(Date(it.time)) }
-                .values.maxBy { it.size }?.size
-
-            return maxBeerOnADay != null && maxBeerOnADay > 8
-
-        }
-    }
-
 
 
 }

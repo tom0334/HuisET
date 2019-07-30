@@ -23,6 +23,30 @@ fun Int.toCurrencyString(): String {
     return "€$signed$euros,$cents"
 }
 
+fun Long.toTimeAgoString():String{
+    val secondsAgo = (System.currentTimeMillis() - this) / 1000
+    val minutesAgo = secondsAgo / 60
+    val hoursAgo = minutesAgo / 60
+    val daysAgo = hoursAgo / 24
+    val weeksAgo = daysAgo / 7
+
+    //#yolo
+    val monthsAgo = daysAgo / 30
+    val yearsAgo = monthsAgo / 12
+
+
+    return when {
+        secondsAgo < 10 -> "Nu"
+        secondsAgo < 60 -> "Zojuist"
+        minutesAgo < 60 -> "$minutesAgo min.\ngeleden"
+        hoursAgo < 24 -> "$hoursAgo uur\ngeleden"
+        daysAgo < 7 -> "$daysAgo dagen\ngeleden"
+        daysAgo < 30 -> "$weeksAgo weken\ngeleden"
+        monthsAgo < 12 -> "$monthsAgo  maanden\ngeleden"
+        else -> "$yearsAgo jaar\ngeleden"
+    }
+}
+
 fun String.euroToCent(): Int {
     var result = 0
 

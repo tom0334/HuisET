@@ -30,37 +30,6 @@ public class Transaction extends RealmObject {
         return t;
     }
 
-    public String getTimeString() {
-        long secondsAgo = (System.currentTimeMillis() - time) / 1000;
-        long minutesAgo = secondsAgo / 60;
-        long hoursAgo = minutesAgo / 60;
-        long daysAgo = hoursAgo / 24;
-        long weeksAgo = daysAgo / 7;
-        //#yolo
-        long monthsAgo = daysAgo / 30;
-        long yearsAgo = monthsAgo / 12;
-
-
-        if (secondsAgo < 10) {
-            return "Nu";
-        } else if (secondsAgo < 60) {
-            return "Zojuist";
-        } else if (minutesAgo < 60) {
-            return minutesAgo + " min.\ngeleden";
-        } else if (hoursAgo < 24) {
-            return hoursAgo + " uur\ngeleden";
-        } else if (daysAgo < 7) {
-            return daysAgo + " dagen\ngeleden";
-        } else if (daysAgo < 30) {
-            return weeksAgo + " weken\ngeleden";
-        } else if (monthsAgo < 12) {
-            return monthsAgo + " maanden\ngeleden";
-        } else {
-            return yearsAgo + " jaar\ngeleden";
-        }
-
-    }
-
     public int getPrice() {
         return price;
     }

@@ -15,6 +15,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:textColor="@color/primaryTextColor"
             android:id="@+id/achievement_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,8 +43,14 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="wrap_content">
-
         </LinearLayout>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/achivement_noOneText"
+            android:text="Niemand heeft deze achievement behaald"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>
