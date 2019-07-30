@@ -64,7 +64,7 @@ class Nice : BaseAchievement() {
 class CollegeWinnaar : BaseAchievement(){
     override val id = A_COLLEGE_WINNAAR
     override val name = "Collegewinnaar"
-    override val description = "Drink een biertje op een doordeweekse dag voor 8:45.Telt vanaf 6 uur s'ochtends."
+    override val description = "Drink een biertje op een doordeweekse dag voor 8:45. Telt vanaf 6 uur s'ochtends."
 
     override fun isAchievedNow(person: Person): Boolean {
         val realm = person.realm
@@ -109,6 +109,7 @@ class MVP: BaseAchievement() {
             val mvpID = pair.key
             val amount = pair.value
 
+            //someone else is the mvp
             if (mvpID != person.id) continue
 
             if (amount > 5) return true
