@@ -15,7 +15,6 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.euroToCent
-import com.tobo.huiset.utils.extensions.findAllCurrentProducts
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
 
@@ -124,7 +123,7 @@ class EditProductActivity : HuisEtActivity() {
             showBool = true
         }
 
-        val row = realm.findAllCurrentProducts()!!.size
+        val row = db.findAllCurrentProducts(includeHidden = true).size
 
         realm.executeTransaction {
             if (new) {
