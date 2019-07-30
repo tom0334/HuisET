@@ -3,14 +3,16 @@ package com.tobo.huiset.utils
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.utils.extensions.toToboTime
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 public val A_PILSBAAS = 1
 public val A_NICE = 2
+public val COLLEGE_WINNAAR = 5
 
-abstract class Achievement(){
+abstract class Achievement {
     abstract val id:Int
     abstract val name:String
     abstract val description:String
@@ -62,7 +64,7 @@ class PilsBaas : Achievement() {
 class Nice : Achievement() {
     override val id = A_NICE
     override val name = "Nice"
-    override val description = "Drink 69 of 420 bier"
+    override val description = "Drink 69 bier"
     override fun isAchievedNow(person: Person): Boolean {
         val realm = person.realm
 
@@ -77,13 +79,40 @@ class Nice : Achievement() {
     }
 }
 
+class CollegeWinnaar : Achievement(){
+    override val id = COLLEGE_WINNAAR
+    override val name = "Collegewinnaar"
+    override val description = "Drink een biertje op een doordeweekse dag voor 8:45.Telt vanaf 6 uur s'ochtends."
+
+    override fun isAchievedNow(person: Person): Boolean {
+        val realm = person.realm
+
+        val transactions = realm.where(Transaction::class.java)
+            .equalTo("personId", person.id)
+            .findAll()
+
+        val fiveOClock = ToboTime(6,0,0)
+        val collegeStartTime = ToboTime(8,45,0)
+
+        val collegeBeers = transactions
+            .filter { it.getProduct(person.realm).isBeer  }
+            .filter { it.time.toToboTime().isWeekDay() && it.time.toToboTime().timeOfDayBetween(fiveOClock,collegeStartTime)}
+
+        return collegeBeers.size > 0
+    }
+
+}
+
+
+
 
 object AchievementManager {
 
     public fun getAchievements(): List<Achievement>{
         return listOf(
             PilsBaas(),
-            Nice()
+            Nice(),
+            CollegeWinnaar()
         )
     }
 

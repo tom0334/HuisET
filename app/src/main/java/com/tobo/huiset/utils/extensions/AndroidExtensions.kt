@@ -5,6 +5,10 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.util.TypedValue
 import android.widget.TextView
+import com.tobo.huiset.MyApplication
+import com.tobo.huiset.utils.ToboTime
+import java.sql.Timestamp
+import java.util.*
 
 fun Int.toPixel(context: Context): Int {
     val r = context.resources
@@ -47,6 +51,10 @@ fun Long.toTimeAgoString(includeNewLine:Boolean):String{
     }
     return if (includeNewLine) text else text.replace("\n", "")
 }
+
+
+fun Long.toToboTime(): ToboTime = ToboTime(this)
+
 
 fun String.euroToCent(): Int {
     var result = 0
