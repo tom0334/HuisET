@@ -75,7 +75,8 @@ class FragmentPurchases : HuisEtFragment() {
             val person = db.getPersonWithId(pickedPersonId) ?: return@setOnItemClickListener
             val product = products[position] ?: return@setOnItemClickListener
 
-            val doneTransaction = db.createAndSaveTransaction(person,product, true)
+            // TODO: add custom amount of purchased item (instead of the 1 in line below)
+            val doneTransaction = db.createAndSaveTransaction(person,product, 1, true)
             setPersonAndUpdate(null)
 
             Snackbar.make(view.findViewById(R.id.purchasesContentView), "${product.name} gekocht door ${person.name}", 4000)

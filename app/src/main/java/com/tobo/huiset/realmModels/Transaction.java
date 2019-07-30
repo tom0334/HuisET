@@ -15,18 +15,19 @@ public class Transaction extends RealmObject {
     private String personId;
     private String productId;
     private int price;
-
+    private int amount;
     private boolean buy;
 
     public Transaction() {
     }
 
-    static public Transaction create(Person person, Product product, boolean buy) {
+    static public Transaction create(Person person, Product product, int amount, boolean buy) {
         Transaction t = new Transaction();
         t.personId = person.getId();
         t.productId = product.getId();
         t.buy = buy;
-        t.price = product.getPrice();
+        t.amount = amount;
+        t.price = product.getPrice() * amount;
         return t;
     }
 
@@ -93,5 +94,13 @@ public class Transaction extends RealmObject {
 
     public String getId() {
         return id;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

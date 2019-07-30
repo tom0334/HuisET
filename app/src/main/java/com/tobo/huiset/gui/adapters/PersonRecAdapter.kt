@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.utils.extensions.getBalanceColorString
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
@@ -38,7 +39,7 @@ class PersonRecAdapter(
         holder.nameTv.text = person.name
 
         holder.balanceTv.text = person.balance.toCurrencyString()
-        val colorString = data?.get(position)!!.balanceColor
+        val colorString = data?.get(position)!!.balance.getBalanceColorString()
         holder.balanceTv.setTextColorFromHex(colorString)
 
         holder.hiddenTv.text = "verborgen"

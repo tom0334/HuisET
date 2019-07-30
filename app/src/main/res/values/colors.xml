@@ -8,6 +8,6 @@
   <color name="secondaryDarkColor">#c17900</color>
   <color name="primaryTextColor">#000</color>
   <color name="secondaryTextColor">#212121</color>
-
+  <color name="androidStandardTextColor">@android:color/tab_indicator_text</color>
   <color name="colorMaxContrast">#fff</color>
 </resources>
