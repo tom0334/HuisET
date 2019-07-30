@@ -10,6 +10,12 @@
         android:layout_width="0dp">
 
         <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mainAmountRec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+        />
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainProductRec"
             android:layout_width="match_parent"
             android:layout_height="@dimen/fragmentMain_product_height"

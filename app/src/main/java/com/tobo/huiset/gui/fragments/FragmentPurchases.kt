@@ -90,11 +90,10 @@ class FragmentPurchases : HuisEtFragment() {
 
             var doneTransaction: Transaction? = null
             realm.executeTransaction {
-                val trans = Transaction.create(person, product, true)
+                // TODO: add custom amount of a purchased item
+                val trans = Transaction.create(person, product, 1, true)
                 person.addTransaction(trans)
                 doneTransaction = realm.copyToRealmOrUpdate(trans)
-
-
             }
             setPersonAndUpdate(null)
 

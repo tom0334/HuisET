@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
-import com.tobo.huiset.realmModels.Person
-import io.realm.Realm
 
 
-class AmountMainRecAdapter(val items: MutableList<Person?>, val context: Context, val realm: Realm) :
+class AmountMainRecAdapter(val items: List<Int>, val context: Context) :
     RecyclerView.Adapter<AmountMainViewHolder>() {
+
+    var selectedPos = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AmountMainViewHolder {
         return AmountMainViewHolder(
@@ -26,24 +27,16 @@ class AmountMainRecAdapter(val items: MutableList<Person?>, val context: Context
     }
 
     override fun onBindViewHolder(holder: AmountMainViewHolder, position: Int) {
-        val p = items[position]
-
-        fun setColors(selected: Boolean) {
-            if (selected) {
-                holder.rootV.setBackgroundColor(ContextCompat.getColor(context, R.color.secondaryDarkColor))
-            } else {
-                holder.rootV.setBackgroundColor(ContextCompat.getColor(context, R.color.primaryDarkColor))
-            }
+        holder.itemView.setOnClickListener {
+            this.notifyItemChanged(selectedPos) // old pos
+            this.notifyItemChanged(position) // new pos
+            this.selectedPos = position
         }
 
-        if (p == null) {
-            holder.personNameTv.text = "Totaal"
-            val selected = realm.where(Person::class.java).equalTo("selectedInAmountView", true).count() == 0L
-            setColors(selected)
-        } else {
-            holder.personNameTv.text = p.name
-            setColors(p.isSelectedInAmountView)
-        }
+        val colorResId = if (position == selectedPos) R.color.secondaryDarkColor else R.color.primaryDarkColor
+        holder.cardV.setBackgroundColor(ContextCompat.getColor(context, colorResId))
+
+        holder.amountTv.text = items[position].toString()
     }
 
     // Gets the number of animals in the list
@@ -51,9 +44,13 @@ class AmountMainRecAdapter(val items: MutableList<Person?>, val context: Context
         return items.size
     }
 
+    fun getSelectedAmount(): Int {
+        return items[selectedPos]
+    }
+
 }
 
 class AmountMainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val personNameTv = view.findViewById<TextView>(R.id.amountMainRec_name)!!
-    val rootV = view.findViewById<View>(R.id.amountMainRec_rootView)!!
+    val cardV: CardView = itemView.findViewById(R.id.amountMainRecItem)
+    val amountTv: TextView = view.findViewById(R.id.amountMainRecItem_name)
 }

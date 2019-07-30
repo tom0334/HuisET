@@ -3,11 +3,13 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
@@ -57,6 +59,7 @@ class FragmentMain : HuisEtFragment() {
         val transActionRec = setupTransactionsRec(view)
         setupTurfRec(view, transActionRec)
 
+        setupAmountRec(view)
         setupProductRec(view)
     }
 
@@ -86,6 +89,17 @@ class FragmentMain : HuisEtFragment() {
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
         setupSpacingForTurRec(columns)
     }
+
+    private fun setupAmountRec(view: View): RecyclerView {
+        // this sets up the amount recyclerview
+        val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
+        val amountList = (1..20).toList()
+        amountRec.adapter = AmountMainRecAdapter(amountList, this.context!!)
+        amountRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
+
+        return amountRec
+    }
+
     private fun setupProductRec(view: View): RecyclerView {
         val products = realm.where(Product::class.java)
             .equalTo("deleted", false)
@@ -93,7 +107,7 @@ class FragmentMain : HuisEtFragment() {
             .sort("row", Sort.ASCENDING)
             .findAll()
 
-        // this sets up the recyclerview to show the products
+        // this sets up the product recyclerview
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
         prodRec.adapter = ProductMainRecAdapter(this.context!!, products, true)
         prodRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
@@ -153,6 +167,8 @@ class FragmentMain : HuisEtFragment() {
 
         setupSpacingForTurRec(columns)
 
+        val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
+
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
             val person = profiles[position]
             if (person != null) {
@@ -162,7 +178,8 @@ class FragmentMain : HuisEtFragment() {
                         .equalTo("selected", true)
                         .sort("row", Sort.ASCENDING)
                         .findFirst()
-                    val t = Transaction.create(person, selectedProduct, false)
+                    val amount = (amountRec.adapter as AmountMainRecAdapter).getSelectedAmount()
+                    val t = Transaction.create(person, selectedProduct, amount, false)
                     selectedProduct?.isSelected = false
 
                     realm.copyToRealmOrUpdate(t)
@@ -185,8 +202,7 @@ class FragmentMain : HuisEtFragment() {
     }
 
     private fun getNumOfColunns(amountOfProfilesToShow: Int):Int{
-        val displayMetrics = context!!.getResources().displayMetrics
-        val dpHeight = displayMetrics.heightPixels / displayMetrics.density
+        val displayMetrics = context!!.resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 
         return when{
@@ -206,7 +222,15 @@ class FragmentMain : HuisEtFragment() {
         turfRec.addItemDecoration(spacer)
     }
 
-
+    // it doesn't save state when tablet is flipped
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//
+//        val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
+//        val adapter = turfRec!!.adapter as TurfRecAdapter
+//
+//        outState.putInt("selectedPos", adapter.)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
