@@ -3,7 +3,6 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -172,14 +171,15 @@ class FragmentMain : HuisEtFragment() {
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
             val person = profiles[position]
             if (person != null) {
+                val amountAdapter = amountRec.adapter as AmountMainRecAdapter
+
                 realm.executeSafe {
                     val selectedProduct = realm.where(Product::class.java)
                         .equalTo("deleted", false)
                         .equalTo("selected", true)
                         .sort("row", Sort.ASCENDING)
                         .findFirst()
-                    val amount = (amountRec.adapter as AmountMainRecAdapter).getSelectedAmount()
-                    val t = Transaction.create(person, selectedProduct, amount, false)
+                    val t = Transaction.create(person, selectedProduct, amountAdapter.getSelectedAmount(), false)
                     selectedProduct?.isSelected = false
 
                     realm.copyToRealmOrUpdate(t)
@@ -194,6 +194,8 @@ class FragmentMain : HuisEtFragment() {
                         firstProd.isSelected = true
                     }
                 }
+                amountAdapter.resetAmountToFirst()
+                amountAdapter.notifyDataSetChanged()
 
                 //scroll to the top, because the item is added at the top
                 transitionRec.scrollToPosition(0)

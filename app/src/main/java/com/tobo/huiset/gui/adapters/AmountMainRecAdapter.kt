@@ -48,6 +48,9 @@ class AmountMainRecAdapter(val items: List<Int>, val context: Context) :
         return items[selectedPos]
     }
 
+    fun resetAmountToFirst() {
+        selectedPos = 0
+    }
 }
 
 class AmountMainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
