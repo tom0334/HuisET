@@ -55,11 +55,12 @@ class FragmentMain : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupAmountRec(view)
+        setupProductRec(view)
+
         val transActionRec = setupTransactionsRec(view)
         setupTurfRec(view, transActionRec)
 
-        setupAmountRec(view)
-        setupProductRec(view)
     }
 
     override fun onTabReactivated() {
@@ -84,7 +85,7 @@ class FragmentMain : HuisEtFragment() {
         val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
         val adapter = turfRec!!.adapter as TurfRecAdapter
 
-        val columns = getNumOfColunns(adapter.itemCount)
+        val columns = getNumOfColumns(adapter.itemCount)
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
         setupSpacingForTurRec(columns)
     }
@@ -137,7 +138,8 @@ class FragmentMain : HuisEtFragment() {
             .findAll()
 
         val transActionRec = view.findViewById<RecyclerView>(R.id.recentRecyclerView)
-        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, realm, true)
+        val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
+        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
 
         //init the periodic refresh
@@ -158,7 +160,7 @@ class FragmentMain : HuisEtFragment() {
             .sort("row", Sort.ASCENDING)
             .findAll()
 
-        val columns = getNumOfColunns(profiles.count())
+        val columns = getNumOfColumns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
@@ -203,7 +205,7 @@ class FragmentMain : HuisEtFragment() {
         }
     }
 
-    private fun getNumOfColunns(amountOfProfilesToShow: Int):Int{
+    private fun getNumOfColumns(amountOfProfilesToShow: Int):Int{
         val displayMetrics = context!!.resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 

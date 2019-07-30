@@ -21,6 +21,7 @@ import io.realm.RealmResults
 class TransactionRecAdapter(
     val context: Context,
     data: RealmResults<Transaction>?,
+    val amountRec: RecyclerView,
     private val realmInstance: Realm,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(data, autoUpdate) {
@@ -37,7 +38,8 @@ class TransactionRecAdapter(
         val person = trans.getPerson(realmInstance)
 
         holder.nameTv.text = person?.name
-        holder.productTv.text = trans.getProduct(realmInstance).name
+        val amount = (amountRec.adapter as AmountMainRecAdapter).getSelectedAmount()
+        holder.productTv.text = "${trans.amount} ${trans.getProduct(realmInstance).name}"
         holder.timeAgo.text = trans.timeString
 
 
