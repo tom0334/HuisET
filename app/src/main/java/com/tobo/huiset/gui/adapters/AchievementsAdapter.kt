@@ -41,7 +41,7 @@ class AchievementsAdapter(val items: List<Achievement>, val persons: List<Person
         for (p in personsThatArchievedThis){
             val child = View.inflate(context,R.layout.achievement_person,null)
             child.findViewById<TextView>(R.id.achievement_person_name).text = p.name
-            child.findViewById<TextView>(R.id.achievement_person_date).text = item.getAchievemoment(p)?.timeStamp?.toTimeAgoString()
+            child.findViewById<TextView>(R.id.achievement_person_date).text = item.getAchievemoment(p)?.timeStamp?.toTimeAgoString(includeNewLine = false)
             placeHolder.addView(child)
         }
 

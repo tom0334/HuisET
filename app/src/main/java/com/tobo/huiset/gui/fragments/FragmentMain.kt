@@ -129,7 +129,6 @@ class FragmentMain : HuisEtFragment() {
 
     private fun getNumOfColunns(amountOfProfilesToShow: Int):Int{
         val displayMetrics = context!!.getResources().displayMetrics
-        val dpHeight = displayMetrics.heightPixels / displayMetrics.density
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 
         return when{

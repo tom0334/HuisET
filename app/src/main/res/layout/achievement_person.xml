@@ -7,6 +7,10 @@
     android:paddingBottom="4dp">
 
     <TextView
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
         android:id="@+id/achievement_person_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -14,6 +18,8 @@
         android:text="Bobbert" />
 
     <TextView
+        android:layout_gravity="center_vertical"
+        android:textSize="12sp"
         android:id="@+id/achievement_person_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

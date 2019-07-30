@@ -21,10 +21,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:text="Pilsbaas"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
 
         <TextView
-            android:paddingTop="4dp"
             android:id="@+id/achievement_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

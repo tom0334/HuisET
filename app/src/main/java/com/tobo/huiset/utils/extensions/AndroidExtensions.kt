@@ -23,7 +23,7 @@ fun Int.toCurrencyString(): String {
     return "€$signed$euros,$cents"
 }
 
-fun Long.toTimeAgoString():String{
+fun Long.toTimeAgoString(includeNewLine:Boolean):String{
     val secondsAgo = (System.currentTimeMillis() - this) / 1000
     val minutesAgo = secondsAgo / 60
     val hoursAgo = minutesAgo / 60
@@ -35,7 +35,7 @@ fun Long.toTimeAgoString():String{
     val yearsAgo = monthsAgo / 12
 
 
-    return when {
+    val text = when {
         secondsAgo < 10 -> "Nu"
         secondsAgo < 60 -> "Zojuist"
         minutesAgo < 60 -> "$minutesAgo min.\ngeleden"
@@ -45,6 +45,7 @@ fun Long.toTimeAgoString():String{
         monthsAgo < 12 -> "$monthsAgo  maanden\ngeleden"
         else -> "$yearsAgo jaar\ngeleden"
     }
+    return if (includeNewLine) text else text.replace("\n", "")
 }
 
 fun String.euroToCent(): Int {

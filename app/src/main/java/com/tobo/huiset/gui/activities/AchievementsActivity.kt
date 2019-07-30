@@ -7,6 +7,8 @@ import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.gui.adapters.AchievementsAdapter
 import com.tobo.huiset.utils.AchievementManager
+import com.tobo.huiset.utils.extensions.toPixel
+import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 
 class AchievementsActivity : HuisEtActivity() {
 
@@ -24,6 +26,18 @@ class AchievementsActivity : HuisEtActivity() {
 
         val rec = findViewById<RecyclerView>(R.id.acievementsRec)
         rec.adapter = AchievementsAdapter(AchievementManager.getAchvievements(),persons, this)
-        rec.layoutManager = GridLayoutManager(this,2)
+
+        val displayMetrics = resources.displayMetrics
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+        val columns = when{
+            dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
+            dpWidth > 900 -> 3
+            dpWidth > 600 -> 2 // 7 inch tablet in portrait
+            else -> 1
+        }
+        rec.layoutManager = GridLayoutManager(this,columns)
+        val spacing = ConsistentSpacingDecoration(16.toPixel(this),16.toPixel(this),columns)
+        rec.addItemDecoration(spacing)
     }
 }

@@ -39,7 +39,7 @@ class TransactionRecAdapter(
 
         holder.nameTv.text = person?.name
         holder.productTv.text = trans.getProduct(realmInstance).name
-        holder.timeAgo.text = trans.time.toTimeAgoString()
+        holder.timeAgo.text = trans.time.toTimeAgoString(includeNewLine = true)
 
 
         holder.deleteButton.setOnClickListener {
