@@ -3,6 +3,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -87,7 +88,7 @@ class FragmentMain : HuisEtFragment() {
 
         val columns = getNumOfColumns(adapter.itemCount)
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
-        setupSpacingForTurRec(columns)
+        setupSpacingForTurfRec(columns)
     }
 
     private fun setupAmountRec(view: View): RecyclerView {
@@ -96,6 +97,8 @@ class FragmentMain : HuisEtFragment() {
         val amountList = (1..20).toList()
         amountRec.adapter = AmountMainRecAdapter(amountList, this.context!!)
         amountRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
+        amountRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+
 
         return amountRec
     }
@@ -111,6 +114,7 @@ class FragmentMain : HuisEtFragment() {
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
         prodRec.adapter = ProductMainRecAdapter(this.context!!, products, true)
         prodRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
+        prodRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
 
         ItemClickSupport.addTo(prodRec).setOnItemClickListener { _, position, _ ->
             realm.executeTransaction {
@@ -141,6 +145,7 @@ class FragmentMain : HuisEtFragment() {
         val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
         transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
+        transActionRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
 
         //init the periodic refresh
         transactionTimeRefreshHandler = Handler()
@@ -166,7 +171,7 @@ class FragmentMain : HuisEtFragment() {
         turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
-        setupSpacingForTurRec(columns)
+        setupSpacingForTurfRec(columns)
 
         val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
 
@@ -217,7 +222,7 @@ class FragmentMain : HuisEtFragment() {
         }
     }
 
-    private fun setupSpacingForTurRec(columns :Int){
+    private fun setupSpacingForTurfRec(columns: Int) {
         val turfRec = view!!.findViewById<RecyclerView>(R.id.mainPersonRec)
         if(::spacer.isInitialized){
             turfRec.removeItemDecoration(spacer)
