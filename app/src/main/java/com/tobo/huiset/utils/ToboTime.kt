@@ -38,6 +38,12 @@ data class ToboTime(private val calendar: Calendar){
     }
 
 
+    /**
+     * Returns the "drinking day" for a timestamp. This avoids the issue of a drinking night ending at 12 in the app,
+     * while IRL it doesn't duh
+     *
+     * Basically, the night is still treated as the day before until 6am
+     */
     fun getZuipDay():ToboDay{
         val zuipTurnoverPoint = ToboTime(6,0,0)
 
@@ -47,8 +53,8 @@ data class ToboTime(private val calendar: Calendar){
             return yesterday.toboDay
         }
         else return this.toboDay
-
     }
+
 
     fun zuipDayHasEnded(): Boolean {
         val now= ToboTime(System.currentTimeMillis())
