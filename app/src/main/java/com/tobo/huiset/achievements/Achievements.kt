@@ -88,7 +88,7 @@ class CollegeWinnaar : BaseAchievement(){
 class MVP: BaseAchievement() {
     override val id = A_MVP
     override val name = "MVP (Most Valuable Pilser"
-    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je dit echt niet hoor."
+    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
 
     override fun isAchievedNow(person: Person): Boolean {
         val realm = person.realm
