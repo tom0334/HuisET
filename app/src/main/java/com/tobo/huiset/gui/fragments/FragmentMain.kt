@@ -140,10 +140,11 @@ class FragmentMain : HuisEtFragment() {
         ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
             val person = profiles[position]
             if (person != null) {
+
                 db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
                 db.selectFirstProduct()
+
                 amountAdapter.resetAmountToFirst()
-                amountAdapter.notifyDataSetChanged()
 
                 //scroll to the top, because the item is added at the top
                 transitionRec.scrollToPosition(0)

@@ -49,7 +49,10 @@ class AmountMainRecAdapter(val items: List<Int>, val context: Context) :
     }
 
     fun resetAmountToFirst() {
+        this.notifyItemChanged(selectedPos)
         selectedPos = 0
+        this.notifyItemChanged(selectedPos)
+
     }
 }
 
