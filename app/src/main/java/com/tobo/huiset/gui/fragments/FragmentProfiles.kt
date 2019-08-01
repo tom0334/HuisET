@@ -40,7 +40,7 @@ class FragmentProfiles : HuisEtFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //this sets up the recyclerview to show the persons
-        val persons = db.findAllCurrentPersons()
+        val persons = db.findAllCurrentPersons(true)
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
