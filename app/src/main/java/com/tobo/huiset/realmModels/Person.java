@@ -72,16 +72,6 @@ public class Person extends RealmObject {
         return balance;
     }
 
-    public String getBalanceColor() {
-        if (balance > 0) {
-            return "#388e3c";
-        } else if (balance == 0) {
-            return "#000000";
-        } else {
-            return "#dd2c00";
-        }
-    }
-
     public String getId() {
         return this.id;
     }

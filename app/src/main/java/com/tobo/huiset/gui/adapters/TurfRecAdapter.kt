@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.utils.extensions.getBalanceColorString
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.RealmRecyclerViewAdapter
@@ -35,7 +36,7 @@ class TurfRecAdapter(
 
         holder.nameTv.text = person.name
         holder.balanceTv.text = person.balance.toCurrencyString()
-        holder.balanceTv.setTextColorFromHex(person.balanceColor)
+        holder.balanceTv.setTextColorFromHex(person.balance.getBalanceColorString())
 
     }
 

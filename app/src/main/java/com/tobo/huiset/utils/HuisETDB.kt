@@ -75,10 +75,10 @@ class HuisETDB(private val realm: Realm) {
      * Adds a new transaction on the selected product
      * @param person the person to put the transaction on
      */
-    fun doTransactionWithSelectedProduct(person: Person) {
+    fun doTransactionWithSelectedProduct(person: Person, amount: Int) {
         realm.executeSafe {
             val selectedProduct = getSelectedProduct()
-            val t = Transaction.create(person, selectedProduct, false)
+            val t = Transaction.create(person, selectedProduct, amount, false)
             selectedProduct?.isSelected = false
 
             realm.copyToRealmOrUpdate(t)
@@ -161,10 +161,10 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Creates a new transaction with the supplied arguments and saves it in the database.
      */
-    fun createAndSaveTransaction(person: Person, product: Product, buy: Boolean):Transaction{
+    fun createAndSaveTransaction(person: Person, product: Product, amount: Int, buy: Boolean):Transaction{
         var savedTrans:Transaction? = null
         realm.executeTransaction{
-            val trans = Transaction.create(person, product, buy)
+            val trans = Transaction.create(person, product, amount, buy)
             person.addTransaction(trans)
             savedTrans = realm.copyToRealmOrUpdate(trans)
         }

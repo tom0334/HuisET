@@ -74,6 +74,19 @@ fun String.euroToCent(): Int {
     return result
 }
 
+/**
+ * green if positiv
+ * black if equal aan 0
+ * red if negativ
+ */
+fun Int.getBalanceColorString(): String {
+    return when {
+        this > 0 -> "#388e3c"
+        this == 0 -> "#000000"
+        else -> "#dd2c00"
+    }
+}
+
 fun Int.toNumberDecimal(): String {
     val signed = if (this < 0) "-" else ""
     val euros = Integer.toString(this / 100)

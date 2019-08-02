@@ -48,7 +48,7 @@ class FragmentPurchases : HuisEtFragment() {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
         pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
 
-        val profiles = db.findAllCurrentPersons(includeHidden = true)
+        val profiles = db.findAllCurrentPersons(false)
 
         pickUserRec.adapter = PurchasePersonRecAdapter(context!!, realm, profiles, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)
@@ -75,7 +75,8 @@ class FragmentPurchases : HuisEtFragment() {
             val person = db.getPersonWithId(pickedPersonId) ?: return@setOnItemClickListener
             val product = products[position] ?: return@setOnItemClickListener
 
-            val doneTransaction = db.createAndSaveTransaction(person,product, true)
+            // TODO: add custom amount of purchased item (instead of the 1 in line below)
+            val doneTransaction = db.createAndSaveTransaction(person,product, 1, true)
             setPersonAndUpdate(null)
 
             Snackbar.make(view.findViewById(R.id.purchasesContentView), "${product.name} gekocht door ${person.name}", 4000)

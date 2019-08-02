@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.toTimeAgoString
+import com.tobo.huiset.utils.extensions.getBalanceColorString
+import com.tobo.huiset.utils.extensions.setTextColorFromHex
+import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
@@ -22,6 +26,7 @@ import io.realm.RealmResults
 class TransactionRecAdapter(
     val context: Context,
     data: RealmResults<Transaction>?,
+    val amountRec: RecyclerView,
     private val realmInstance: Realm,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(data, autoUpdate) {
@@ -38,9 +43,15 @@ class TransactionRecAdapter(
         val person = trans.getPerson(realmInstance)
 
         holder.nameTv.text = person?.name
-        holder.productTv.text = trans.getProduct(realmInstance).name
         holder.timeAgo.text = trans.time.toTimeAgoString(includeNewLine = true)
-
+        holder.productTv.text = "${trans.amount} ${trans.getProduct(realmInstance).name}"
+        if (trans.isBuy) {
+            holder.priceTv.text = "+ ${trans.price.toCurrencyString()} (gekocht)"
+            holder.priceTv.setTextColorFromHex((1).getBalanceColorString())
+        } else {
+            holder.priceTv.text = "${trans.price.toCurrencyString()}"
+            holder.priceTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
+        }
 
         holder.deleteButton.setOnClickListener {
             realmInstance.executeSafe {
@@ -57,6 +68,7 @@ class TransactionRecAdapter(
 
     class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.main_transactionRec_name)!!
+        val priceTv = itemView.findViewById<TextView>(R.id.main_transactionRec_price)!!
         val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)!!
         val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)!!
         val deleteButton = itemView.findViewById<ImageButton>(R.id.main_transactionRec_deleteButton)!!

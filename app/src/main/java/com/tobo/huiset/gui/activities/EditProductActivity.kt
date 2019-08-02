@@ -154,7 +154,7 @@ class EditProductActivity : HuisEtActivity() {
             return false
         }
         // name is too long
-        val maxPriceLength = 8
+        val maxPriceLength = 6
         if (price.split('.')[0].length > maxPriceLength) {
             editText.error = "Er mogen niet meer dan $maxPriceLength voor de comma staan"
             return false
