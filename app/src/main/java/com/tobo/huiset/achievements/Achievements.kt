@@ -125,7 +125,7 @@ class MVP: BaseAchievement() {
 class GroteBoodschap: BaseAchievement(){
     override val id = A_GROTE_BOODSCHAP
     override val name = "Grote boodschap"
-    override val description ="Koop 3 kratjes in een keer in."
+    override val description ="Koop 2 kratjes in een keer in. Haha nummer 2."
 
     override fun isAchievedNow(person: Person): Boolean {
         val realm = person.realm
@@ -137,10 +137,9 @@ class GroteBoodschap: BaseAchievement(){
             .filter { it.getProduct(realm).isCrate }
 
 
-        if(crateBuys.isEmpty()) return false
         //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
         return  crateBuys.groupBy { it.time / 60000 }
-            .values.find { it.size >= 3 } != null
+            .values.find { it.size >= 2 } != null
     }
 
 }
