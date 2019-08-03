@@ -157,9 +157,10 @@ class EditProfileActivity : HuisEtActivity() {
         // duplicate names are not accepted, except if the old person is deleted
         if (realm.where(Person::class.java)
                 .equalTo("deleted", false)
-                .equalTo("name", name)
-                .count() > 0
-        ) {
+                .findAll().map { it.name }
+                .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
+        )
+        {
             if (new) {
                 editText.error = "Naam bestaat al"
                 return false
