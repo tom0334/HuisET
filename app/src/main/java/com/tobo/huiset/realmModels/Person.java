@@ -1,5 +1,6 @@
 package com.tobo.huiset.realmModels;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,8 @@ public class Person extends RealmObject {
     private boolean show;
     private int row;
     private boolean deleted = false;
+
+    private RealmList<AchievementCompletion> completions = new RealmList<>();
 
     private boolean selectedInHistoryView;
 
@@ -39,6 +42,10 @@ public class Person extends RealmObject {
     @NotNull
     public String getName() {
         return this.name;
+    }
+
+    public void addAchievement(AchievementCompletion a){
+        this.completions.add(a);
     }
 
 
@@ -119,5 +126,9 @@ public class Person extends RealmObject {
 
     public void setRow(int row) {
         this.row = row;
+    }
+
+    public RealmList<AchievementCompletion> getCompletions() {
+        return completions;
     }
 }

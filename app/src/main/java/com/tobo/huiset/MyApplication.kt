@@ -36,10 +36,10 @@ class MyApplication : Application() {
         if (settings.count() > 0) return
 
         realm.executeTransaction {
-            val beer = Product.create("Bier", Product.STANDARD_PRICE_BEER, true, 0)
+            val beer = Product.create("Bier", Product.STANDARD_PRICE_BEER, true, 0, true)
             beer.isSelected = true
             //no need copy, it is copy with the settings
-            val crate = Product.create("Kratje", Product.STANDARD_PRICE_CRATE, true, 1)
+            val crate = Product.create("Kratje", Product.STANDARD_PRICE_CRATE, true, 1, false)
             //no need to copy, it is copied with the settings
             val newSettingsObj = HuisETSettings.create(beer, crate)
             realm.copyToRealm(newSettingsObj)

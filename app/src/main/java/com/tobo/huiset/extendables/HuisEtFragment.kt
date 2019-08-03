@@ -27,7 +27,7 @@ abstract class HuisEtFragment : Fragment() {
     }
 
     /**
-     * Does nothing by default, but can be overridden by subclasses to update data for example.
+     * Does nothing by default, but can be overridden by subclasses to isAchievedNow data for example.
      */
     open fun onTabReactivated(){}
 

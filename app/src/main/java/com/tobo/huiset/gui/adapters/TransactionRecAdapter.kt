@@ -1,6 +1,5 @@
 package com.tobo.huiset.gui.adapters
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.executeSafe
+import com.tobo.huiset.utils.extensions.toTimeAgoString
 import com.tobo.huiset.utils.extensions.getBalanceColorString
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
 import com.tobo.huiset.utils.extensions.toCurrencyString
@@ -43,6 +43,7 @@ class TransactionRecAdapter(
         val person = trans.getPerson(realmInstance)
 
         holder.nameTv.text = person?.name
+        holder.timeAgo.text = trans.time.toTimeAgoString(includeNewLine = true)
         holder.productTv.text = "${trans.amount} ${trans.getProduct(realmInstance).name}"
         if (trans.isBuy) {
             holder.priceTv.text = "+ ${trans.price.toCurrencyString()} (gekocht)"
@@ -51,9 +52,6 @@ class TransactionRecAdapter(
             holder.priceTv.text = "${trans.price.toCurrencyString()}"
             holder.priceTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
         }
-
-        holder.timeAgo.text = trans.timeString
-
 
         holder.deleteButton.setOnClickListener {
             realmInstance.executeSafe {

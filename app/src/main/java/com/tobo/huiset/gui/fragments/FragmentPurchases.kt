@@ -48,7 +48,7 @@ class FragmentPurchases : HuisEtFragment() {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
         pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
 
-        val profiles = db.findAllCurrentPersons(includeHidden = true)
+        val profiles = db.findAllCurrentPersons(false)
 
         pickUserRec.adapter = PurchasePersonRecAdapter(context!!, realm, profiles, true)
         pickUserRec.layoutManager = LinearLayoutManager(context!!)

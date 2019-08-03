@@ -18,16 +18,18 @@ public class Product extends RealmObject {
     private int row;    // geeft row aan
     private boolean selected = false;
     private boolean deleted = false;
+    private boolean isBeer = false;
 
     public Product() {
     }
 
-    static public Product create(String name, int price, boolean show, int row) {
+    static public Product create(String name, int price, boolean show, int row, boolean isBeer) {
         Product p = new Product();
         p.name = name;
         p.price = price;
         p.show = show;
         p.row = row;
+        p.isBeer = isBeer;
 
         return p;
     }
@@ -82,5 +84,9 @@ public class Product extends RealmObject {
 
     public void setRow(int row) {
         this.row = row;
+    }
+
+    public boolean isBeer() {
+        return isBeer;
     }
 }

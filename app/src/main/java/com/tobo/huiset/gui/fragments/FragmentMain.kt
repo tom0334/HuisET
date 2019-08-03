@@ -59,7 +59,7 @@ class FragmentMain : HuisEtFragment() {
         setupTurfRec(view, transActionRec)
 
         if (savedInstanceState != null) {
-            val amountAdapter = view?.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
+            val amountAdapter = view.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
             amountAdapter.selectedPos = savedInstanceState.getInt("selectedPos")
             amountAdapter.notifyDataSetChanged()
         }
