@@ -162,7 +162,7 @@ class FragmentMain : HuisEtFragment() {
 
         return when{
             amountOfProfilesToShow >= 8 && dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
-            amountOfProfilesToShow >= 6 && dpWidth > 900 -> 3
+            amountOfProfilesToShow >= 7 && dpWidth > 900 -> 3
             amountOfProfilesToShow >= 4 && dpWidth > 600 -> 2 // 7 inch tablet in portrait
             else -> 1
         }
