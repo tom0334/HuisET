@@ -14,7 +14,7 @@ import java.util.*
  * 3-> add it to the list of all achievements in the achievement manager
  *
  */
-
+//Achievements are numbered to be saved in the database.
 const val A_PILSBAAS = 1
 const val A_NICE = 2
 const val A_MVP = 3
@@ -34,7 +34,7 @@ class PilsBaas : BaseAchievement() {
 
         val transactions = realm.where(Transaction::class.java)
             .equalTo("personId", person.id)
-            .findAll()
+            .findAll().filter { it.getProduct(realm).isBeer }
 
         val maxBeerOnADay = transactions
             .filter { it.getProduct(person.realm).isBeer  }
@@ -206,6 +206,8 @@ object AchievementManager {
             DoeHetVoorDeKoning()
         )
     }
+
+    //todo Give some data that is used often as parameter, for more efficiency
 
     fun updateForPerson(p:Person) = getAchievements().forEach { it.update(p) }
 }
