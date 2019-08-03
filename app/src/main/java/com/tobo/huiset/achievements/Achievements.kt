@@ -109,8 +109,11 @@ class MVP: BaseAchievement() {
             val mvpID = pair.key
             val amount = pair.value
 
+
             //someone else is the mvp
             if (mvpID != person.id) continue
+            //its a tie! There are multiple people that drank the same amount. No winner then.
+            if(amountOftransactionsOnDay.values.count { it == amount} > 1 ) continue
 
             if (amount > 5) return true
         }
