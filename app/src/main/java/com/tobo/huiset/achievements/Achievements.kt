@@ -2,7 +2,6 @@ package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
-import com.tobo.huiset.utils.ToboDay
 import com.tobo.huiset.utils.ToboTime
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,7 +18,9 @@ import java.util.*
 const val A_PILSBAAS = 1
 const val A_NICE = 2
 const val A_MVP = 3
+const val A_GROTE_BOODSCHAP = 4
 const val A_COLLEGE_WINNAAR = 6
+
 
 class PilsBaas : BaseAchievement() {
     override val id = A_PILSBAAS
@@ -121,6 +122,29 @@ class MVP: BaseAchievement() {
     }
 }
 
+class GroteBoodschap: BaseAchievement(){
+    override val id = A_GROTE_BOODSCHAP
+    override val name = "Grote boodschap"
+    override val description ="Koop 3 kratjes in een keer in."
+
+    override fun isAchievedNow(person: Person): Boolean {
+        val realm = person.realm
+
+        val crateBuys = realm.where(Transaction::class.java)
+            .equalTo("personId", person.id)
+            .equalTo("buy",true)
+            .findAll()
+            .filter { it.getProduct(realm).isCrate }
+
+
+        if(crateBuys.isEmpty()) return false
+        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
+        return  crateBuys.groupBy { it.time / 60000 }
+            .values.find { it.size >= 3 } != null
+    }
+
+}
+
 object AchievementManager {
 
     fun getAchievements(): List<BaseAchievement>{
@@ -128,11 +152,10 @@ object AchievementManager {
             PilsBaas(),
             Nice(),
             CollegeWinnaar(),
-            MVP()
+            MVP(),
+            GroteBoodschap()
         )
     }
 
     fun updateForPerson(p:Person) = getAchievements().forEach { it.update(p) }
-
-
 }

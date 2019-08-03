@@ -19,17 +19,19 @@ public class Product extends RealmObject {
     private boolean selected = false;
     private boolean deleted = false;
     private boolean isBeer = false;
+    private boolean isCrate;
 
     public Product() {
     }
 
-    static public Product create(String name, int price, boolean show, int row, boolean isBeer) {
+    static public Product create(String name, int price, boolean show, int row, boolean isBeer, boolean isCrate) {
         Product p = new Product();
         p.name = name;
         p.price = price;
         p.show = show;
         p.row = row;
         p.isBeer = isBeer;
+        p.isCrate = isCrate;
 
         return p;
     }
@@ -88,5 +90,9 @@ public class Product extends RealmObject {
 
     public boolean isBeer() {
         return isBeer;
+    }
+
+    public boolean isCrate() {
+        return isCrate;
     }
 }
