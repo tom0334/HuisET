@@ -21,9 +21,11 @@ data class ToboTime(private val calendar: Calendar){
     val hour by lazy { calendar.get(Calendar.HOUR_OF_DAY)}
     val min by lazy{ calendar.get(Calendar.MINUTE)}
     val sec by lazy{ calendar.get(Calendar.SECOND)}
-    val dayOfYear by lazy { calendar.get(Calendar.DAY_OF_YEAR) }
+    val dayOfMonth by lazy { calendar.get(Calendar.DAY_OF_MONTH) }
+    val month by lazy { calendar.get(Calendar.MONTH) }
     val year by lazy { calendar.get(Calendar.YEAR) }
 
+    val dayOfYear by lazy { calendar.get(Calendar.DAY_OF_YEAR) }
     val toboDay by lazy { ToboDay(this.dayOfYear, this.year) }
 
 

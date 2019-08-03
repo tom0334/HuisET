@@ -22,6 +22,8 @@ const val A_GROTE_BOODSCHAP = 4
 const val A_REPARATIE_PILSJE = 5
 const val A_COLLEGE_WINNAAR = 6
 
+const val A_DOE_HET_VOOR_DE_KONING = 9
+
 
 class PilsBaas : BaseAchievement() {
     override val id = A_PILSBAAS
@@ -174,6 +176,23 @@ class ReparatieBiertje :BaseAchievement(){
 
 }
 
+class DoeHetVoorDeKoning : BaseAchievement() {
+    override val id = A_DOE_HET_VOOR_DE_KONING
+    override val name = "Doe het voor de koning"
+    override val description = "Drink een biertje op koningsdag. Op Prins Pils!"
+
+    override fun isAchievedNow(person: Person): Boolean {
+        val realm = person.realm
+        val kingsDayBeer =  realm.where(Transaction::class.java)
+            .equalTo("personId", person.id)
+            .findAll()
+            .find { it.toboTime.dayOfMonth == 27 && it.toboTime.month == Calendar.APRIL}
+
+        return kingsDayBeer != null
+    }
+
+}
+
 object AchievementManager {
 
     fun getAchievements(): List<BaseAchievement>{
@@ -183,7 +202,8 @@ object AchievementManager {
             Nice(),
             CollegeWinnaar(),
             MVP(),
-            GroteBoodschap()
+            GroteBoodschap(),
+            DoeHetVoorDeKoning()
         )
     }
 
