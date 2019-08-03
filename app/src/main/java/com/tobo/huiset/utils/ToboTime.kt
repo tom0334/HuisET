@@ -98,5 +98,12 @@ data class ToboTime(private val calendar: Calendar){
         return this.calendar.after(other.calendar)
     }
 
+    fun is1DayLaterThan(thanThis: ToboTime): Boolean {
+        val maybe1DayLater = Calendar.getInstance()
+        maybe1DayLater.timeInMillis = thanThis.unix
+        maybe1DayLater.add(Calendar.DAY_OF_YEAR,1)
+        return this.calendar.get(Calendar.DAY_OF_YEAR) == maybe1DayLater.get(Calendar.DAY_OF_YEAR)
+    }
+
 
 }

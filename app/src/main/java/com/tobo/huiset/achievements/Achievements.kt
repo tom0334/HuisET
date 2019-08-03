@@ -19,6 +19,7 @@ const val A_PILSBAAS = 1
 const val A_NICE = 2
 const val A_MVP = 3
 const val A_GROTE_BOODSCHAP = 4
+const val A_REPARATIE_PILSJE = 5
 const val A_COLLEGE_WINNAAR = 6
 
 
@@ -144,11 +145,41 @@ class GroteBoodschap: BaseAchievement(){
 
 }
 
+class ReparatieBiertje :BaseAchievement(){
+    override val id = A_REPARATIE_PILSJE
+    override val name = "Reparatie Biertje"
+    override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken.\n"
+
+    override fun isAchievedNow(person: Person): Boolean {
+        val realm = person.realm
+
+        val allBeerTransactions = realm.where(Transaction::class.java)
+            .equalTo("personId", person.id)
+            .findAll()
+            .filter { it.getProduct(person.realm).isBeer  }
+
+        val drankEnoughDays = allBeerTransactions.groupBy { it.toboTime.getZuipDay() }
+            .filter { entry -> entry.value.size > 10 }
+            .map{ entry -> entry.value[0].toboTime}
+
+
+        val morningBeers = allBeerTransactions.filter { it.toboTime.hour < 12 }
+
+        for (drinkDay in drankEnoughDays){
+            val repair =morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
+            if(repair != null) return true
+        }
+        return false
+    }
+
+}
+
 object AchievementManager {
 
     fun getAchievements(): List<BaseAchievement>{
         return listOf(
             PilsBaas(),
+            ReparatieBiertje(),
             Nice(),
             CollegeWinnaar(),
             MVP(),
