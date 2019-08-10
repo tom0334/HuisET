@@ -127,7 +127,8 @@ class EditProductActivity : HuisEtActivity() {
 
         realm.executeTransaction {
             if (new) {
-                val product = Product.create(newName, newPrice, showBool, row,false)
+                //todo UI for isbeer and isCrate
+                val product = Product.create(newName, newPrice, showBool, row,false,false)
                 realm.copyToRealm(product)
             } else {
                 oldProduct!!.name = newName
