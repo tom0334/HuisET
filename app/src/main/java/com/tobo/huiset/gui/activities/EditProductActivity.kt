@@ -40,11 +40,19 @@ class EditProductActivity : HuisEtActivity() {
             findViewById<EditText>(R.id.name).setText(oldProduct!!.name)
             findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
 
-            val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_kindProd)
+            val kindRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_kindProd)
             when {
-                oldProduct!!.kind == Product.ONLY_TURFABLE -> showRadioGroup.check(R.id.radio_OnlyTurf_Prod)
-                oldProduct!!.kind == Product.ONLY_BUYABLE -> showRadioGroup.check(R.id.radio_OnlyBuy_Prod)
-                else -> showRadioGroup.check(R.id.radio_Both_Prod)
+                oldProduct!!.kind == Product.ONLY_TURFABLE -> kindRadioGroup.check(R.id.radio_OnlyTurf_Prod)
+                oldProduct!!.kind == Product.ONLY_BUYABLE -> kindRadioGroup.check(R.id.radio_OnlyBuy_Prod)
+                else -> kindRadioGroup.check(R.id.radio_Both_Prod)
+            }
+
+            val speciesRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_productSpecies)
+            when {
+                oldProduct!!.species == Product.BEERPRODUCT -> speciesRadioGroup.check(R.id.radio_beerProduct)
+                oldProduct!!.species == Product.CRATEPRODUCT -> speciesRadioGroup.check(R.id.radio_crateProduct)
+                oldProduct!!.species == Product.SNACKPRODUCT -> speciesRadioGroup.check(R.id.radio_snackProduct)
+                else -> speciesRadioGroup.check(R.id.radio_otherProduct)
             }
 
             new = false
@@ -129,11 +137,12 @@ class EditProductActivity : HuisEtActivity() {
         val newRow = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY).size
 
         val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
-        var newSpecies = Product.OTHERPRODUCT
+        var newSpecies: Int
         when (selectedSpeciesButton) {
             R.id.radio_beerProduct -> newSpecies = Product.BEERPRODUCT
             R.id.radio_crateProduct -> newSpecies = Product.CRATEPRODUCT
             R.id.radio_snackProduct -> newSpecies = Product.SNACKPRODUCT
+            else -> newSpecies = Product.OTHERPRODUCT
         }
 
         realm.executeTransaction {
@@ -144,7 +153,6 @@ class EditProductActivity : HuisEtActivity() {
                 oldProduct!!.name = newName
                 oldProduct!!.price = newPrice
                 oldProduct!!.kind = newKind
-                oldProduct!!.row = newRow
                 oldProduct!!.species = newSpecies
             }
         }
