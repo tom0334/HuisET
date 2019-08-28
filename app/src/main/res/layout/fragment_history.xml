@@ -40,7 +40,7 @@
 
                 <TextView
                     android:id="@+id/earlyTimePointDate"
-                    android:fontFamily="sans-serif-condensed"
+                    android:fontFamily="sans-serif-medium"
                     android:gravity="center_horizontal"
                     android:text="24-05-2018"
                     android:layout_width="match_parent"
@@ -49,7 +49,7 @@
 
                 <TextView
                     android:id="@+id/earlyTimePointTime"
-                    android:fontFamily="sans-serif-condensed"
+                    android:fontFamily="sans-serif-condensed-medium"
                     android:gravity="center_horizontal"
                     android:text="8:00"
                     android:layout_width="match_parent"
@@ -90,7 +90,7 @@
 
                 <TextView
                     android:id="@+id/lateTimePointDate"
-                    android:fontFamily="sans-serif-condensed"
+                    android:fontFamily="sans-serif-medium"
                     android:gravity="center_horizontal"
                     android:text="25-05-2018"
                     android:layout_width="match_parent"
@@ -99,15 +99,13 @@
 
                 <TextView
                     android:id="@+id/lateTimePointTime"
-                    android:fontFamily="sans-serif-condensed"
+                    android:fontFamily="sans-serif-condensed-medium"
                     android:gravity="center_horizontal"
                     android:text="8:00"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
-
-
 
 
             <Button
@@ -125,23 +123,25 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
             android:id="@+id/radiogroup_history_bought"
-            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radioHistoryBought"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="right"
+                android:layout_marginRight="16dp"
                 android:text="Gekocht" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radioHistoryGeturft"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:checked="true"
+                android:layout_marginLeft="16dp"
                 android:text="Geturft" />
 
         </RadioGroup>

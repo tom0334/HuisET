@@ -31,7 +31,7 @@ class FragmentHistory : HuisEtFragment() {
 
 
     private val timeNames =
-        arrayOf<CharSequence>("1 uur", "8 uur", "1 Dag", "1 week", "1 maand", "3 maanden", "Half jaar", "1 Jaar")
+        arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar")
 
     private val TIMEDIFF_ONE_HOUR = 0
     private val TIMEDIFF_EIGHT_HOURS = 1
