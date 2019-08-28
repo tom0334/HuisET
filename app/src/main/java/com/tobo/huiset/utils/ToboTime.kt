@@ -21,9 +21,11 @@ data class ToboTime(private val calendar: Calendar){
     val hour by lazy { calendar.get(Calendar.HOUR_OF_DAY)}
     val min by lazy{ calendar.get(Calendar.MINUTE)}
     val sec by lazy{ calendar.get(Calendar.SECOND)}
-    val dayOfYear by lazy { calendar.get(Calendar.DAY_OF_YEAR) }
+    val dayOfMonth by lazy { calendar.get(Calendar.DAY_OF_MONTH) }
+    val month by lazy { calendar.get(Calendar.MONTH) }
     val year by lazy { calendar.get(Calendar.YEAR) }
 
+    val dayOfYear by lazy { calendar.get(Calendar.DAY_OF_YEAR) }
     val toboDay by lazy { ToboDay(this.dayOfYear, this.year) }
 
 
@@ -96,6 +98,13 @@ data class ToboTime(private val calendar: Calendar){
     fun momentAfter(other:ToboTime): Boolean {
         if(this.unix == 0L) throw IllegalStateException("Moment used without setting unix timestamp.")
         return this.calendar.after(other.calendar)
+    }
+
+    fun is1DayLaterThan(thanThis: ToboTime): Boolean {
+        val maybe1DayLater = Calendar.getInstance()
+        maybe1DayLater.timeInMillis = thanThis.unix
+        maybe1DayLater.add(Calendar.DAY_OF_YEAR,1)
+        return this.calendar.get(Calendar.DAY_OF_YEAR) == maybe1DayLater.get(Calendar.DAY_OF_YEAR)
     }
 
 
