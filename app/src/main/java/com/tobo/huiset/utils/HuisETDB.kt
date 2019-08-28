@@ -14,10 +14,10 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Returns the highest priority product. Should be listed first in the mainactivity
      */
-    fun getFirstProduct(): Product? {
+    fun getFirstTurfProduct(): Product? {
         return this.realm.where(Product::class.java)
             .equalTo("deleted", false)
-            .equalTo("show", true)
+            .`in`("kind", arrayOf(Product.ONLY_TURFABLE, Product.BOTH_TURF_AND_BUY))
             .sort("row", Sort.ASCENDING)
             .findFirst()
     }
@@ -25,7 +25,7 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Selects the highest priority product
      */
-    fun selectFirstProduct() = selectProduct(getFirstProduct())
+    fun selectFirstTurfProduct() = selectProduct(getFirstTurfProduct())
 
     /**
      * Deselects all products and changes the selection to the param supplied.
@@ -117,19 +117,24 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Find all products, exluding the deleted ones
      */
-    fun findAllCurrentProducts(includeHidden:Boolean = false): RealmResults<Product> {
+    fun findAllCurrentProducts(kind: Int): RealmResults<Product> {
         val query = realm.where(Product::class.java)
             .equalTo("deleted", false)
-        if (! includeHidden){
-            query.equalTo("show",true)
+
+        if (kind == Product.ONLY_BUYABLE) {
+            query.`in`("kind", arrayOf(Product.ONLY_BUYABLE, Product.BOTH_TURF_AND_BUY))
         }
+        else if (kind == Product.ONLY_TURFABLE) {
+            query.`in`("kind", arrayOf(Product.ONLY_TURFABLE, Product.BOTH_TURF_AND_BUY))
+        }
+
         return query.sort("row", Sort.ASCENDING).findAll()
     }
 
     /**
      * Finds all persons that are not deleted
      */
-    fun findAllCurrentPersons(includeHidden:Boolean = false): RealmResults<Person> {
+    fun findAllCurrentPersons(includeHidden: Boolean = false): RealmResults<Person> {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
         if (! includeHidden){

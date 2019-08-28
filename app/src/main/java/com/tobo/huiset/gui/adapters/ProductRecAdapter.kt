@@ -39,7 +39,11 @@ class ProductRecAdapter(
 
         holder.hiddenTv.text = "verborgen"
         holder.hiddenTv.visibility = View.VISIBLE
-        if (product.show)
+        if (product.kind == Product.ONLY_TURFABLE)
+            holder.hiddenTv.text = "Alleen turfbaar"
+        else if (product.kind == Product.ONLY_BUYABLE)
+            holder.hiddenTv.text = "Alleen inkoopbaar"
+        else
             holder.hiddenTv.visibility = View.GONE
 
         // make item go up

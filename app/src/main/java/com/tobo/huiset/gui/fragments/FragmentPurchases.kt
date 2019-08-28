@@ -15,6 +15,7 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
 
 
@@ -69,7 +70,7 @@ class FragmentPurchases : HuisEtFragment() {
         pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
 
 
-        val products = db.findAllCurrentProducts(true)
+        val products = db.findAllCurrentProducts(Product.ONLY_BUYABLE)
 
         // this sets up the recyclerview to show the persons
         pickProductsRec.adapter = PurchaseProductRecAdapter(this.context!!, realm, products, true)
