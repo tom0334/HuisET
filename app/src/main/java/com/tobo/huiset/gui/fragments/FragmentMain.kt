@@ -13,7 +13,7 @@ import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
-import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toPixel
@@ -66,7 +66,7 @@ class FragmentMain : HuisEtFragment() {
     }
 
     override fun onTabReactivated() {
-        db.selectFirstProduct()
+        db.selectFirstTurfProduct()
         val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
         val adapter = turfRec!!.adapter as TurfRecAdapter
 
@@ -88,7 +88,7 @@ class FragmentMain : HuisEtFragment() {
     }
 
     private fun setupProductRec(view: View): RecyclerView {
-        val products = db.findAllCurrentProducts()
+        val products = db.findAllCurrentProducts(Product.ONLY_TURFABLE)
 
         // this sets up the product recyclerview
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
@@ -146,7 +146,7 @@ class FragmentMain : HuisEtFragment() {
             if (person != null) {
 
                 db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
-                db.selectFirstProduct()
+                db.selectFirstTurfProduct()
 
                 amountAdapter.resetAmountToFirst()
 

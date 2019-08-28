@@ -10,28 +10,35 @@ public class Product extends RealmObject {
     public static final int STANDARD_PRICE_BEER = 44;
     public static final int STANDARD_PRICE_CRATE = 1050;
 
+    public static final int ONLY_TURFABLE = 0;
+    public static final int ONLY_BUYABLE = 1;
+    public static final int BOTH_TURF_AND_BUY = 2;
+
+    public static final int BEERPRODUCT = 0;
+    public static final int CRATEPRODUCT = 1;
+    public static final int SNACKPRODUCT = 2;
+    public static final int OTHERPRODUCT = 3;
+
     @PrimaryKey
     private String id = UUID.randomUUID().toString();
     private String name;
     private int price;
-    private boolean show;
+    private int kind;   // what kind of product it is (see fields)
     private int row;    // geeft row aan
+    private int species;    // bier, kratje, snack, etc... (see fields)
     private boolean selected = false;
     private boolean deleted = false;
-    private boolean isBeer = false;
-    private boolean isCrate = false;
 
     public Product() {
     }
 
-    static public Product create(String name, int price, boolean show, int row, boolean isBeer, boolean isCrate) {
+    static public Product create(String name, int price, int kind, int row, int species) {
         Product p = new Product();
         p.name = name;
         p.price = price;
-        p.show = show;
+        p.kind = kind;
         p.row = row;
-        p.isBeer = isBeer;
-        p.isCrate = isCrate;
+        p.species = species;
 
         return p;
     }
@@ -54,14 +61,6 @@ public class Product extends RealmObject {
 
     public String getId() {
         return id;
-    }
-
-    public boolean getShow() {
-        return show;
-    }
-
-    public void setShow(boolean show) {
-        this.show = show;
     }
 
     public boolean isSelected() {
@@ -88,12 +87,19 @@ public class Product extends RealmObject {
         this.row = row;
     }
 
-    public boolean isBeer() {
-        return isBeer;
+    public int getKind() {
+        return kind;
     }
 
-    public boolean isCrate() {
-        return isCrate;
+    public void setKind(int kind) {
+        this.kind = kind;
     }
 
+    public int getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(int species) {
+        this.species = species;
+    }
 }

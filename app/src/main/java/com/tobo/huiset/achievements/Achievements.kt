@@ -1,6 +1,7 @@
 package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ToboTime
 import java.text.SimpleDateFormat
@@ -73,7 +74,7 @@ class CollegeWinnaar : BaseAchievement(){
         val collegeBeers = helpData.beerTurfTransactions
             .filter { it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(sixOClock,collegeStartTime)}
 
-        return collegeBeers.size > 0
+        return collegeBeers.isNotEmpty()
     }
 
 }
@@ -125,7 +126,7 @@ class GroteBoodschap: BaseAchievement(){
             .equalTo("personId", person.id)
             .equalTo("buy",true)
             .findAll()
-            .filter { it.getProduct(realm).isCrate }
+            .filter { it.getProduct(realm).species == Product.CRATEPRODUCT }
 
         return crateBuys.find { buy -> buy.amount >= 2} != null
 
@@ -195,7 +196,7 @@ object AchievementManager {
                 .findAll()
 
             val beerTransactions = turfTrans
-                .filter { it.getProduct(person.realm).isBeer }
+                .filter { it.getProduct(person.realm).species == Product.BEERPRODUCT }
 
             val helpData = AchievementUpdateHelpData(turfTrans,beerTransactions)
 

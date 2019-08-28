@@ -31,7 +31,7 @@ class FragmentHistory : HuisEtFragment() {
 
 
     private val timeNames =
-        arrayOf<CharSequence>("1 uur", "8 uur", "1 Dag", "1 week", "1 maand", "3 maanden", "Half jaar", "1 Jaar")
+        arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar")
 
     private val TIMEDIFF_ONE_HOUR = 0
     private val TIMEDIFF_EIGHT_HOURS = 1
@@ -198,15 +198,15 @@ class FragmentHistory : HuisEtFragment() {
         /**
          * class key starts with a lowercase letter, because it can't be found otherwise
          */
-        data class key(val productId: String, val price: Int)
-        fun Transaction.tokey(): key{
-            return key(this.productId, this.saldoImpact)
+        data class key(val productId: String, val isBuy: Boolean)
+        fun Transaction.tokey(): key {
+            return key(this.productId, this.isBuy)
         }
         val res = inTimeSpan
             .asSequence()
             .filter { it.isBuy == showBuy}
             .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
+            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumBy { it.amount }, values.sumBy { it.saldoImpact }, false) }
             .sortedByDescending { it.amount }.toMutableList()
 
 
