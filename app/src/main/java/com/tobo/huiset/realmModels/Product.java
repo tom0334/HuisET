@@ -19,7 +19,7 @@ public class Product extends RealmObject {
     private boolean selected = false;
     private boolean deleted = false;
     private boolean isBeer = false;
-    private boolean isCrate;
+    private boolean isCrate = false;
 
     public Product() {
     }
@@ -95,4 +95,5 @@ public class Product extends RealmObject {
     public boolean isCrate() {
         return isCrate;
     }
+
 }

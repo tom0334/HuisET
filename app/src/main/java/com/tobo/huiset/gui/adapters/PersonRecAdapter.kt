@@ -43,8 +43,9 @@ class PersonRecAdapter(
         holder.balanceTv.setTextColorFromHex(colorString)
 
         holder.hiddenTv.text = "verborgen"
-        if (!person.show)
-            holder.hiddenTv.visibility = View.VISIBLE
+        holder.hiddenTv.visibility = View.VISIBLE
+        if (person.show)
+            holder.hiddenTv.visibility = View.GONE
 
         // make item go up
         holder.upIv.setOnClickListener {

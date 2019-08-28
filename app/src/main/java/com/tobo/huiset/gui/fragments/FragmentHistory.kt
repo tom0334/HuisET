@@ -42,7 +42,7 @@ class FragmentHistory : HuisEtFragment() {
     private val TIMEDIFF_HALF_YEAR = 6
     private val TIMEDIFF_YEAR = 7
 
-    private var timeDiffSelected: Int = 0
+    private var timeDiffSelected: Int = TIMEDIFF_ONE_DAY
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_history, container, false)

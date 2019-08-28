@@ -4,9 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
@@ -20,6 +22,8 @@ class FragmentPurchases : HuisEtFragment() {
 
 
     private var pickedPersonId: String? = null
+
+    private val prodRecAdapter get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_purchases, container, false)
@@ -38,9 +42,10 @@ class FragmentPurchases : HuisEtFragment() {
 
     override fun onBackButtonPressed(): Boolean {
         //if we are already on the profiles screen, the activity must handle the back button
-        if(pickedPersonId == null) return false
+        if (pickedPersonId == null) return false
         //else we will handle it here
         setPersonAndUpdate(null)
+
         return true
     }
 
@@ -64,25 +69,21 @@ class FragmentPurchases : HuisEtFragment() {
         pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
 
 
-        val products = db.findAllCurrentProducts(includeHidden = true)
+        val products = db.findAllCurrentProducts(true)
 
         // this sets up the recyclerview to show the persons
         pickProductsRec.adapter = PurchaseProductRecAdapter(this.context!!, realm, products, true)
         pickProductsRec.layoutManager = LinearLayoutManager(this.context)
 
-        ItemClickSupport.addTo(pickProductsRec).setOnItemClickListener { _, position, _ ->
-
-            val person = db.getPersonWithId(pickedPersonId) ?: return@setOnItemClickListener
-            val product = products[position] ?: return@setOnItemClickListener
-
-            // TODO: add custom amount of purchased item (instead of the 1 in line below)
-            val doneTransaction = db.createAndSaveTransaction(person,product, 1, true)
+        view.findViewById<MaterialButton>(R.id.purchaseSaveButton).setOnClickListener {
+            products.forEach {
+                val amount = prodRecAdapter.getFromMap(it.id)
+                if (amount > 0) {
+                    db.createAndSaveTransaction(db.getPersonWithId(pickedPersonId)!!, it, amount, true)
+                }
+            }
+            Toast.makeText(context, "Inkoop opgeslagen", Toast.LENGTH_SHORT).show()
             setPersonAndUpdate(null)
-
-            Snackbar.make(view.findViewById(R.id.purchasesContentView), "${product.name} gekocht door ${person.name}", 4000)
-                .setAction("Undo") {
-                    db.undoTransaction(doneTransaction,person)
-                }.show()
         }
     }
 
@@ -104,6 +105,9 @@ class FragmentPurchases : HuisEtFragment() {
             userLayout.visibility = View.GONE
             productLayout.visibility = View.VISIBLE
         }
+
+        // clear amounts in recyclerview
+        prodRecAdapter.resetMapValues()
     }
 
 

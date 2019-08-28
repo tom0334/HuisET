@@ -38,8 +38,9 @@ class ProductRecAdapter(
         holder.priceTv.text = product.price.toCurrencyString()
 
         holder.hiddenTv.text = "verborgen"
-        if (!product.show)
-            holder.hiddenTv.visibility = View.VISIBLE
+        holder.hiddenTv.visibility = View.VISIBLE
+        if (product.show)
+            holder.hiddenTv.visibility = View.GONE
 
         // make item go up
         holder.upIv.setOnClickListener {
