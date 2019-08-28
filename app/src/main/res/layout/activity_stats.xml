@@ -5,10 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".gui.activities.StatsActivity">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:background="@color/primaryLightColor"
-        android:layout_height="48dp"
-        android:layout_width="48dp"
-        android:src="@drawable/baseline_timeline_white_48"/>
-
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
