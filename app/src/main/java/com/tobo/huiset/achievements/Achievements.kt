@@ -189,15 +189,15 @@ object AchievementManager {
     fun updateForPerson(person:Person){
 
         for (a in getAchievements()) {
-            val buyTrans = person.realm.where(Transaction::class.java)
+            val turfTrans = person.realm.where(Transaction::class.java)
                 .equalTo("buy",false)
                 .equalTo("personId", person.id)
                 .findAll()
 
-            val beerTransactions = buyTrans
+            val beerTransactions = turfTrans
                 .filter { it.getProduct(person.realm).isBeer }
 
-            val helpData = AchievementUpdateHelpData(buyTrans,beerTransactions)
+            val helpData = AchievementUpdateHelpData(turfTrans,beerTransactions)
 
             a.update(person,helpData)
         }
