@@ -25,6 +25,15 @@ const val A_COLLEGE_WINNAAR = 6
 const val A_DOE_HET_VOOR_DE_KONING = 9
 
 
+/**
+ * Finds the amount of products turfed in a list of transactions, even when the amount of products in a transaction
+ * is greater than 1.
+ */
+fun List<Transaction>.amountOfProducts(): Int {
+    return this.map {it.amount }.sum()
+}
+
+
 class PilsBaas : BaseAchievement() {
     override val id = A_PILSBAAS
     override val name = "Pilsbaas"
@@ -35,7 +44,7 @@ class PilsBaas : BaseAchievement() {
             .groupBy {
                 SimpleDateFormat("yyyy-MM-dd").format(Date(it.time))
             }
-            .values.maxBy { it.size }?.size
+            .values.map { it.amountOfProducts() }.max()
 
         return maxBeerOnADay != null && maxBeerOnADay > 8
 
@@ -47,7 +56,7 @@ class Nice : BaseAchievement() {
     override val name = "Nice"
     override val description = "Drink 69 bier."
     override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
-        val totalBeer = helpData.beerTurfTransactions.size
+        val totalBeer = helpData.beerTurfTransactions.amountOfProducts()
         return totalBeer >= 69
     }
 }
@@ -74,10 +83,7 @@ class MVP: BaseAchievement() {
     override val name = "MVP (Most Valuable Pilser"
     override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
 
-    override fun isAchievedNow(
-        person: Person,
-        helpData: AchievementUpdateHelpData
-    ): Boolean {
+    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
 
         val perDay = helpData.beerTurfTransactions
             .filter { it.toboTime.zuipDayHasEnded() } // this achievement can only be decided if the day has ended
@@ -85,11 +91,12 @@ class MVP: BaseAchievement() {
 
 
         for ((day, transactionsOnDay) in perDay) {
-            val amountOftransactionsOnDay = transactionsOnDay
+            val amountOfBeersOnDay = transactionsOnDay
                 .groupBy { it.personId }
-                .mapValues { it.value.count() }
+                //entry.value is a list of transactions
+                .mapValues { entry -> entry.value.amountOfProducts() }
 
-            val pair = amountOftransactionsOnDay.maxBy { it.value }!!
+            val pair = amountOfBeersOnDay.maxBy { it.value }!!
 
             val mvpID = pair.key
             val amount = pair.value
@@ -98,7 +105,7 @@ class MVP: BaseAchievement() {
             //someone else is the mvp
             if (mvpID != person.id) continue
             //its a tie! There are multiple people that drank the same amount. No winner then.
-            if(amountOftransactionsOnDay.values.count { it == amount} > 1 ) continue
+            if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
 
             if (amount > 5) return true
         }
@@ -111,10 +118,7 @@ class GroteBoodschap: BaseAchievement(){
     override val name = "Grote boodschap"
     override val description ="Koop 2 kratjes in een keer in. Haha nummer 2."
 
-    override fun isAchievedNow(
-        person: Person,
-        helpData: AchievementUpdateHelpData
-    ): Boolean {
+    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
         val realm = person.realm
 
         val crateBuys = realm.where(Transaction::class.java)
@@ -123,10 +127,11 @@ class GroteBoodschap: BaseAchievement(){
             .findAll()
             .filter { it.getProduct(realm).isCrate }
 
+        return crateBuys.find { buy -> buy.amount >= 2} != null
 
-        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
-        return  crateBuys.groupBy { it.time / 60000 }
-            .values.find { it.size >= 2 } != null
+//        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
+//        return  crateBuys.groupBy { it.time / 60000 }
+//            .values.find { it.size >= 2 } != null
     }
 
 }
@@ -180,8 +185,6 @@ object AchievementManager {
             DoeHetVoorDeKoning()
         )
     }
-
-    //todo Give some data that is used often as parameter, for more efficiency
 
     fun updateForPerson(person:Person){
 
