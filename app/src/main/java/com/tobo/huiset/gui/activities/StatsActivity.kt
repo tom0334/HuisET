@@ -3,6 +3,7 @@ package com.tobo.huiset.gui.activities
 import android.graphics.Color
 import android.os.Bundle
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.tobo.huiset.R
@@ -52,16 +53,22 @@ class StatsActivity : HuisEtActivity() {
 
         chart.xAxis.labelRotationAngle = -30f
 
+
         chart.axisLeft.isGranularityEnabled = true
         chart.axisLeft.granularity = 1f
 
-        chart.axisRight.isEnabled = false
 
+        chart.description = null
 
 
 
         chart.axisLeft.mAxisMinimum = 0.0f
 
+        chart.legend.setDrawInside(true)
+        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+        chart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        chart.legend.yOffset = 20f
+        chart.legend.xOffset = 20f
 
         chart.xAxis.valueFormatter = object : ValueFormatter() {
 
@@ -79,6 +86,9 @@ class StatsActivity : HuisEtActivity() {
     fun createDataForPerson(p: Person):ILineDataSet {
         val entries = getEntriesForPerson(p)
         val dSet = LineDataSet(entries, p.name)
+        dSet.setCircleColor(Color.parseColor(p.color))
+        dSet.setDrawCircleHole(true)
+        dSet.setDrawValues(false)
 
         dSet.color = Color.parseColor(p.color)
         return dSet
