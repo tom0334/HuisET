@@ -40,11 +40,19 @@ class EditProductActivity : HuisEtActivity() {
             findViewById<EditText>(R.id.name).setText(oldProduct!!.name)
             findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
 
-            val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod)
+            val kindRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_kindProd)
             when {
-                oldProduct!!.kind == Product.ONLY_TURFABLE -> showRadioGroup.check(R.id.radio_OnlyTurf_Prod)
-                oldProduct!!.kind == Product.ONLY_BUYABLE -> showRadioGroup.check(R.id.radio_OnlyBuy_Prod)
-                else -> showRadioGroup.check(R.id.radio_Both_Prod)
+                oldProduct!!.kind == Product.ONLY_TURFABLE -> kindRadioGroup.check(R.id.radio_OnlyTurf_Prod)
+                oldProduct!!.kind == Product.ONLY_BUYABLE -> kindRadioGroup.check(R.id.radio_OnlyBuy_Prod)
+                else -> kindRadioGroup.check(R.id.radio_Both_Prod)
+            }
+
+            val speciesRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_productSpecies)
+            when {
+                oldProduct!!.species == Product.BEERPRODUCT -> speciesRadioGroup.check(R.id.radio_beerProduct)
+                oldProduct!!.species == Product.CRATEPRODUCT -> speciesRadioGroup.check(R.id.radio_crateProduct)
+                oldProduct!!.species == Product.SNACKPRODUCT -> speciesRadioGroup.check(R.id.radio_snackProduct)
+                else -> speciesRadioGroup.check(R.id.radio_otherProduct)
             }
 
             new = false
@@ -117,26 +125,35 @@ class EditProductActivity : HuisEtActivity() {
         }
         val newPrice = priceString.euroToCent()
 
-        val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
+        val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
         var newKind = Product.BOTH_TURF_AND_BUY
-        if (radioShowGroup == R.id.radio_OnlyTurf_Prod) {
+        if (selectedKindButton == R.id.radio_OnlyTurf_Prod) {
             newKind = Product.ONLY_TURFABLE
         }
-        if (radioShowGroup == R.id.radio_OnlyBuy_Prod) {
+        else if (selectedKindButton == R.id.radio_OnlyBuy_Prod) {
             newKind = Product.ONLY_BUYABLE
         }
 
-        val row = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY).size
+        val newRow = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY).size
+
+        val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
+        var newSpecies: Int
+        when (selectedSpeciesButton) {
+            R.id.radio_beerProduct -> newSpecies = Product.BEERPRODUCT
+            R.id.radio_crateProduct -> newSpecies = Product.CRATEPRODUCT
+            R.id.radio_snackProduct -> newSpecies = Product.SNACKPRODUCT
+            else -> newSpecies = Product.OTHERPRODUCT
+        }
 
         realm.executeTransaction {
             if (new) {
-                //todo UI for isbeer and isCrate
-                val product = Product.create(newName, newPrice, newKind, row, false, false)
+                val product = Product.create(newName, newPrice, newKind, newRow, newSpecies)
                 realm.copyToRealm(product)
             } else {
                 oldProduct!!.name = newName
                 oldProduct!!.price = newPrice
                 oldProduct!!.kind = newKind
+                oldProduct!!.species = newSpecies
             }
         }
 
