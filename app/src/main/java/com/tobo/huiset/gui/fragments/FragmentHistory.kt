@@ -198,15 +198,15 @@ class FragmentHistory : HuisEtFragment() {
         /**
          * class key starts with a lowercase letter, because it can't be found otherwise
          */
-        data class key(val productId: String, val price: Int)
-        fun Transaction.tokey(): key{
-            return key(this.productId, this.saldoImpact)
+        data class key(val productId: String, val isBuy: Boolean)
+        fun Transaction.tokey(): key {
+            return key(this.productId, this.isBuy)
         }
         val res = inTimeSpan
             .asSequence()
             .filter { it.isBuy == showBuy}
             .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.size, values.sumBy { it.saldoImpact }, false) }
+            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumBy { it.amount }, values.sumBy { it.saldoImpact }, false) }
             .sortedByDescending { it.amount }.toMutableList()
 
 
