@@ -87,16 +87,6 @@ class HuisETDB(private val realm: Realm) {
     }
 
     /**
-     * Undos and then deletes a transaction from realm
-     */
-    fun undoTransaction(doneTransaction: Transaction?, person: Person) {
-        realm.executeSafe {
-            person.undoTransaction(doneTransaction)
-            doneTransaction?.deleteFromRealm()
-        }
-    }
-
-    /**
      * Gets the person that is selected in history
      */
      fun getSelectedPersonInHistory(): Person? {
