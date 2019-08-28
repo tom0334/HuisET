@@ -8,12 +8,15 @@ abstract class BaseAchievement {
     abstract val name:String
     abstract val description:String
     //should check if
-    abstract fun isAchievedNow(person: Person):Boolean
+    abstract fun isAchievedNow(
+        person: Person,
+        helpData: AchievementUpdateHelpData
+    ):Boolean
 
-    fun update(person: Person){
+    fun update(person: Person, helpData: AchievementUpdateHelpData){
         if(wasAchieved(person)) return
 
-        if(isAchievedNow(person)){
+        if(isAchievedNow(person,helpData)){
             person.realm.executeTransaction {
                 val comp = AchievementCompletion.create(this.id,System.currentTimeMillis(),person.id)
                 it.copyToRealm(comp)
