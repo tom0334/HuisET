@@ -41,10 +41,10 @@ class EditProductActivity : HuisEtActivity() {
             findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
 
             val showRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod)
-            if (oldProduct!!.show) {
-                showRadioGroup.check(R.id.radioShowProd)
-            } else {
-                showRadioGroup.check(R.id.radioHideProd)
+            when {
+                oldProduct!!.kind == Product.ONLY_TURFABLE -> showRadioGroup.check(R.id.radio_OnlyTurf_Prod)
+                oldProduct!!.kind == Product.ONLY_BUYABLE -> showRadioGroup.check(R.id.radio_OnlyBuy_Prod)
+                else -> showRadioGroup.check(R.id.radio_Both_Prod)
             }
 
             new = false
@@ -118,22 +118,25 @@ class EditProductActivity : HuisEtActivity() {
         val newPrice = priceString.euroToCent()
 
         val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showprod).checkedRadioButtonId
-        var showBool = false
-        if (radioShowGroup == R.id.radioShowProd) {
-            showBool = true
+        var newKind = Product.BOTH_TURF_AND_BUY
+        if (radioShowGroup == R.id.radio_OnlyTurf_Prod) {
+            newKind = Product.ONLY_TURFABLE
+        }
+        if (radioShowGroup == R.id.radio_OnlyBuy_Prod) {
+            newKind = Product.ONLY_BUYABLE
         }
 
-        val row = db.findAllCurrentProducts(includeHidden = true).size
+        val row = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY).size
 
         realm.executeTransaction {
             if (new) {
                 //todo UI for isbeer and isCrate
-                val product = Product.create(newName, newPrice, showBool, row,false,false)
+                val product = Product.create(newName, newPrice, newKind, row, false, false)
                 realm.copyToRealm(product)
             } else {
                 oldProduct!!.name = newName
                 oldProduct!!.price = newPrice
-                oldProduct!!.show = showBool
+                oldProduct!!.kind = newKind
             }
         }
 
