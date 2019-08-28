@@ -12,11 +12,10 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.tobo.huiset.achievements.amountOfProducts
 import java.text.SimpleDateFormat
 import java.util.*
 import com.github.mikephil.charting.components.YAxis
-import com.tobo.huiset.utils.CustomXAxisRenderer
+import com.tobo.huiset.utils.DoubleLineXaxisRenderer
 
 
 
@@ -35,7 +34,7 @@ class StatsActivity : HuisEtActivity() {
         val datasets = persons.map { createDataForPerson(it) }
 
         chart.setXAxisRenderer(
-            CustomXAxisRenderer(
+            DoubleLineXaxisRenderer(
                 chart.getViewPortHandler(),
                 chart.getXAxis(),
                 chart.getTransformer(YAxis.AxisDependency.LEFT)
