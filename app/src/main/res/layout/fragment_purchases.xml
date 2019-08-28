@@ -1,69 +1,84 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/purchasesContentView"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/pickUserLayout"
+    <LinearLayout
+            android:id="@+id/purchasesContentView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/primaryDarkColor"
-                android:fontFamily="sans-serif-medium"
-                android:paddingLeft="16sp"
-                android:paddingTop="32sp"
-                android:paddingRight="16sp"
-                android:paddingBottom="32sp"
-                android:text="Wie heeft inkopen gedaan?"
-                android:textColor="#fff"
-                android:textSize="30sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/pickUserRec"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-
         <LinearLayout
-            android:id="@+id/pickProductLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="gone">
+                android:id="@+id/pickUserLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
             <TextView
-                android:id="@+id/whatHaveYouBoughtText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/secondaryColor"
-                android:fontFamily="sans-serif-medium"
-                android:paddingLeft="16sp"
-                android:paddingTop="32sp"
-                android:paddingRight="16sp"
-                android:paddingBottom="32sp"
-                android:text="Wat heb je gekocht?"
-                android:textColor="#000"
-                android:textSize="30sp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primaryDarkColor"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingLeft="16sp"
+                    android:paddingTop="32sp"
+                    android:paddingRight="16sp"
+                    android:paddingBottom="32sp"
+                    android:text="Wie heeft inkopen gedaan?"
+                    android:textColor="#fff"
+                    android:textSize="30sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/pickProductsRec"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                    android:id="@+id/pickUserRec"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
         </LinearLayout>
+
+
+        <RelativeLayout
+                android:id="@+id/pickProductLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+            <TextView
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/whatHaveYouBoughtText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/secondaryColor"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingLeft="16sp"
+                    android:paddingTop="32sp"
+                    android:paddingRight="16sp"
+                    android:paddingBottom="32sp"
+                    android:text="Wat heb je gekocht?"
+                    android:textColor="#000"
+                    android:textSize="30sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_below="@id/whatHaveYouBoughtText"
+                    android:layout_above="@id/purchaseSaveButton"
+                    android:id="@+id/pickProductsRec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <com.google.android.material.button.MaterialButton
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/purchaseSaveButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
+                    android:text="Opslaan"
+                    android:textSize="20sp"
+                    app:backgroundTint="@color/primaryColor"
+            />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

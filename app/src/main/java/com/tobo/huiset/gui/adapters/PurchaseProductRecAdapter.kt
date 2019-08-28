@@ -19,10 +19,11 @@ import io.realm.RealmResults
 class PurchaseProductRecAdapter(
     val context: Context,
     val realm: Realm,
-    data: RealmResults<Product>?,
+    data: RealmResults<Product>,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Product, PurchaseProductRecAdapter.ProductViewHolder>(data, autoUpdate) {
 
+    val amountMap: MutableMap<String, Int> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.product_purchase_rec_item, parent, false)
@@ -34,14 +35,31 @@ class PurchaseProductRecAdapter(
 
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
+        holder.amountTv.text = getFromMap(product.id).toString()
+
+        holder.itemView.setOnClickListener {
+            amountMap[product.id] = getFromMap(product.id) + 1
+            notifyItemChanged(position)
+        }
     }
 
     override fun getItemCount(): Int {
         return if (data == null) 0 else data!!.size
     }
 
+    fun getFromMap(id: String): Int {
+        if (!amountMap.containsKey(id)) amountMap[id] = 0
+        return amountMap[id]!!
+    }
+
+    fun resetMapValues() {
+        amountMap.clear()
+        notifyDataSetChanged()
+    }
+
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.productRecItem_name)!!
         val priceTv = itemView.findViewById<TextView>(R.id.productRecItem_price)!!
+        val amountTv = itemView.findViewById<TextView>(R.id.productRecItem_purch_amount)!!
     }
 }
