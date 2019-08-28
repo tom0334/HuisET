@@ -40,7 +40,7 @@ class StatsActivity : HuisEtActivity() {
                 chart.getXAxis(),
                 chart.getTransformer(YAxis.AxisDependency.LEFT)
             )
-        )High
+        )
         //todo clean up this code
 
         chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
