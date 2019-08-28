@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.tobo.huiset.R
@@ -16,9 +17,8 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import java.text.SimpleDateFormat
 import java.util.*
 import com.github.mikephil.charting.components.YAxis
+import com.tobo.huiset.gui.Other.CustomMarkerView
 import com.tobo.huiset.utils.DoubleLineXaxisRenderer
-
-
 
 
 
@@ -40,7 +40,8 @@ class StatsActivity : HuisEtActivity() {
                 chart.getXAxis(),
                 chart.getTransformer(YAxis.AxisDependency.LEFT)
             )
-        )
+        )High
+        //todo clean up this code
 
         chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
 
@@ -69,6 +70,13 @@ class StatsActivity : HuisEtActivity() {
         chart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
         chart.legend.yOffset = 20f
         chart.legend.xOffset = 20f
+
+
+
+        //todo fix markerview not working for some reason
+        chart.data.isHighlightEnabled = false
+        chart.marker = CustomMarkerView(this,R.layout.marker_view)
+        chart.setDrawMarkers(true)
 
         chart.xAxis.valueFormatter = object : ValueFormatter() {
 
