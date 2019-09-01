@@ -48,6 +48,10 @@ class StatsActivity : HuisEtActivity() {
         chart.legend.xOffset = 20f
 
         //Set up the amount of spacing between lines
+
+        chart.xAxis.spaceMin = chart.xAxis.mAxisRange * 0.15f
+        chart.xAxis.spaceMax = chart.xAxis.mAxisRange * 0.15f
+
         chart.axisLeft.isGranularityEnabled = true
         chart.axisLeft.granularity = 1f
 
