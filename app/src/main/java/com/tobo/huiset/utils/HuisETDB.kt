@@ -182,5 +182,30 @@ class HuisETDB(private val realm: Realm) {
         return query.findAll()
     }
 
+    fun updateProductRows() {
+        val products = this.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY)
+
+        realm.executeTransaction {
+            products.sort("row")
+
+            var newRow = 0
+            products.forEach {
+                it.row = newRow++
+            }
+        }
+    }
+
+    fun updateProfileRows() {
+        val persons = this.findAllCurrentPersons(true)
+        realm.executeTransaction {
+            persons.sort("row")
+
+            var newRow = 0
+            persons.forEach {
+                it.row = newRow++
+            }
+        }
+    }
+
 
 }

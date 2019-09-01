@@ -74,13 +74,7 @@ class FragmentProfiles : HuisEtFragment() {
     }
 
     fun updateRows() {
-        val persons = db.findAllCurrentPersons(true)
-        persons.sort("row")
-
-        var newRow = 0
-        persons.forEach {
-            it.row = newRow++
-        }
+        db.updateProfileRows()
     }
 
 }

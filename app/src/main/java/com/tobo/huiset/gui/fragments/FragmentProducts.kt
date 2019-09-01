@@ -71,13 +71,7 @@ class FragmentProducts : HuisEtFragment() {
     }
 
     fun updateRows() {
-        val products = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY)
-        products.sort("row")
-
-        var newRow = 0
-        products.forEach {
-            it.row = newRow++
-        }
+        db.updateProductRows()
     }
 
 }

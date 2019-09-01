@@ -50,8 +50,8 @@ class PersonRecAdapter(
 
         // make item go up
         holder.upIv.setOnClickListener {
+            fragmentProfiles.updateRows()
             realm.executeTransaction {
-                fragmentProfiles.updateRows()
                 val other = realm.where(Person::class.java).equalTo("row", person.row - 1).findFirst()
                 if (other != null) {
                     other.row += 1
@@ -62,8 +62,8 @@ class PersonRecAdapter(
 
         // make item go down
         holder.downIv.setOnClickListener {
+            fragmentProfiles.updateRows()
             realm.executeTransaction {
-                fragmentProfiles.updateRows()
                 val other = realm.where(Person::class.java).equalTo("row", person.row + 1).findFirst()
                 if (other != null) {
                     other.row -= 1

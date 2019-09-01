@@ -47,8 +47,8 @@ class ProductRecAdapter(
 
         // make item go up
         holder.upIv.setOnClickListener {
+            fragmentProducts.updateRows()
             realm.executeTransaction {
-                fragmentProducts.updateRows()
                 val other = realm.where(Product::class.java).equalTo("row", product.row - 1).findFirst()
                 if (other != null) {
                     other.row += 1
@@ -59,8 +59,8 @@ class ProductRecAdapter(
 
         // make item go down
         holder.downIv.setOnClickListener {
+            fragmentProducts.updateRows()
             realm.executeTransaction {
-                fragmentProducts.updateRows()
                 val other = realm.where(Product::class.java).equalTo("row", product.row + 1).findFirst()
                 if (other != null) {
                     other.row -= 1
