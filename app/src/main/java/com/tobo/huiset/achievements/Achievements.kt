@@ -60,7 +60,7 @@ class PilsBaas : BaseAchievement() {
 class Nice : BaseAchievement() {
     override val id = A_NICE
     override val name = "Nice"
-    override val description = "Drink 69 bier."
+    override val description = "Drink totaal 69 bier."
     override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
         val totalBeer = helpData.beerTurfTransactions.amountOfProducts()
         return totalBeer >= 69
@@ -230,16 +230,16 @@ object AchievementManager {
 
     fun getAchievements(): List<BaseAchievement>{
         return listOf(
+            BeginnendeDrinker(),
             PilsBaas(),
-//            ReparatieBiertje(),
+            Inhaalslag(),
+            MVP(),
             Nice(),
             CollegeWinnaar(),
-            MVP(),
+//            ReparatieBiertje(),
             GroteBoodschap(),
             DoeHetVoorDeKoning(),
-            Oktoberfest(),
-            Inhaalslag(),
-            BeginnendeDrinker()
+            Oktoberfest()
         )
     }
 
