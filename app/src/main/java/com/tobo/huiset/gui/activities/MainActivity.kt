@@ -30,7 +30,6 @@ class MainActivity : HuisEtActivity() {
     private lateinit var fragments: List<HuisEtFragment>
     private var currentFragmentIndex = 0
 
-
     private val fullScreenMode get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_FULLSCREEN_ID,false)
 
     private val hideAppBar get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_HIDEAPPBAR_ID,false)

@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,7 @@ class TurfRecAdapter(
 
     override fun onBindViewHolder(holder: TurfRecViewHolder, position: Int) {
         val person = data?.get(position) ?: return
+        holder.colorView.setBackgroundColor(Color.parseColor(person.color))
 
         holder.nameTv.text = person.name
         holder.balanceTv.text = person.balance.toCurrencyString()
@@ -47,5 +49,6 @@ class TurfRecAdapter(
     class TurfRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.turfRecItem_name)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.turfRecItem_balance)!!
+        val colorView = itemView.findViewById<View>(R.id.turfRecItem_color_line)
     }
 }
