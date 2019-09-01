@@ -17,7 +17,6 @@ public class HuisETSettings extends RealmObject {
         return settings;
     }
 
-
     public Product getBeerProduct() {
         return beerProduct;
     }
