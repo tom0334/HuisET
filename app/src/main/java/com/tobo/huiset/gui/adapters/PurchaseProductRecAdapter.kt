@@ -1,10 +1,12 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentPurchases
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
@@ -33,9 +35,18 @@ class PurchaseProductRecAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = data?.get(position) ?: return
 
+        holder.amountTv.text = getFromMap(product.id).toString()
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
-        holder.amountTv.text = getFromMap(product.id).toString()
+
+        if (getFromMap(product.id) > 0) {
+            holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
+            holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
+        }
+        else {
+            holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
+            holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
+        }
 
         holder.itemView.setOnClickListener {
             amountMap[product.id] = getFromMap(product.id) + 1

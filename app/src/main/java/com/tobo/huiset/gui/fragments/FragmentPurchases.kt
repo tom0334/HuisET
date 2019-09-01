@@ -24,7 +24,11 @@ class FragmentPurchases : HuisEtFragment() {
 
 
     private var pickedPersonId: String? = null
-    var totalPurchasePrice: Int = 0
+    private var totalPurchasePrice: Int = 0
+    set(value) {
+        field = value
+        view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = "Totaal: ${value.toCurrencyString()}"
+    }
 
     private val prodRecAdapter get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
 
@@ -112,11 +116,12 @@ class FragmentPurchases : HuisEtFragment() {
 
         // clear amounts in recyclerview
         prodRecAdapter.resetMapValues()
+
+        totalPurchasePrice = 0
     }
 
     fun increaseCounter(inc: Int) {
         totalPurchasePrice += inc
-        view!!.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
     }
 
     override fun onResume() {
