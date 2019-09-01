@@ -13,15 +13,15 @@ object ProfileColors{
         "#1976D2", //nameblue
         "#FFA000", //nameOrange
         "#AA00FF", //namePurple
-        "#c51162", //namepink
+        "#FF80AB", //namepink
         "#00BFA5", //nameTeal
         "#ffd600", //nameDeeporange
         "#00E5FF", //nameCyan
         "#64DD17" //nameLightGreen
     )
 
-    fun getRandomColor(realm: Realm): String{
-        val usedColors = realm.where(Person::class.java).findAll().map { it.color }
+    fun getNextColor(db:HuisETDB): String{
+        val usedColors = db.findAllCurrentPersons().map { it.color }
         val unused = PROFILECOLORS.toList().minus(usedColors)
         if(unused.isNotEmpty()){
             return unused[0]
