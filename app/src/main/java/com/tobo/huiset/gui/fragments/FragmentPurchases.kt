@@ -17,12 +17,14 @@ import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.extensions.toCurrencyString
 
 
 class FragmentPurchases : HuisEtFragment() {
 
 
     private var pickedPersonId: String? = null
+    var totalPurchasePrice: Int = 0
 
     private val prodRecAdapter get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
 
@@ -34,6 +36,7 @@ class FragmentPurchases : HuisEtFragment() {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
         initProductsRec(view)
+        view.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
     }
 
     override fun onTabReactivated(){
@@ -73,7 +76,7 @@ class FragmentPurchases : HuisEtFragment() {
         val products = db.findAllCurrentProducts(Product.ONLY_BUYABLE)
 
         // this sets up the recyclerview to show the persons
-        pickProductsRec.adapter = PurchaseProductRecAdapter(this.context!!, realm, products, true)
+        pickProductsRec.adapter = PurchaseProductRecAdapter(this, realm, products, true)
         pickProductsRec.layoutManager = LinearLayoutManager(this.context)
 
         view.findViewById<MaterialButton>(R.id.purchaseSaveButton).setOnClickListener {
@@ -83,7 +86,7 @@ class FragmentPurchases : HuisEtFragment() {
                     db.createAndSaveTransaction(db.getPersonWithId(pickedPersonId)!!, it, amount, true)
                 }
             }
-            Toast.makeText(context, "Inkoop opgeslagen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
             setPersonAndUpdate(null)
         }
     }
@@ -111,6 +114,10 @@ class FragmentPurchases : HuisEtFragment() {
         prodRecAdapter.resetMapValues()
     }
 
+    fun increaseCounter(inc: Int) {
+        totalPurchasePrice += inc
+        view!!.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
+    }
 
     override fun onResume() {
         super.onResume()
