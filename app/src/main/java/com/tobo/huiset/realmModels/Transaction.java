@@ -36,6 +36,10 @@ public class Transaction extends RealmObject {
         return price;
     }
 
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public String getPersonId() {
         return personId;
     }

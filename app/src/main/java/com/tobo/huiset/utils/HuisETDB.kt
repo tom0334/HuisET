@@ -183,4 +183,42 @@ class HuisETDB(private val realm: Realm) {
     }
 
 
+    fun getTransactionsBetween(timeStamp1:Long, timeStamp2:Long): RealmResults<Transaction> {
+        val recentTransactions = realm.where(Transaction::class.java)
+            .between("time",timeStamp1, timeStamp2)
+            .findAll()
+        return recentTransactions
+    }
+
+    fun mergeTransactionsIfPossible(tooRecentLimit:Long){
+        ///all transactions from the last 3 minutes, but don't merge ones that are too recent just yet. That could
+        // be confusing for the user.
+        val threeMinutesAgo = System.currentTimeMillis() - 3 * 60 * 1000
+        val recentTransactions = getTransactionsBetween(threeMinutesAgo,tooRecentLimit).sort("time").toMutableList()
+
+
+        var i = 0
+        while((i +1) in recentTransactions.indices){
+            val first = recentTransactions[i]!!
+            val other = recentTransactions[i+1]!!
+
+            if(first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId){
+                realm.executeTransaction {
+                    first.amount += other.amount
+                    first.price += other.price
+                    other.deleteFromRealm()
+                    recentTransactions.removeAt(i +1)
+                }
+                //Either delete the item that was merged or go on to the next one.
+                //Don't do both at the same time, because the merge result may need to be merged with the next one
+            }else{
+                i++
+            }
+
+        }
+
+    }
+
+
+
 }
