@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.tobo.huiset.R
@@ -12,27 +11,61 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Person
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import java.text.SimpleDateFormat
-import java.util.*
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.tobo.huiset.gui.Other.CustomMarkerView
 import com.tobo.huiset.utils.DoubleLineXaxisRenderer
-
-
+import java.util.*
 
 class StatsActivity : HuisEtActivity() {
-    lateinit var chart:LineChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats)
 
-        chart= findViewById<LineChart>(R.id.chart)
+        val chart= findViewById<LineChart>(R.id.chart)
 
         val persons = db.findAllCurrentPersons()
         val datasets = persons.map { createDataForPerson(it) }
+        
+        val lineData = LineData(datasets)
+        chart.data = lineData
+        styleChart(chart)
+    }
+
+    fun styleChart(chart: LineChart) {
+        chart.marker = CustomMarkerView(this,R.layout.marker_view)
+        chart.setDrawMarkers(true)
+
+        chart.description = null
+
+        chart.legend.setDrawInside(true)
+        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+        chart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        chart.legend.yOffset = 20f
+        chart.legend.xOffset = 20f
+
+        //Set up the amount of spacing between lines
+        chart.axisLeft.isGranularityEnabled = true
+        chart.axisLeft.granularity = 1f
+
+        chart.axisRight.isGranularityEnabled = true
+        chart.axisRight.granularity = 1f
+
+        chart.axisLeft.mAxisMinimum = 0.0f
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+
+        chart.xAxis.labelRotationAngle = -30f
+        chart.xAxis.valueFormatter = object : ValueFormatter() {
+            private val mFormat = SimpleDateFormat("HH:mm\ndd MMM")
+
+            override fun getFormattedValue(value: Float): String {
+                return mFormat.format(Date(value.toLong()))
+            }
+        }
 
         chart.setXAxisRenderer(
             DoubleLineXaxisRenderer(
@@ -41,51 +74,6 @@ class StatsActivity : HuisEtActivity() {
                 chart.getTransformer(YAxis.AxisDependency.LEFT)
             )
         )
-        //todo clean up this code
-
-        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-        val lineData = LineData(datasets)
-        chart.data = lineData
-
-
-        chart.xAxis.spaceMax = 43200000f
-        chart.xAxis.spaceMin = 43200000f
-
-        chart.xAxis.labelRotationAngle = -30f
-
-
-        chart.axisLeft.isGranularityEnabled = true
-        chart.axisLeft.granularity = 1f
-
-
-        chart.description = null
-
-
-
-        chart.axisLeft.mAxisMinimum = 0.0f
-
-        chart.legend.setDrawInside(true)
-        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
-        chart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-        chart.legend.yOffset = 20f
-        chart.legend.xOffset = 20f
-
-
-
-        //todo fix markerview not working for some reason
-        chart.data.isHighlightEnabled = false
-        chart.marker = CustomMarkerView(this,R.layout.marker_view)
-        chart.setDrawMarkers(true)
-
-        chart.xAxis.valueFormatter = object : ValueFormatter() {
-
-            private val mFormat = SimpleDateFormat("HH:mm\ndd MMM")
-
-            override fun getFormattedValue(value: Float): String {
-                return mFormat.format(Date(value.toLong()))
-            }
-        }
 
 
         chart.invalidate() // refresh
