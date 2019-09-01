@@ -141,7 +141,7 @@ class FragmentHistory : HuisEtFragment() {
         val newData = findHistoryItems()
         val historyRec = view!!.findViewById<RecyclerView>(R.id.historyRecyclerView)
 
-        //the views to show if there is no data
+        //the views to show if there is no dateMap
         val noDataView = view!!.findViewById<View>(R.id.history_nodata_view)
         val noDataTextView = view!!.findViewById<TextView>(R.id.text_nothing_turfed)
 
