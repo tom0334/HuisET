@@ -29,6 +29,8 @@ const val A_OKTOBERFEST = 11
 const val A_INHAALSLAG = 12
 const val A_BEGINNENDE_DRINKER = 13
 
+const val A_KONINGSHUIS = 32
+
 
 
 /**
@@ -84,41 +86,45 @@ class CollegeWinnaar : BaseAchievement(){
 
 }
 
-class MVP: BaseAchievement() {
-    override val id = A_MVP
-    override val name = "MVP (Most Valuable Pilser)"
-    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt de MVP pas bepaald. Minstens 5 bier, anders verdien je het niet."
 
-    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
-
-        val perDay = helpData.beerTurfTransactions
-            .filter { it.toboTime.zuipDayHasEnded() } // this achievement can only be decided if the day has ended
-            .groupBy { it.toboTime.getZuipDay() }
-
-
-        for ((day, transactionsOnDay) in perDay) {
-            val amountOfBeersOnDay = transactionsOnDay
-                .groupBy { it.personId }
-                //entry.value is a list of transactions
-                .mapValues { entry -> entry.value.amountOfProducts() }
-
-            val pair = amountOfBeersOnDay.maxBy { it.value }!!
-
-            val mvpID = pair.key
-            val amount = pair.value
-
-
-            //someone else is the mvp
-            if (mvpID != person.id) continue
-            //its a tie! There are multiple people that drank the same amount. No winner then.
-            if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
-
-
-            if (amount > 5) return true
-        }
-        return false
-    }
-}
+/**
+ * DEZE KAN MEERDERE WINNNAARS HEBBEN MAAR DAT IS NIET DE BEDOELING, ZIE KONINGSHUIS
+ */
+//class MVP: BaseAchievement() {
+//    override val id = A_MVP
+//    override val name = "MVP (Most Valuable Pilser)"
+//    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt de MVP pas bepaald. Minstens 5 bier, anders verdien je het niet."
+//
+//    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
+//
+//        val perDay = helpData.beerTurfTransactions
+//            .filter { it.toboTime.zuipDayHasEnded() } // this achievement can only be decided if the day has ended
+//            .groupBy { it.toboTime.getZuipDay() }
+//
+//
+//        for ((day, transactionsOnDay) in perDay) {
+//            val amountOfBeersOnDay = transactionsOnDay
+//                .groupBy { it.personId }
+//                //entry.value is a list of transactions
+//                .mapValues { entry -> entry.value.amountOfProducts() }
+//
+//            val pair = amountOfBeersOnDay.maxBy { it.value }!!
+//
+//            val mvpID = pair.key
+//            val amount = pair.value
+//
+//
+//            //someone else is the mvp
+//            if (mvpID != person.id) continue
+//            //its a tie! There are multiple people that drank the same amount. No winner then.
+//            if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
+//
+//
+//            if (amount > 5) return true
+//        }
+//        return false
+//    }
+//}
 
 class GroteBoodschap: BaseAchievement(){
     override val id = A_GROTE_BOODSCHAP
@@ -225,6 +231,50 @@ class BeginnendeDrinker: BaseAchievement() {
 }
 
 
+/**
+ * WERKT NOG NIET
+ */
+//class Koningshuis: BaseAchievement() {
+//    override val id: Int
+//        get() = A_KONINGSHUIS
+//    override val name: String
+//        get() = "Het Koningshuis"
+//    override val description: String
+//        get() = "Eindig samen op het hoogste bier op een avond met minstens 5 mensen. Jullie moeten minimaal 5 bier hebben gedronken."
+//
+//    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
+//        val perDay = helpData.beerTurfTransactions
+//            .filter { it.toboTime.zuipDayHasEnded() } // this achievement can only be decided if the day has ended
+//            .groupBy { it.toboTime.getZuipDay() }
+//
+//
+//        for ((day, transactionsOnDay) in perDay) {
+//            val amountOfBeersOnDay = transactionsOnDay
+//                .groupBy { it.personId }
+//                //entry.value is a list of transactions
+//                .mapValues { entry -> entry.value.amountOfProducts() }
+//
+//            val pair = amountOfBeersOnDay.maxBy { it.value }!!
+//
+//            val mvpID = pair.key
+//            val amount = pair.value
+//
+//            // someone else is the mvp
+//            if (mvpID != person.id) continue
+//
+//            // at least 5 people must've had a beer that day.
+//            if (amountOfBeersOnDay.values.count { it > 0 } < 5) continue
+//
+//            // it's not a tie! There is a single winner who achieved MVP
+//            if (amountOfBeersOnDay.values.count { it == amount} < 2) continue
+//
+//            if (amount > 5) return true
+//        }
+//        return false
+//    }
+//}
+
+
 
 object AchievementManager {
 
@@ -233,7 +283,8 @@ object AchievementManager {
             BeginnendeDrinker(),
             PilsBaas(),
             Inhaalslag(),
-            MVP(),
+//            MVP(),
+//            Koningshuis(),
             Nice(),
             CollegeWinnaar(),
 //            ReparatieBiertje(),
