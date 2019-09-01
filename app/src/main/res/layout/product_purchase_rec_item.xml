@@ -8,16 +8,6 @@
               android:layout_width="match_parent"
               android:layout_height="40dp"
 >
-    
-    <TextView
-            android:id="@+id/productRecItem_name"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="16sp"
-            android:gravity="center_vertical"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            tools:text="Biertje"
-    />
 
     <TextView
             android:id="@+id/productRecItem_purch_amount"
@@ -27,6 +17,17 @@
             android:layout_height="match_parent"
             android:textSize="16sp"
             android:text="3"
+            android:paddingRight="8dp"
+            />
+
+    <TextView
+            android:id="@+id/productRecItem_name"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            tools:text="Biertje"
     />
 
     <View
