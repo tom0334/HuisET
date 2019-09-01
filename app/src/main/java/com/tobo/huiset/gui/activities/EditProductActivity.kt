@@ -137,12 +137,12 @@ class EditProductActivity : HuisEtActivity() {
         val newRow = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY).size
 
         val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
-        var newSpecies: Int
-        when (selectedSpeciesButton) {
-            R.id.radio_beerProduct -> newSpecies = Product.BEERPRODUCT
-            R.id.radio_crateProduct -> newSpecies = Product.CRATEPRODUCT
-            R.id.radio_snackProduct -> newSpecies = Product.SNACKPRODUCT
-            else -> newSpecies = Product.OTHERPRODUCT
+        val newSpecies: Int
+        newSpecies = when (selectedSpeciesButton) {
+            R.id.radio_beerProduct -> Product.BEERPRODUCT
+            R.id.radio_crateProduct -> Product.CRATEPRODUCT
+            R.id.radio_snackProduct -> Product.SNACKPRODUCT
+            else -> Product.OTHERPRODUCT
         }
 
         realm.executeTransaction {
