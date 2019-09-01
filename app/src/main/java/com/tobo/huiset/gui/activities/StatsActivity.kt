@@ -32,6 +32,14 @@ class StatsActivity : HuisEtActivity() {
         
         val lineData = LineData(datasets)
         chart.data = lineData
+
+
+        val min = lineData.xMin
+        val max = lineData.xMax
+        val margin = ((max - min)  * 0.1f) + 100000f
+        chart.xAxis.axisMinimum = min - margin
+        chart.xAxis.axisMaximum = max + margin
+
         styleChart(chart)
     }
 
@@ -48,10 +56,6 @@ class StatsActivity : HuisEtActivity() {
         chart.legend.xOffset = 20f
 
         //Set up the amount of spacing between lines
-
-        chart.xAxis.spaceMin = chart.xAxis.mAxisRange * 0.15f
-        chart.xAxis.spaceMax = chart.xAxis.mAxisRange * 0.15f
-
         chart.axisLeft.isGranularityEnabled = true
         chart.axisLeft.granularity = 1f
 
