@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class AchievementsAdapter(val items: List<BaseAchievement>, val persons: List<Pe
             val child = View.inflate(context,R.layout.achievement_person,null)
             child.findViewById<TextView>(R.id.achievement_person_name).text = p.name
             child.findViewById<TextView>(R.id.achievement_person_date).text = item.getAchievemoment(p)?.timeStamp?.toTimeAgoString(includeNewLine = false)
+            child.findViewById<View>(R.id.achievement_person_color).setBackgroundColor(Color.parseColor(p.color))
             placeHolder.addView(child)
         }
 

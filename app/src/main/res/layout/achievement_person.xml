@@ -6,6 +6,13 @@
     android:paddingTop="4dp"
     android:paddingBottom="4dp">
 
+    <View
+        android:layout_gravity="center_vertical"
+        android:id="@+id/achievement_person_color"
+        android:layout_marginRight="8dp"
+        android:layout_width="4dp"
+        android:layout_height="16dp"/>
+
     <TextView
         android:layout_gravity="center_vertical"
         android:textColor="@color/primaryTextColor"
