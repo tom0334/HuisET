@@ -166,5 +166,21 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
+    /**
+     * Gets a list of all transactions
+     * if personId is provided, it findss any with that personid
+     * if buy i provided, it gives all with that buy value
+     */
+    fun getTransactions(personId:String? = null, buy:Boolean? = null): List<Transaction> {
+        val query = realm.where(Transaction::class.java)
+        if(personId != null){
+            query.equalTo("personId", personId)
+        }
+        if (buy!= null){
+            query.equalTo("buy", buy)
+        }
+        return query.findAll()
+    }
+
 
 }

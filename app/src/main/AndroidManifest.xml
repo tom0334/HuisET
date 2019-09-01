@@ -13,7 +13,7 @@
         </activity>
         <activity android:name="com.tobo.huiset.gui.activities.AchievementsActivity">
         </activity>
-        <activity android:name="com.tobo.huiset.gui.activities.StatsActivity">
+        <activity android:name="com.tobo.huiset.gui.activities.StatsActivity" android:theme="@style/AppThemeNoActionBar">
         </activity>
         <activity android:name="com.tobo.huiset.gui.activities.EditProfileActivity">
         </activity>
