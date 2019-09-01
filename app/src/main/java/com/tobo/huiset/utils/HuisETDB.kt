@@ -1,6 +1,5 @@
 package com.tobo.huiset.utils
 
-import com.tobo.huiset.achievements.amountOfProducts
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
@@ -183,33 +182,43 @@ class HuisETDB(private val realm: Realm) {
         return query.findAll()
     }
 
-    fun mergeTransactionsIfPossible(){
-        ///all transactions from the last 3 minutes
-        val recent = System.currentTimeMillis() - 3 * 60 * 1000
+
+    fun getTransactionsBetween(timeStamp1:Long, timeStamp2:Long): RealmResults<Transaction> {
         val recentTransactions = realm.where(Transaction::class.java)
-            .greaterThan("time",recent)
+            .between("time",timeStamp1, timeStamp2)
             .findAll()
+        return recentTransactions
+    }
 
-        data class FieldsThatMatter(val personId: String, val productId: String, val isBuy:Boolean)
+    fun mergeTransactionsIfPossible(tooRecentLimit:Long){
+        ///all transactions from the last 3 minutes, but don't merge ones that are too recent just yet. That could
+        // be confusing for the user.
+        val threeMinutesAgo = System.currentTimeMillis() - 3 * 60 * 1000
+        val recentTransactions = getTransactionsBetween(threeMinutesAgo,tooRecentLimit).sort("time").toMutableList()
 
-        val groups = recentTransactions.groupBy { FieldsThatMatter(it.personId,it.productId, it.isBuy) }
 
-        for(group in groups.values){
-            if(group.size < 2) continue
-            val first = group.first()
-            val other = group.subList(1,group.size)
-            realm.executeTransaction {
-                other.forEach {
-                    first.amount += it.amount
-                    first.price += it.price
+        var i = 0
+        while((i +1) in recentTransactions.indices){
+            val first = recentTransactions[i]!!
+            val other = recentTransactions[i+1]!!
+
+            if(first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId){
+                realm.executeTransaction {
+                    first.amount += other.amount
+                    first.price += other.price
+                    other.deleteFromRealm()
+                    recentTransactions.removeAt(i +1)
                 }
-                other.forEach { it.deleteFromRealm() }
+                //Either delete the item that was merged or go on to the next one.
+                //Don't do both at the same time, because the merge result may need to be merged with the next one
+            }else{
+                i++
             }
 
         }
 
-
     }
+
 
 
 }
