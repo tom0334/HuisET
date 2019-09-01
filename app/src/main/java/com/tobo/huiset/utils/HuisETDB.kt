@@ -1,5 +1,6 @@
 package com.tobo.huiset.utils
 
+import com.tobo.huiset.achievements.amountOfProducts
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
@@ -180,6 +181,34 @@ class HuisETDB(private val realm: Realm) {
             query.equalTo("buy", buy)
         }
         return query.findAll()
+    }
+
+    fun mergeTransactionsIfPossible(){
+        ///all transactions from the last 3 minutes
+        val recent = System.currentTimeMillis() - 3 * 60 * 1000
+        val recentTransactions = realm.where(Transaction::class.java)
+            .greaterThan("time",recent)
+            .findAll()
+
+        data class FieldsThatMatter(val personId: String, val productId: String, val isBuy:Boolean)
+
+        val groups = recentTransactions.groupBy { FieldsThatMatter(it.personId,it.productId, it.isBuy) }
+
+        for(group in groups.values){
+            if(group.size < 2) continue
+            val first = group.first()
+            val other = group.subList(1,group.size)
+            realm.executeTransaction {
+                other.forEach {
+                    first.amount += it.amount
+                    first.price += it.price
+                }
+                other.forEach { it.deleteFromRealm() }
+            }
+
+        }
+
+
     }
 
 

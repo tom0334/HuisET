@@ -73,6 +73,7 @@ class FragmentMain : HuisEtFragment() {
         val columns = getNumOfColumns(adapter.itemCount)
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
         setupSpacingForTurfRec(columns)
+        db.mergeTransactionsIfPossible()
     }
 
     private fun setupAmountRec(view: View): RecyclerView {
