@@ -39,7 +39,7 @@ class FragmentProducts : HuisEtFragment() {
         // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
-        rec.adapter = ProductRecAdapter(this.context!!, realm, products, true)
+        rec.adapter = ProductRecAdapter(this, realm, products, true)
         rec.layoutManager = LinearLayoutManager(this.context)
 
 
@@ -67,6 +67,16 @@ class FragmentProducts : HuisEtFragment() {
             val intent = Intent(this.activity, EditProductActivity::class.java)
                 .putExtra("PRODUCT_ID", product?.id)
             startActivity(intent)
+        }
+    }
+
+    fun updateRows() {
+        val products = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY)
+        products.sort("row")
+
+        var newRow = 0
+        products.forEach {
+            it.row = newRow++
         }
     }
 
