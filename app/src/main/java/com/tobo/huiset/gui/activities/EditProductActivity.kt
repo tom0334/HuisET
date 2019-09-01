@@ -91,19 +91,8 @@ class EditProductActivity : HuisEtActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->
-                realm.executeTransaction {
-                    if (realm.where(Transaction::class.java).equalTo(
-                            "productId",
-                            oldProduct!!.id
-                        ).findFirst() == null
-                    ) {
-                        // Actually delete the profile from the realm if it isn't involved in any transactions
-                        oldProduct!!.deleteFromRealm()
-                    } else {
-                        // fake delete profile from the realm
-                        oldProduct!!.isDeleted = true
-                    }
-                }
+                db.removeProduct(oldProduct!!)
+                db.updateProductRows()
                 this.finish()
             }
             .setNegativeButton("annuleren") { _, _ ->
@@ -134,6 +123,7 @@ class EditProductActivity : HuisEtActivity() {
             newKind = Product.ONLY_BUYABLE
         }
 
+        db.updateProductRows()
         val newRow = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY).size
 
         val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId

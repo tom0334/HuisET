@@ -207,5 +207,33 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
+    fun removeProfile(oldProfile: Person) {
+        realm.executeTransaction {
+            if (realm.where(Transaction::class.java).equalTo("personId", oldProfile.id).findFirst() == null) {
+                // Actually delete the product from the realm if it isn't involved in any transactions
+                oldProfile.deleteFromRealm()
+            } else {
+                // fake delete product from the realm
+                oldProfile.isDeleted = true
+            }
+        }
+    }
+
+    fun removeProduct(oldProduct: Product) {
+        realm.executeTransaction {
+            if (realm.where(Transaction::class.java).equalTo(
+                    "productId",
+                    oldProduct!!.id
+                ).findFirst() == null
+            ) {
+                // Actually delete the profile from the realm if it isn't involved in any transactions
+                oldProduct!!.deleteFromRealm()
+            } else {
+                // fake delete profile from the realm
+                oldProduct!!.isDeleted = true
+            }
+        }
+    }
+
 
 }
