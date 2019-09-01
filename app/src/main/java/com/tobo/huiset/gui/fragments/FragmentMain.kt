@@ -29,11 +29,20 @@ class FragmentMain : HuisEtFragment() {
 
     private var transactionTimeRefreshHandler: Handler? = null
 
+    private var mergeTransactionsHandler:Handler = Handler()
+
     private val updateTransactionRecRunnable = object : Runnable {
         override fun run() {
             updateTransactionRec(this)
         }
     }
+
+    private val mergeTransactionsRunnable = object : Runnable {
+        override fun run() {
+            db.mergeTransactionsIfPossible( System.currentTimeMillis()- 30 * 1000)
+        }
+    }
+
 
     /**
      * This function is run every TRANSACTION_VIEW_REFRESH_TIME milliseconds. It updates the time ago texts in the
@@ -73,6 +82,7 @@ class FragmentMain : HuisEtFragment() {
         val columns = getNumOfColumns(adapter.itemCount)
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
         setupSpacingForTurfRec(columns)
+        db.mergeTransactionsIfPossible(System.currentTimeMillis())
     }
 
     private fun setupAmountRec(view: View): RecyclerView {
@@ -152,6 +162,8 @@ class FragmentMain : HuisEtFragment() {
 
                 //scroll to the top, because the item is added at the top
                 transitionRec.scrollToPosition(0)
+                mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable,30 * 1000)
+
             }
         }
     }
@@ -195,6 +207,9 @@ class FragmentMain : HuisEtFragment() {
             transactionTimeRefreshHandler!!.removeCallbacks(updateTransactionRecRunnable)
 
         }
+        db.mergeTransactionsIfPossible(System.currentTimeMillis())
+        mergeTransactionsHandler!!.removeCallbacks(mergeTransactionsRunnable)
+
     }
 
 
