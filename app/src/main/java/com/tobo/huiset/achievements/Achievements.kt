@@ -10,7 +10,7 @@ import java.util.*
 
 /**
  * To Add a new achievement, 3 things need to be done:
- * 1-> create UNIQUE const int to be used as ID in database
+ * 1-> craete UNIQUE const int to be used as ID in database
  * 2-> make implementation of achievement class
  * 3-> add it to the list of all achievements in the achievement manager
  *
@@ -24,11 +24,6 @@ const val A_REPARATIE_PILSJE = 5
 const val A_COLLEGE_WINNAAR = 6
 
 const val A_DOE_HET_VOOR_DE_KONING = 9
-
-const val A_OKTOBERFEST = 11
-const val A_INHAALSLAG = 12
-const val A_BEGINNENDE_DRINKER = 13
-
 
 
 /**
@@ -70,7 +65,7 @@ class Nice : BaseAchievement() {
 class CollegeWinnaar : BaseAchievement(){
     override val id = A_COLLEGE_WINNAAR
     override val name = "Collegewinnaar"
-    override val description = "Drink een biertje op een doordeweekse dag voor 8:45. Telt vanaf 6 uur 's ochtends."
+    override val description = "Drink een biertje op een doordeweekse dag voor 8:45. Telt vanaf 6 uur s'ochtends."
 
     override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
         val sixOClock = ToboTime(6, 0, 0)
@@ -86,8 +81,8 @@ class CollegeWinnaar : BaseAchievement(){
 
 class MVP: BaseAchievement() {
     override val id = A_MVP
-    override val name = "MVP (Most Valuable Pilser)"
-    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt de MVP pas bepaald. Minstens 5 bier, anders verdien je het niet."
+    override val name = "MVP (Most Valuable Pilser"
+    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
 
     override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
 
@@ -112,7 +107,6 @@ class MVP: BaseAchievement() {
             if (mvpID != person.id) continue
             //its a tie! There are multiple people that drank the same amount. No winner then.
             if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
-
 
             if (amount > 5) return true
         }
@@ -146,7 +140,7 @@ class GroteBoodschap: BaseAchievement(){
 class ReparatieBiertje :BaseAchievement(){
     override val id = A_REPARATIE_PILSJE
     override val name = "Reparatie Biertje"
-    override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken."
+    override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken.\n"
 
     override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
 
@@ -157,7 +151,7 @@ class ReparatieBiertje :BaseAchievement(){
         val morningBeers = helpData.beerTurfTransactions.filter { it.toboTime.hour < 12 }
 
         for (drinkDay in drankEnoughDays){
-            val repair= morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
+            val repair =morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
             if(repair != null) return true
         }
         return false
@@ -179,53 +173,6 @@ class DoeHetVoorDeKoning : BaseAchievement() {
 
 }
 
-class Oktoberfest: BaseAchievement() {
-    override val id: Int
-        get() = A_OKTOBERFEST
-    override val name: String
-        get() = "Oktoberfest"
-    override val description: String
-        get() = "Drink een biertje in oktober. Bonuspunten als je een lederhose/dirndl draagt."
-
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
-        val octoberBeer = helpData.beerTurfTransactions
-            .find { it.toboTime.month == Calendar.OCTOBER }
-
-        return octoberBeer != null
-    }
-}
-
-class Inhaalslag: BaseAchievement() {
-    override val id: Int
-        get() = A_INHAALSLAG
-    override val name: String
-        get() = "Inhaalslag"
-    override val description: String
-        get() = "turf 5 bier in 1 keer."
-
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
-        val fiveOrMoreBeer = helpData.beerTurfTransactions
-            .find { it.amount >= 5 }
-
-        return fiveOrMoreBeer != null
-    }
-}
-
-class BeginnendeDrinker: BaseAchievement() {
-    override val id: Int
-        get() = A_BEGINNENDE_DRINKER
-    override val name: String
-        get() = "Beginnende Drinker"
-    override val description: String
-        get() = "Turf je eerste biertje."
-
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
-        return helpData.beerTurfTransactions.isNotEmpty()
-    }
-}
-
-
-
 object AchievementManager {
 
     fun getAchievements(): List<BaseAchievement>{
@@ -236,10 +183,7 @@ object AchievementManager {
             CollegeWinnaar(),
             MVP(),
             GroteBoodschap(),
-            DoeHetVoorDeKoning(),
-            Oktoberfest(),
-            Inhaalslag(),
-            BeginnendeDrinker()
+            DoeHetVoorDeKoning()
         )
     }
 
