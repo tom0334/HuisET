@@ -1,10 +1,12 @@
 package com.tobo.huiset.gui.adapters
 
-import android.content.Context
+import FragmentPurchases
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
@@ -17,7 +19,7 @@ import io.realm.RealmResults
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
  */
 class PurchaseProductRecAdapter(
-    val context: Context,
+    val fragmentPurchases: FragmentPurchases,
     val realm: Realm,
     data: RealmResults<Product>,
     autoUpdate: Boolean
@@ -26,19 +28,29 @@ class PurchaseProductRecAdapter(
     val amountMap: MutableMap<String, Int> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.product_purchase_rec_item, parent, false)
+        val view = LayoutInflater.from(fragmentPurchases.context).inflate(R.layout.product_purchase_rec_item, parent, false)
         return ProductViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = data?.get(position) ?: return
 
+        holder.amountTv.text = getFromMap(product.id).toString()
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
-        holder.amountTv.text = getFromMap(product.id).toString()
+
+        if (getFromMap(product.id) > 0) {
+            holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
+            holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
+        }
+        else {
+            holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
+            holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
+        }
 
         holder.itemView.setOnClickListener {
             amountMap[product.id] = getFromMap(product.id) + 1
+            fragmentPurchases.increaseCounter(product.price)
             notifyItemChanged(position)
         }
     }
