@@ -10,6 +10,13 @@
               android:layout_height="40dp"
 >
 
+    <View
+        android:layout_gravity="center_vertical"
+        android:id="@+id/personRec_item_color"
+        android:layout_marginRight="8dp"
+        android:layout_width="4dp"
+        android:layout_height="16dp"/>
+
 
     <TextView
             android:id="@+id/personRecItem_name"

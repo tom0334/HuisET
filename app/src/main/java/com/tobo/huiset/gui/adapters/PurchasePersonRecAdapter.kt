@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ class PurchasePersonRecAdapter(
         holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balance.getBalanceColorString()
         holder.balanceTv.setTextColorFromHex(colorString)
+        holder.colorLine.setBackgroundColor(Color.parseColor(person.color))
     }
 
     override fun getItemCount(): Int {
@@ -48,5 +50,6 @@ class PurchasePersonRecAdapter(
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.personRecItem_name)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.personRecItem_balance)!!
+        val colorLine = itemView.findViewById<View>(R.id.personRec_item_color)
     }
 }
