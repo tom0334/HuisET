@@ -128,13 +128,12 @@ class EditProfileActivity : HuisEtActivity() {
         val row = db.findAllCurrentPersons().size
 
         realm.executeTransaction {
-            val newColorString = ProfileColors.getNextColor(db)
             if (new) {
+                val newColorString = ProfileColors.getNextColor(db)
                 val person = Person.create(newName, newColorString, guestBool, showBool, row)
                 realm.copyToRealm(person)
             } else {
                 oldProfile!!.name = newName
-                oldProfile!!.color = newColorString
                 oldProfile!!.isGuest = guestBool
                 oldProfile!!.show = showBool
             }
