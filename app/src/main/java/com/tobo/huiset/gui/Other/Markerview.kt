@@ -7,6 +7,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.tobo.huiset.R
+import java.text.SimpleDateFormat
 
 /**
  * Constructor. Sets up the MarkerView with a custom layout resource.
@@ -31,8 +32,10 @@ class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(conte
     // callbacks everytime the MarkerView is redrawn, can be used to update the
     // content (user-interface)
     override fun refreshContent(e: Entry, highlight: Highlight) {
-        topTv.setText(e.x.toInt())
-//        bottomTv.setText()
+        topTv.setText("${e.y.toInt()} bier")
+        val date = e.x.toLong()
+        val mFormat = SimpleDateFormat("dd-MM HH:mm")
+        bottomTv.text = mFormat.format(date)
         super.refreshContent(e, highlight)
     }
 
