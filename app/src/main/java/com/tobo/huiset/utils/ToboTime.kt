@@ -1,6 +1,7 @@
 package com.tobo.huiset.utils
 
 import java.lang.IllegalStateException
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -11,7 +12,18 @@ import java.util.*
  * hours mins and seconds.
  */
 
-data class ToboDay(val dayOfYear:Int, val year:Int)
+data class ToboDay(val dayOfYear:Int, val year:Int) {
+
+    fun UnixOnDay(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_YEAR, dayOfYear)
+        calendar.set(Calendar.HOUR_OF_DAY,0)
+        calendar.set(Calendar.MINUTE,0)
+        calendar.set(Calendar.SECOND,0)
+
+        return calendar.timeInMillis
+    }
+}
 
 data class ToboTime(private val calendar: Calendar){
 
