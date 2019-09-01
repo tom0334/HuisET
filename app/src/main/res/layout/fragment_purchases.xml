@@ -45,8 +45,8 @@
                 android:visibility="gone">
 
             <TextView
-                    android:layout_alignParentTop="true"
                     android:id="@+id/whatHaveYouBoughtText"
+                    android:layout_alignParentTop="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/secondaryColor"
@@ -60,23 +60,52 @@
                     android:textSize="30sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:layout_below="@id/whatHaveYouBoughtText"
-                    android:layout_above="@id/purchaseSaveButton"
                     android:id="@+id/pickProductsRec"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            <com.google.android.material.button.MaterialButton
-                    android:layout_alignParentBottom="true"
-                    android:id="@+id/purchaseSaveButton"
+                    android:layout_below="@id/whatHaveYouBoughtText"
+                    android:layout_above="@id/linearBottomPurch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:text="Opslaan"
-                    android:textSize="20sp"
-                    app:backgroundTint="@color/primaryColor"
-            />
+                    />
+
+            <LinearLayout
+                    android:id="@+id/linearBottomPurch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    >
+
+                <View
+                        android:id="@+id/purchaseDividerLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/primaryColor"
+                    />
+
+                <TextView
+                        android:id="@+id/purchaseMoneyCounter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="Totaal: "
+                        android:paddingBottom="4dp"
+                        android:paddingTop="8dp"
+                        android:gravity="center_horizontal"
+                        />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/purchaseSaveButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:text="Opslaan"
+                        android:textSize="20sp"
+                        android:shadowColor="#FFFFFF"
+                        app:backgroundTint="@color/primaryColor"
+                />
+            </LinearLayout>
 
         </RelativeLayout>
 
