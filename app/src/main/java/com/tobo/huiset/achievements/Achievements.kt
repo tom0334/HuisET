@@ -20,7 +20,7 @@ const val A_PILSBAAS = 1
 const val A_NICE = 2
 const val A_MVP = 3
 const val A_GROTE_BOODSCHAP = 4
-const val A_REPARATIE_PILSJE = 5
+//const val A_REPARATIE_PILSJE = 5
 const val A_COLLEGE_WINNAAR = 6
 
 const val A_DOE_HET_VOOR_DE_KONING = 9
@@ -143,27 +143,27 @@ class GroteBoodschap: BaseAchievement(){
 
 }
 
-class ReparatieBiertje :BaseAchievement(){
-    override val id = A_REPARATIE_PILSJE
-    override val name = "Reparatie Biertje"
-    override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken."
-
-    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
-
-        val drankEnoughDays = helpData.beerTurfTransactions.groupBy { it.toboTime.getZuipDay() }
-            .filter { entry -> entry.value.size > 10 }
-            .map{ entry -> entry.value[0].toboTime}
-
-        val morningBeers = helpData.beerTurfTransactions.filter { it.toboTime.hour < 12 }
-
-        for (drinkDay in drankEnoughDays){
-            val repair= morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
-            if(repair != null) return true
-        }
-        return false
-    }
-
-}
+//class ReparatieBiertje :BaseAchievement(){
+//    override val id = A_REPARATIE_PILSJE
+//    override val name = "Reparatie Biertje"
+//    override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken."
+//
+//    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
+//
+//        val drankEnoughDays = helpData.beerTurfTransactions.groupBy { it.toboTime.getZuipDay() }
+//            .filter { entry -> entry.value.size > 10 }
+//            .map{ entry -> entry.value[0].toboTime}
+//
+//        val morningBeers = helpData.beerTurfTransactions.filter { it.toboTime.hour < 12 }
+//
+//        for (drinkDay in drankEnoughDays){
+//            val repair= morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
+//            if(repair != null) return true
+//        }
+//        return false
+//    }
+//
+//}
 
 class DoeHetVoorDeKoning : BaseAchievement() {
     override val id = A_DOE_HET_VOOR_DE_KONING
@@ -231,7 +231,7 @@ object AchievementManager {
     fun getAchievements(): List<BaseAchievement>{
         return listOf(
             PilsBaas(),
-            ReparatieBiertje(),
+//            ReparatieBiertje(),
             Nice(),
             CollegeWinnaar(),
             MVP(),
