@@ -1,5 +1,6 @@
 package com.tobo.huiset.achievements
 
+import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
@@ -193,8 +194,12 @@ object AchievementManager {
         )
     }
 
-    fun updateForPerson(person:Person){
+    /**
+     * Updates all achievements for a perseon. Returns a list of completions if new ones exist
+     */
+    fun updateForPerson(person:Person):List<AchievementCompletion>{
 
+        val completions = mutableListOf<AchievementCompletion>()
         for (a in getAchievements()) {
             val allTurfTrans = person.realm.where(Transaction::class.java)
                 .equalTo("buy",false)
@@ -210,8 +215,13 @@ object AchievementManager {
                 beerTurfTransactionsByPerson = allBeerTrans.filter { it.personId == person.id }
             )
 
-            a.update(person,helpData)
+            val completion = a.update(person,helpData)
+            if(completion!= null){
+                completions.add(completion)
+            }
+
         }
+        return completions.toList()
     }
 }
 

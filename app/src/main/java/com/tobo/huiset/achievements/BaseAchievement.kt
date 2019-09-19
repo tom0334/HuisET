@@ -13,18 +13,22 @@ abstract class BaseAchievement {
         helpData: AchievementUpdateHelpData
     ):Long?
 
-    fun update(person: Person, helpData: AchievementUpdateHelpData){
-        if(wasAchieved(person)) return
+    fun update(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion?{
+        if(wasAchieved(person)) return null
 
         val completionTimeStamp = checkIfAchieved(person,helpData)
 
-        if(completionTimeStamp != null){
-            person.realm.executeTransaction {
-                val comp = AchievementCompletion.create(this.id,completionTimeStamp,person.id)
-                it.copyToRealm(comp)
-                person.addAchievement(comp)
-            }
-        }
+        if(completionTimeStamp == null)return null
+
+        val realm = person.realm
+
+        realm.beginTransaction()
+        val comp = AchievementCompletion.create(this.id,completionTimeStamp,person.id)
+        realm.copyToRealm(comp)
+        person.addAchievement(comp)
+        realm.commitTransaction()
+
+        return comp
     }
 
     fun wasAchieved(person: Person):Boolean{
