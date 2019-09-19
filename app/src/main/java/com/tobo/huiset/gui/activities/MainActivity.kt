@@ -97,6 +97,11 @@ class MainActivity : HuisEtActivity() {
             startActivityForResult(intent, MAINACTIVITY_REQUESTCODE_SETTINGS)
         }
 
+        if (id == R.id.transfermoney) {
+            val intent = Intent(this, TransferMoneyActivity::class.java)
+            startActivity(intent)
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
