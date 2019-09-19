@@ -23,7 +23,6 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
@@ -133,10 +132,7 @@ class FragmentMain : HuisEtFragment() {
             .findAll()
 
         val onDeleteClicked = fun (trans: Transaction, person: Person){
-            realm.executeSafe {
-                person.undoTransaction(trans)
-                trans.deleteFromRealm()
-            }
+            db.deleteTransaction(trans,person)
 
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself

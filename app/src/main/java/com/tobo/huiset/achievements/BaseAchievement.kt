@@ -2,6 +2,7 @@ package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.utils.extensions.getDb
 
 abstract class BaseAchievement {
     abstract val id:Int
@@ -25,15 +26,8 @@ abstract class BaseAchievement {
 
         if(completionTimeStamp == null)return null
 
-        val realm = person.realm
+        return person.getDb().createAndSaveAchievementCompletion(this, completionTimeStamp,person)
 
-        realm.beginTransaction()
-        val comp = AchievementCompletion.create(this.id,completionTimeStamp,person.id)
-        realm.copyToRealm(comp)
-        person.addAchievement(comp)
-        realm.commitTransaction()
-
-        return comp
     }
 
     fun wasAchieved(person: Person):Boolean{
