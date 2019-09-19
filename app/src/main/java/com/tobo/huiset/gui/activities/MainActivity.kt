@@ -6,6 +6,7 @@ import FragmentProducts
 import FragmentProfiles
 import FragmentPurchases
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
@@ -19,6 +20,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import nl.dionsegijn.konfetti.KonfettiView
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 
 private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
@@ -233,9 +237,24 @@ class MainActivity : HuisEtActivity() {
                             or View.SYSTEM_UI_FLAG_IMMERSIVE
                     )
         }
-
-
     }
+
+
+    fun showConfetti(){
+        val viewKonfetti = findViewById<KonfettiView>(R.id.viewKonfetti)
+        viewKonfetti.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+            .setDirection(0.0, 359.0)
+            .setSpeed(1f, 5f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .addShapes( Shape.CIRCLE)
+            .addSizes(Size(12))
+            .setPosition(-50f, viewKonfetti.width + 50f, 0f, -50f)
+            .burst(300)
+    }
+
+
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)

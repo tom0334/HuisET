@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.activities.MainActivity
 import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
@@ -165,6 +166,7 @@ class FragmentMain : HuisEtFragment() {
                 mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable,30 * 1000)
 
             }
+            (activity as MainActivity).showConfetti()
         }
     }
 
