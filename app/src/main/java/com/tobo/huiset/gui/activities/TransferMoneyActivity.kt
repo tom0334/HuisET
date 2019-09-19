@@ -1,6 +1,5 @@
 package com.tobo.huiset.gui.activities
 
-import android.content.ComponentCallbacks2
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -12,6 +11,7 @@ import com.google.android.material.button.MaterialButton
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.gui.adapters.TransferPersonRecAdapter
+import com.tobo.huiset.realmModels.Person
 
 class TransferMoneyActivity : HuisEtActivity() {
 
@@ -28,16 +28,13 @@ class TransferMoneyActivity : HuisEtActivity() {
     }
 
     private fun initProfileRec() {
-        val pickUserRec = findViewById<RecyclerView>(R.id.MTpickUserRec)
-        pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
-
-        val personsLayout = findViewById<View>(R.id.MTtransferContentView)
-        val calculationLayout = findViewById<View>(R.id.MTcalculationLayout)
-
+        val selectPersonsRec = findViewById<RecyclerView>(R.id.MTpickUserRec)
+        selectPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         val profiles = db.findAllCurrentPersons(true)
 
-        pickUserRec.adapter = TransferPersonRecAdapter(this, this, realm, profiles, true)
-        pickUserRec.layoutManager = LinearLayoutManager(this)
+        val selectPersonRecAdapter = TransferPersonRecAdapter(this, this, realm, profiles, true)
+        selectPersonsRec.adapter = selectPersonRecAdapter
+        selectPersonsRec.layoutManager = LinearLayoutManager(this)
 
         amountOfPersonsSelected = 0
 
@@ -47,20 +44,27 @@ class TransferMoneyActivity : HuisEtActivity() {
                 return@setOnClickListener
             }
             else {
-                personsLayout.visibility = View.GONE
-                calculationLayout.visibility = View.VISIBLE
-                calculateTransfersAndShow()
+                // hide selection view and show calculation view
+                findViewById<View>(R.id.MTpickUsersLayout).visibility = View.GONE
+                findViewById<View>(R.id.MTcalculationLayout).visibility = View.VISIBLE
+
+                calculateTransfersAndShow(selectPersonRecAdapter)
             }
         }
     }
 
-    private fun calculateTransfersAndShow() {
-        //TODO: implement this unit
+    private fun calculateTransfersAndShow(recAdapt: TransferPersonRecAdapter) {
+        val calculatedPersonsRec = findViewById<RecyclerView>(R.id.MTcalculatedPersonsRec)
+        calculatedPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        val realmResultsSelected = db.findPersonsWithIDInArray(recAdapt.chosenMap.toTypedArray())
+        calculatedPersonsRec.adapter = TransferPersonRecAdapter(this, this, realm, realmResultsSelected, true)
+        calculatedPersonsRec.layoutManager = LinearLayoutManager(this)
 
     }
 
-    fun increaseCounter(b: Boolean) {
-        if (b) amountOfPersonsSelected++
+    fun increaseCounter(bool: Boolean) {
+        if (bool) amountOfPersonsSelected++
         else amountOfPersonsSelected--
     }
 

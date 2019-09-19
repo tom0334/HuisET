@@ -31,8 +31,7 @@ class TransferPersonRecAdapter(
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Person, TransferPersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
-    private val chosenMap: MutableMap<String, Boolean> = mutableMapOf()
-        get() = field
+    val chosenMap = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.person_transfer_rec_item, parent, false)
@@ -48,7 +47,7 @@ class TransferPersonRecAdapter(
         holder.balanceTv.setTextColorFromHex(colorString)
         holder.colorLine.setBackgroundColor(Color.parseColor(person.color))
 
-        if (getFromMap(person.id)) {
+        if (chosenMap.contains(person.id)) {
             holder.nameTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
         }
         else {
@@ -56,19 +55,20 @@ class TransferPersonRecAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            chosenMap[person.id] = !getFromMap(person.id)
-            transferMoneyActivity.increaseCounter(getFromMap(person.id))
+            if (!chosenMap.contains(person.id)) {
+                chosenMap.add(person.id)
+                transferMoneyActivity.increaseCounter(true)
+            }
+            else {
+                chosenMap.remove(person.id)
+                transferMoneyActivity.increaseCounter(false)
+            }
             notifyItemChanged(position)
         }
     }
 
     override fun getItemCount(): Int {
         return if (data == null) 0 else data!!.size
-    }
-
-    private fun getFromMap(id: String): Boolean {
-        if (!chosenMap.containsKey(id)) chosenMap[id] = false
-        return chosenMap[id]!!
     }
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

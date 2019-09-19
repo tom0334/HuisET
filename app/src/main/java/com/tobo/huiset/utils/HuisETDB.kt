@@ -272,6 +272,9 @@ class HuisETDB(private val realm: Realm) {
 
     }
 
+    fun findPersonsWithIDInArray(arr: Array<String>): RealmResults<Person>? {
+        return realm.where(Person::class.java).`in`("id", arr).findAll()
+    }
 
 
 }
