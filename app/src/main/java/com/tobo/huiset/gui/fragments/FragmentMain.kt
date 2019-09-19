@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
+import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.MainActivity
 import com.tobo.huiset.gui.activities.PREFS_TURF_CONFETTI_ID
@@ -17,9 +18,11 @@ import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
@@ -128,11 +131,25 @@ class FragmentMain : HuisEtFragment() {
             .sort("time", Sort.DESCENDING)
             .findAll()
 
+        val onDeleteClicked = fun (trans: Transaction, person: Person){
+            realm.executeSafe {
+                person.undoTransaction(trans)
+                trans.deleteFromRealm()
+            }
+            val added = AchievementManager.checkAgainForPerson(person)
+            (this.activity as CelebratingHuisEtActivity).showAchievements(added)
+        }
+
+
         val transActionRec = view.findViewById<RecyclerView>(R.id.recentRecyclerView)
         val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
-        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true)
+        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true, onDeleteClicked)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
         transActionRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+
+
+
+
 
         //init the periodic refresh
         transactionTimeRefreshHandler = Handler()

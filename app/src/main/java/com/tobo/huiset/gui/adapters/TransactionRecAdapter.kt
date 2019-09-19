@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
-import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.toTimeAgoString
 import com.tobo.huiset.utils.extensions.getBalanceColorString
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
@@ -28,7 +28,8 @@ class TransactionRecAdapter(
     data: RealmResults<Transaction>?,
     val amountRec: RecyclerView,
     private val realmInstance: Realm,
-    autoUpdate: Boolean
+    autoUpdate: Boolean,
+    val deleteButtonCallback: (Transaction, Person) -> Unit
 ) : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(data, autoUpdate) {
 
 
@@ -54,10 +55,7 @@ class TransactionRecAdapter(
         }
 
         holder.deleteButton.setOnClickListener {
-            realmInstance.executeSafe {
-                person.undoTransaction(trans)
-                trans.deleteFromRealm()
-            }
+            deleteButtonCallback(trans, person)
         }
 
     }

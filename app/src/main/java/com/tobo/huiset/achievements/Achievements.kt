@@ -5,6 +5,7 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ToboTime
+import io.realm.Realm
 import java.util.*
 
 
@@ -229,6 +230,25 @@ object AchievementManager {
     fun getAchievementForCompletion(completion: AchievementCompletion): BaseAchievement {
         return getAchievements().find {completion.achievement == it.id}!!
     }
+
+    fun checkAgainForPerson(person:Person): List<AchievementCompletion> {
+        val realm = person.realm
+        val before = person.completions.map { realm.copyFromRealm(it)  }
+
+        realm.executeTransaction {
+            //removes all completions completely
+            person.completions.createSnapshot().forEach {
+                it.deleteFromRealm()
+            }
+            person.completions.clear()
+        }
+
+        //finds them back
+        val after = updateForPerson(person)
+
+        return after.minus(before)
+    }
+
 }
 
 data class AchievementUpdateHelpData(
