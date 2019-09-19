@@ -27,7 +27,7 @@ abstract class HuisEtFragment : Fragment() {
     }
 
     /**
-     * Does nothing by default, but can be overridden by subclasses to isAchievedNow dateMap for example.
+     * Does nothing by default, but can be overridden by subclasses to checkIfAchieved dateMap for example.
      */
     open fun onTabReactivated(){}
 

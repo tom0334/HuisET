@@ -1,5 +1,6 @@
 import android.os.Bundle
 import android.os.Handler
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
+import com.tobo.huiset.achievements.AchievementManager
+import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.activities.MainActivity
+import com.tobo.huiset.gui.activities.PREFS_TURF_CONFETTI_ID
 import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
+import com.tobo.huiset.realmModels.AchievementCompletion
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
@@ -30,6 +37,8 @@ class FragmentMain : HuisEtFragment() {
     private var transactionTimeRefreshHandler: Handler? = null
 
     private var mergeTransactionsHandler:Handler = Handler()
+
+    private val showConfettiOnTurf by lazy{ PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(PREFS_TURF_CONFETTI_ID,false)}
 
     private val updateTransactionRecRunnable = object : Runnable {
         override fun run() {
@@ -122,11 +131,27 @@ class FragmentMain : HuisEtFragment() {
             .sort("time", Sort.DESCENDING)
             .findAll()
 
+        val onDeleteClicked = fun (trans: Transaction, person: Person){
+            db.deleteTransaction(trans,person)
+
+            //When removing transactions, it can happen that some achievements should not have been completed.
+            //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
+            //Keep track of what achievements were added, and show that in the activity
+            val added = mutableListOf<AchievementCompletion>()
+            db.findAllCurrentPersons(true).forEach {
+                added.addAll(AchievementManager.checkAgainForPerson(person))
+            }
+            (this.activity as CelebratingHuisEtActivity).showAchievements(added)
+
+        }
+
+
         val transActionRec = view.findViewById<RecyclerView>(R.id.recentRecyclerView)
         val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
-        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true)
+        transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true, onDeleteClicked)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
         transActionRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+
 
         //init the periodic refresh
         transactionTimeRefreshHandler = Handler()
@@ -156,6 +181,13 @@ class FragmentMain : HuisEtFragment() {
             if (person != null) {
 
                 db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
+                val changed = AchievementManager.updateAchievementsAfterTurf(person)
+                (activity as MainActivity).showAchievements(changed)
+
+                if(changed.isEmpty() && showConfettiOnTurf){
+                    (activity as MainActivity).showTurfConfetti()
+                }
+
                 db.selectFirstTurfProduct()
 
                 amountAdapter.resetAmountToFirst()

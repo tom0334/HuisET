@@ -2,16 +2,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
-import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.achievements.AchievementManager
+import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
@@ -84,14 +83,20 @@ class FragmentPurchases : HuisEtFragment() {
         pickProductsRec.layoutManager = LinearLayoutManager(this.context)
 
         view.findViewById<MaterialButton>(R.id.purchaseSaveButton).setOnClickListener {
+            val person = db.getPersonWithId(pickedPersonId)!!
             products.forEach {
                 val amount = prodRecAdapter.getFromMap(it.id)
                 if (amount > 0) {
-                    db.createAndSaveTransaction(db.getPersonWithId(pickedPersonId)!!, it, amount, true)
+                    db.createAndSaveTransaction(person, it, amount, true)
                 }
             }
             Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
             setPersonAndUpdate(null)
+            db.mergeTransactionsIfPossible(System.currentTimeMillis())
+            val changes = AchievementManager.updateAchievementsAfterBuy(person)
+            (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
+
+
         }
     }
 

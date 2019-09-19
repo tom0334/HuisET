@@ -62,8 +62,8 @@ public class Transaction extends RealmObject {
         return realm.where(Person.class).equalTo("id", this.personId).findFirst();
     }
 
-    public Product getProduct(Realm realm) {
-        return realm.where(Product.class).equalTo("id", this.productId).findFirst();
+    public Product getProduct() {
+        return this.getRealm().where(Product.class).equalTo("id", this.productId).findFirst();
     }
 
     public String getId() {

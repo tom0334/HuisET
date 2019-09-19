@@ -1,10 +1,11 @@
 package com.tobo.huiset.achievements
 
+import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ToboTime
-import java.text.SimpleDateFormat
+import com.tobo.huiset.utils.extensions.getDb
 import java.util.*
 
 
@@ -39,16 +40,21 @@ class PilsBaas : BaseAchievement() {
     override val id = A_PILSBAAS
     override val name = "Pilsbaas"
     override val description = "Drink 10 of meer pils op een dag"
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
 
-        val maxBeerOnADay = helpData.beerTurfTransactions
-            .groupBy {
-                SimpleDateFormat("yyyy-MM-dd").format(Date(it.time))
-            }
-            .values.map { it.amountOfProducts() }.max()
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
 
-        return maxBeerOnADay != null && maxBeerOnADay > 8
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
+        val maxBeerOnADay = helpData.beerTurfTransactionsByPerson
+            .groupBy {it.toboTime.toboDay}
+
+        // a map entry for each day. Find one that meets our needs
+        val goodDayEntry = maxBeerOnADay.entries.find { it.value.amountOfProducts() >= 10}
+
+        if(goodDayEntry != null) return goodDayEntry.value.last().time
+        return null
     }
 }
 
@@ -56,9 +62,18 @@ class Nice : BaseAchievement() {
     override val id = A_NICE
     override val name = "Nice"
     override val description = "Drink 69 bier."
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
-        val totalBeer = helpData.beerTurfTransactions.amountOfProducts()
-        return totalBeer >= 69
+
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
+
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        var count = 0
+        for (t in helpData.beerTurfTransactionsByPerson){
+            count+= t.amount
+            if(count>= 69 ) return t.time
+        }
+        return null
     }
 }
 
@@ -67,16 +82,20 @@ class CollegeWinnaar : BaseAchievement(){
     override val name = "Collegewinnaar"
     override val description = "Drink een biertje op een doordeweekse dag voor 8:45. Telt vanaf 6 uur s'ochtends."
 
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
+
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val sixOClock = ToboTime(6, 0, 0)
         val collegeStartTime = ToboTime(8, 45, 0)
 
-        val collegeBeers = helpData.beerTurfTransactions
-            .filter { it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(sixOClock,collegeStartTime)}
+        val collegeBeer = helpData.beerTurfTransactionsByPerson
+            .find{ it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(sixOClock,collegeStartTime)}
 
-        return collegeBeers.isNotEmpty()
+        if(collegeBeer!= null) return collegeBeer.time
+        return null
     }
-
 }
 
 class MVP: BaseAchievement() {
@@ -84,9 +103,13 @@ class MVP: BaseAchievement() {
     override val name = "MVP (Most Valuable Pilser"
     override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
 
-    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
+    override val updateOnTurf = false
+    override val updateOnBuy = false
+    override val updateOnLaunch = true
 
-        val perDay = helpData.beerTurfTransactions
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+
+        val perDay = helpData.allBeerTurfTrans
             .filter { it.toboTime.zuipDayHasEnded() } // this achievement can only be decided if the day has ended
             .groupBy { it.toboTime.getZuipDay() }
 
@@ -108,9 +131,10 @@ class MVP: BaseAchievement() {
             //its a tie! There are multiple people that drank the same amount. No winner then.
             if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
 
-            if (amount > 5) return true
+            //return the last
+            if (amount > 5) return transactionsOnDay.last().time
         }
-        return false
+        return null
     }
 }
 
@@ -119,16 +143,18 @@ class GroteBoodschap: BaseAchievement(){
     override val name = "Grote boodschap"
     override val description ="Koop 2 kratjes in een keer in. Haha nummer 2."
 
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
-        val realm = person.realm
+    override val updateOnTurf = false
+    override val updateOnBuy = true
+    override val updateOnLaunch = false
 
-        val crateBuys = realm.where(Transaction::class.java)
-            .equalTo("personId", person.id)
-            .equalTo("buy",true)
-            .findAll()
-            .filter { it.getProduct(realm).species == Product.CRATEPRODUCT }
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val crateBuys = person.getDb().getTransactions(personId = person.id, buy = true)
+            .filter { it.product.species == Product.CRATEPRODUCT }
 
-        return crateBuys.find { buy -> buy.amount >= 2} != null
+        val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
+
+        if( doubleCreateBuy != null) return  doubleCreateBuy.time
+        return null
 
 //        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
 //        return  crateBuys.groupBy { it.time / 60000 }
@@ -142,19 +168,23 @@ class ReparatieBiertje :BaseAchievement(){
     override val name = "Reparatie Biertje"
     override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken.\n"
 
-    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
 
-        val drankEnoughDays = helpData.beerTurfTransactions.groupBy { it.toboTime.getZuipDay() }
-            .filter { entry -> entry.value.size > 10 }
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+
+        val drankEnoughDays = helpData.beerTurfTransactionsByPerson.groupBy { it.toboTime.getZuipDay() }
+            .filter { entry -> entry.value.amountOfProducts() > 10 }
             .map{ entry -> entry.value[0].toboTime}
 
-        val morningBeers = helpData.beerTurfTransactions.filter { it.toboTime.hour < 12 }
+        val morningBeers = helpData.beerTurfTransactionsByPerson.filter { it.toboTime.hour < 12 }
 
         for (drinkDay in drankEnoughDays){
-            val repair =morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
-            if(repair != null) return true
+            val repair = morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
+            if(repair != null) return repair.time
         }
-        return false
+        return null
     }
 
 }
@@ -164,18 +194,23 @@ class DoeHetVoorDeKoning : BaseAchievement() {
     override val name = "Doe het voor de koning"
     override val description = "Drink een biertje op koningsdag. Op Prins Pils!"
 
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
-        val kingsDayBeer = helpData.beerTurfTransactions
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
+
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val kingsDayBeer = helpData.beerTurfTransactionsByPerson
             .find { it.toboTime.dayOfMonth == 27 && it.toboTime.month == Calendar.APRIL}
 
-        return kingsDayBeer != null
+        if(kingsDayBeer != null) return kingsDayBeer.time
+        return null
     }
 
 }
 
 object AchievementManager {
 
-    fun getAchievements(): List<BaseAchievement>{
+    fun getAllAchievements(): List<BaseAchievement>{
         return listOf(
             PilsBaas(),
             ReparatieBiertje(),
@@ -187,26 +222,78 @@ object AchievementManager {
         )
     }
 
-    fun updateForPerson(person:Person){
-
-        for (a in getAchievements()) {
-            val turfTrans = person.realm.where(Transaction::class.java)
-                .equalTo("buy",false)
-                .equalTo("personId", person.id)
-                .findAll()
-
-            val beerTransactions = turfTrans
-                .filter { it.getProduct(person.realm).species == Product.BEERPRODUCT }
-
-            val helpData = AchievementUpdateHelpData(turfTrans,beerTransactions)
-
-            a.update(person,helpData)
-        }
+    /**
+     * Updates all achievements for a perseon. Returns a list of completions if new ones exist
+     */
+    fun updateAllForPerson(person:Person):List<AchievementCompletion>{
+        return updateForPerson(getAllAchievements(), person)
     }
+
+    private fun updateForPerson(achievementsToUpdate:List<BaseAchievement>, person:Person): List<AchievementCompletion> {
+        val completions = mutableListOf<AchievementCompletion>()
+
+        val helpData = AchievementUpdateHelpData(person)
+
+        for (a in achievementsToUpdate) {
+            val completion = a.update(person,helpData)
+            if(completion!= null){
+                completions.add(completion)
+            }
+        }
+        return completions.toList()
+    }
+
+    fun updateAchievementsAfterLaunch(person: Person): List<AchievementCompletion> {
+        return updateForPerson(getAllAchievements().filter { it.updateOnLaunch},person)
+    }
+
+    fun updateAchievementsAfterTurf(person: Person): List<AchievementCompletion> {
+        return updateForPerson(getAllAchievements().filter { it.updateOnTurf},person)
+    }
+
+    fun updateAchievementsAfterBuy(person: Person): List<AchievementCompletion> {
+       return updateForPerson(getAllAchievements().filter { it.updateOnBuy },person)
+    }
+
+    fun getAchievementForCompletion(completion: AchievementCompletion): BaseAchievement {
+        return getAllAchievements().find {completion.achievement == it.id}!!
+    }
+
+    fun checkAgainForPerson(person:Person): List<AchievementCompletion> {
+        val beforeIds = person.completions.map { it.achievement }
+
+        person.getDb().removeAllAchievementCompletionsForPerson(person)
+
+        //finds them back
+        val after = updateAllForPerson(person)
+        val afterIds = after.map { it.achievement }
+
+        //Minus does not work as expected on a list of achivementcompletions. Has something to do with equals i think.
+        //This works around that, just look for equal ids and then find the completion object back
+        val newIds = afterIds.minus(beforeIds)
+
+        return after.filter { newIds.contains(it.achievement) }
+    }
+
 }
 
-data class AchievementUpdateHelpData(
-    val turfTransactions:List<Transaction>,
-    val beerTurfTransactions:List<Transaction>
-)
+data class AchievementUpdateHelpData(private val person:Person){
+
+    val allTurfTrans by lazy {
+        person.getDb().getTransactions(buy = false)
+    }
+
+    val allBeerTurfTrans by lazy {
+        allTurfTrans.filter { it.product.species == Product.BEERPRODUCT }
+    }
+
+    val turfTransactionsByPerson by lazy {
+        allTurfTrans.filter { it.personId == person.id }
+    }
+
+    val beerTurfTransactionsByPerson by lazy {
+        allBeerTurfTrans.filter { it.personId == person.id }
+    }
+
+}
 

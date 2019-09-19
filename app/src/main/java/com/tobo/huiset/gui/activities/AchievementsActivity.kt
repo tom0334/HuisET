@@ -15,8 +15,6 @@ class AchievementsActivity : HuisEtActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_achievements)
-
-        db.findAllCurrentPersons(true).forEach { AchievementManager.updateForPerson(it) }
         setupRec()
     }
 
@@ -25,7 +23,7 @@ class AchievementsActivity : HuisEtActivity() {
         val persons = db.findAllCurrentPersons(true)
 
         val rec = findViewById<RecyclerView>(R.id.acievementsRec)
-        rec.adapter = AchievementsAdapter(AchievementManager.getAchievements(),persons, this)
+        rec.adapter = AchievementsAdapter(AchievementManager.getAllAchievements(),persons, this)
 
         val displayMetrics = resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density

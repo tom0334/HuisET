@@ -1,5 +1,8 @@
 package com.tobo.huiset.utils
 
+import com.tobo.huiset.achievements.AchievementManager
+import com.tobo.huiset.achievements.BaseAchievement
+import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
@@ -272,6 +275,31 @@ class HuisETDB(private val realm: Realm) {
 
     }
 
+    fun removeAllAchievementCompletionsForPerson(person: Person) {
+        realm.executeTransaction {
+            //removes all completions completely
+            person.completions.createSnapshot().forEach {
+                it.deleteFromRealm()
+            }
+            person.completions.clear()
+        }
+    }
+
+    fun deleteTransaction(trans: Transaction, person: Person) {
+        realm.executeSafe {
+            person.undoTransaction(trans)
+            trans.deleteFromRealm()
+        }
+    }
+
+    fun createAndSaveAchievementCompletion(achievement: BaseAchievement,completionTimeStamp: Long,person: Person) : AchievementCompletion{
+        realm.beginTransaction()
+        val comp = AchievementCompletion.create(achievement.id,completionTimeStamp,person.id)
+        realm.copyToRealm(comp)
+        person.addAchievement(comp)
+        realm.commitTransaction()
+        return comp
+    }
 
 
 }
