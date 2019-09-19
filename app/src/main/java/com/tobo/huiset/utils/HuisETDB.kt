@@ -273,6 +273,15 @@ class HuisETDB(private val realm: Realm) {
 
     }
 
+    fun removeAllAchievementCompletionsForPerson(person: Person) {
+        realm.executeTransaction {
+            //removes all completions completely
+            person.completions.createSnapshot().forEach {
+                it.deleteFromRealm()
+            }
+            person.completions.clear()
+        }
+    }
 
 
 }

@@ -5,6 +5,7 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ToboTime
+import com.tobo.huiset.utils.extensions.getDb
 import java.util.*
 
 
@@ -147,13 +148,8 @@ class GroteBoodschap: BaseAchievement(){
     override val updateOnLaunch = false
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val realm = person.realm
-
-        val crateBuys = realm.where(Transaction::class.java)
-            .equalTo("personId", person.id)
-            .equalTo("buy",true)
-            .findAll()
-            .filter { it.getProduct(realm).species == Product.CRATEPRODUCT }
+        val crateBuys = person.getDb().getTransactions(personId = person.id, buy = true)
+            .filter { it.getProduct(person.realm).species == Product.CRATEPRODUCT }
 
         val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
 
@@ -264,16 +260,9 @@ object AchievementManager {
     }
 
     fun checkAgainForPerson(person:Person): List<AchievementCompletion> {
-        val realm = person.realm
         val beforeIds = person.completions.map { it.achievement }
 
-        realm.executeTransaction {
-            //removes all completions completely
-            person.completions.createSnapshot().forEach {
-                it.deleteFromRealm()
-            }
-            person.completions.clear()
-        }
+        person.getDb().removeAllAchievementCompletionsForPerson(person)
 
         //finds them back
         val after = updateAllForPerson(person)
@@ -291,9 +280,7 @@ object AchievementManager {
 data class AchievementUpdateHelpData(private val person:Person){
 
     val allTurfTrans by lazy {
-        person.realm.where(Transaction::class.java)
-            .equalTo("buy", false)
-            .findAll()
+        person.getDb().getTransactions(buy = true)
     }
 
     val allBeerTurfTrans by lazy {
