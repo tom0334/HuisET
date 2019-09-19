@@ -153,13 +153,13 @@ class ReparatieBiertje :BaseAchievement(){
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
         val drankEnoughDays = helpData.beerTurfTransactionsByPerson.groupBy { it.toboTime.getZuipDay() }
-            .filter { entry -> entry.value.size > 10 }
+            .filter { entry -> entry.value.amountOfProducts() > 10 }
             .map{ entry -> entry.value[0].toboTime}
 
         val morningBeers = helpData.beerTurfTransactionsByPerson.filter { it.toboTime.hour < 12 }
 
         for (drinkDay in drankEnoughDays){
-            val repair =morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
+            val repair = morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
             if(repair != null) return repair.time
         }
         return null
