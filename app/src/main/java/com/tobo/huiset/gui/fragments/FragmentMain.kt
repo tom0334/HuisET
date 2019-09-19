@@ -18,6 +18,7 @@ import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
 import com.tobo.huiset.gui.adapters.TurfRecAdapter
+import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
@@ -136,8 +137,16 @@ class FragmentMain : HuisEtFragment() {
                 person.undoTransaction(trans)
                 trans.deleteFromRealm()
             }
-            val added = AchievementManager.checkAgainForPerson(person)
+
+            //When removing transactions, it can happen that some achievements should not have been completed.
+            //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
+            //Keep track of what achievements were added, and show that in the activity
+            val added = mutableListOf<AchievementCompletion>()
+            db.findAllCurrentPersons(true).forEach {
+                added.addAll(AchievementManager.checkAgainForPerson(person))
+            }
             (this.activity as CelebratingHuisEtActivity).showAchievements(added)
+
         }
 
 
@@ -146,10 +155,7 @@ class FragmentMain : HuisEtFragment() {
         transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true, onDeleteClicked)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
         transActionRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
-
-
-
-
+        
 
         //init the periodic refresh
         transactionTimeRefreshHandler = Handler()
