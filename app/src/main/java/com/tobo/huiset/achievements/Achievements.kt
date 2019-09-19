@@ -280,7 +280,7 @@ object AchievementManager {
 data class AchievementUpdateHelpData(private val person:Person){
 
     val allTurfTrans by lazy {
-        person.getDb().getTransactions(buy = true)
+        person.getDb().getTransactions(buy = false)
     }
 
     val allBeerTurfTrans by lazy {
