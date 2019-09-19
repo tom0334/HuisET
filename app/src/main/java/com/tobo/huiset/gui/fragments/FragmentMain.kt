@@ -155,7 +155,7 @@ class FragmentMain : HuisEtFragment() {
         transActionRec.adapter = TransactionRecAdapter(this.context!!, transactions, amountRec, realm, true, onDeleteClicked)
         transActionRec.layoutManager = LinearLayoutManager(this.context)
         transActionRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
-        
+
 
         //init the periodic refresh
         transactionTimeRefreshHandler = Handler()

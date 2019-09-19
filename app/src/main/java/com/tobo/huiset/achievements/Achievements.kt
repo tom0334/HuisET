@@ -5,7 +5,6 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ToboTime
-import io.realm.Realm
 import java.util.*
 
 
@@ -233,7 +232,7 @@ object AchievementManager {
 
     fun checkAgainForPerson(person:Person): List<AchievementCompletion> {
         val realm = person.realm
-        val before = person.completions.map { realm.copyFromRealm(it)  }
+        val beforeIds = person.completions.map { it.achievement }
 
         realm.executeTransaction {
             //removes all completions completely
@@ -245,8 +244,13 @@ object AchievementManager {
 
         //finds them back
         val after = updateForPerson(person)
+        val afterIds = after.map { it.achievement }
 
-        return after.minus(before)
+        //Minus does not work as expected on a list of achivementcompletions. Has something to do with equals i think.
+        //This works around that, just look for equal ids and then find the completion object back
+        val newIds = afterIds.minus(beforeIds)
+
+        return after.filter { newIds.contains(it.achievement) }
     }
 
 }
