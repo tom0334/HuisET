@@ -32,6 +32,7 @@ class TransferPersonRecAdapter(
 ) : RealmRecyclerViewAdapter<Person, TransferPersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
     private val chosenMap: MutableMap<String, Boolean> = mutableMapOf()
+        get() = field
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.person_transfer_rec_item, parent, false)

@@ -7,13 +7,13 @@
         android:orientation="vertical">
 
     <LinearLayout
-            android:id="@+id/MTpurchasesContentView"
+            android:id="@+id/MTtransferContentView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
         <RelativeLayout
-                android:id="@+id/MTpickUserLayout"
+                android:id="@+id/MTpickUsersLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="6dp"
-                        android:text="Opslaan"
+                        android:text="Bereken"
                         android:textSize="20sp"
                         android:shadowColor="#FFFFFF"
                         app:backgroundTint="@color/primaryColor"
@@ -83,7 +83,7 @@
 
 
         <RelativeLayout
-                android:id="@+id/MTpickProductLayout"
+                android:id="@+id/MTcalculationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone">
