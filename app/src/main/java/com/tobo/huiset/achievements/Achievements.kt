@@ -46,7 +46,7 @@ class PilsBaas : BaseAchievement() {
             .groupBy {it.toboTime.toboDay}
 
         // a map entry for each day. Find one that meets our needs
-        val goodDayEntry = maxBeerOnADay.entries.find { it.value.size >= 10 }
+        val goodDayEntry = maxBeerOnADay.entries.find { it.value.amountOfProducts() >= 10}
 
         if(goodDayEntry != null) return goodDayEntry.value.last().time
         return null
