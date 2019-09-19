@@ -41,7 +41,7 @@ class PilsBaas : BaseAchievement() {
     override val description = "Drink 10 of meer pils op een dag"
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
-        val maxBeerOnADay = helpData.beerTurfTransactions
+        val maxBeerOnADay = helpData.beerTurfTransactionsByPerson
             .groupBy {
                 SimpleDateFormat("yyyy-MM-dd").format(Date(it.time))
             }
@@ -59,7 +59,7 @@ class Nice : BaseAchievement() {
     override val name = "Nice"
     override val description = "Drink 69 bier."
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val totalBeer = helpData.beerTurfTransactions.amountOfProducts()
+        val totalBeer = helpData.beerTurfTransactionsByPerson.amountOfProducts()
         if(totalBeer >= 69) return System.currentTimeMillis()
         return null
     }
@@ -74,7 +74,7 @@ class CollegeWinnaar : BaseAchievement(){
         val sixOClock = ToboTime(6, 0, 0)
         val collegeStartTime = ToboTime(8, 45, 0)
 
-        val collegeBeers = helpData.beerTurfTransactions
+        val collegeBeers = helpData.beerTurfTransactionsByPerson
             .filter { it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(sixOClock,collegeStartTime)}
 
         if(collegeBeers.isNotEmpty()) return System.currentTimeMillis()
@@ -89,7 +89,7 @@ class MVP: BaseAchievement() {
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
-        val perDay = helpData.beerTurfTransactions
+        val perDay = helpData.AllBeerTurfTransactions
             .filter { it.toboTime.zuipDayHasEnded() } // this achievement can only be decided if the day has ended
             .groupBy { it.toboTime.getZuipDay() }
 
@@ -112,7 +112,7 @@ class MVP: BaseAchievement() {
             if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
 
             //return the last
-            if (amount > 5) transactionsOnDay.last().time
+            if (amount > 5) return transactionsOnDay.last().time
         }
         return null
     }
@@ -149,11 +149,11 @@ class ReparatieBiertje :BaseAchievement(){
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
-        val drankEnoughDays = helpData.beerTurfTransactions.groupBy { it.toboTime.getZuipDay() }
+        val drankEnoughDays = helpData.beerTurfTransactionsByPerson.groupBy { it.toboTime.getZuipDay() }
             .filter { entry -> entry.value.size > 10 }
             .map{ entry -> entry.value[0].toboTime}
 
-        val morningBeers = helpData.beerTurfTransactions.filter { it.toboTime.hour < 12 }
+        val morningBeers = helpData.beerTurfTransactionsByPerson.filter { it.toboTime.hour < 12 }
 
         for (drinkDay in drankEnoughDays){
             val repair =morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
@@ -170,7 +170,7 @@ class DoeHetVoorDeKoning : BaseAchievement() {
     override val description = "Drink een biertje op koningsdag. Op Prins Pils!"
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val kingsDayBeer = helpData.beerTurfTransactions
+        val kingsDayBeer = helpData.beerTurfTransactionsByPerson
             .find { it.toboTime.dayOfMonth == 27 && it.toboTime.month == Calendar.APRIL}
 
         if(kingsDayBeer != null) return System.currentTimeMillis()
@@ -196,15 +196,19 @@ object AchievementManager {
     fun updateForPerson(person:Person){
 
         for (a in getAchievements()) {
-            val turfTrans = person.realm.where(Transaction::class.java)
+            val allTurfTrans = person.realm.where(Transaction::class.java)
                 .equalTo("buy",false)
-                .equalTo("personId", person.id)
                 .findAll()
 
-            val beerTransactions = turfTrans
+            val allBeerTrans = allTurfTrans
                 .filter { it.getProduct(person.realm).species == Product.BEERPRODUCT }
 
-            val helpData = AchievementUpdateHelpData(turfTrans,beerTransactions)
+            val helpData = AchievementUpdateHelpData(
+                allTurfTransactions = allTurfTrans,
+                AllBeerTurfTransactions = allBeerTrans,
+                turfTransactionsByPerson = allTurfTrans.filter { it.personId == person.id },
+                beerTurfTransactionsByPerson = allBeerTrans.filter { it.personId == person.id }
+            )
 
             a.update(person,helpData)
         }
@@ -212,7 +216,9 @@ object AchievementManager {
 }
 
 data class AchievementUpdateHelpData(
-    val turfTransactions:List<Transaction>,
-    val beerTurfTransactions:List<Transaction>
+    val allTurfTransactions:List<Transaction>,
+    val AllBeerTurfTransactions:List<Transaction>,
+    val turfTransactionsByPerson:List<Transaction>,
+    val beerTurfTransactionsByPerson:List<Transaction>
 )
 
