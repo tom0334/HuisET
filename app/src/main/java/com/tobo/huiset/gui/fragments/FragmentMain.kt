@@ -188,7 +188,7 @@ class FragmentMain : HuisEtFragment() {
                 val changed = AchievementManager.updateAchievementsAfterTurf(person)
                 (activity as MainActivity).showAchievements(changed)
 
-                if(changed.size >0 && showConfettiOnTurf){
+                if(changed.isEmpty() && showConfettiOnTurf){
                     (activity as MainActivity).showTurfConfetti()
                 }
 
