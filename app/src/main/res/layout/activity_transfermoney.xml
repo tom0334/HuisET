@@ -12,7 +12,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
                 android:id="@+id/MTpickUserLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -22,6 +22,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/primaryDarkColor"
+                    android:id="@+id/MTwhoDoYouWantText"
                     android:fontFamily="sans-serif-medium"
                     android:paddingLeft="16sp"
                     android:paddingTop="32sp"
@@ -34,9 +35,51 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/MTpickUserRec"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/MTwhoDoYouWantText"
+                    android:layout_above="@id/MTselectedLinearBottomTransfer"/>
 
-        </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/MTselectedLinearBottomTransfer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    >
+
+                <View
+                        android:id="@+id/MTselectedPersonsDividerLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/primaryColor"
+                        />
+
+                <TextView
+                        android:id="@+id/MTselectedPersonsCounter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="Totaal: "
+                        android:paddingBottom="4dp"
+                        android:paddingTop="8dp"
+                        android:gravity="center_horizontal"
+                        />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/MTselectedPersonsSaveButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:text="Opslaan"
+                        android:textSize="20sp"
+                        android:shadowColor="#FFFFFF"
+                        app:backgroundTint="@color/primaryColor"
+                        />
+            </LinearLayout>
+
+        </RelativeLayout>
 
 
         <RelativeLayout

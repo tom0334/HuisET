@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
+import com.tobo.huiset.gui.activities.TransferMoneyActivity
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.getBalanceColorString
 import com.tobo.huiset.utils.extensions.setTextColorFromHex
@@ -23,6 +24,7 @@ import io.realm.RealmResults
  *
  */
 class TransferPersonRecAdapter(
+    private val transferMoneyActivity: TransferMoneyActivity,
     val context: Context,
     val realm: Realm,
     data: RealmResults<Person>?,
@@ -54,6 +56,7 @@ class TransferPersonRecAdapter(
 
         holder.itemView.setOnClickListener {
             chosenMap[person.id] = !getFromMap(person.id)
+            transferMoneyActivity.increaseCounter(getFromMap(person.id))
             notifyItemChanged(position)
         }
     }
