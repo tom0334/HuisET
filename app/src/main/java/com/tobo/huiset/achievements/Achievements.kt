@@ -39,7 +39,7 @@ class PilsBaas : BaseAchievement() {
     override val id = A_PILSBAAS
     override val name = "Pilsbaas"
     override val description = "Drink 10 of meer pils op een dag"
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
         val maxBeerOnADay = helpData.beerTurfTransactions
             .groupBy {
@@ -47,8 +47,10 @@ class PilsBaas : BaseAchievement() {
             }
             .values.map { it.amountOfProducts() }.max()
 
-        return maxBeerOnADay != null && maxBeerOnADay > 8
-
+        if(maxBeerOnADay != null && maxBeerOnADay > 8){
+            return System.currentTimeMillis()
+        }
+        return null
     }
 }
 
@@ -56,9 +58,10 @@ class Nice : BaseAchievement() {
     override val id = A_NICE
     override val name = "Nice"
     override val description = "Drink 69 bier."
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val totalBeer = helpData.beerTurfTransactions.amountOfProducts()
-        return totalBeer >= 69
+        if(totalBeer >= 69) return System.currentTimeMillis()
+        return null
     }
 }
 
@@ -67,16 +70,16 @@ class CollegeWinnaar : BaseAchievement(){
     override val name = "Collegewinnaar"
     override val description = "Drink een biertje op een doordeweekse dag voor 8:45. Telt vanaf 6 uur s'ochtends."
 
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val sixOClock = ToboTime(6, 0, 0)
         val collegeStartTime = ToboTime(8, 45, 0)
 
         val collegeBeers = helpData.beerTurfTransactions
             .filter { it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(sixOClock,collegeStartTime)}
 
-        return collegeBeers.isNotEmpty()
+        if(collegeBeers.isNotEmpty()) return System.currentTimeMillis()
+        return null
     }
-
 }
 
 class MVP: BaseAchievement() {
@@ -84,7 +87,7 @@ class MVP: BaseAchievement() {
     override val name = "MVP (Most Valuable Pilser"
     override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
 
-    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
         val perDay = helpData.beerTurfTransactions
             .filter { it.toboTime.zuipDayHasEnded() } // this achievement can only be decided if the day has ended
@@ -108,9 +111,10 @@ class MVP: BaseAchievement() {
             //its a tie! There are multiple people that drank the same amount. No winner then.
             if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
 
-            if (amount > 5) return true
+            //return the last
+            if (amount > 5) transactionsOnDay.last().time
         }
-        return false
+        return null
     }
 }
 
@@ -119,7 +123,7 @@ class GroteBoodschap: BaseAchievement(){
     override val name = "Grote boodschap"
     override val description ="Koop 2 kratjes in een keer in. Haha nummer 2."
 
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val realm = person.realm
 
         val crateBuys = realm.where(Transaction::class.java)
@@ -128,7 +132,8 @@ class GroteBoodschap: BaseAchievement(){
             .findAll()
             .filter { it.getProduct(realm).species == Product.CRATEPRODUCT }
 
-        return crateBuys.find { buy -> buy.amount >= 2} != null
+        if( crateBuys.any { buy -> buy.amount >= 2}) return System.currentTimeMillis()
+        return null
 
 //        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
 //        return  crateBuys.groupBy { it.time / 60000 }
@@ -142,7 +147,7 @@ class ReparatieBiertje :BaseAchievement(){
     override val name = "Reparatie Biertje"
     override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken.\n"
 
-    override fun isAchievedNow(person: Person,helpData: AchievementUpdateHelpData): Boolean {
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
         val drankEnoughDays = helpData.beerTurfTransactions.groupBy { it.toboTime.getZuipDay() }
             .filter { entry -> entry.value.size > 10 }
@@ -152,9 +157,9 @@ class ReparatieBiertje :BaseAchievement(){
 
         for (drinkDay in drankEnoughDays){
             val repair =morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
-            if(repair != null) return true
+            if(repair != null) return System.currentTimeMillis()
         }
-        return false
+        return null
     }
 
 }
@@ -164,11 +169,12 @@ class DoeHetVoorDeKoning : BaseAchievement() {
     override val name = "Doe het voor de koning"
     override val description = "Drink een biertje op koningsdag. Op Prins Pils!"
 
-    override fun isAchievedNow(person: Person, helpData: AchievementUpdateHelpData): Boolean {
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val kingsDayBeer = helpData.beerTurfTransactions
             .find { it.toboTime.dayOfMonth == 27 && it.toboTime.month == Calendar.APRIL}
 
-        return kingsDayBeer != null
+        if(kingsDayBeer != null) return System.currentTimeMillis()
+        return null
     }
 
 }
