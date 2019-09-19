@@ -33,6 +33,7 @@ class FragmentProfiles : HuisEtFragment() {
         val rec = view?.findViewById<RecyclerView>(R.id.profilesTabRec)
         if (rec != null) {
             ItemClickSupport.removeFrom(rec)
+            ItemDoubleClickSupport.removeFrom(rec)
         }
     }
 
