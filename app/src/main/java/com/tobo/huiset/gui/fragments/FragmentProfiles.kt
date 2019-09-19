@@ -12,7 +12,8 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProfileActivity
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.utils.ItemClickSupport
-import io.realm.Sort
+import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.utils.ItemDoubleClickSupport
 
 
 /**
@@ -63,13 +64,32 @@ class FragmentProfiles : HuisEtFragment() {
             startActivity(intent)
         }
 
-        // opens EditProfileActivity on the correct profile if a profile is clicked
-        ItemClickSupport.addTo(rec).setOnItemClickListener { _, position, _ ->
+        /*ItemClickSupport.addTo(rec).setOnItemClickListener { _, position, _ ->
             val person = persons[position]
             val intent = Intent(this.activity, EditProfileActivity::class.java)
                 .putExtra("PERSON_ID", person?.id)
             startActivity(intent)
-        }
+        }*/
+
+        // opens EditProfileActivity on the correct profile if a profile is clicked
+        ItemDoubleClickSupport.addTo(rec)
+            .setOnItemClickListener(object : ItemDoubleClickSupport.OnItemClickListener {
+                override fun onItemClicked(recyclerView: RecyclerView, position: Int, v: View) {
+                    val person = persons[position]
+                    val intent = Intent(activity, EditProfileActivity::class.java)
+                        .putExtra("PERSON_ID", person?.id)
+                    startActivity(intent)
+                }
+
+                override fun onItemDoubleClicked(recyclerView: RecyclerView, position: Int, v: View) {
+                    val person = persons[position] as Person
+                    val prevShow = person.show
+
+                    realm.executeTransaction {
+                        person.show = !prevShow
+                    }
+                }
+            })
 
     }
 
