@@ -113,7 +113,7 @@ class EditProfileActivity : HuisEtActivity() {
         val showBool = (radioShowGroup == R.id.radioShowPerson)
 
         db.updateProfileRows()
-        val row = db.findAllCurrentPersons().size
+        val row = db.findAllCurrentPersons(true).size
 
         realm.executeTransaction {
             if (new) {

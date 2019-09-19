@@ -22,7 +22,7 @@ class AchievementsActivity : HuisEtActivity() {
 
 
     private fun setupRec(){
-        val persons = db.findAllCurrentPersons(includeHidden = false)
+        val persons = db.findAllCurrentPersons(true)
 
         val rec = findViewById<RecyclerView>(R.id.acievementsRec)
         rec.adapter = AchievementsAdapter(AchievementManager.getAchievements(),persons, this)
