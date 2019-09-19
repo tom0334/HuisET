@@ -5,7 +5,6 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ToboTime
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -43,14 +42,12 @@ class PilsBaas : BaseAchievement() {
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
         val maxBeerOnADay = helpData.beerTurfTransactionsByPerson
-            .groupBy {
-                SimpleDateFormat("yyyy-MM-dd").format(Date(it.time))
-            }
-            .values.map { it.amountOfProducts() }.max()
+            .groupBy {it.toboTime.toboDay}
 
-        if(maxBeerOnADay != null && maxBeerOnADay > 8){
-            return System.currentTimeMillis()
-        }
+        // a map entry for each day. Find one that meets our needs
+        val goodDayEntry = maxBeerOnADay.entries.find { it.value.size >= 10 }
+
+        if(goodDayEntry != null) return goodDayEntry.value.last().time
         return null
     }
 }
@@ -60,8 +57,11 @@ class Nice : BaseAchievement() {
     override val name = "Nice"
     override val description = "Drink 69 bier."
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val totalBeer = helpData.beerTurfTransactionsByPerson.amountOfProducts()
-        if(totalBeer >= 69) return System.currentTimeMillis()
+        var count = 0
+        for (t in helpData.beerTurfTransactionsByPerson){
+            count+= t.amount
+            if(count>= 69 ) return t.time
+        }
         return null
     }
 }
@@ -75,10 +75,10 @@ class CollegeWinnaar : BaseAchievement(){
         val sixOClock = ToboTime(6, 0, 0)
         val collegeStartTime = ToboTime(8, 45, 0)
 
-        val collegeBeers = helpData.beerTurfTransactionsByPerson
-            .filter { it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(sixOClock,collegeStartTime)}
+        val collegeBeer = helpData.beerTurfTransactionsByPerson
+            .find{ it.toboTime.isWeekDay() && it.toboTime.timeOfDayBetween(sixOClock,collegeStartTime)}
 
-        if(collegeBeers.isNotEmpty()) return System.currentTimeMillis()
+        if(collegeBeer!= null) return collegeBeer.time
         return null
     }
 }
@@ -133,7 +133,9 @@ class GroteBoodschap: BaseAchievement(){
             .findAll()
             .filter { it.getProduct(realm).species == Product.CRATEPRODUCT }
 
-        if( crateBuys.any { buy -> buy.amount >= 2}) return System.currentTimeMillis()
+        val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
+
+        if( doubleCreateBuy != null) return  doubleCreateBuy.time
         return null
 
 //        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
@@ -158,7 +160,7 @@ class ReparatieBiertje :BaseAchievement(){
 
         for (drinkDay in drankEnoughDays){
             val repair =morningBeers.find { mb ->  mb.toboTime.is1DayLaterThan(drinkDay)  }
-            if(repair != null) return System.currentTimeMillis()
+            if(repair != null) return repair.time
         }
         return null
     }
@@ -174,7 +176,7 @@ class DoeHetVoorDeKoning : BaseAchievement() {
         val kingsDayBeer = helpData.beerTurfTransactionsByPerson
             .find { it.toboTime.dayOfMonth == 27 && it.toboTime.month == Calendar.APRIL}
 
-        if(kingsDayBeer != null) return System.currentTimeMillis()
+        if(kingsDayBeer != null) return kingsDayBeer.time
         return null
     }
 
