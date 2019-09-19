@@ -1,4 +1,3 @@
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
@@ -10,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
+import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.MainActivity
 import com.tobo.huiset.gui.activities.PREFS_TURF_CONFETTI_ID
@@ -162,6 +162,13 @@ class FragmentMain : HuisEtFragment() {
             if (person != null) {
 
                 db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
+                val changed = AchievementManager.updateForPerson(person)
+                (activity as MainActivity).showAchievements(changed)
+
+                if(changed.size >0 && showConfettiOnTurf){
+                    (activity as MainActivity).showTurfConfetti()
+                }
+
                 db.selectFirstTurfProduct()
 
                 amountAdapter.resetAmountToFirst()
@@ -170,9 +177,6 @@ class FragmentMain : HuisEtFragment() {
                 transitionRec.scrollToPosition(0)
                 mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable,30 * 1000)
 
-            }
-            if(showConfettiOnTurf){
-                (activity as MainActivity).showConfetti()
             }
         }
     }

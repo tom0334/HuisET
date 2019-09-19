@@ -1,5 +1,6 @@
 package com.tobo.huiset.utils
 
+import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction

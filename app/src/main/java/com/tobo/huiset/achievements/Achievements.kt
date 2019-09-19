@@ -223,6 +223,10 @@ object AchievementManager {
         }
         return completions.toList()
     }
+
+    fun getAchievementForCompletion(completion: AchievementCompletion): BaseAchievement {
+        return getAchievements().find {completion.achievement == it.id}!!
+    }
 }
 
 data class AchievementUpdateHelpData(
