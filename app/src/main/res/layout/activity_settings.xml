@@ -1,85 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".gui.activities.SettingsActivity">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".gui.activities.SettingsActivity">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_margin="16dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="horizontal">
 
                 <TextView
-                    android:textSize="16sp"
-                    android:textColor="@color/primaryTextColor"
-                    android:id="@+id/fullScreenSettingText"
-                    android:layout_alignParentLeft="true"
-                    android:text="Fullscreen mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                        android:id="@+id/fullScreenSettingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Fullscreen mode"
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="16sp" />
 
                 <TextView
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="2dp"
-                    android:id="@+id/fullScreenSettingExplain"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@id/fullScreenSettingText"
-                    android:text="Verbergt de statusbar en de knoppenbalk onder aan uw scherm(home, terug en recents)."
-                    android:layout_width="wrap_content"
-                    android:layout_toLeftOf="@id/fullScreenSwitch"
-                    android:layout_height="wrap_content" />
+                        android:id="@+id/fullScreenSettingExplain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/fullScreenSettingText"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@id/fullScreenSwitch"
+                        android:text="Verbergt de statusbar en de knoppenbalk onder aan uw scherm(home, terug en recents)." />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/fullScreenSwitch"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                        android:id="@+id/fullScreenSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_margin="16dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:id="@+id/hideAppBarSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="horizontal">
 
                 <TextView
-                    android:textSize="16sp"
-                    android:textColor="@color/primaryTextColor"
-                    android:id="@+id/hideAppBarSettingText"
-                    android:layout_alignParentLeft="true"
-                    android:text="Verberg ook app balk in fullscreen mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                        android:id="@+id/hideAppBarSettingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Verberg ook app balk in fullscreen mode"
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="16sp" />
 
                 <TextView
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="2dp"
-                    android:id="@+id/hideAppBarSettingExplain"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@id/hideAppBarSettingText"
-                    android:text="Verbergt naast de statusbalk en de navigatiebalk ook de bovenste app balk. Veeg omlaag om weer te zien."
-                    android:layout_width="wrap_content"
-                    android:layout_toLeftOf="@id/hideAppBarSwitch"
-                    android:layout_height="wrap_content" />
+                        android:id="@+id/hideAppBarSettingExplain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/hideAppBarSettingText"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@id/hideAppBarSwitch"
+                        android:text="Verbergt naast de statusbalk en de navigatiebalk ook de bovenste app balk. Veeg omlaag om weer te zien." />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/hideAppBarSwitch"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                        android:id="@+id/hideAppBarSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
             </RelativeLayout>
 
 
