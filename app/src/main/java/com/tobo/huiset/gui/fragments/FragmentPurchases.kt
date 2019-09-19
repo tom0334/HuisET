@@ -92,6 +92,7 @@ class FragmentPurchases : HuisEtFragment() {
             }
             Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
             setPersonAndUpdate(null)
+            db.mergeTransactionsIfPossible(System.currentTimeMillis())
             val changes = AchievementManager.updateAchievementsAfterBuy(person)
             (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
 
