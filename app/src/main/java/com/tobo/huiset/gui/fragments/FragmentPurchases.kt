@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
+import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
@@ -91,7 +92,8 @@ class FragmentPurchases : HuisEtFragment() {
             }
             Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
             setPersonAndUpdate(null)
-            AchievementManager.updateAchievementsAfterBuy(person)
+            val changes = AchievementManager.updateAchievementsAfterBuy(person)
+            (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
 
 
         }
