@@ -1,5 +1,7 @@
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.MainActivity
+import com.tobo.huiset.gui.activities.PREFS_TURF_CONFETTI_ID
 import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
@@ -31,6 +34,8 @@ class FragmentMain : HuisEtFragment() {
     private var transactionTimeRefreshHandler: Handler? = null
 
     private var mergeTransactionsHandler:Handler = Handler()
+
+    private val showConfettiOnTurf by lazy{ PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(PREFS_TURF_CONFETTI_ID,false)}
 
     private val updateTransactionRecRunnable = object : Runnable {
         override fun run() {
@@ -166,7 +171,9 @@ class FragmentMain : HuisEtFragment() {
                 mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable,30 * 1000)
 
             }
-            (activity as MainActivity).showConfetti()
+            if(showConfettiOnTurf){
+                (activity as MainActivity).showConfetti()
+            }
         }
     }
 

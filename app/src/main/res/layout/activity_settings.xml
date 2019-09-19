@@ -84,6 +84,41 @@
             </RelativeLayout>
 
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/confettiSettingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Confetti"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/confettiSettingExplain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/confettiSettingText"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@id/turfConfettiSwitch"
+                    android:text="Vier dat u een drankje turft met confetti!" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/turfConfettiSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+
         </LinearLayout>
 
     </ScrollView>
