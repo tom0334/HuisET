@@ -185,7 +185,7 @@ class FragmentMain : HuisEtFragment() {
             if (person != null) {
 
                 db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
-                val changed = AchievementManager.updateForPerson(person)
+                val changed = AchievementManager.updateAchievementsAfterTurf(person)
                 (activity as MainActivity).showAchievements(changed)
 
                 if(changed.size >0 && showConfettiOnTurf){

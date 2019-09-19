@@ -17,8 +17,10 @@ import android.view.MotionEvent
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
+import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.realmModels.AchievementCompletion
 import nl.dionsegijn.konfetti.KonfettiView
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
@@ -62,7 +64,17 @@ class MainActivity : CelebratingHuisEtActivity() {
     override fun onPause() {
         super.onPause()
         systemUIHandler.removeCallbacks(null)
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        val changes = mutableListOf<AchievementCompletion>()
+        db.findAllCurrentPersons(true).forEach {
+            val new = AchievementManager.updateAchievementsAfterLaunch(it)
+            changes.addAll(new)
+        }
+        showAchievements(changes)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
