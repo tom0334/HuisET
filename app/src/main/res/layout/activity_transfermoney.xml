@@ -1,15 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".gui.activities.SettingsActivity"
-        android:background="@color/primaryLightColor">
+        android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
+            android:id="@+id/MTpurchasesContentView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/transfermoneytekstje"
-            android:text="transfer money broer" />
+            android:orientation="vertical">
 
-</LinearLayout>
+        <LinearLayout
+                android:id="@+id/MTpickUserLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primaryDarkColor"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingLeft="16sp"
+                    android:paddingTop="32sp"
+                    android:paddingRight="16sp"
+                    android:paddingBottom="32sp"
+                    android:text="Wie wil je afrekenen?"
+                    android:textColor="#fff"
+                    android:textSize="30sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/MTpickUserRec"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+                android:id="@+id/MTpickProductLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+            <TextView
+                    android:id="@+id/MTwhatHaveYouBoughtText"
+                    android:layout_alignParentTop="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/secondaryColor"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingLeft="16sp"
+                    android:paddingTop="32sp"
+                    android:paddingRight="16sp"
+                    android:paddingBottom="32sp"
+                    android:text="Wat heb je gekocht?"
+                    android:textColor="#000"
+                    android:textSize="30sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/MTpickProductsRec"
+                    android:layout_below="@id/MTwhatHaveYouBoughtText"
+                    android:layout_above="@id/MTlinearBottomPurch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            <LinearLayout
+                    android:id="@+id/MTlinearBottomPurch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    >
+
+                <View
+                        android:id="@+id/MTpurchaseDividerLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/primaryColor"
+                        />
+
+                <TextView
+                        android:id="@+id/MTpurchaseMoneyCounter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="Totaal: "
+                        android:paddingBottom="4dp"
+                        android:paddingTop="8dp"
+                        android:gravity="center_horizontal"
+                        />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/MTpurchaseSaveButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:text="Opslaan"
+                        android:textSize="20sp"
+                        android:shadowColor="#FFFFFF"
+                        app:backgroundTint="@color/primaryColor"
+                        />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

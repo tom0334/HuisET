@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
 
-              android:layout_margin="16dp"
-              android:layout_gravity="center_horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="40dp"
->
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        >
 
     <View
-        android:layout_gravity="center_vertical"
-        android:id="@+id/personRec_item_color"
-        android:layout_marginRight="8dp"
-        android:layout_width="4dp"
-        android:layout_height="16dp"/>
+            android:layout_gravity="center_vertical"
+            android:id="@+id/MTpersonRec_item_color"
+            android:layout_marginRight="8dp"
+            android:layout_width="4dp"
+            android:layout_height="16dp"/>
 
 
     <TextView
-            android:id="@+id/personRecItem_name"
+            android:id="@+id/MTpersonRecItem_name"
             android:fontFamily="sans-serif-medium"
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             tools:text="Bobbert"
-    />
+            />
 
 
     <View
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-    />
+            />
 
 
     <TextView
-            android:id="@+id/personRecItem_balance"
+            android:id="@+id/MTpersonRecItem_balance"
             android:gravity="center_vertical"
             tools:text ="€4.00"
             android:layout_width="wrap_content"
