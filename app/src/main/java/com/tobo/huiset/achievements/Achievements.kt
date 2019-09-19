@@ -149,7 +149,7 @@ class GroteBoodschap: BaseAchievement(){
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val crateBuys = person.getDb().getTransactions(personId = person.id, buy = true)
-            .filter { it.getProduct(person.realm).species == Product.CRATEPRODUCT }
+            .filter { it.product.species == Product.CRATEPRODUCT }
 
         val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
 
@@ -284,7 +284,7 @@ data class AchievementUpdateHelpData(private val person:Person){
     }
 
     val allBeerTurfTrans by lazy {
-        allTurfTrans.filter { it.getProduct(person.realm).species == Product.BEERPRODUCT }
+        allTurfTrans.filter { it.product.species == Product.BEERPRODUCT }
     }
 
     val turfTransactionsByPerson by lazy {

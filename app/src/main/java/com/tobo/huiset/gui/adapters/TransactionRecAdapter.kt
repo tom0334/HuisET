@@ -45,7 +45,7 @@ class TransactionRecAdapter(
 
         holder.nameTv.text = person?.name
         holder.timeAgo.text = trans.time.toTimeAgoString(includeNewLine = true)
-        holder.productTv.text = "${trans.amount} ${trans.getProduct(realmInstance).name}"
+        holder.productTv.text = "${trans.amount} ${trans.product.name}"
         if (trans.isBuy) {
             holder.priceTv.text = "+ ${trans.price.toCurrencyString()} (gekocht)"
             holder.priceTv.setTextColorFromHex((1).getBalanceColorString())
