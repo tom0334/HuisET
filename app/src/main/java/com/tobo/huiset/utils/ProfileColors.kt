@@ -21,7 +21,7 @@ object ProfileColors{
     )
 
     fun getNextColor(db:HuisETDB): String{
-        val usedColors = db.findAllCurrentPersons().map { it.color }
+        val usedColors = db.findAllCurrentPersons(true).map { it.color }
         val unused = PROFILECOLORS.toList().minus(usedColors)
         if(unused.isNotEmpty()){
             return unused[0]

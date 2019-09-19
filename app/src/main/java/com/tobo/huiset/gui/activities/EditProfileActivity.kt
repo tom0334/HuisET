@@ -86,15 +86,8 @@ class EditProfileActivity : HuisEtActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->
-                realm.executeTransaction {
-                    if (realm.where(Transaction::class.java).equalTo("personId", oldProfile!!.id).findFirst() == null) {
-                        // Actually delete the product from the realm if it isn't involved in any transactions
-                        oldProfile!!.deleteFromRealm()
-                    } else {
-                        // fake delete product from the realm
-                        oldProfile!!.isDeleted = true
-                    }
-                }
+                db.removeProfile(oldProfile!!)
+                db.updateProfileRows()
                 this.finish()
             }
             .setNegativeButton("annuleren") { _, _ ->
@@ -114,18 +107,13 @@ class EditProfileActivity : HuisEtActivity() {
         }
 
         val radioGuestGroup = findViewById<RadioGroup>(R.id.radiogroup_guest).checkedRadioButtonId
-        var guestBool = false
-        if (radioGuestGroup == R.id.radioGuest) {
-            guestBool = true
-        }
+        val guestBool = (radioGuestGroup == R.id.radioGuest)
 
         val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showPerson).checkedRadioButtonId
-        var showBool = false
-        if (radioShowGroup == R.id.radioShowPerson) {
-            showBool = true
-        }
+        val showBool = (radioShowGroup == R.id.radioShowPerson)
 
-        val row = db.findAllCurrentPersons().size
+        db.updateProfileRows()
+        val row = db.findAllCurrentPersons(true).size
 
         realm.executeTransaction {
             if (new) {

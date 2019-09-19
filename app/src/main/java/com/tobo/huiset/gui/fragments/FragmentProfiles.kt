@@ -12,6 +12,7 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProfileActivity
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.utils.ItemClickSupport
+import io.realm.Sort
 
 
 /**
@@ -42,7 +43,7 @@ class FragmentProfiles : HuisEtFragment() {
 
         val rec = view.findViewById<RecyclerView>(R.id.profilesTabRec)
         rec.addItemDecoration(DividerItemDecoration(rec.context, DividerItemDecoration.VERTICAL))
-        rec.adapter = PersonRecAdapter(this.context!!, realm, persons, true)
+        rec.adapter = PersonRecAdapter(this, realm, persons, true)
         rec.layoutManager = LinearLayoutManager(this.context)
         val fab = view.findViewById<FloatingActionButton>(R.id.add_profile)
 
@@ -70,6 +71,10 @@ class FragmentProfiles : HuisEtFragment() {
             startActivity(intent)
         }
 
+    }
+
+    fun updateRows() {
+        db.updateProfileRows()
     }
 
 }

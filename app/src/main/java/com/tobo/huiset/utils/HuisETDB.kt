@@ -124,7 +124,7 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Finds all persons that are not deleted
      */
-    fun findAllCurrentPersons(includeHidden: Boolean = false): RealmResults<Person> {
+    fun findAllCurrentPersons(includeHidden: Boolean): RealmResults<Person> {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
         if (! includeHidden){
@@ -180,6 +180,59 @@ class HuisETDB(private val realm: Realm) {
             query.equalTo("buy", buy)
         }
         return query.findAll()
+    }
+
+    fun updateProductRows() {
+        val products = this.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY)
+
+        realm.executeTransaction {
+            products.sort("row")
+
+            var newRow = 0
+            products.forEach {
+                it.row = newRow++
+            }
+        }
+    }
+
+    fun updateProfileRows() {
+        val persons = this.findAllCurrentPersons(true)
+        realm.executeTransaction {
+            persons.sort("row")
+
+            var newRow = 0
+            persons.forEach {
+                it.row = newRow++
+            }
+        }
+    }
+
+    fun removeProfile(oldProfile: Person) {
+        realm.executeTransaction {
+            if (realm.where(Transaction::class.java).equalTo("personId", oldProfile.id).findFirst() == null) {
+                // Actually delete the product from the realm if it isn't involved in any transactions
+                oldProfile.deleteFromRealm()
+            } else {
+                // fake delete product from the realm
+                oldProfile.isDeleted = true
+            }
+        }
+    }
+
+    fun removeProduct(oldProduct: Product) {
+        realm.executeTransaction {
+            if (realm.where(Transaction::class.java).equalTo(
+                    "productId",
+                    oldProduct!!.id
+                ).findFirst() == null
+            ) {
+                // Actually delete the profile from the realm if it isn't involved in any transactions
+                oldProduct!!.deleteFromRealm()
+            } else {
+                // fake delete profile from the realm
+                oldProduct!!.isDeleted = true
+            }
+        }
     }
 
 

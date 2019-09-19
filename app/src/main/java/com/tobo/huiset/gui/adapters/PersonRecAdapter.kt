@@ -1,6 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
-import android.content.Context
+import FragmentProfiles
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +22,7 @@ import io.realm.RealmResults
  *
  */
 class PersonRecAdapter(
-    val context: Context,
+    val fragmentProfiles: FragmentProfiles,
     val realm: Realm,
     data: RealmResults<Person>?,
     autoUpdate: Boolean
@@ -30,7 +30,7 @@ class PersonRecAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.person_rec_item, parent, false)
+        val view = LayoutInflater.from(fragmentProfiles.context).inflate(R.layout.person_rec_item, parent, false)
         return PersonViewHolder(view)
     }
 
@@ -50,6 +50,7 @@ class PersonRecAdapter(
 
         // make item go up
         holder.upIv.setOnClickListener {
+            fragmentProfiles.updateRows()
             realm.executeTransaction {
                 val other = realm.where(Person::class.java).equalTo("row", person.row - 1).findFirst()
                 if (other != null) {
@@ -61,6 +62,7 @@ class PersonRecAdapter(
 
         // make item go down
         holder.downIv.setOnClickListener {
+            fragmentProfiles.updateRows()
             realm.executeTransaction {
                 val other = realm.where(Person::class.java).equalTo("row", person.row + 1).findFirst()
                 if (other != null) {
@@ -84,6 +86,6 @@ class PersonRecAdapter(
         val upIv = itemView.findViewById<ImageView>(R.id.personRecItem_up)!!
         val downIv = itemView.findViewById<ImageView>(R.id.personRecItem_down)!!
         val hiddenTv = itemView.findViewById<TextView>(R.id.personRecItem_hidden)!!
-        val colorLine = itemView.findViewById<View>(R.id.personRecItem_color_line)
+        val colorLine = itemView.findViewById<View>(R.id.personRecItem_color_line)!!
     }
 }

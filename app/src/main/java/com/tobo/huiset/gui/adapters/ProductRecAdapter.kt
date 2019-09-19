@@ -1,6 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
-import android.content.Context
+import FragmentProducts
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +18,7 @@ import io.realm.RealmResults
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
  */
 class ProductRecAdapter(
-    val context: Context,
+    val fragmentProducts: FragmentProducts,
     val realm: Realm,
     data: RealmResults<Product>?,
     autoUpdate: Boolean
@@ -26,7 +26,7 @@ class ProductRecAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.product_rec_item, parent, false)
+        val view = LayoutInflater.from(fragmentProducts.context).inflate(R.layout.product_rec_item, parent, false)
         return ProductViewHolder(view)
     }
 
@@ -47,6 +47,7 @@ class ProductRecAdapter(
 
         // make item go up
         holder.upIv.setOnClickListener {
+            fragmentProducts.updateRows()
             realm.executeTransaction {
                 val other = realm.where(Product::class.java).equalTo("row", product.row - 1).findFirst()
                 if (other != null) {
@@ -58,6 +59,7 @@ class ProductRecAdapter(
 
         // make item go down
         holder.downIv.setOnClickListener {
+            fragmentProducts.updateRows()
             realm.executeTransaction {
                 val other = realm.where(Product::class.java).equalTo("row", product.row + 1).findFirst()
                 if (other != null) {

@@ -27,7 +27,7 @@ class StatsActivity : HuisEtActivity() {
 
         val chart= findViewById<LineChart>(R.id.chart)
 
-        val persons = db.findAllCurrentPersons()
+        val persons = db.findAllCurrentPersons(true)
         val datasets = persons.map { createDataForPerson(it) }
         
         val lineData = LineData(datasets)

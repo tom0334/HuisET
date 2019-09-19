@@ -140,7 +140,7 @@ class FragmentMain : HuisEtFragment() {
      */
     private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
 
-        val profiles = db.findAllCurrentPersons()
+        val profiles = db.findAllCurrentPersons(false)
         val columns = this.getNumOfColumns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
