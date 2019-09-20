@@ -21,6 +21,7 @@ abstract class HuisEtActivity : AppCompatActivity() {
 
     val db:HuisETDB by lazy {  HuisETDB(realm) }
 
+
     override fun onDestroy() {
         super.onDestroy()
         realm.close()

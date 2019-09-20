@@ -2,27 +2,32 @@ package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.utils.extensions.getDb
 
 abstract class BaseAchievement {
     abstract val id:Int
+
+    abstract val updateOnTurf:Boolean
+    abstract val updateOnBuy:Boolean
+    abstract val updateOnLaunch:Boolean
+
     abstract val name:String
     abstract val description:String
     //should check if
-    abstract fun isAchievedNow(
+    abstract fun checkIfAchieved(
         person: Person,
         helpData: AchievementUpdateHelpData
-    ):Boolean
+    ):Long?
 
-    fun update(person: Person, helpData: AchievementUpdateHelpData){
-        if(wasAchieved(person)) return
+    fun update(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion?{
+        if(wasAchieved(person)) return null
 
-        if(isAchievedNow(person,helpData)){
-            person.realm.executeTransaction {
-                val comp = AchievementCompletion.create(this.id,System.currentTimeMillis(),person.id)
-                it.copyToRealm(comp)
-                person.addAchievement(comp)
-            }
-        }
+        val completionTimeStamp = checkIfAchieved(person,helpData)
+
+        if(completionTimeStamp == null)return null
+
+        return person.getDb().createAndSaveAchievementCompletion(this, completionTimeStamp,person)
+
     }
 
     fun wasAchieved(person: Person):Boolean{

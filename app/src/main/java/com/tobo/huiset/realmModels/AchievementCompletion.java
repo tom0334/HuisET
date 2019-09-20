@@ -1,5 +1,8 @@
 package com.tobo.huiset.realmModels;
 
+import org.jetbrains.annotations.NotNull;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 public class AchievementCompletion extends RealmObject {
@@ -29,5 +32,9 @@ public class AchievementCompletion extends RealmObject {
 
     public String getPersonID() {
         return personID;
+    }
+
+    public Person getPerson(Realm realm) {
+        return realm.where(Person.class).equalTo("id",personID).findFirst();
     }
 }

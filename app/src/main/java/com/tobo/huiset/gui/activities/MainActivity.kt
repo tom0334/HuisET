@@ -6,6 +6,7 @@ import FragmentProducts
 import FragmentProfiles
 import FragmentPurchases
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
@@ -14,17 +15,21 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
-import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.achievements.AchievementManager
+import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.realmModels.AchievementCompletion
+import nl.dionsegijn.konfetti.KonfettiView
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 
 private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
 private const val MAINACTIVITY_REQUESTCODE_SETTINGS = 1
 
-class MainActivity : HuisEtActivity() {
+class MainActivity : CelebratingHuisEtActivity() {
 
 
     private lateinit var fragments: List<HuisEtFragment>
@@ -59,7 +64,17 @@ class MainActivity : HuisEtActivity() {
     override fun onPause() {
         super.onPause()
         systemUIHandler.removeCallbacks(null)
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        val changes = mutableListOf<AchievementCompletion>()
+        db.findAllCurrentPersons(true).forEach {
+            val new = AchievementManager.updateAchievementsAfterLaunch(it)
+            changes.addAll(new)
+        }
+        showAchievements(changes)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -238,9 +253,24 @@ class MainActivity : HuisEtActivity() {
                             or View.SYSTEM_UI_FLAG_IMMERSIVE
                     )
         }
-
-
     }
+
+
+    fun showTurfConfetti(){
+        val viewKonfetti = findViewById<KonfettiView>(R.id.viewKonfetti)
+        viewKonfetti.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+            .setDirection(0.0, 359.0)
+            .setSpeed(1f, 5f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .addShapes( Shape.CIRCLE)
+            .addSizes(Size(12))
+            .setPosition(-50f, viewKonfetti.width + 50f, 0f, -50f)
+            .burst(300)
+    }
+
+
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -257,6 +287,8 @@ class MainActivity : HuisEtActivity() {
     override fun getSnackbarBottomMargin(): Int {
         return this.findViewById<View>(R.id.bottomNavigation).height
     }
+
+
 
 
 }
