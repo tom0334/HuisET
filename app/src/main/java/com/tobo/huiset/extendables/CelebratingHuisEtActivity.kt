@@ -14,7 +14,7 @@ abstract class CelebratingHuisEtActivity: HuisEtActivity(){
     fun showAchievements(changed: List<AchievementCompletion>) {
         changed.forEach {
             val a = AchievementManager.getAchievementForCompletion(it)
-            Toast.makeText(this, "Achievement unlocked by ${it.getPerson(realm).name}:\n\"${a.name}\"", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Achievement unlocked door ${it.getPerson(realm).name}:\n\"${a.name}\"", Toast.LENGTH_LONG).show()
         }
         if (changed.size > 0) {
 
