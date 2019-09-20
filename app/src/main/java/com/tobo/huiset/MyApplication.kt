@@ -2,7 +2,9 @@ package com.tobo.huiset
 
 import android.app.Application
 import com.tobo.huiset.realmModels.HuisETSettings
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.ProfileColors
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -40,8 +42,12 @@ class MyApplication : Application() {
             beer.isSelected = true
             //no need copy, it is copy with the settings
             val crate = Product.create("Kratje", Product.STANDARD_PRICE_CRATE, Product.ONLY_BUYABLE, 1, Product.CRATEPRODUCT)
+
+//            static public Person create(String name, String color, boolean guest, boolean show, int row) {
+            val huisrekening = Person.create("Huisrekening", "#000000", true, false, 0)
+
             //no need to copy, it is copied with the settings
-            val newSettingsObj = HuisETSettings.create(beer, crate)
+            val newSettingsObj = HuisETSettings.create(beer, crate, huisrekening)
             realm.copyToRealm(newSettingsObj)
         }
 

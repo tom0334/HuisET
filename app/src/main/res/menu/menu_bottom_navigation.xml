@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_bottle_wine_white_24dp"
         android:id="@+id/action_main"
         android:enabled="true"
-        android:title="Betalen"
+        android:title="Turven"
         app:showAsAction="always" />
 
     <item
