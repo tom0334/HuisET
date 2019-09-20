@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.gui.adapters.TransferCalcPersonRecAdapter
 import com.tobo.huiset.gui.adapters.TransferPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 
@@ -56,10 +57,10 @@ class TransferMoneyActivity : HuisEtActivity() {
     private fun calculateTransfersAndShow(recAdapt: TransferPersonRecAdapter) {
         val calculatedPersonsRec = findViewById<RecyclerView>(R.id.MTcalculatedPersonsRec)
         calculatedPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-
         val realmResultsSelected = db.findPersonsWithIDInArray(recAdapt.chosenMap.toTypedArray())
-        calculatedPersonsRec.adapter = TransferPersonRecAdapter(this, this, realm, realmResultsSelected, true)
+        calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, this, realm, realmResultsSelected, true)
         calculatedPersonsRec.layoutManager = LinearLayoutManager(this)
+
 
     }
 
