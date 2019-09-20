@@ -30,7 +30,7 @@ class TransferMoneyActivity : HuisEtActivity() {
     private fun initProfileRec() {
         val selectPersonsRec = findViewById<RecyclerView>(R.id.MTpickUserRec)
         selectPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        val profiles = db.findAllCurrentPersons(true)
+        val profiles = db.findAllCurrentPersonsWithBalanceNotZero()
 
         val selectPersonRecAdapter = TransferPersonRecAdapter(this, this, realm, profiles, true)
         selectPersonsRec.adapter = selectPersonRecAdapter

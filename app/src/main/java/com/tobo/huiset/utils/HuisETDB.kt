@@ -237,7 +237,7 @@ class HuisETDB(private val realm: Realm) {
             }
         }
     }
-    
+
     fun getTransactionsBetween(timeStamp1:Long, timeStamp2:Long): RealmResults<Transaction> {
         val recentTransactions = realm.where(Transaction::class.java)
             .between("time",timeStamp1, timeStamp2)
@@ -302,6 +302,13 @@ class HuisETDB(private val realm: Realm) {
         person.addAchievement(comp)
         realm.commitTransaction()
         return comp
+    }
+
+    fun findAllCurrentPersonsWithBalanceNotZero(): RealmResults<Person>? {
+        val query = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .not().`in`("balance", arrayListOf(0).toTypedArray())
+        return query.sort("row", Sort.ASCENDING).findAll()
     }
 
 
