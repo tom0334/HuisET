@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.tobo.huiset.MyApplication
 import com.tobo.huiset.utils.ToboTime
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
 
 fun Int.toPixel(context: Context): Int {
@@ -25,6 +26,21 @@ fun Int.toCurrencyString(): String {
     var cents = if (abscents < 10) "0" else ""
     cents += Integer.toString(abscents)
     return "€$signed$euros,$cents"
+}
+
+fun Long.toMixedTimeString(): String {
+    val secondsAgo = (System.currentTimeMillis() - this) / 1000
+    val minutesAgo = secondsAgo / 60
+    val hoursAgo = minutesAgo / 60
+    val daysAgo = hoursAgo / 24
+
+    if(daysAgo <= 7){
+        return this.toTimeAgoString(false)
+    }
+    else{
+        val format = SimpleDateFormat("EEEE d MMM yyyy")
+        return format.format(this)
+    }
 }
 
 fun Long.toTimeAgoString(includeNewLine:Boolean):String{
