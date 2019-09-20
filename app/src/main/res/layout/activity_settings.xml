@@ -38,7 +38,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginRight="16dp"
                         android:layout_toLeftOf="@id/fullScreenSwitch"
-                        android:text="Verbergt de statusbar en de knoppenbalk onder aan uw scherm(home, terug en recents)." />
+                        android:text="Verberg de statusbar en de knoppenbalk onder aan uw scherm(home, terug en recents)." />
 
                 <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/fullScreenSwitch"
@@ -73,7 +73,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginRight="16dp"
                         android:layout_toLeftOf="@id/hideAppBarSwitch"
-                        android:text="Verbergt naast de statusbalk en de navigatiebalk ook de bovenste app balk. Veeg omlaag om weer te zien." />
+                        android:text="Verberg naast de statusbalk en de navigatiebalk ook de bovenste app balk. Veeg omlaag om weer te zien." />
 
                 <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/hideAppBarSwitch"
@@ -108,7 +108,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="16dp"
                     android:layout_toLeftOf="@id/turfConfettiSwitch"
-                    android:text="Vier dat u een drankje turft met confetti!" />
+                    android:text="Vier dat u een product turft met confetti!" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/turfConfettiSwitch"
