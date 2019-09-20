@@ -2,30 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="horizontal"
-
         android:layout_margin="16dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="47.5dp"
         >
 
     <View
-            android:layout_gravity="center_vertical"
             android:id="@+id/MTpersonRec_item_color"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="8dp"
             android:layout_width="4dp"
             android:layout_height="16dp"/>
 
 
-    <TextView
-            android:id="@+id/MTpersonRecItem_name"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="16sp"
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
+    <LinearLayout android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            tools:text="Bobbert"
-            />
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/MTpersonRecItem_name"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                tools:text="Bobbert"
+                />
+
+        <TextView
+                android:id="@+id/MTpersonRecItem_selected"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Geselecteerd"
+                />
+
+    </LinearLayout>
 
 
     <View

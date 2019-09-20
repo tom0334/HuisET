@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
@@ -45,13 +44,18 @@ class TransferPersonRecAdapter(
         holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balance.getBalanceColorString()
         holder.balanceTv.setTextColorFromHex(colorString)
+
         holder.colorLine.setBackgroundColor(Color.parseColor(person.color))
+
+        holder.selectedTv.text = "Geselecteerd"
 
         if (chosenMap.contains(person.id)) {
             holder.nameTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
+            holder.selectedTv.visibility = View.VISIBLE
         }
         else {
             holder.nameTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
+            holder.selectedTv.visibility = View.GONE
         }
 
         holder.itemView.setOnClickListener {
@@ -73,6 +77,7 @@ class TransferPersonRecAdapter(
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_name)!!
+        val selectedTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_selected)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_balance)!!
         val colorLine = itemView.findViewById<View>(R.id.MTpersonRec_item_color)!!
     }
