@@ -1,8 +1,13 @@
 package com.tobo.huiset
 
 import android.app.Application
+import android.content.Intent
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
+import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.realmModels.HuisETSettings
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.extensions.edit
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -12,6 +17,18 @@ class MyApplication : Application() {
         super.onCreate()
         setupRealm()
         createHuisEtSettingsNeeded()
+
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        if(prefs.getBoolean("firstLaunch", true)){
+            prefs.edit {
+                it.putBoolean("firstLaunch",false)
+            }
+            val intent = Intent(this, IntroActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     private fun setupRealm() {
