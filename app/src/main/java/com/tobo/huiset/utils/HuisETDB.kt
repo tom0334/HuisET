@@ -311,6 +311,17 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
+    fun createAndSavePerson(name:String, guest:Boolean, show:Boolean, huisEtRekening:Boolean, first:Boolean) {
+        this.updateProfileRows()
+
+        val row =  if(first) -1 else findAllCurrentPersons(true).size
+        realm.executeTransaction {
+            val person = Person.create(name,ProfileColors.getNextColor(this),guest,true,row,huisEtRekening)
+            realm.copyToRealm(person)
+        }
+
+        this.updateProfileRows()
+    }
 
 
 }
