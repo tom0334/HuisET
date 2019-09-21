@@ -15,7 +15,7 @@
             android:id="@+id/transfermoney"
             android:icon="@drawable/ic_cash_register_white_48dp"
             android:title="overmaken"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always" />
     <item
             android:id="@+id/settings"
             android:icon="@drawable/round_settings_white_48"
