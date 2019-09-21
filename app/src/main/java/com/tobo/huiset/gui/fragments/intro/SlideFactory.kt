@@ -59,10 +59,10 @@ object SlideFactory{
     fun newPriceSlide(
         title: String,
         description: String,
-        hint:String
-    ): PickBeerPriceSlide {
-
-        val sampleSlide =  PickBeerPriceSlide()
+        hint:String,
+        crate:Boolean
+    ): AbstractPickPriceSlide {
+        val sampleSlide =  if(crate)PickCratePriceSlide() else PickBeerSlide()
 
         val args = Bundle()
 

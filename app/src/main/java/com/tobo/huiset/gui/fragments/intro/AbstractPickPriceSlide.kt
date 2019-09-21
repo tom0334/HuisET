@@ -10,20 +10,24 @@ import com.tobo.huiset.R
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
 
 
-class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy, SlideDismissListener{
+abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy, SlideDismissListener{
 
+    abstract fun processPrice(price:Int)
+    abstract fun getInitialPrice():String
 
     private lateinit var hint:String
 
     override fun onSlideDismissed() {
         val price = getPrice()
         if(price!= null){
+            this.processPrice(price)
             db.createDemoBeer(price)
         }
         else{
-            Toast.makeText(this.context,"Incorrect pice input!",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context,"Prijs input klopt niet!", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     override fun isPolicyRespected(): Boolean {
         return getPrice() != null
@@ -48,14 +52,14 @@ class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy, SlideDismi
     }
 
 
-    private fun getPrice(): Int? {
+    internal fun getPrice(): Int? {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         return parsePrice(editText.text.toString())
     }
 
     private fun parsePrice(toString: String): Int? {
         //todo safely pares price, return null if error
-        return 45
+        return 100
     }
 
 
@@ -65,7 +69,7 @@ class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy, SlideDismi
         view.findViewById<MaterialButton>(R.id.button_intro_textfield_create).visibility = View.GONE
 
         val editText = view.findViewById<TextInputEditText>(R.id.intro_name)
-        val text = "0.44".toCharArray()
+        val text = getInitialPrice().toCharArray()
         editText.setText(text,0,text.size)
     }
 }

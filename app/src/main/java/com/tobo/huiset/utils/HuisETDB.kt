@@ -346,5 +346,9 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
+    fun getCrateIfExists(): Product? {
+        return realm.where(Product::class.java).equalTo("kind",Product.CRATEPRODUCT).findFirst()
+    }
+
 
 }
