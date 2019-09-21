@@ -2,11 +2,12 @@ package com.tobo.huiset
 
 import android.app.Application
 import android.content.Intent
-import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.realmModels.HuisETSettings
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.ProfileColors
 import com.tobo.huiset.utils.extensions.edit
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -16,7 +17,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         setupRealm()
-        createHuisEtSettingsNeeded()
+        createInitialData()
 
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -47,7 +48,7 @@ class MyApplication : Application() {
         Realm.setDefaultConfiguration(config)
     }
 
-    private fun createHuisEtSettingsNeeded() {
+    private fun createInitialData() {
         val realm = Realm.getDefaultInstance()
 
         val settings = realm.where(HuisETSettings::class.java)
@@ -63,6 +64,16 @@ class MyApplication : Application() {
             val newSettingsObj = HuisETSettings.create(beer, crate)
             realm.copyToRealm(newSettingsObj)
         }
+
+
+
+        //create a standard huisrekening thing
+        realm.executeTransaction {
+            val huisRekening = Person.create("Huisrekening", ProfileColors.huisrekeningColor, false, false, 0,true)
+            realm.copyToRealm(huisRekening)
+        }
+
+
 
     }
 

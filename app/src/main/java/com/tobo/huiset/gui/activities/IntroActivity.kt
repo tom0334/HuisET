@@ -64,14 +64,9 @@ class CustomLayoutSlide : Fragment(), SlideDissmissListener {
     private var selection:Boolean = false
 
     override fun onSlideDismissed(){
-
         val realm = Realm.getDefaultInstance()
         val db = HuisETDB(realm)
-
-        if(selection){
-            db.addHuisRekeningIfNotExisting()
-        }
-
+        db.setHuisRekeningActive(selection)
         realm.close()
     }
 
