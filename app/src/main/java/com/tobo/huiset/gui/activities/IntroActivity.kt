@@ -13,6 +13,8 @@ import com.github.paolorotolo.appintro.AppIntroFragment
 import com.github.paolorotolo.appintro.model.SliderPage
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.utils.HuisETDB
+import io.realm.Realm
 
 
 class IntroActivity : AppIntro2(){
@@ -52,7 +54,7 @@ interface SlideDissmissListener{
 
 
 
-class CustomLayoutSlide : HuisEtFragment(), SlideDissmissListener {
+class CustomLayoutSlide : Fragment(), SlideDissmissListener {
     private var layoutResId: Int = 0
     private lateinit var title: String
     private lateinit var description:String
@@ -62,9 +64,15 @@ class CustomLayoutSlide : HuisEtFragment(), SlideDissmissListener {
     private var selection:Boolean = false
 
     override fun onSlideDismissed(){
+
+        val realm = Realm.getDefaultInstance()
+        val db = HuisETDB(realm)
+
         if(selection){
             db.addHuisRekeningIfNotExisting()
         }
+
+        realm.close()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

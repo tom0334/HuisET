@@ -1,6 +1,5 @@
 package com.tobo.huiset.utils
 
-import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -301,8 +300,22 @@ class HuisETDB(private val realm: Realm) {
         return comp
     }
 
+    fun getHuisRekening(): Person? {
+        return realm.where(Person::class.java).equalTo("deleted", false).equalTo("huisRekening",true).findFirst()
+    }
+
     fun addHuisRekeningIfNotExisting() {
-        //todo
+        val huisRekening = getHuisRekening()
+
+        if(huisRekening == null){
+
+            updateProfileRows()
+            realm.executeTransaction {
+                val person = Person.create("Huisrekening",ProfileColors.huisrekeningColor,false,false,-1,true)
+                realm.copyToRealm(person)
+            }
+            updateProfileRows()
+        }
     }
 
 
