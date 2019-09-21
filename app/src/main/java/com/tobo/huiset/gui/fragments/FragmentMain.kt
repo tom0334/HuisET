@@ -1,13 +1,18 @@
+import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
@@ -26,6 +31,7 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class FragmentMain : HuisEtFragment() {
@@ -46,10 +52,8 @@ class FragmentMain : HuisEtFragment() {
         }
     }
 
-    private val mergeTransactionsRunnable = object : Runnable {
-        override fun run() {
-            db.mergeTransactionsIfPossible( System.currentTimeMillis()- 30 * 1000)
-        }
+    private val mergeTransactionsRunnable = Runnable {
+        db.mergeTransactionsIfPossible( System.currentTimeMillis()- 30 * 1000)
     }
 
 
@@ -70,6 +74,8 @@ class FragmentMain : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkIfAnyTurfableProductExists()
+
         setupAmountRec(view)
         setupProductRec(view)
 
@@ -84,7 +90,11 @@ class FragmentMain : HuisEtFragment() {
     }
 
     override fun onTabReactivated() {
+
+        checkIfAnyTurfableProductExists()
+
         db.selectFirstTurfProduct()
+
         val turfRec = view?.findViewById<RecyclerView>(R.id.mainPersonRec)
         val adapter = turfRec!!.adapter as TurfRecAdapter
 
@@ -92,6 +102,23 @@ class FragmentMain : HuisEtFragment() {
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
         setupSpacingForTurfRec(columns)
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
+    }
+
+    private fun checkIfAnyTurfableProductExists() {
+        if (db.findAllCurrentProducts(Product.ONLY_TURFABLE).size <= 0) {
+            val context = this.context as MainActivity
+
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("Er zijn geen turfbare producten gekozen.")
+                .setPositiveButton("Naar \"Producten\"") { _, _ ->
+                    context.showFragment(context.PRODUCTS_TAB)
+                    val bottomNavigation = context.findViewById<BottomNavigationView>(R.id.bottomNavigation)
+                    bottomNavigation.selectedItemId = bottomNavigation.menu.getItem(2).itemId
+                }
+
+            // Create the AlertDialog object and return it
+            builder.create().show()
+        }
     }
 
     private fun setupAmountRec(view: View): RecyclerView {
@@ -138,7 +165,7 @@ class FragmentMain : HuisEtFragment() {
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
             //Keep track of what achievements were added, and show that in the activity
             val added = mutableListOf<AchievementCompletion>()
-            db.findAllCurrentPersons(true).forEach {
+            db.findAllCurrentPersons(true).forEach { _ ->
                 added.addAll(AchievementManager.checkAgainForPerson(person))
             }
             (this.activity as CelebratingHuisEtActivity).showAchievements(added)

@@ -84,7 +84,7 @@ class EditProfileActivity : HuisEtActivity() {
             this.finish()
             return
         }
-        // if profile isn't new, then ask "are you sure?
+        // if profile isn't new, then ask "are you sure?"
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->

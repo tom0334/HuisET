@@ -32,6 +32,9 @@ private const val MAINACTIVITY_REQUESTCODE_SETTINGS = 1
 class MainActivity : CelebratingHuisEtActivity() {
 
 
+    val PRODUCTS_TAB = 2
+    val PROFILES_TAB = 4
+
     private lateinit var fragments: List<HuisEtFragment>
     private var currentFragmentIndex = 0
 
@@ -124,9 +127,9 @@ class MainActivity : CelebratingHuisEtActivity() {
             val fragToShow = when (it.itemId) {
                 R.id.action_main -> 0
                 R.id.action_purchases -> 1
-                R.id.action_products -> 2
+                R.id.action_products -> PRODUCTS_TAB
                 R.id.action_history -> 3
-                R.id.action_profiles -> 4
+                R.id.action_profiles -> PROFILES_TAB
                 else -> {
                     Log.e("Mainactivity", "Unknown action id")
                     0
@@ -171,7 +174,7 @@ class MainActivity : CelebratingHuisEtActivity() {
         }
     }
 
-    private fun showFragment(newFragIndex: Int) {
+    fun showFragment(newFragIndex: Int) {
         supportFragmentManager.beginTransaction()
             .hide(fragments[currentFragmentIndex])
             .show(fragments[newFragIndex])

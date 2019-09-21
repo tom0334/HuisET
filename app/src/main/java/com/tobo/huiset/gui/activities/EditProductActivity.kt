@@ -96,7 +96,7 @@ class EditProductActivity : HuisEtActivity() {
                 try {
                     val s = editable.toString()
 
-                    // 
+                    // Make sure only 1 comma or dot is used
                     if (s != "") {
                         java.lang.Double.valueOf(editable.toString().replace(',', '.'))
                     }
