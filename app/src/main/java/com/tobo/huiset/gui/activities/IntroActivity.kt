@@ -32,7 +32,8 @@ class IntroActivity : AppIntro2(){
 
         val createPersonSlide = TextFieldSlide.newInstance("Maak alvast een profiel", "Je kan er meerdere maken als je wilt, maar het is aangeraden om er minstens eentje te maken","Maak profiel","Naam")
         addSlide(createPersonSlide)
-        
+
+        skipButtonEnabled = false
     }
 
     override fun onDonePressed(currentFragment: Fragment?) {
