@@ -240,7 +240,7 @@ class FragmentMain : HuisEtFragment() {
                 (activity as MainActivity).showAchievements(changed)
 
                 if(changed.isEmpty() && showConfettiOnTurf){
-                    (activity as MainActivity).showTurfConfetti()
+                    (activity as MainActivity).showTurfConfetti(person)
                 }
 
                 db.selectFirstTurfProduct()
