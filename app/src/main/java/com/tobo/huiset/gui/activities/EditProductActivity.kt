@@ -34,7 +34,7 @@ class EditProductActivity : HuisEtActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editproduct)
 
-        priceInitOnlyOneSeperatorValidator()
+        priceInitOnlyOneSeparatorValidator()
 
         // reset old values of product is edited
         val extras = intent.extras
@@ -66,10 +66,11 @@ class EditProductActivity : HuisEtActivity() {
         }
     }
 
-    private fun priceInitOnlyOneSeperatorValidator() {
+    private fun priceInitOnlyOneSeparatorValidator() {
         val editText = findViewById<TextInputEditText>(R.id.price)
         editText.addTextChangedListener(object : TextWatcher {
             lateinit var sBackup: String
+            var twoDecimals = false
 
             /**
              * Backup string before comma
@@ -89,11 +90,27 @@ class EditProductActivity : HuisEtActivity() {
 
             /**
              * Makes sure only 1 comma or dot is used.
+             * And only 2 decimals are allowed.
              */
             override fun afterTextChanged(editable: Editable) {
                 try {
-                    if (editable.toString() != "") {
+                    val s = editable.toString()
+
+                    // 
+                    if (s != "") {
                         java.lang.Double.valueOf(editable.toString().replace(',', '.'))
+                    }
+
+                    // format should be _.cc (only 2 decimals)
+                    if (s.contains(',') && editable.toString().split(",")[1].length > 2) {
+                        editText.setText(sBackup)
+                        editText.setSelection(editText.text.toString().length)
+                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
+                    }
+                    if (s.contains('.') && editable.toString().split(".")[1].length > 2) {
+                        editText.setText(sBackup)
+                        editText.setSelection(editText.text.toString().length)
+                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
                     }
                 } catch (e: Exception) {
                     editText.setText(sBackup)
@@ -220,15 +237,8 @@ class EditProductActivity : HuisEtActivity() {
         // name is too long
         val maxPriceLength = 6
         if (price.split('.')[0].length > maxPriceLength) {
-            editText.error = "Er mogen niet meer dan $maxPriceLength voor de comma staan"
+            editText.error = "Er mogen niet meer dan $maxPriceLength voor de komma staan"
             return false
-        }
-        // format should be _.cc
-        if (price.contains('.')) {
-            if (price.split('.')[1].length > 2) {
-                editText.error = "Er mogen maximaal 2 getallen achter de comma"
-                return false
-            }
         }
 
         return true
