@@ -16,6 +16,9 @@ import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
+import android.text.Editable
+import android.text.TextWatcher
+import com.google.android.material.textfield.TextInputEditText
 
 
 /**
@@ -30,6 +33,8 @@ class EditProductActivity : HuisEtActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editproduct)
+
+        priceInitOnlyOneSeperatorValidator()
 
         // reset old values of product is edited
         val extras = intent.extras
@@ -59,6 +64,44 @@ class EditProductActivity : HuisEtActivity() {
         else {
             showSoftKeyboard(findViewById(R.id.name))
         }
+    }
+
+    private fun priceInitOnlyOneSeperatorValidator() {
+        val editText = findViewById<TextInputEditText>(R.id.price)
+        editText.addTextChangedListener(object : TextWatcher {
+            lateinit var sBackup: String
+
+            /**
+             * Backup string before comma
+             */
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+                sBackup = s.toString()
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+            }
+
+            /**
+             * Makes sure only 1 comma or dot is used.
+             */
+            override fun afterTextChanged(editable: Editable) {
+                try {
+                    if (editable.toString() != "") {
+                        java.lang.Double.valueOf(editable.toString().replace(',', '.'))
+                    }
+                } catch (e: Exception) {
+                    editText.setText(sBackup)
+                    editText.setSelection(editText.text.toString().length)
+                }
+
+            }
+        })
     }
 
     // create an action bar button
@@ -117,7 +160,7 @@ class EditProductActivity : HuisEtActivity() {
         val newName = nameEditText.text.toString()
 
         val priceEditText = findViewById<EditText>(R.id.price)
-        val priceString = priceEditText.text.toString()
+        val priceString = priceEditText.text.toString().replace(',','.')
 
         if (!nameValidate(newName, nameEditText) || !priceValidate(priceString, priceEditText)) {
             return
