@@ -18,7 +18,7 @@ abstract class AbstractCustomIntroSlide : Fragment() {
     private lateinit var title: String
     private lateinit var description:String
 
-    private lateinit var db:HuisETDB
+    lateinit var db:HuisETDB
 
     abstract fun getLayoutResId():Int
 

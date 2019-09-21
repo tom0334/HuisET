@@ -7,15 +7,26 @@ import com.github.paolorotolo.appintro.ISlidePolicy
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
 
 
-class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy{
+class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy, SlideDismissListener{
+
+
+    private lateinit var hint:String
+
+    override fun onSlideDismissed() {
+        val price = getPrice()
+        if(price!= null){
+            db.createDemoBeer(price)
+        }
+        else{
+            Toast.makeText(this.context,"Incorrect pice input!",Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun isPolicyRespected(): Boolean {
-        //tood check if input ok
-        return true
+        return getPrice() != null
     }
 
     override fun onUserIllegallyRequestedNextPage() {
@@ -26,7 +37,6 @@ class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy{
         return R.layout.intro_slide_text_field
     }
 
-    private lateinit var hint:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +48,15 @@ class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy{
     }
 
 
+    private fun getPrice(): Int? {
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        return parsePrice(editText.text.toString())
+    }
+
+    private fun parsePrice(toString: String): Int? {
+        //todo safely pares price, return null if error
+        return 45
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,9 +65,7 @@ class PickBeerPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy{
         view.findViewById<MaterialButton>(R.id.button_intro_textfield_create).visibility = View.GONE
 
         val editText = view.findViewById<TextInputEditText>(R.id.intro_name)
-
-
-        val beerProduct = db.findFirstBeerProduct()
-        editText.text =
+        val text = "0.44".toCharArray()
+        editText.setText(text,0,text.size)
     }
 }

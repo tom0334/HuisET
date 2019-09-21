@@ -24,6 +24,10 @@ import java.lang.IllegalArgumentException
 
 class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
 
+    private lateinit var buttonText:String
+    private lateinit var hint:String
+
+
     override fun isPolicyRespected(): Boolean {
         val realm = Realm.getDefaultInstance()
         val db = HuisETDB(realm)
@@ -44,17 +48,13 @@ class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
         return R.layout.intro_slide_text_field
     }
 
-
-    private lateinit var buttonText:String
-    private lateinit var hint:String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (arguments != null) {
             val args = arguments!!
-            hint = args.getString(ARG_BUTTON_TEXT)!!
-            buttonText = args.getString(ARG_HINT)!!
+            buttonText = args.getString(ARG_BUTTON_TEXT)!!
+            hint = args.getString(ARG_HINT)!!
         }
     }
 

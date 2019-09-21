@@ -36,14 +36,14 @@ object SlideFactory{
     }
 
 
-    fun newPersonSlide(
+    fun newCreatePersonSlide(
         title: String,
         description: String,
         buttonText:String,
         hint:String
     ): CreatePersonSlide {
 
-        val sampleSlide = PersonTextFieldSlide()
+        val sampleSlide =  CreatePersonSlide()
 
         val args = Bundle()
 
@@ -56,5 +56,22 @@ object SlideFactory{
         return sampleSlide
     }
 
+    fun newPriceSlide(
+        title: String,
+        description: String,
+        hint:String
+    ): PickBeerPriceSlide {
+
+        val sampleSlide =  PickBeerPriceSlide()
+
+        val args = Bundle()
+
+        args.putString(ARG_TITLE, title)
+        args.putString(ARG_DESCRIPTION, description)
+        args.putString(ARG_HINT, hint)
+
+        sampleSlide.arguments = args
+        return sampleSlide
+    }
 
 }

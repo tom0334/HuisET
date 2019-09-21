@@ -9,8 +9,7 @@ import com.github.paolorotolo.appintro.AppIntroFragment
 import com.github.paolorotolo.appintro.model.SliderPage
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.fragments.intro.SlideDismissListener
-import com.tobo.huiset.gui.fragments.intro.CreatePersonSlide
-import com.tobo.huiset.gui.fragments.intro.YesNoIntroFragment
+import com.tobo.huiset.gui.fragments.intro.SlideFactory
 import com.tobo.huiset.utils.HuisETDB
 import io.realm.Realm
 
@@ -27,11 +26,14 @@ class IntroActivity : AppIntro2(){
         addSlide(AppIntroFragment.newInstance(firstSlide))
 
 
-        val huisRekeningSlide = YesNoIntroFragment.newInstance("Gebruiken jullie een huisrekening?","Met een huisrekening bedoelen we een gedeelde bankrekening waar je alle inkopen van betaalt.", "Ja, wij gebruiken een huisrekening waar we inkopen van betalen.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
+        val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Met een huisrekening bedoelen we een gedeelde bankrekening waar je alle inkopen van betaalt.", "Ja, wij gebruiken een huisrekening waar we inkopen van betalen.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
         addSlide(huisRekeningSlide)
 
-        val createPersonSlide = CreatePersonSlide.newInstance("Maak alvast een profiel", "Je kan er meerdere maken als je wilt, maar het is aangeraden om er minstens eentje te maken","Maak profiel","Naam")
+        val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een profiel", "Je kan er meerdere maken als je wilt, maar het is aangeraden om er minstens eentje te maken","Maak profiel","Naam")
         addSlide(createPersonSlide)
+
+        val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje?","Dit kun je later nog aanpassen, en je kan ook losse prijzen voor een verschillende merken doen. Toch vragen we je voor nu even voor een standaardprijs.","Prijs in Euro")
+        addSlide(beerPriceSlide)
 
         skipButtonEnabled = false
     }

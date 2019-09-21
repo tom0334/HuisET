@@ -331,5 +331,20 @@ class HuisETDB(private val realm: Realm) {
         realm.close()
     }
 
+    fun createDemoCrate(price:Int){
+        realm.executeTransaction {
+            val crate = Product.create("Kratje", Product.STANDARD_PRICE_CRATE, Product.ONLY_BUYABLE, 1, Product.CRATEPRODUCT)
+            realm.copyToRealm(crate)
+        }
+    }
+
+    fun createDemoBeer(price:Int){
+
+        realm.executeTransaction {
+            val beer = Product.create("Bier", Product.STANDARD_PRICE_BEER, Product.ONLY_TURFABLE, 0, Product.BEERPRODUCT)
+            realm.copyToRealm(beer)
+        }
+    }
+
 
 }

@@ -8,6 +8,11 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.tobo.huiset.R
+import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_DEFAULT_CHOICE
+import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_DESCRIPTION
+import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_NO_TEXT
+import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_TITLE
+import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_YES_TEXT
 import com.tobo.huiset.utils.HuisETDB
 import io.realm.Realm
 
@@ -63,33 +68,5 @@ class YesNoIntroFragment : Fragment(), SlideDismissListener {
             selection = false
         }
 
-    }
-
-    companion object {
-        private val ARG_TITLE = "slide_title"
-        private val ARG_DESCRIPTION = "slide_description"
-        private val ARG_YES_TEXT = "yes_text"
-        private val ARG_NO_TEXT = "no_text"
-        private val ARG_DEFAULT_CHOICE = "def_choice"
-
-        fun newInstance(
-            title: String,
-            description: String,
-            yesText: String,
-            noText: String,
-            defaultChoice: Boolean
-        ): YesNoIntroFragment {
-            val sampleSlide = YesNoIntroFragment()
-
-            val args = Bundle()
-
-            args.putString(ARG_TITLE, title)
-            args.putString(ARG_DESCRIPTION,description)
-            args.putString(ARG_YES_TEXT,yesText)
-            args.putString(ARG_NO_TEXT,noText)
-            args.putBoolean(ARG_DEFAULT_CHOICE,defaultChoice)
-            sampleSlide.arguments = args
-            return sampleSlide
-        }
     }
 }
