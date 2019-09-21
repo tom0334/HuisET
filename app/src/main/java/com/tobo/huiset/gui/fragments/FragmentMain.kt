@@ -1,4 +1,5 @@
 import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
@@ -74,7 +75,7 @@ class FragmentMain : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkIfAnyTurfableProductExists()
+        confirmationChecks()
 
         setupAmountRec(view)
         setupProductRec(view)
@@ -91,7 +92,7 @@ class FragmentMain : HuisEtFragment() {
 
     override fun onTabReactivated() {
 
-        checkIfAnyTurfableProductExists()
+        confirmationChecks()
 
         db.selectFirstTurfProduct()
 
@@ -104,7 +105,12 @@ class FragmentMain : HuisEtFragment() {
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
     }
 
-    private fun checkIfAnyTurfableProductExists() {
+    private fun confirmationChecks() {
+        val needToCheckPerson = checkIfAnyTurfableProductExists()
+        if (needToCheckPerson) checkIfAnyShownPersonExists()
+    }
+
+    private fun checkIfAnyTurfableProductExists(): Boolean {
         if (db.findAllCurrentProducts(Product.ONLY_TURFABLE).size <= 0) {
             val context = this.context as MainActivity
 
@@ -112,8 +118,30 @@ class FragmentMain : HuisEtFragment() {
             builder.setMessage("Er zijn geen turfbare producten gekozen.")
                 .setPositiveButton("Naar \"Producten\"") { _, _ ->
                     context.showFragment(context.PRODUCTS_TAB)
+                    val bottomNavigation =
+                        context.findViewById<BottomNavigationView>(R.id.bottomNavigation)
+                    bottomNavigation.selectedItemId =
+                        bottomNavigation.menu.getItem(context.PRODUCTS_TAB).itemId
+                }
+
+            // Create the AlertDialog object and return it
+            builder.create().show()
+
+            return false
+        }
+        return true
+    }
+
+    private fun checkIfAnyShownPersonExists() {
+        if (db.findAllCurrentPersons(false).size <= 0) {
+            val context = this.context as MainActivity
+
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("Er worden momenteel geen gebruikers getoond.")
+                .setPositiveButton("Naar \"Gebruikers\"") { _, _ ->
+                    context.showFragment(context.PROFILES_TAB)
                     val bottomNavigation = context.findViewById<BottomNavigationView>(R.id.bottomNavigation)
-                    bottomNavigation.selectedItemId = bottomNavigation.menu.getItem(2).itemId
+                    bottomNavigation.selectedItemId = bottomNavigation.menu.getItem(context.PROFILES_TAB).itemId
                 }
 
             // Create the AlertDialog object and return it
