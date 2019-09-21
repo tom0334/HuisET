@@ -327,5 +327,9 @@ class HuisETDB(private val realm: Realm) {
         return realm.where(Person::class.java).equalTo("huisRekening",false).findFirst() != null
     }
 
+    fun close() {
+        realm.close()
+    }
+
 
 }

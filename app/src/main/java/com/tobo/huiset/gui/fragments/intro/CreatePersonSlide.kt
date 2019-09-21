@@ -15,11 +15,15 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.activities.IntroActivity
+import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_BUTTON_TEXT
+import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
 import com.tobo.huiset.utils.HuisETDB
 import io.realm.Realm
+import java.lang.IllegalArgumentException
 
 
-class TextFieldSlide : Fragment(), ISlidePolicy {
+class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
+
     override fun isPolicyRespected(): Boolean {
         val realm = Realm.getDefaultInstance()
         val db = HuisETDB(realm)
@@ -35,8 +39,12 @@ class TextFieldSlide : Fragment(), ISlidePolicy {
         Toast.makeText(this.context,"Maak minstens 1 profiel!",Toast.LENGTH_SHORT).show()
     }
 
-    private lateinit var title: String
-    private lateinit var description:String
+
+    override fun getLayoutResId(): Int {
+        return R.layout.intro_slide_text_field
+    }
+
+
     private lateinit var buttonText:String
     private lateinit var hint:String
 
@@ -45,58 +53,22 @@ class TextFieldSlide : Fragment(), ISlidePolicy {
 
         if (arguments != null) {
             val args = arguments!!
-
-            title = args.getString(ARG_TITLE)!!
-            description = args.getString(ARG_DESCRIPTION)!!
             hint = args.getString(ARG_BUTTON_TEXT)!!
             buttonText = args.getString(ARG_HINT)!!
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.intro_slide_text_field, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.title).text = title
-        view.findViewById<TextView>(R.id.description).text = description
 
         val createButton = view.findViewById<MaterialButton>(R.id.button_intro_textfield_create)
         val editText = view.findViewById<TextInputEditText>(R.id.intro_name)
-
 
         editText.hint = hint
         createButton.setOnClickListener {
             (this.activity as IntroActivity).createPerson(editText.text.toString())
             editText.setText(charArrayOf(),0,0)
-        }
-    }
-
-    companion object {
-        private val ARG_TITLE = "slide_title"
-        private val ARG_DESCRIPTION = "slide_description"
-        private val ARG_HINT ="slide_hint"
-        private val ARG_BUTTON_TEXT = "slide_createButtonText"
-
-        fun newInstance(
-            title: String,
-            description: String,
-            buttonText:String,
-            hint:String
-        ): TextFieldSlide {
-            val sampleSlide = TextFieldSlide()
-
-            val args = Bundle()
-
-            args.putString(ARG_TITLE, title)
-            args.putString(ARG_DESCRIPTION,description)
-            args.putString(ARG_BUTTON_TEXT,buttonText)
-            args.putString(ARG_HINT,hint)
-
-            sampleSlide.arguments = args
-            return sampleSlide
         }
     }
 }
