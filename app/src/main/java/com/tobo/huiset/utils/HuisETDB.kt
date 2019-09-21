@@ -323,5 +323,9 @@ class HuisETDB(private val realm: Realm) {
         this.updateProfileRows()
     }
 
+    fun hasAtLeastOnePerson(): Boolean {
+        return realm.where(Person::class.java).equalTo("huisRekening",false).findFirst() != null
+    }
+
 
 }

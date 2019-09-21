@@ -11,9 +11,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.gui.fragments.intro.SlideDismissListener
 import com.tobo.huiset.gui.fragments.intro.TextFieldSlide
 import com.tobo.huiset.gui.fragments.intro.YesNoIntroFragment
-import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.HuisETDB
-import com.tobo.huiset.utils.ProfileColors
 import io.realm.Realm
 
 
@@ -29,11 +27,14 @@ class IntroActivity : AppIntro2(){
         addSlide(AppIntroFragment.newInstance(firstSlide))
 
 
-        val secondSlide = YesNoIntroFragment.newInstance("Gebruiken jullie een huisrekening?","Met een huisrekening bedoelen we een gedeelde bankrekening waar je alle inkopen van betaalt.", "Ja, wij gebruiken een huisrekening waar we inkopen van betalen.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
-        addSlide(secondSlide)
+        val huisRekeningSlide = YesNoIntroFragment.newInstance("Gebruiken jullie een huisrekening?","Met een huisrekening bedoelen we een gedeelde bankrekening waar je alle inkopen van betaalt.", "Ja, wij gebruiken een huisrekening waar we inkopen van betalen.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
+        addSlide(huisRekeningSlide)
 
-        val thirdSlide = TextFieldSlide.newInstance("Maak alvast een profiel", "Je kan er meerdere maken als je wilt, maar het is aangeraden om er minstens eentje te maken","Maak profiel","Naam")
-        addSlide(thirdSlide)
+        val createPersonSlide = TextFieldSlide.newInstance("Maak alvast een profiel", "Je kan er meerdere maken als je wilt, maar het is aangeraden om er minstens eentje te maken","Maak profiel","Naam")
+        addSlide(createPersonSlide)
+
+     val huisRekeningSlide = YesNoIntroFragment.newInstance("Gebruiken jullie een huisrekening?","Met een huisrekening bedoelen we een gedeelde bankrekening waar je alle inkopen van betaalt.", "Ja, wij gebruiken een huisrekening waar we inkopen van betalen.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
+        addSlide(huisRekeningSlide)
     }
 
     override fun onDonePressed(currentFragment: Fragment?) {

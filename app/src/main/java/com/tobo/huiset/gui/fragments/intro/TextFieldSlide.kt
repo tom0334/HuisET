@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.github.paolorotolo.appintro.ISlidePolicy
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -17,14 +19,26 @@ import com.tobo.huiset.utils.HuisETDB
 import io.realm.Realm
 
 
-class TextFieldSlide : Fragment() {
+class TextFieldSlide : Fragment(), ISlidePolicy {
+    override fun isPolicyRespected(): Boolean {
+        val realm = Realm.getDefaultInstance()
+        val db = HuisETDB(realm)
+
+        val ok = db.hasAtLeastOnePerson()
+
+        realm.close()
+
+        return ok
+    }
+
+    override fun onUserIllegallyRequestedNextPage() {
+        Toast.makeText(this.context,"Maak minstens 1 profiel!",Toast.LENGTH_SHORT).show()
+    }
+
     private lateinit var title: String
     private lateinit var description:String
     private lateinit var buttonText:String
     private lateinit var hint:String
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +68,6 @@ class TextFieldSlide : Fragment() {
 
 
         editText.hint = hint
-        e
         createButton.setOnClickListener {
             (this.activity as IntroActivity).createPerson(editText.text.toString())
             editText.setText(charArrayOf(),0,0)
