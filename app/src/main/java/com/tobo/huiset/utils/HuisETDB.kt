@@ -331,24 +331,48 @@ class HuisETDB(private val realm: Realm) {
         realm.close()
     }
 
-    fun createDemoCrate(price:Int){
-        realm.executeTransaction {
-            val crate = Product.create("Kratje", Product.STANDARD_PRICE_CRATE, Product.ONLY_BUYABLE, 1, Product.CRATEPRODUCT)
-            realm.copyToRealm(crate)
+    fun createDemoCrateOrSetPrice(price:Int){
+        val current = getCrateIfExists()
+
+        if(current != null){
+            realm.executeTransaction {
+                current.price = price
+            }
+        }else{
+            realm.executeTransaction {
+                val crate = Product.create("Kratje", price, Product.ONLY_BUYABLE, 1, Product.CRATEPRODUCT)
+                realm.copyToRealm(crate)
+            }
         }
+
+        realm.refresh()
     }
 
-    fun createDemoBeer(price:Int){
+    fun createDemoBeerOrSetPrice(price:Int){
+        val current = getBeerIfExists()
 
-        realm.executeTransaction {
-            val beer = Product.create("Bier", Product.STANDARD_PRICE_BEER, Product.ONLY_TURFABLE, 0, Product.BEERPRODUCT)
-            realm.copyToRealm(beer)
+        if(current != null){
+            realm.executeTransaction {
+                current.price = price
+            }
+        }else{
+            realm.executeTransaction {
+                val beer = Product.create("Bier", price, Product.ONLY_TURFABLE, 0, Product.BEERPRODUCT)
+                realm.copyToRealm(beer)
+            }
         }
+
     }
+
 
     fun getCrateIfExists(): Product? {
         return realm.where(Product::class.java).equalTo("kind",Product.CRATEPRODUCT).findFirst()
     }
+
+    fun getBeerIfExists(): Product? {
+        return realm.where(Product::class.java).equalTo("kind",Product.BEERPRODUCT).findFirst()
+    }
+
 
 
 }

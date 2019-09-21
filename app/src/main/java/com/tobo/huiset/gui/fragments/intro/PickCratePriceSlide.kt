@@ -1,13 +1,19 @@
 package com.tobo.huiset.gui.fragments.intro
 
-import android.widget.Toast
+import com.tobo.huiset.utils.extensions.toNumberDecimal
 
 class PickCratePriceSlide :AbstractPickPriceSlide(){
     override fun getInitialPrice(): String {
-        return "11.00"
+        val crate = db.getCrateIfExists()
+        if(crate!= null){
+            return crate.price.toNumberDecimal()
+        }
+        return "15.00"
     }
 
+
+
     override fun processPrice(price: Int) {
-        db.createDemoCrate(price)
+        db.createDemoCrateOrSetPrice(price)
     }
 }

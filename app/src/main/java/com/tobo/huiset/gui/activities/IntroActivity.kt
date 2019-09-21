@@ -10,6 +10,7 @@ import com.github.paolorotolo.appintro.model.SliderPage
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.fragments.intro.SlideDismissListener
 import com.tobo.huiset.gui.fragments.intro.SlideFactory
+import com.tobo.huiset.gui.fragments.intro.SlideShowListener
 import com.tobo.huiset.utils.HuisETDB
 import io.realm.Realm
 
@@ -53,6 +54,9 @@ class IntroActivity : AppIntro2(){
 
         if(oldFragment is SlideDismissListener){
             (oldFragment as SlideDismissListener).onSlideDismissed()
+        }
+        if(newFragment is SlideShowListener){
+            (newFragment as SlideShowListener).onSlideShown()
         }
     }
 

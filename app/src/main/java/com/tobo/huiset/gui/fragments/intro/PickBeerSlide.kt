@@ -1,21 +1,20 @@
 package com.tobo.huiset.gui.fragments.intro
 
-import android.widget.Toast
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.extensions.toNumberDecimal
 
 class PickBeerSlide :AbstractPickPriceSlide(){
     override fun getInitialPrice(): String {
         val crate = db.getCrateIfExists()
 
-        val beerPrice = if(crate!=null){
-            crate.price.toFloat() / 24f
+        if(crate!=null){
+            return (crate.price / 24).toNumberDecimal()
         }else{
-            Product.STANDARD_PRICE_BEER
+            return Product.STANDARD_PRICE_BEER.toNumberDecimal()
         }
-        return  "%.2f".format(beerPrice)
     }
 
     override fun processPrice(price: Int) {
-        db.createDemoBeer(price)
+        db.createDemoBeerOrSetPrice(price)
     }
 }
