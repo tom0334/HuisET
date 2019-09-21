@@ -301,5 +301,9 @@ class HuisETDB(private val realm: Realm) {
         return comp
     }
 
+    fun addHuisRekeningIfNotExisting() {
+        //todo
+    }
+
 
 }

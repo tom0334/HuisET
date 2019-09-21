@@ -24,9 +24,11 @@ class MyApplication : Application() {
             prefs.edit {
                 it.putBoolean("firstLaunch",false)
             }
-            val intent = Intent(this, IntroActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, IntroActivity::class.java)
+//            startActivity(intent)
         }
+        val intent = Intent(this, IntroActivity::class.java)
+        startActivity(intent)
 
 
     }
