@@ -1,25 +1,15 @@
 package com.tobo.huiset.gui.fragments.intro
 
 import android.os.Bundle
-import android.text.Editable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.github.paolorotolo.appintro.ISlidePolicy
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_BUTTON_TEXT
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
-import com.tobo.huiset.utils.HuisETDB
-import io.realm.Realm
-import java.lang.IllegalArgumentException
 
 
 class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
@@ -29,14 +19,7 @@ class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
 
 
     override fun isPolicyRespected(): Boolean {
-        val realm = Realm.getDefaultInstance()
-        val db = HuisETDB(realm)
-
-        val ok = db.hasAtLeastOnePerson()
-
-        realm.close()
-
-        return ok
+        return db.hasAtLeastOnePerson()
     }
 
     override fun onUserIllegallyRequestedNextPage() {
@@ -66,6 +49,8 @@ class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
         val editText = view.findViewById<TextInputEditText>(R.id.intro_name)
 
         editText.hint = hint
+
+        //todo Check input of user here. Same as used in editprofile
         createButton.setOnClickListener {
             (this.activity as IntroActivity).createPerson(editText.text.toString())
             editText.setText(charArrayOf(),0,0)
