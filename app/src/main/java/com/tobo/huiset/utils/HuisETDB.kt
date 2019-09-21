@@ -1,6 +1,5 @@
 package com.tobo.huiset.utils
 
-import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -169,6 +168,16 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
+    fun createAndSaveTransfer(person: Person, receiver: Person, price: Int): Transaction {
+        var savedTrans: Transaction? = null
+        realm.executeTransaction {
+            val trans = Transaction.createTransfer(person, receiver, price)
+            person.addTransaction(trans)
+            savedTrans = realm.copyToRealmOrUpdate(trans)
+        }
+        return savedTrans!!
+    }
+
     /**
      * Gets a list of all transactions
      * if personId is provided, it findss any with that personid
@@ -230,10 +239,10 @@ class HuisETDB(private val realm: Realm) {
                 ).findFirst() == null
             ) {
                 // Actually delete the profile from the realm if it isn't involved in any transactions
-                oldProduct!!.deleteFromRealm()
+                oldProduct.deleteFromRealm()
             } else {
                 // fake delete profile from the realm
-                oldProduct!!.isDeleted = true
+                oldProduct.isDeleted = true
             }
         }
     }
@@ -304,11 +313,15 @@ class HuisETDB(private val realm: Realm) {
         return comp
     }
 
-    fun findAllCurrentPersonsWithBalanceNotZero(): RealmResults<Person>? {
+    fun findAllCurrentPersonsWithBalanceNegative(): RealmResults<Person>? {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
-            .not().`in`("balance", arrayListOf(0).toTypedArray())
+            .lessThan("balance", 0)
         return query.sort("row", Sort.ASCENDING).findAll()
+    }
+
+    fun findPersonWithMostBalance(): Person? {
+        return realm.where(Person::class.java).sort("balance", Sort.DESCENDING).findFirst()
     }
 
 

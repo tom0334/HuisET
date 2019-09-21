@@ -40,7 +40,7 @@
                 android:textStyle="italic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Geselecteerd"
+                tools:text=" - moet XX overmaken aan XX"
                 />
 
     </LinearLayout>

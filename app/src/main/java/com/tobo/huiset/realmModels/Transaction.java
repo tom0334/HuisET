@@ -19,6 +19,8 @@ public class Transaction extends RealmObject {
     private int amount;
     private boolean buy;
 
+    private Person otherPerson = null;
+
     public Transaction() {
     }
 
@@ -29,6 +31,17 @@ public class Transaction extends RealmObject {
         t.buy = buy;
         t.amount = amount;
         t.price = product.getPrice() * amount;
+        return t;
+    }
+
+    static public Transaction createTransfer(Person person, Person receiver, int price) {
+        Transaction t = new Transaction();
+        t.personId = person.getId();
+        t.productId = null;
+        t.buy = false;
+        t.amount = 1;
+        t.price = price;
+        t.otherPerson = receiver;
         return t;
     }
 
@@ -52,7 +65,6 @@ public class Transaction extends RealmObject {
         if(isBuy()) return price;
         else return -1 * price;
     }
-
 
     public boolean isBuy() {
         return buy;
@@ -84,5 +96,13 @@ public class Transaction extends RealmObject {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public Person getOtherPerson() {
+        return otherPerson;
+    }
+
+    public void setOtherPerson(Person otherPerson) {
+        this.otherPerson = otherPerson;
     }
 }

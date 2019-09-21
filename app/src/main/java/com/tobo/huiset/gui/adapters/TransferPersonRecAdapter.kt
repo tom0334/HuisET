@@ -61,11 +61,11 @@ class TransferPersonRecAdapter(
         holder.itemView.setOnClickListener {
             if (!chosenMap.contains(person.id)) {
                 chosenMap.add(person.id)
-                transferMoneyActivity.increaseCounter(true)
+                transferMoneyActivity.increaseSelectedPersonsCounter(true)
             }
             else {
                 chosenMap.remove(person.id)
-                transferMoneyActivity.increaseCounter(false)
+                transferMoneyActivity.increaseSelectedPersonsCounter(false)
             }
             notifyItemChanged(position)
         }

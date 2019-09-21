@@ -111,6 +111,57 @@
                     android:layout_below="@id/MTcalculationInstruction"
                     />
 
+            <LinearLayout
+                    android:id="@+id/MThasPaidLinearBottomTransfer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    >
+
+                <View
+                        android:id="@+id/MThaspaidPersonsDividerLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/primaryColor"
+                        />
+
+                <TextView
+                        android:id="@+id/MThasPaidPersonsCounter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="Aantal personen: "
+                        android:paddingBottom="4dp"
+                        android:paddingTop="8dp"
+                        android:gravity="center_horizontal"
+                        />
+
+                <TextView
+                        android:id="@+id/MTmoneyPaidCounter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="hebben in totaal overgemaakt: "
+                        android:paddingBottom="4dp"
+                        android:paddingTop="8dp"
+                        android:gravity="center_horizontal"
+                        />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/MThasPaidPersonsSaveButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:text="Klaar"
+                        android:textSize="20sp"
+                        android:shadowColor="#FFFFFF"
+                        app:backgroundTint="@color/primaryColor"
+                        />
+            </LinearLayout>
+
         </RelativeLayout>
 
     </LinearLayout>

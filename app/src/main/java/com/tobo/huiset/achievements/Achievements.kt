@@ -284,7 +284,7 @@ data class AchievementUpdateHelpData(private val person:Person){
     }
 
     val allBeerTurfTrans by lazy {
-        allTurfTrans.filter { it.product.species == Product.BEERPRODUCT }
+        allTurfTrans.filter { it.product != null && it.product.species == Product.BEERPRODUCT }
     }
 
     val turfTransactionsByPerson by lazy {

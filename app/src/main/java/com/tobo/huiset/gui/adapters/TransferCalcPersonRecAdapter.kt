@@ -30,7 +30,8 @@ class TransferCalcPersonRecAdapter(
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Person, TransferCalcPersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
-    private val chosenMap = mutableListOf<String>()
+    private val hasPaidMap = mutableMapOf<Person, Int>()
+    private var clickedMap = mutableMapOf<Int, Person>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.person_transfercalc_rec_item, parent, false)
@@ -40,25 +41,37 @@ class TransferCalcPersonRecAdapter(
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = data?.get(position) ?: return
 
-        holder.nameTv.text = "${person.name} moet:"
+        holder.nameTv.text = "${person.name}"
         holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balance.getBalanceColorString()
         holder.balanceTv.setTextColorFromHex(colorString)
 
         holder.colorLine.setBackgroundColor(Color.parseColor(person.color))
 
-        holder.selectedTv.text = "  - XX overmaken aan HENKIE"
+        if (hasPaidMap.contains(person)) {
+            holder.actionTv.text = "heeft ${hasPaidMap[person]!!.toCurrencyString()} overgemaakt naar ${clickedMap[position]!!.name}"
+            holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
+        }
+        else {
+            holder.actionTv.text = "moet ${person.balance.toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findPersonWithMostBalance()!!.name}"
+            holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
+        }
 
         holder.itemView.setOnClickListener {
-            if (!chosenMap.contains(person.id)) {
-                chosenMap.add(person.id)
-                transferMoneyActivity.increaseCounter(true)
+            val mostBalancePerson = transferMoneyActivity.db.findPersonWithMostBalance()
+
+            if (!hasPaidMap.contains(person)) {
+                hasPaidMap[person] = person.balance
+
+                clickedMap[position] = mostBalancePerson!!
+                transferMoneyActivity.someonePaidSomeone(person, mostBalancePerson!!, person.balance, false)
             }
             else {
-                chosenMap.remove(person.id)
-                transferMoneyActivity.increaseCounter(false)
+                transferMoneyActivity.someonePaidSomeone(person, mostBalancePerson!!, hasPaidMap[person]!!, true)
+
+                hasPaidMap.remove(person)
+                clickedMap.remove(position)
             }
-            notifyItemChanged(position)
         }
     }
 
@@ -68,7 +81,7 @@ class TransferCalcPersonRecAdapter(
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.MTCpersonRecItem_name)!!
-        val selectedTv = itemView.findViewById<TextView>(R.id.MTCpersonRecItem_selected)!!
+        val actionTv = itemView.findViewById<TextView>(R.id.MTCpersonRecItem_selected)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.MTCpersonRecItem_balance)!!
         val colorLine = itemView.findViewById<View>(R.id.MTCpersonRec_item_color)!!
     }
