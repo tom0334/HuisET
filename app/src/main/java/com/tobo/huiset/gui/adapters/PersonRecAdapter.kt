@@ -43,7 +43,7 @@ class PersonRecAdapter(
         val colorString = data?.get(position)!!.balance.getBalanceColorString()
         holder.balanceTv.setTextColorFromHex(colorString)
 
-        holder.hiddenTv.text = "verborgen"
+        holder.hiddenTv.text = "verborgen bij turven"
         holder.hiddenTv.visibility = View.VISIBLE
         if (person.show)
             holder.hiddenTv.visibility = View.GONE

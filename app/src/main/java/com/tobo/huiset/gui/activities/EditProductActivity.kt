@@ -13,10 +13,12 @@ import android.widget.Toast
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Product
-import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
+import android.text.Editable
+import android.text.TextWatcher
+import com.google.android.material.textfield.TextInputEditText
 
 
 /**
@@ -31,6 +33,8 @@ class EditProductActivity : HuisEtActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editproduct)
+
+        priceInitOnlyOneSeparatorValidator()
 
         // reset old values of product is edited
         val extras = intent.extras
@@ -57,6 +61,64 @@ class EditProductActivity : HuisEtActivity() {
 
             new = false
         }
+        else {
+            showSoftKeyboard(findViewById(R.id.name))
+        }
+    }
+
+    private fun priceInitOnlyOneSeparatorValidator() {
+        val editText = findViewById<TextInputEditText>(R.id.price)
+        editText.addTextChangedListener(object : TextWatcher {
+            lateinit var sBackup: String
+            var twoDecimals = false
+
+            /**
+             * Backup string before comma
+             */
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+                sBackup = s.toString()
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+            }
+
+            /**
+             * Makes sure only 1 comma or dot is used.
+             * And only 2 decimals are allowed.
+             */
+            override fun afterTextChanged(editable: Editable) {
+                try {
+                    val s = editable.toString()
+
+                    // Make sure only 1 comma or dot is used
+                    if (s != "") {
+                        java.lang.Double.valueOf(editable.toString().replace(',', '.'))
+                    }
+
+                    // format should be _.cc (only 2 decimals)
+                    if (s.contains(',') && editable.toString().split(",")[1].length > 2) {
+                        editText.setText(sBackup)
+                        editText.setSelection(editText.text.toString().length)
+                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
+                    }
+                    if (s.contains('.') && editable.toString().split(".")[1].length > 2) {
+                        editText.setText(sBackup)
+                        editText.setSelection(editText.text.toString().length)
+                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
+                    }
+                } catch (e: Exception) {
+                    editText.setText(sBackup)
+                    editText.setSelection(editText.text.toString().length)
+                }
+
+            }
+        })
     }
 
     // create an action bar button
@@ -79,6 +141,14 @@ class EditProductActivity : HuisEtActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    // automatically opens keyboard on startup
+    private fun showSoftKeyboard(view: View) {
+        if (view.requestFocus()) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     private fun deleteClicked() {
@@ -107,7 +177,7 @@ class EditProductActivity : HuisEtActivity() {
         val newName = nameEditText.text.toString()
 
         val priceEditText = findViewById<EditText>(R.id.price)
-        val priceString = priceEditText.text.toString()
+        val priceString = priceEditText.text.toString().replace(',','.')
 
         if (!nameValidate(newName, nameEditText) || !priceValidate(priceString, priceEditText)) {
             return
@@ -167,15 +237,8 @@ class EditProductActivity : HuisEtActivity() {
         // name is too long
         val maxPriceLength = 6
         if (price.split('.')[0].length > maxPriceLength) {
-            editText.error = "Er mogen niet meer dan $maxPriceLength voor de comma staan"
+            editText.error = "Er mogen niet meer dan $maxPriceLength voor de komma staan"
             return false
-        }
-        // format should be _.cc
-        if (price.contains('.')) {
-            if (price.split('.')[1].length > 2) {
-                editText.error = "Er mogen maximaal 2 getallen achter de comma"
-                return false
-            }
         }
 
         return true
