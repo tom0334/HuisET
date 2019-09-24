@@ -34,11 +34,11 @@ public class Transaction extends RealmObject {
         return t;
     }
 
-    static public Transaction createTransfer(Person person, Person receiver, int price) {
+    static public Transaction createTransfer(Person person, Person receiver, int price, Product product) {
         Transaction t = new Transaction();
         t.personId = person.getId();
-        t.productId = null;
-        t.buy = false;
+        t.productId = product.getId();
+        t.buy = true;
         t.amount = 1;
         t.price = price;
         t.otherPerson = receiver;

@@ -1,5 +1,7 @@
 package com.tobo.huiset.utils
 
+import android.content.Context
+import android.widget.Toast
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -168,13 +170,21 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
-    fun createAndSaveTransfer(person: Person, receiver: Person, price: Int): Transaction {
+    fun createAndSaveTransfer(person: Person, receiver: Person, amountOfMoney: Int, context: Context): Transaction {
         var savedTrans: Transaction? = null
+
+        val product = Product.create("Overgemaakt", amountOfMoney, Product.BOTH_TURF_AND_BUY, 13, Product.OTHERPRODUCT)
+
         realm.executeTransaction {
-            val trans = Transaction.createTransfer(person, receiver, price)
+            realm.copyToRealm(product)
+
+            val trans = Transaction.createTransfer(person, receiver, amountOfMoney, product)
             person.addTransaction(trans)
             savedTrans = realm.copyToRealmOrUpdate(trans)
+
+            product.isDeleted = true
         }
+
         return savedTrans!!
     }
 
@@ -297,9 +307,9 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun deleteTransaction(trans: Transaction, person: Person) {
+    fun deleteTransaction(trans: Transaction) {
         realm.executeSafe {
-            person.undoTransaction(trans)
+            trans.getPerson(realm).undoTransaction(trans)
             trans.deleteFromRealm()
         }
     }

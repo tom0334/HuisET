@@ -132,13 +132,17 @@ class FragmentMain : HuisEtFragment() {
             .findAll()
 
         val onDeleteClicked = fun (trans: Transaction, person: Person){
-            db.deleteTransaction(trans,person)
+            if (trans.otherPerson == null) {
+                db.deleteTransaction(trans)
+            } else {
+                db.deleteTransaction(trans)
+            }
 
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
             //Keep track of what achievements were added, and show that in the activity
             val added = mutableListOf<AchievementCompletion>()
-            db.findAllCurrentPersons(true).forEach {
+            db.findAllCurrentPersons(true).forEach { _ ->
                 added.addAll(AchievementManager.checkAgainForPerson(person))
             }
             (this.activity as CelebratingHuisEtActivity).showAchievements(added)

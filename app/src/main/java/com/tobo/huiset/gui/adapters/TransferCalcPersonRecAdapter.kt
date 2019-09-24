@@ -61,10 +61,11 @@ class TransferCalcPersonRecAdapter(
             val mostBalancePerson = transferMoneyActivity.db.findPersonWithMostBalance()
 
             if (!hasPaidMap.contains(person)) {
-                hasPaidMap[person] = person.balance
-
+                val moneyToTransfer = -person.balance
+                hasPaidMap[person] = moneyToTransfer
                 clickedMap[position] = mostBalancePerson!!
-                transferMoneyActivity.someonePaidSomeone(person, mostBalancePerson!!, person.balance, false)
+
+                transferMoneyActivity.someonePaidSomeone(person, mostBalancePerson, moneyToTransfer, false)
             }
             else {
                 transferMoneyActivity.someonePaidSomeone(person, mostBalancePerson!!, hasPaidMap[person]!!, true)

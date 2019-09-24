@@ -100,24 +100,20 @@ class TransferMoneyActivity : HuisEtActivity() {
     }
 
     fun someonePaidSomeone(payer: Person, receiver: Person, money: Int, undo: Boolean) {
-        val transactionProduct = Product.create("Overgemaakt", money, Product.BOTH_TURF_AND_BUY, 13, Product.OTHERPRODUCT)
-        realm.executeTransaction {
-            realm.copyToRealm(transactionProduct)
-        }
-
         if (!undo) {
-            val transaction = db.createAndSaveTransfer(payer, receiver, money)
-            transactionMap[payer] = transaction
+            val transaction = db.createAndSaveTransfer(payer, receiver, money, this)
 
+            transactionMap[payer] = transaction
             amountOfPersonsPaid++
-            amountOfMoneyPaid -= money
-        }
-        else {
-            db.deleteTransaction(transactionMap[payer]!!, payer)
-            amountOfPersonsPaid--
             amountOfMoneyPaid += money
         }
+        else {
+            db.deleteTransaction(transactionMap[payer]!!)
 
-        db.removeProduct(transactionProduct)
+            transactionMap.remove(payer)
+            amountOfPersonsPaid--
+            amountOfMoneyPaid -= money
+        }
+
     }
 }

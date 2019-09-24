@@ -53,6 +53,9 @@ public class Person extends RealmObject {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance += price;
+            if (t.getOtherPerson() != null) {
+                t.getOtherPerson().balance -= price;
+            }
         } else {
             this.balance -= price;
         }
@@ -62,6 +65,9 @@ public class Person extends RealmObject {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance -= price;
+            if (t.getOtherPerson() != null) {
+                t.getOtherPerson().balance += price;
+            }
         } else {
             this.balance += price;
         }
