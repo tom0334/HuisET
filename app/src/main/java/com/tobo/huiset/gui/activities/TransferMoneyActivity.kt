@@ -45,6 +45,14 @@ class TransferMoneyActivity : HuisEtActivity() {
         initProfileRec()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        transactionMap.toList().forEach {
+            db.deleteTransaction(it.second)
+        }
+        Toast.makeText(this, "Niemand heeft geld overgemaakt", Toast.LENGTH_SHORT).show()
+    }
+
     private fun initProfileRec() {
         val selectPersonsRec = findViewById<RecyclerView>(R.id.MTpickUserRec)
         selectPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
