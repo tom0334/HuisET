@@ -12,8 +12,8 @@
         <activity android:name="com.tobo.huiset.gui.activities.SettingsActivity"></activity>
         <activity android:name="com.tobo.huiset.gui.activities.AchievementsActivity"></activity>
         <activity android:name="com.tobo.huiset.gui.activities.StatsActivity" android:theme="@style/AppThemeNoActionBar"></activity>
-        <activity android:name="com.tobo.huiset.gui.activities.EditProfileActivity"></activity>
-        <activity android:name="com.tobo.huiset.gui.activities.EditProductActivity"></activity>
+        <activity android:name="com.tobo.huiset.gui.activities.EditProfileActivity" android:windowSoftInputMode="stateVisible"></activity>
+        <activity android:name="com.tobo.huiset.gui.activities.EditProductActivity" android:windowSoftInputMode="stateVisible"></activity>
         <activity android:name=".gui.activities.TransferMoneyActivity"></activity>
         <activity android:name="com.tobo.huiset.gui.activities.MainActivity">
             <intent-filter>

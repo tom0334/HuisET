@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ProfileColors
 
 /**
@@ -52,6 +51,9 @@ class EditProfileActivity : HuisEtActivity() {
 
             new = false
         }
+        else {
+            showSoftKeyboard(findViewById(R.id.name))
+        }
 
     }
 
@@ -82,7 +84,7 @@ class EditProfileActivity : HuisEtActivity() {
             this.finish()
             return
         }
-        // if profile isn't new, then ask "are you sure?
+        // if profile isn't new, then ask "are you sure?"
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->
@@ -131,6 +133,14 @@ class EditProfileActivity : HuisEtActivity() {
             .show()
 
         this.finish()
+    }
+
+    // automatically opens keyboard on startup
+    private fun showSoftKeyboard(view: View) {
+        if (view.requestFocus()) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     /**
