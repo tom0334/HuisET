@@ -176,14 +176,12 @@ class HuisETDB(private val realm: Realm) {
         val product = Product.create("Overgemaakt", amountOfMoney, Product.BOTH_TURF_AND_BUY, 13, Product.OTHERPRODUCT)
 
         realm.executeTransaction {
-            realm.copyToRealm(product)
-
             val trans = Transaction.createTransfer(person, receiver, amountOfMoney, product)
             person.addTransaction(trans)
             savedTrans = realm.copyToRealmOrUpdate(trans)
-
-            product.isDeleted = true
         }
+
+        removeProduct(product, context)
 
         return savedTrans!!
     }
@@ -231,7 +229,9 @@ class HuisETDB(private val realm: Realm) {
 
     fun removeProfile(oldProfile: Person) {
         realm.executeTransaction {
-            if (realm.where(Transaction::class.java).equalTo("personId", oldProfile.id).findFirst() == null) {
+            if (realm.where(Transaction::class.java)
+                    .equalTo("personId", oldProfile.id)
+                    .findFirst() == null) {
                 // Actually delete the product from the realm if it isn't involved in any transactions
                 oldProfile.deleteFromRealm()
             } else {
@@ -241,18 +241,18 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun removeProduct(oldProduct: Product) {
+    fun removeProduct(oldProduct: Product, context: Context) {
         realm.executeTransaction {
-            if (realm.where(Transaction::class.java).equalTo(
-                    "productId",
-                    oldProduct!!.id
-                ).findFirst() == null
+            if (realm.where(Transaction::class.java)
+                    .equalTo("productId", oldProduct.id)
+                    .findFirst() == null
             ) {
                 // Actually delete the profile from the realm if it isn't involved in any transactions
                 oldProduct.deleteFromRealm()
             } else {
                 // fake delete profile from the realm
                 oldProduct.isDeleted = true
+                Toast.makeText(context, "product is fake deleted", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -53,7 +53,7 @@ class TransferCalcPersonRecAdapter(
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
         }
         else {
-            holder.actionTv.text = "moet ${person.balance.toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findPersonWithMostBalance()!!.name}"
+            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findPersonWithMostBalance()!!.name}"
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
         }
 
