@@ -1,5 +1,6 @@
 package com.tobo.huiset.gui.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -58,16 +59,22 @@ class TransferMoneyActivity : HuisEtActivity() {
         amountOfMoneyPaid = 0
 
         findViewById<MaterialButton>(R.id.MTselectedPersonsSaveButton).setOnClickListener {
-            if (amountOfPersonsSelected == 0) {
-                Toast.makeText(this, "Er zijn geen personen geselecteerd", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            else {
-                // hide selection view and show calculation view
-                findViewById<View>(R.id.MTpickUsersLayout).visibility = View.GONE
-                findViewById<View>(R.id.MTcalculationLayout).visibility = View.VISIBLE
+            when {
+                amountOfPersonsSelected == 0 -> {
+                    Toast.makeText(this, "Er zijn geen personen geselecteerd", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                db.findRoommateWithMostBalanceWhoIsNotInArray(selectPersonRecAdapter.chosenMap.toTypedArray()) == null -> {
+                    Toast.makeText(this, "Er moet minimaal één huisgenoot niet geselecteerd zijn", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+                else -> {
+                    // hide selection view and show calculation view
+                    findViewById<View>(R.id.MTpickUsersLayout).visibility = View.GONE
+                    findViewById<View>(R.id.MTcalculationLayout).visibility = View.VISIBLE
 
-                calculateTransfersAndShow(selectPersonRecAdapter)
+                    calculateTransfersAndShow(selectPersonRecAdapter)
+                }
             }
         }
 
