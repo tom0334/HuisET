@@ -13,7 +13,6 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.gui.adapters.TransferCalcPersonRecAdapter
 import com.tobo.huiset.gui.adapters.TransferPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
@@ -87,8 +86,9 @@ class TransferMoneyActivity : HuisEtActivity() {
     private fun calculateTransfersAndShow(recAdapt: TransferPersonRecAdapter) {
         val calculatedPersonsRec = findViewById<RecyclerView>(R.id.MTcalculatedPersonsRec)
         calculatedPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        val realmResultsSelected = db.findPersonsWithIDInArray(recAdapt.chosenMap.toTypedArray())
-        calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, this, realm, realmResultsSelected, true)
+        val chosenArray = recAdapt.chosenMap.toTypedArray()
+        val realmResultsSelected = db.findPersonsWithIDInArray(chosenArray)
+        calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, this, realm, realmResultsSelected, true, chosenArray)
         calculatedPersonsRec.layoutManager = LinearLayoutManager(this)
 
 
@@ -100,8 +100,9 @@ class TransferMoneyActivity : HuisEtActivity() {
     }
 
     fun someonePaidSomeone(payer: Person, receiver: Person, money: Int, undo: Boolean) {
+
         if (!undo) {
-            val transaction = db.createAndSaveTransfer(payer, receiver, money, this)
+            val transaction = db.createAndSaveTransfer(payer, receiver, money)
 
             transactionMap[payer] = transaction
             amountOfPersonsPaid++

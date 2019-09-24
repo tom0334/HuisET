@@ -91,7 +91,7 @@ class EditProductActivity : HuisEtActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->
-                db.removeProduct(oldProduct!!, this)
+                db.removeProduct(oldProduct!!)
                 db.updateProductRows()
                 this.finish()
             }

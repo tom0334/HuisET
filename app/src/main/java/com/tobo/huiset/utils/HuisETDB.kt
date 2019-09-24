@@ -1,7 +1,6 @@
 package com.tobo.huiset.utils
 
 import android.content.Context
-import android.widget.Toast
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -170,7 +169,7 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
-    fun createAndSaveTransfer(person: Person, receiver: Person, amountOfMoney: Int, context: Context): Transaction {
+    fun createAndSaveTransfer(person: Person, receiver: Person, amountOfMoney: Int): Transaction {
         var savedTrans: Transaction? = null
 
         val product = Product.create("Overgemaakt", amountOfMoney, Product.BOTH_TURF_AND_BUY, 13, Product.OTHERPRODUCT)
@@ -181,7 +180,7 @@ class HuisETDB(private val realm: Realm) {
             savedTrans = realm.copyToRealmOrUpdate(trans)
         }
 
-        removeProduct(product, context)
+        removeProduct(product)
 
         return savedTrans!!
     }
@@ -241,7 +240,7 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun removeProduct(oldProduct: Product, context: Context) {
+    fun removeProduct(oldProduct: Product) {
         realm.executeTransaction {
             if (realm.where(Transaction::class.java)
                     .equalTo("productId", oldProduct.id)
@@ -252,16 +251,14 @@ class HuisETDB(private val realm: Realm) {
             } else {
                 // fake delete profile from the realm
                 oldProduct.isDeleted = true
-                Toast.makeText(context, "product is fake deleted", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     fun getTransactionsBetween(timeStamp1:Long, timeStamp2:Long): RealmResults<Transaction> {
-        val recentTransactions = realm.where(Transaction::class.java)
+        return realm.where(Transaction::class.java)
             .between("time",timeStamp1, timeStamp2)
             .findAll()
-        return recentTransactions
     }
 
     fun mergeTransactionsIfPossible(tooRecentLimit:Long){
@@ -330,8 +327,8 @@ class HuisETDB(private val realm: Realm) {
         return query.sort("row", Sort.ASCENDING).findAll()
     }
 
-    fun findPersonWithMostBalance(): Person? {
-        return realm.where(Person::class.java).sort("balance", Sort.DESCENDING).findFirst()
+    fun findPersonWithMostBalanceNotInArray(arr: Array<String>): Person? {
+        return realm.where(Person::class.java).not().`in`("id", arr).sort("balance", Sort.DESCENDING).findFirst()
     }
 
 

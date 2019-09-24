@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,8 @@ class TransferCalcPersonRecAdapter(
     val context: Context,
     val realm: Realm,
     data: RealmResults<Person>?,
-    autoUpdate: Boolean
+    autoUpdate: Boolean,
+    private val chosenArray: Array<String>
 ) : RealmRecyclerViewAdapter<Person, TransferCalcPersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
     private val hasPaidMap = mutableMapOf<Person, Int>()
@@ -53,12 +55,13 @@ class TransferCalcPersonRecAdapter(
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
         }
         else {
-            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findPersonWithMostBalance()!!.name}"
+            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findPersonWithMostBalanceNotInArray(chosenArray)!!.name}"
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
         }
 
         holder.itemView.setOnClickListener {
-            val mostBalancePerson = transferMoneyActivity.db.findPersonWithMostBalance()
+
+            val mostBalancePerson = transferMoneyActivity.db.findPersonWithMostBalanceNotInArray(chosenArray)
 
             if (!hasPaidMap.contains(person)) {
                 val moneyToTransfer = -person.balance
@@ -73,6 +76,8 @@ class TransferCalcPersonRecAdapter(
                 hasPaidMap.remove(person)
                 clickedMap.remove(position)
             }
+
+            notifyDataSetChanged()
         }
     }
 
