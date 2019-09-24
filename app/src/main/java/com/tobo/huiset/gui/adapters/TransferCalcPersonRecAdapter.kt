@@ -1,7 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -55,13 +54,13 @@ class TransferCalcPersonRecAdapter(
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
         }
         else {
-            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findPersonWithMostBalanceNotInArray(chosenArray)!!.name}"
+            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findRoommateWithMostBalanceWhoIsNotInArray(chosenArray)!!.name}"
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
         }
 
         holder.itemView.setOnClickListener {
 
-            val mostBalancePerson = transferMoneyActivity.db.findPersonWithMostBalanceNotInArray(chosenArray)
+            val mostBalancePerson = transferMoneyActivity.db.findRoommateWithMostBalanceWhoIsNotInArray(chosenArray)
 
             if (!hasPaidMap.contains(person)) {
                 val moneyToTransfer = -person.balance

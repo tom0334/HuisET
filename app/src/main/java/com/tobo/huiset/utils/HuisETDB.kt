@@ -327,8 +327,8 @@ class HuisETDB(private val realm: Realm) {
         return query.sort("row", Sort.ASCENDING).findAll()
     }
 
-    fun findPersonWithMostBalanceNotInArray(arr: Array<String>): Person? {
-        return realm.where(Person::class.java).not().`in`("id", arr).sort("balance", Sort.DESCENDING).findFirst()
+    fun findRoommateWithMostBalanceWhoIsNotInArray(arr: Array<String>): Person? {
+        return realm.where(Person::class.java).equalTo("guest", false).not().`in`("id", arr).sort("balance", Sort.DESCENDING).findFirst()
     }
 
 
