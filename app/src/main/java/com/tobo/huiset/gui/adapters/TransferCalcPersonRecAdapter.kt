@@ -51,19 +51,32 @@ class TransferCalcPersonRecAdapter(
         val theoreticalBalanceList = transferMoneyActivity.theoreticalBalanceList.toList().sortedByDescending { it.second }.toMutableList()
 
         if (hasPaidMap.contains(person)) {
-            holder.actionTv.text = "heeft ${hasPaidMap[person]!!.toCurrencyString()} overgemaakt naar ${personMatchMap[person]!!.name}"
+            if (hasPaidMap[person]!! > 0) {
+                holder.actionTv.text = "heeft ${hasPaidMap[person]!!.toCurrencyString()} overgemaakt naar ${personMatchMap[person]!!.name}"
+            } else {
+                holder.actionTv.text = "heeft ${(-hasPaidMap[person]!!).toCurrencyString()} ontvangen van ${personMatchMap[person]!!.name}"
+            }
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
         }
         else {
-            val mostBalancePerson = theoreticalBalanceList.first().first
-            personMatchMap[person] = mostBalancePerson
+            val neededPerson = if (person.balance < 0) theoreticalBalanceList.first().first
+                                    else theoreticalBalanceList.last().first
+            personMatchMap[person] = neededPerson
             val otherPerson = personMatchMap[person]
 
-            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${otherPerson!!.name}"
+            if (person.balance < 0) {
+                holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${otherPerson!!.name}"
+            } else {
+                holder.actionTv.text = "moet ${person.balance.toCurrencyString()} ontvangen van ${otherPerson!!.name}"
+            }
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
 
             theoreticalBalanceList.remove(Pair(otherPerson, otherPerson.balance))
-            theoreticalBalanceList.add(Pair(otherPerson, otherPerson.balance + person.balance))
+            if (person.balance < 0) {
+                theoreticalBalanceList.add(Pair(otherPerson, otherPerson.balance + person.balance))
+            } else {
+                theoreticalBalanceList.add(Pair(otherPerson, otherPerson.balance - person.balance))
+            }
         }
 
         transferMoneyActivity.theoreticalBalanceList = theoreticalBalanceList
@@ -81,7 +94,11 @@ class TransferCalcPersonRecAdapter(
                 val otherPersonUndo = personMatchMap[person]!!
                 transferMoneyActivity.someonePaidSomeone(person, otherPersonUndo, hasPaidMap[person]!!, true)
 
-                theoreticalBalanceList.remove(Pair(otherPersonUndo, otherPersonUndo.balance - hasPaidMap[person]!!))
+                if (hasPaidMap[person]!! > 0) {
+                    theoreticalBalanceList.remove(Pair(otherPersonUndo, otherPersonUndo.balance - hasPaidMap[person]!!))
+                } else {
+                    theoreticalBalanceList.remove(Pair(otherPersonUndo, otherPersonUndo.balance + hasPaidMap[person]!!))
+                }
                 theoreticalBalanceList.add(Pair(otherPersonUndo, otherPersonUndo.balance))
 
                 hasPaidMap.remove(person)

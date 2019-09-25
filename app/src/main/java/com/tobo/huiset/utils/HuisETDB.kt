@@ -354,5 +354,11 @@ class HuisETDB(private val realm: Realm) {
             .findAll()
     }
 
+    fun findAllRoommatesMinusInArray(chosenArray: Array<String>): List<Person> {
+        return findAllCurrentPersons(true)
+            .minus(findAllGuests())
+            .minus(findPersonsWithIDInArray(chosenArray)!!)
+    }
+
 
 }

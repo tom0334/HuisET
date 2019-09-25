@@ -33,7 +33,7 @@ class TransferMoneyActivity : HuisEtActivity() {
     private var amountOfMoneyPaid: Int = 0
         set(value) {
             field = value
-            findViewById<TextView>(R.id.MTmoneyPaidCounter)?.text = "Hebben in totaal overgemaakt: ${value.toCurrencyString()}"
+            findViewById<TextView>(R.id.MTmoneyPaidCounter)?.text = "In totaal overgemaakt: ${value.toCurrencyString()}"
         }
 
     private var transactionMap: MutableMap<Person, Transaction> = mutableMapOf()
@@ -111,8 +111,8 @@ class TransferMoneyActivity : HuisEtActivity() {
         calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, this, realm, realmResultsSelected, true)
         calculatedPersonsRec.layoutManager = LinearLayoutManager(this)
 
-        db.findAllCurrentPersons(true).minus(db.findAllGuests()).minus(db.findPersonsWithIDInArray(chosenArray)!!).forEach {
-            theoreticalBalanceList.add(Pair((it as Person), it.balance))
+        db.findAllRoommatesMinusInArray(chosenArray).forEach {
+            theoreticalBalanceList.add(Pair(it, it.balance))
         }
     }
 
@@ -124,18 +124,32 @@ class TransferMoneyActivity : HuisEtActivity() {
     fun someonePaidSomeone(payer: Person, receiver: Person, money: Int, undo: Boolean) {
 
         if (!undo) {
-            val transaction = db.createAndSaveTransfer(payer, receiver, money)
+
+            var transaction: Transaction = if (money > 0) {
+                db.createAndSaveTransfer(payer, receiver, money)
+            } else {
+                db.createAndSaveTransfer(receiver, payer, -money)
+            }
 
             transactionMap[payer] = transaction
             amountOfPersonsPaid++
-            amountOfMoneyPaid += money
+            amountOfMoneyPaid += if (money >= 0) {
+                money
+            } else {
+                -money
+            }
         }
         else {
             db.deleteTransaction(transactionMap[payer]!!)
 
             transactionMap.remove(payer)
             amountOfPersonsPaid--
-            amountOfMoneyPaid -= money
+
+            amountOfMoneyPaid += if (money >= 0) {
+                -money
+            } else {
+                money
+            }
         }
 
     }
