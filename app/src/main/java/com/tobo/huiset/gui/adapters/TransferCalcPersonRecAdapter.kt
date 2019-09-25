@@ -27,12 +27,11 @@ class TransferCalcPersonRecAdapter(
     val context: Context,
     val realm: Realm,
     data: RealmResults<Person>?,
-    autoUpdate: Boolean,
-    private val chosenArray: Array<String>
+    autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Person, TransferCalcPersonRecAdapter.PersonViewHolder>(data, autoUpdate) {
 
-    private val hasPaidMap = mutableMapOf<Person, Int>()
-    private var clickedMap = mutableMapOf<Int, Person>()
+    private var hasPaidMap: MutableMap<Person, Int> = mutableMapOf()
+    private var personMatchMap: MutableMap<Person, Person> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.person_transfercalc_rec_item, parent, false)
@@ -42,42 +41,55 @@ class TransferCalcPersonRecAdapter(
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = data?.get(position) ?: return
 
-        holder.nameTv.text = "${person.name}"
+        holder.nameTv.text = person.name
         holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balance.getBalanceColorString()
         holder.balanceTv.setTextColorFromHex(colorString)
 
         holder.colorLine.setBackgroundColor(Color.parseColor(person.color))
 
+        val theoreticalBalanceList = transferMoneyActivity.theoreticalBalanceList.toList().sortedByDescending { it.second }.toMutableList()
+
         if (hasPaidMap.contains(person)) {
-            holder.actionTv.text = "heeft ${hasPaidMap[person]!!.toCurrencyString()} overgemaakt naar ${clickedMap[position]!!.name}"
+            holder.actionTv.text = "heeft ${hasPaidMap[person]!!.toCurrencyString()} overgemaakt naar ${personMatchMap[person]!!.name}"
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
         }
         else {
-            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${transferMoneyActivity.db.findRoommateWithMostBalanceWhoIsNotInArray(chosenArray)!!.name}"
+            val mostBalancePerson = theoreticalBalanceList.first().first
+            personMatchMap[person] = mostBalancePerson
+            val otherPerson = personMatchMap[person]
+
+            holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${otherPerson!!.name}"
             holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
+
+            theoreticalBalanceList.remove(Pair(otherPerson, otherPerson.balance))
+            theoreticalBalanceList.add(Pair(otherPerson, otherPerson.balance + person.balance))
         }
 
-        holder.itemView.setOnClickListener {
+        transferMoneyActivity.theoreticalBalanceList = theoreticalBalanceList
 
-            val mostBalancePerson = transferMoneyActivity.db.findRoommateWithMostBalanceWhoIsNotInArray(chosenArray)
+        holder.itemView.setOnClickListener {
+            val otherPerson = personMatchMap[person]!!
 
             if (!hasPaidMap.contains(person)) {
                 val moneyToTransfer = -person.balance
                 hasPaidMap[person] = moneyToTransfer
-                clickedMap[position] = mostBalancePerson!!
 
-                transferMoneyActivity.someonePaidSomeone(person, mostBalancePerson, moneyToTransfer, false)
+                transferMoneyActivity.someonePaidSomeone(person, otherPerson, moneyToTransfer, false)
             }
             else {
-                transferMoneyActivity.someonePaidSomeone(person, mostBalancePerson!!, hasPaidMap[person]!!, true)
+                val otherPersonUndo = personMatchMap[person]!!
+                transferMoneyActivity.someonePaidSomeone(person, otherPersonUndo, hasPaidMap[person]!!, true)
+
+                theoreticalBalanceList.remove(Pair(otherPersonUndo, otherPersonUndo.balance - hasPaidMap[person]!!))
+                theoreticalBalanceList.add(Pair(otherPersonUndo, otherPersonUndo.balance))
 
                 hasPaidMap.remove(person)
-                clickedMap.remove(position)
+                transferMoneyActivity.theoreticalBalanceList = theoreticalBalanceList
             }
 
-            notifyDataSetChanged()
         }
+
     }
 
     override fun getItemCount(): Int {

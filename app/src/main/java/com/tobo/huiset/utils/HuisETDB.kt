@@ -291,7 +291,9 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun findPersonsWithIDInArray(arr: Array<String>): RealmResults<Person>? {
-        return realm.where(Person::class.java).`in`("id", arr).findAll()
+        return realm.where(Person::class.java)
+            .`in`("id", arr)
+            .findAll()
     }
 
     fun removeAllAchievementCompletionsForPerson(person: Person) {
@@ -327,8 +329,20 @@ class HuisETDB(private val realm: Realm) {
         return query.sort("row", Sort.ASCENDING).findAll()
     }
 
-    fun findRoommateWithMostBalanceWhoIsNotInArray(arr: Array<String>): Person? {
-        return realm.where(Person::class.java).equalTo("guest", false).not().`in`("id", arr).sort("balance", Sort.DESCENDING).findFirst()
+    fun findRoommateWithMostTheoreticalBalanceNotInArray(arr: Array<String>): Person? {
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("guest", false)
+            .not().`in`("id", arr)
+            .sort("balance", Sort.DESCENDING)
+            .findFirst()
+    }
+
+    fun findAllGuests(): RealmResults<Person> {
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("guest", true)
+            .findAll()
     }
 
 

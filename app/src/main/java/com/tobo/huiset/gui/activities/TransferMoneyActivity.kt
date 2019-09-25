@@ -1,6 +1,5 @@
 package com.tobo.huiset.gui.activities
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -38,6 +37,8 @@ class TransferMoneyActivity : HuisEtActivity() {
         }
 
     private var transactionMap: MutableMap<Person, Transaction> = mutableMapOf()
+    var theoreticalBalanceList: MutableList<Pair<Person, Int>> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +46,8 @@ class TransferMoneyActivity : HuisEtActivity() {
         initProfileRec()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onBackPressed() {
+        super.onBackPressed()
         transactionMap.toList().forEach {
             db.deleteTransaction(it.second)
         }
@@ -57,6 +58,9 @@ class TransferMoneyActivity : HuisEtActivity() {
         val selectPersonsRec = findViewById<RecyclerView>(R.id.MTpickUserRec)
         selectPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         val profiles = db.findAllCurrentPersonsWithBalanceNegative()
+        if (profiles == null) {
+            Toast.makeText(this, "There are no profiles with negative balance", Toast.LENGTH_SHORT).show()
+        }
 
         val selectPersonRecAdapter = TransferPersonRecAdapter(this, this, realm, profiles, true)
         selectPersonsRec.adapter = selectPersonRecAdapter
@@ -66,13 +70,14 @@ class TransferMoneyActivity : HuisEtActivity() {
         amountOfPersonsPaid = 0
         amountOfMoneyPaid = 0
 
+
         findViewById<MaterialButton>(R.id.MTselectedPersonsSaveButton).setOnClickListener {
             when {
                 amountOfPersonsSelected == 0 -> {
                     Toast.makeText(this, "Er zijn geen personen geselecteerd", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                db.findRoommateWithMostBalanceWhoIsNotInArray(selectPersonRecAdapter.chosenMap.toTypedArray()) == null -> {
+                db.findRoommateWithMostTheoreticalBalanceNotInArray(selectPersonRecAdapter.chosenMap.toTypedArray()) == null -> {
                     Toast.makeText(this, "Er moet minimaal één huisgenoot niet geselecteerd zijn", Toast.LENGTH_LONG).show()
                     return@setOnClickListener
                 }
@@ -103,10 +108,12 @@ class TransferMoneyActivity : HuisEtActivity() {
         calculatedPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         val chosenArray = recAdapt.chosenMap.toTypedArray()
         val realmResultsSelected = db.findPersonsWithIDInArray(chosenArray)
-        calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, this, realm, realmResultsSelected, true, chosenArray)
+        calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, this, realm, realmResultsSelected, true)
         calculatedPersonsRec.layoutManager = LinearLayoutManager(this)
 
-
+        db.findAllCurrentPersons(true).minus(db.findAllGuests()).minus(db.findPersonsWithIDInArray(chosenArray)!!).forEach {
+            theoreticalBalanceList.add(Pair((it as Person), it.balance))
+        }
     }
 
     fun increaseSelectedPersonsCounter(bool: Boolean) {
