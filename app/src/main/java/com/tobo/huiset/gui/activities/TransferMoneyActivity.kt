@@ -57,12 +57,12 @@ class TransferMoneyActivity : HuisEtActivity() {
     private fun initProfileRec() {
         val selectPersonsRec = findViewById<RecyclerView>(R.id.MTpickUserRec)
         selectPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        val profiles = db.findAllCurrentPersonsWithBalanceNegative()
-        if (profiles == null) {
+        val selectableTransferPersons = db.findAllPersonsAbleToTransfer()
+        if (selectableTransferPersons == null) {
             Toast.makeText(this, "There are no profiles with negative balance", Toast.LENGTH_SHORT).show()
         }
 
-        val selectPersonRecAdapter = TransferPersonRecAdapter(this, this, realm, profiles, true)
+        val selectPersonRecAdapter = TransferPersonRecAdapter(this, this, realm, selectableTransferPersons, true)
         selectPersonsRec.adapter = selectPersonRecAdapter
         selectPersonsRec.layoutManager = LinearLayoutManager(this)
 

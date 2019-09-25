@@ -1,6 +1,5 @@
 package com.tobo.huiset.utils
 
-import android.content.Context
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -8,6 +7,7 @@ import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
+import io.realm.RealmQuery
 import io.realm.RealmResults
 import io.realm.Sort
 
@@ -322,11 +322,20 @@ class HuisETDB(private val realm: Realm) {
         return comp
     }
 
-    fun findAllCurrentPersonsWithBalanceNegative(): RealmResults<Person>? {
+    fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
-            .lessThan("balance", 0)
-        return query.sort("row", Sort.ASCENDING).findAll()
+
+        /** People who can transfer:
+         *  - Roommates or guests with balance < 0
+         *  - Guests with balance > 0
+         */
+        val selectablePersons =
+            query.lessThan("balance", 0)
+                    .or().greaterThan("balance", 0)
+                            .and().equalTo("guest", true)
+
+        return selectablePersons.findAll()
     }
 
     fun findRoommateWithMostTheoreticalBalanceNotInArray(arr: Array<String>): Person? {
