@@ -89,7 +89,7 @@ class EditProfileActivity : HuisEtActivity() {
             }
             oldProfile!!.balance != 0 -> {
                 Snackbar.make(findViewById(R.id.editProfileView), "Dit persoon moet eerst afrekenen voordat hij verwijderd kan worden", Snackbar.LENGTH_LONG).setAction("Afrekenen", View.OnClickListener {
-                    val intent = Intent(this, StatsActivity::class.java)
+                    val intent = Intent(this, TransferMoneyActivity::class.java)
                     startActivity(intent)
                 }).show()
             }
