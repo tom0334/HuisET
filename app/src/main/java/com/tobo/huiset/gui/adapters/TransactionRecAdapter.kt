@@ -45,9 +45,15 @@ class TransactionRecAdapter(
 
         holder.nameTv.text = person?.name
         holder.timeAgo.text = trans.time.toTimeAgoString(includeNewLine = true)
-        holder.productTv.text = "${trans.amount} ${trans.product.name}"
+        if (trans.otherPerson != null) {
+            holder.productTv.text = "Aan ${trans.otherPerson.name}"
+        }
+        else {
+            holder.productTv.text = "${trans.amount} ${trans.product.name}"
+        }
+
         if (trans.isBuy) {
-            holder.priceTv.text = "+ ${trans.price.toCurrencyString()} (gekocht)"
+            holder.priceTv.text = "+ ${trans.price.toCurrencyString()} (betaald)"
             holder.priceTv.setTextColorFromHex((1).getBalanceColorString())
         } else {
             holder.priceTv.text = "${trans.price.toCurrencyString()}"

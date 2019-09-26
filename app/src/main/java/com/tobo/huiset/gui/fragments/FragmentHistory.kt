@@ -205,6 +205,7 @@ class FragmentHistory : HuisEtFragment() {
         val res = inTimeSpan
             .asSequence()
             .filter { it.isBuy == showBuy}
+            .filter { it.product != null }
             .groupBy { it.tokey()}
             .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumBy { it.amount }, values.sumBy { it.saldoImpact }, false) }
             .sortedByDescending { it.amount }.toMutableList()

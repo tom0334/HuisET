@@ -90,7 +90,12 @@ class FragmentPurchases : HuisEtFragment() {
                     db.createAndSaveTransaction(person, it, amount, true)
                 }
             }
-            Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
+            if (totalPurchasePrice == 0) {
+                Toast.makeText(context, "Geen producten geselecteerd", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
+            }
             setPersonAndUpdate(null)
             db.mergeTransactionsIfPossible(System.currentTimeMillis())
             val changes = AchievementManager.updateAchievementsAfterBuy(person)

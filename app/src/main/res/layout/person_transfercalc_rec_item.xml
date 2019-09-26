@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="47.5dp"
+        >
+
+    <ImageView
+            android:id="@+id/MTCcheckedImage"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/baseline_done_white_48"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Done" />
+
+
+    <View
+            android:id="@+id/MTCpersonRec_item_color"
+            android:layout_gravity="center_vertical"
+            android:background="@color/secondaryLightColor"
+            android:layout_marginRight="16dp"
+            android:layout_width="4dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp" />
+
+    <LinearLayout android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+        <TextView
+                android:id="@+id/MTCpersonRecItem_name"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                tools:text="Bobbert"
+                android:textColor="@color/primaryTextColor"
+                />
+
+        <TextView
+                android:id="@+id/MTCpersonRecItem_selected"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text=" - moet XX overmaken aan XX"
+                />
+
+    </LinearLayout>
+
+
+    <View
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            />
+
+
+    <TextView
+            android:id="@+id/MTCpersonRecItem_balance"
+            android:gravity="center_vertical"
+            tools:text ="€4.00"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+
+</LinearLayout>

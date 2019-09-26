@@ -1,6 +1,5 @@
 package com.tobo.huiset.utils
 
-import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -169,6 +168,31 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
+    fun createAndSaveTransaction(transaction: Transaction): Transaction {
+        var savedTrans:Transaction? = null
+        realm.executeTransaction {
+            transaction.getPerson(realm).addTransaction(transaction)
+            savedTrans = realm.copyToRealmOrUpdate(transaction)
+        }
+        return savedTrans!!
+    }
+
+    fun createAndSaveTransfer(person: Person, receiver: Person, amountOfMoney: Int): Transaction {
+        var savedTrans: Transaction? = null
+
+        val product = Product.create("Overgemaakt", amountOfMoney, Product.BOTH_TURF_AND_BUY, 13, Product.OTHERPRODUCT)
+
+        realm.executeTransaction {
+            val trans = Transaction.createTransfer(person, receiver, amountOfMoney, product)
+            person.addTransaction(trans)
+            savedTrans = realm.copyToRealmOrUpdate(trans)
+        }
+
+        removeProduct(product)
+
+        return savedTrans!!
+    }
+
     /**
      * Gets a list of all transactions
      * if personId is provided, it findss any with that personid
@@ -212,7 +236,9 @@ class HuisETDB(private val realm: Realm) {
 
     fun removeProfile(oldProfile: Person) {
         realm.executeTransaction {
-            if (realm.where(Transaction::class.java).equalTo("personId", oldProfile.id).findFirst() == null) {
+            if (realm.where(Transaction::class.java)
+                    .equalTo("personId", oldProfile.id)
+                    .findFirst() == null) {
                 // Actually delete the product from the realm if it isn't involved in any transactions
                 oldProfile.deleteFromRealm()
             } else {
@@ -223,27 +249,24 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun removeProduct(oldProduct: Product) {
-        realm.executeTransaction {
-            if (realm.where(Transaction::class.java).equalTo(
-                    "productId",
-                    oldProduct!!.id
-                ).findFirst() == null
+        realm.executeSafe {
+            if (realm.where(Transaction::class.java)
+                    .equalTo("productId", oldProduct.id)
+                    .findFirst() == null
             ) {
                 // Actually delete the profile from the realm if it isn't involved in any transactions
-                oldProduct!!.deleteFromRealm()
+                oldProduct.deleteFromRealm()
             } else {
                 // fake delete profile from the realm
-                oldProduct!!.isDeleted = true
+                oldProduct.isDeleted = true
             }
         }
     }
 
-
     fun getTransactionsBetween(timeStamp1:Long, timeStamp2:Long): RealmResults<Transaction> {
-        val recentTransactions = realm.where(Transaction::class.java)
+        return realm.where(Transaction::class.java)
             .between("time",timeStamp1, timeStamp2)
             .findAll()
-        return recentTransactions
     }
 
     fun mergeTransactionsIfPossible(tooRecentLimit:Long){
@@ -275,6 +298,12 @@ class HuisETDB(private val realm: Realm) {
 
     }
 
+    fun findPersonsWithIDInArray(arr: Array<String>): RealmResults<Person>? {
+        return realm.where(Person::class.java)
+            .`in`("id", arr)
+            .findAll()
+    }
+
     fun removeAllAchievementCompletionsForPerson(person: Person) {
         realm.executeTransaction {
             //removes all completions completely
@@ -285,9 +314,9 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun deleteTransaction(trans: Transaction, person: Person) {
+    fun deleteTransaction(trans: Transaction) {
         realm.executeSafe {
-            person.undoTransaction(trans)
+            trans.getPerson(realm).undoTransaction(trans)
             trans.deleteFromRealm()
         }
     }
@@ -301,5 +330,39 @@ class HuisETDB(private val realm: Realm) {
         return comp
     }
 
+    fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
+        val query = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .sort("row", Sort.ASCENDING)
+
+        /** People who can transfer:
+         *  - Roommates or guests with balance < 0
+         *  - Guests with balance > 0
+         */
+        val selectablePersons =
+            query.lessThan("balance", 0)
+                    .or().greaterThan("balance", 0)
+                            .and().equalTo("guest", true)
+
+        return selectablePersons.findAll()
+    }
+
+    fun findRoommateWithMostTheoreticalBalanceNotInArray(arr: Array<String>): Person? {
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("guest", false)
+            .not().`in`("id", arr)
+            .sort("balance", Sort.DESCENDING)
+            .findFirst()
+    }
+
+    fun findAllRoommatesMinusInArray(chosenArray: Array<String>): List<Person> {
+        val query = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("guest", false)
+            .sort("row", Sort.ASCENDING)
+
+        return query.findAll().minus(findPersonsWithIDInArray(chosenArray)!!)
+    }
 
 }
