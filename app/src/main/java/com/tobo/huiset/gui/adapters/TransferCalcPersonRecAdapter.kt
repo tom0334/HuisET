@@ -42,13 +42,10 @@ class TransferCalcPersonRecAdapter(
         val person = data?.get(position) ?: return
 
         holder.nameTv.text = person.name
-        holder.balanceTv.text = person.balance.toCurrencyString()
-        val colorString = data?.get(position)!!.balance.getBalanceColorString()
-        holder.balanceTv.setTextColorFromHex(colorString)
-
         holder.colorLine.setBackgroundColor(Color.parseColor(person.color))
 
         val theoreticalBalanceList = transferMoneyActivity.theoreticalBalanceList.toList().sortedByDescending { it.second }.toMutableList()
+        var ownTheoreticalBalance = person.balance
 
         if (hasPaidMap.contains(person)) {
             if (hasPaidMap[person]!! > 0) {
@@ -59,7 +56,7 @@ class TransferCalcPersonRecAdapter(
                 holder.checkedIv.setImageResource(R.drawable.baseline_done_black_48)
             }
             holder.actionTv.setTextColor(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
-
+            ownTheoreticalBalance += hasPaidMap[person]!!
         }
         else {
             val neededPerson = if (person.balance < 0) theoreticalBalanceList.first().first
@@ -83,6 +80,11 @@ class TransferCalcPersonRecAdapter(
                 theoreticalBalanceList.add(Pair(otherPerson, otherPerson.balance - person.balance))
             }
         }
+
+        holder.balanceTv.text = ownTheoreticalBalance.toCurrencyString()
+        val colorString = ownTheoreticalBalance.getBalanceColorString()
+        holder.balanceTv.setTextColorFromHex(colorString)
+
 
         transferMoneyActivity.theoreticalBalanceList = theoreticalBalanceList
 
