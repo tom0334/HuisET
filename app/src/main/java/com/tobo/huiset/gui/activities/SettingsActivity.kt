@@ -56,7 +56,7 @@ class SettingsActivity : HuisEtActivity() {
     private fun showStatus() {
         fullscreenSwitch.isChecked = prefs.getBoolean(PREFS_FULLSCREEN_ID, false)
         hideAppBarSwitch.isChecked = prefs.getBoolean(PREFS_HIDEAPPBAR_ID, false)
-        turfConfettiSwitch.isChecked = prefs.getBoolean(PREFS_TURF_CONFETTI_ID,false)
+        turfConfettiSwitch.isChecked = prefs.getBoolean(PREFS_TURF_CONFETTI_ID,true)
     }
 
     private fun saveChanges() {
