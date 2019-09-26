@@ -2,6 +2,7 @@ package com.tobo.huiset.gui.activities
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Person
@@ -86,7 +88,10 @@ class EditProfileActivity : HuisEtActivity() {
                 return
             }
             oldProfile!!.balance != 0 -> {
-                Toast.makeText(this, "Dit persoon moet eerst afrekenen voordat hij verwijdert kan worden", Toast.LENGTH_SHORT).show()
+                Snackbar.make(findViewById(R.id.editProfileView), "Dit persoon moet eerst afrekenen voordat hij verwijderd kan worden", Snackbar.LENGTH_LONG).setAction("Afrekenen", View.OnClickListener {
+                    val intent = Intent(this, StatsActivity::class.java)
+                    startActivity(intent)
+                }).show()
             }
             else -> {
                 // if profile isn't new, then ask "are you sure?"
