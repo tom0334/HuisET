@@ -108,7 +108,7 @@ class TransferMoneyActivity : HuisEtActivity() {
         calculatedPersonsRec.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         val chosenArray = recAdapt.chosenMap.toTypedArray()
         val realmResultsSelected = db.findPersonsWithIDInArray(chosenArray)
-        calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, this, realm, realmResultsSelected, true)
+        calculatedPersonsRec.adapter = TransferCalcPersonRecAdapter(this, realm, realmResultsSelected, true)
         calculatedPersonsRec.layoutManager = LinearLayoutManager(this)
 
         db.findAllRoommatesMinusInArray(chosenArray).forEach {

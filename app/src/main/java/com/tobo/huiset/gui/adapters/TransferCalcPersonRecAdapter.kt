@@ -24,7 +24,6 @@ import io.realm.RealmResults
  */
 class TransferCalcPersonRecAdapter(
     private val transferMoneyActivity: TransferMoneyActivity,
-    val context: Context,
     val realm: Realm,
     data: RealmResults<Person>?,
     autoUpdate: Boolean
@@ -34,7 +33,7 @@ class TransferCalcPersonRecAdapter(
     private var personMatchMap: MutableMap<Person, Person> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.person_transfercalc_rec_item, parent, false)
+        val view = LayoutInflater.from(transferMoneyActivity).inflate(R.layout.person_transfercalc_rec_item, parent, false)
         return PersonViewHolder(view)
     }
 
@@ -56,7 +55,7 @@ class TransferCalcPersonRecAdapter(
             } else {
                 holder.actionTv.text = "heeft ${(-hasPaidMap[person]!!).toCurrencyString()} ontvangen van ${personMatchMap[person]!!.name}"
             }
-            holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
+            holder.actionTv.setTextColor(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
         }
         else {
             val neededPerson = if (person.balance < 0) theoreticalBalanceList.first().first
@@ -69,7 +68,7 @@ class TransferCalcPersonRecAdapter(
             } else {
                 holder.actionTv.text = "moet ${person.balance.toCurrencyString()} ontvangen van ${otherPerson!!.name}"
             }
-            holder.actionTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
+            holder.actionTv.setTextColor(ContextCompat.getColor(transferMoneyActivity, R.color.androidStandardTextColor))
 
             theoreticalBalanceList.remove(Pair(otherPerson, otherPerson.balance))
             if (person.balance < 0) {
