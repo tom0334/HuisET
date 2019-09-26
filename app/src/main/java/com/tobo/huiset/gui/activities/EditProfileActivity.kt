@@ -80,23 +80,31 @@ class EditProfileActivity : HuisEtActivity() {
     }
 
     private fun deleteClicked() {
-        if (new) {
-            this.finish()
-            return
-        }
-        // if profile isn't new, then ask "are you sure?"
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
-            .setPositiveButton("verwijderen") { _, _ ->
-                db.removeProfile(oldProfile!!)
-                db.updateProfileRows()
+        when {
+            new -> {
                 this.finish()
+                return
             }
-            .setNegativeButton("annuleren") { _, _ ->
-                // User cancelled the dialog, do nothing
+            oldProfile!!.balance != 0 -> {
+                Toast.makeText(this, "Dit persoon moet eerst afrekenen voordat hij verwijdert kan worden", Toast.LENGTH_SHORT).show()
             }
-        // Create the AlertDialog object and return it
-        builder.create().show()
+            else -> {
+                // if profile isn't new, then ask "are you sure?"
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
+                    .setPositiveButton("verwijderen") { _, _ ->
+                        Toast.makeText(this, "Profiel ${oldProfile!!.name} is verwijderd", Toast.LENGTH_SHORT).show()
+                        db.removeProfile(oldProfile!!)
+                        db.updateProfileRows()
+                        this.finish()
+                    }
+                    .setNegativeButton("annuleren") { _, _ ->
+                        // User cancelled the dialog, do nothing
+                    }
+                // Create the AlertDialog object and return it
+                builder.create().show()
+            }
+        }
     }
 
     private fun doneClicked() {
@@ -129,8 +137,7 @@ class EditProfileActivity : HuisEtActivity() {
             }
         }
 
-        Toast.makeText(this, "Profile $newName added/edited", Toast.LENGTH_SHORT)
-            .show()
+        Toast.makeText(this, "Profiel $newName toegevoegd/aangepast", Toast.LENGTH_SHORT).show()
 
         this.finish()
     }
