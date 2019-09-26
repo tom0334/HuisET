@@ -1,10 +1,11 @@
 package com.tobo.huiset.gui.adapters
 
-import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -52,10 +53,13 @@ class TransferCalcPersonRecAdapter(
         if (hasPaidMap.contains(person)) {
             if (hasPaidMap[person]!! > 0) {
                 holder.actionTv.text = "heeft ${hasPaidMap[person]!!.toCurrencyString()} overgemaakt naar ${personMatchMap[person]!!.name}"
+                holder.checkedIv.setImageResource(R.drawable.baseline_done_black_48)
             } else {
                 holder.actionTv.text = "heeft ${(-hasPaidMap[person]!!).toCurrencyString()} ontvangen van ${personMatchMap[person]!!.name}"
+                holder.checkedIv.setImageResource(R.drawable.baseline_done_black_48)
             }
             holder.actionTv.setTextColor(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
+
         }
         else {
             val neededPerson = if (person.balance < 0) theoreticalBalanceList.first().first
@@ -65,8 +69,10 @@ class TransferCalcPersonRecAdapter(
 
             if (person.balance < 0) {
                 holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${otherPerson!!.name}"
+                holder.checkedIv.setImageResource(R.drawable.baseline_done_white_48)
             } else {
                 holder.actionTv.text = "moet ${person.balance.toCurrencyString()} ontvangen van ${otherPerson!!.name}"
+                holder.checkedIv.setImageResource(R.drawable.baseline_done_white_48)
             }
             holder.actionTv.setTextColor(ContextCompat.getColor(transferMoneyActivity, R.color.androidStandardTextColor))
 
@@ -86,8 +92,9 @@ class TransferCalcPersonRecAdapter(
             if (!hasPaidMap.contains(person)) {
                 val moneyToTransfer = -person.balance
                 hasPaidMap[person] = moneyToTransfer
-
                 transferMoneyActivity.someonePaidSomeone(person, otherPerson, moneyToTransfer, false)
+
+                notifyItemChanged(position)
             }
             else {
                 val otherPersonUndo = personMatchMap[person]!!
@@ -102,6 +109,8 @@ class TransferCalcPersonRecAdapter(
 
                 hasPaidMap.remove(person)
                 transferMoneyActivity.theoreticalBalanceList = theoreticalBalanceList
+
+                notifyItemChanged(position)
             }
 
         }
@@ -116,6 +125,7 @@ class TransferCalcPersonRecAdapter(
         val nameTv = itemView.findViewById<TextView>(R.id.MTCpersonRecItem_name)!!
         val actionTv = itemView.findViewById<TextView>(R.id.MTCpersonRecItem_selected)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.MTCpersonRecItem_balance)!!
+        val checkedIv = itemView.findViewById<ImageView>(R.id.MTCcheckedImage)!!
         val colorLine = itemView.findViewById<View>(R.id.MTCpersonRec_item_color)!!
     }
 }

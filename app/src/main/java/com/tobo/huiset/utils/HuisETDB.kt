@@ -7,7 +7,6 @@ import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
-import io.realm.RealmQuery
 import io.realm.RealmResults
 import io.realm.Sort
 
@@ -169,6 +168,15 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
+    fun createAndSaveTransaction(transaction: Transaction): Transaction {
+        var savedTrans:Transaction? = null
+        realm.executeTransaction {
+            transaction.getPerson(realm).addTransaction(transaction)
+            savedTrans = realm.copyToRealmOrUpdate(transaction)
+        }
+        return savedTrans!!
+    }
+
     fun createAndSaveTransfer(person: Person, receiver: Person, amountOfMoney: Int): Transaction {
         var savedTrans: Transaction? = null
 
@@ -241,7 +249,7 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun removeProduct(oldProduct: Product) {
-        realm.executeTransaction {
+        realm.executeSafe {
             if (realm.where(Transaction::class.java)
                     .equalTo("productId", oldProduct.id)
                     .findFirst() == null
@@ -325,6 +333,7 @@ class HuisETDB(private val realm: Realm) {
     fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
+            .sort("row", Sort.ASCENDING)
 
         /** People who can transfer:
          *  - Roommates or guests with balance < 0
@@ -347,18 +356,13 @@ class HuisETDB(private val realm: Realm) {
             .findFirst()
     }
 
-    fun findAllGuests(): RealmResults<Person> {
-        return realm.where(Person::class.java)
-            .equalTo("deleted", false)
-            .equalTo("guest", true)
-            .findAll()
-    }
-
     fun findAllRoommatesMinusInArray(chosenArray: Array<String>): List<Person> {
-        return findAllCurrentPersons(true)
-            .minus(findAllGuests())
-            .minus(findPersonsWithIDInArray(chosenArray)!!)
-    }
+        val query = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("guest", false)
+            .sort("row", Sort.ASCENDING)
 
+        return query.findAll().minus(findPersonsWithIDInArray(chosenArray)!!)
+    }
 
 }

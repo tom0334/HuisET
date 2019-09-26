@@ -13,6 +13,7 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.gui.adapters.TransferCalcPersonRecAdapter
 import com.tobo.huiset.gui.adapters.TransferPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
@@ -36,7 +37,7 @@ class TransferMoneyActivity : HuisEtActivity() {
             findViewById<TextView>(R.id.MTmoneyPaidCounter)?.text = "In totaal overgemaakt: ${value.toCurrencyString()}"
         }
 
-    private var transactionMap: MutableMap<Person, Transaction> = mutableMapOf()
+    var transactionMap: MutableMap<Person, Transaction> = mutableMapOf()
     var theoreticalBalanceList: MutableList<Pair<Person, Int>> = mutableListOf()
 
 
@@ -44,14 +45,6 @@ class TransferMoneyActivity : HuisEtActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transfermoney)
         initProfileRec()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        transactionMap.toList().forEach {
-            db.deleteTransaction(it.second)
-        }
-        Toast.makeText(this, "Niemand heeft geld overgemaakt", Toast.LENGTH_SHORT).show()
     }
 
     private fun initProfileRec() {
@@ -96,6 +89,9 @@ class TransferMoneyActivity : HuisEtActivity() {
                 Toast.makeText(this, "Niemand heeft geld overgemaakt", Toast.LENGTH_SHORT).show()
             }
             else {
+                transactionMap.toList().forEach {
+                    db.createAndSaveTransaction(it.second)
+                }
                 Toast.makeText(this, "Totaal ${amountOfMoneyPaid.toCurrencyString()} overgemaakt door $amountOfPersonsPaid personen", Toast.LENGTH_SHORT).show()
             }
             this.finish()
@@ -124,32 +120,25 @@ class TransferMoneyActivity : HuisEtActivity() {
     fun someonePaidSomeone(payer: Person, receiver: Person, money: Int, undo: Boolean) {
 
         if (!undo) {
+            val product = Product.create("Overgemaakt", money, Product.BOTH_TURF_AND_BUY, 13, Product.OTHERPRODUCT)
 
-            var transaction: Transaction = if (money > 0) {
-                db.createAndSaveTransfer(payer, receiver, money)
+            val transaction: Transaction = if (money > 0) {
+                Transaction.createTransfer(payer, receiver, money, product)
             } else {
-                db.createAndSaveTransfer(receiver, payer, -money)
+                Transaction.createTransfer(receiver, payer, -money, product)
             }
+
+            db.removeProduct(product)
 
             transactionMap[payer] = transaction
             amountOfPersonsPaid++
-            amountOfMoneyPaid += if (money >= 0) {
-                money
-            } else {
-                -money
-            }
+            amountOfMoneyPaid += if (money >= 0) money else -money
         }
         else {
-            db.deleteTransaction(transactionMap[payer]!!)
-
             transactionMap.remove(payer)
             amountOfPersonsPaid--
 
-            amountOfMoneyPaid += if (money >= 0) {
-                -money
-            } else {
-                money
-            }
+            amountOfMoneyPaid += if (money >= 0) -money else money
         }
 
     }
