@@ -1,19 +1,16 @@
 import android.app.AlertDialog
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
@@ -32,7 +29,6 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class FragmentMain : HuisEtFragment() {
@@ -187,6 +183,11 @@ class FragmentMain : HuisEtFragment() {
             .findAll()
 
         val onDeleteClicked = fun (trans: Transaction, person: Person){
+
+            Snackbar.make(view, "Transaction deleted", Snackbar.LENGTH_LONG).setAction("Undo") {
+                    db.createAndSaveTransaction(trans)
+                }.show()
+
             db.deleteTransaction(trans,person)
 
             //When removing transactions, it can happen that some achievements should not have been completed.

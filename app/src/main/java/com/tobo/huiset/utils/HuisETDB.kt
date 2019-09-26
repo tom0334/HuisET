@@ -169,6 +169,15 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
+    fun createAndSaveTransaction(transaction: Transaction): Transaction {
+        var savedTrans:Transaction? = null
+        realm.executeTransaction {
+            transaction.getPerson(realm).addTransaction(transaction)
+            savedTrans = realm.copyToRealmOrUpdate(transaction)
+        }
+        return savedTrans!!
+    }
+
     /**
      * Gets a list of all transactions
      * if personId is provided, it findss any with that personid
