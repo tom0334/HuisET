@@ -187,11 +187,8 @@ class FragmentMain : HuisEtFragment() {
             .findAll()
 
         val onDeleteClicked = fun (trans: Transaction, person: Person){
-            if (trans.otherPerson == null) {
-                db.deleteTransaction(trans)
-            } else {
-                db.deleteTransaction(trans)
-            }
+
+            db.deleteTransaction(trans)
 
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
