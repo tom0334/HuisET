@@ -84,13 +84,15 @@ class FragmentPurchases : HuisEtFragment() {
 
         view.findViewById<MaterialButton>(R.id.purchaseSaveButton).setOnClickListener {
             val person = db.getPersonWithId(pickedPersonId)!!
+            var anythingBought = false
             products.forEach {
                 val amount = prodRecAdapter.getFromMap(it.id)
                 if (amount > 0) {
                     db.createAndSaveTransaction(person, it, amount, true)
+                    anythingBought = true
                 }
             }
-            if (totalPurchasePrice == 0) {
+            if (!anythingBought) {
                 Toast.makeText(context, "Geen producten geselecteerd", Toast.LENGTH_SHORT).show()
             }
             else {

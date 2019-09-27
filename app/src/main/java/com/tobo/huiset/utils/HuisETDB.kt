@@ -171,27 +171,12 @@ class HuisETDB(private val realm: Realm) {
     fun createAndSaveTransaction(transaction: Transaction): Transaction {
         var savedTrans:Transaction? = null
         realm.executeTransaction {
-            transaction.getPerson(realm).addTransaction(transaction)
+            transaction.getPerson(realm, transaction.personId).addTransaction(transaction)
             savedTrans = realm.copyToRealmOrUpdate(transaction)
         }
         return savedTrans!!
     }
 
-    fun createAndSaveTransfer(person: Person, receiver: Person, amountOfMoney: Int): Transaction {
-        var savedTrans: Transaction? = null
-
-        val product = Product.create("Overgemaakt", amountOfMoney, Product.BOTH_TURF_AND_BUY, 13, Product.OTHERPRODUCT)
-
-        realm.executeTransaction {
-            val trans = Transaction.createTransfer(person, receiver, amountOfMoney, product)
-            person.addTransaction(trans)
-            savedTrans = realm.copyToRealmOrUpdate(trans)
-        }
-
-        removeProduct(product)
-
-        return savedTrans!!
-    }
 
     /**
      * Gets a list of all transactions
@@ -316,7 +301,7 @@ class HuisETDB(private val realm: Realm) {
 
     fun deleteTransaction(trans: Transaction) {
         realm.executeSafe {
-            trans.getPerson(realm).undoTransaction(trans)
+            trans.getPerson(realm, trans.personId).undoTransaction(trans)
             trans.deleteFromRealm()
         }
     }

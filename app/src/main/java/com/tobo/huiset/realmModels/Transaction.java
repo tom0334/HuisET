@@ -19,7 +19,7 @@ public class Transaction extends RealmObject {
     private int amount;
     private boolean buy;
 
-    private Person otherPerson = null;
+    private String otherPersonId = null;
 
     public Transaction() {
     }
@@ -41,7 +41,7 @@ public class Transaction extends RealmObject {
         t.buy = true;
         t.amount = 1;
         t.price = price;
-        t.otherPerson = receiver;
+        t.otherPersonId = receiver.getId();
         return t;
     }
 
@@ -70,8 +70,8 @@ public class Transaction extends RealmObject {
         return buy;
     }
 
-    public Person getPerson(Realm realm) {
-        return realm.where(Person.class).equalTo("id", this.personId).findFirst();
+    public Person getPerson(Realm realm, String id) {
+        return realm.where(Person.class).equalTo("id", id).findFirst();
     }
 
     public Product getProduct() {
@@ -98,11 +98,11 @@ public class Transaction extends RealmObject {
         this.amount = amount;
     }
 
-    public Person getOtherPerson() {
-        return otherPerson;
+    public String getOtherPersonId() {
+        return otherPersonId;
     }
 
-    public void setOtherPerson(Person otherPerson) {
-        this.otherPerson = otherPerson;
+    public void setOtherPersonId(String otherPersonId) {
+        this.otherPersonId = otherPersonId;
     }
 }
