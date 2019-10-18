@@ -18,15 +18,15 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
     abstract fun processPrice(price:Int)
     abstract fun getInitialPrice():String
 
-    private lateinit var hint:String
+    private lateinit var hint: String
 
     override fun onSlideDismissed() {
-
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
-        val price = getPrice()
-        if(HandyFunctions.priceValidate(editText.text.toString(), editText)){
-            this.processPrice(price!!)
-            db.createDemoBeerOrSetPrice(price)
+        val price = editText.text.toString().replace(',','.')
+
+        if(HandyFunctions.priceValidate(price, editText)){
+            this.processPrice(price.euroToCent())
+            db.createDemoBeerOrSetPrice(price.euroToCent())
         }
         else{
             Toast.makeText(this.context,"Prijs input klopt niet.", Toast.LENGTH_SHORT).show()
@@ -34,16 +34,14 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
     }
 
     override fun onSlideShown() {
-//        view!!.findViewById<MaterialButton>(R.id.button_intro_textfield_create).visibility = View.GONE
-
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val text = getInitialPrice().toCharArray()
         editText.setText(text,0,text.size)
     }
 
-
     override fun isPolicyRespected(): Boolean {
-        return getPrice() != null
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        return HandyFunctions.priceValidate(editText.text.toString(), editText)
     }
 
     override fun onUserIllegallyRequestedNextPage() {
@@ -64,16 +62,4 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
         }
     }
 
-    private fun getPrice(): Int? {
-        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
-        return parsePrice(editText.text.toString())
-    }
-
-    private fun parsePrice(toString: String): Int? {
-        return try{
-            toString.euroToCent()
-        }catch (e:Exception){
-            return null
-        }
-    }
 }
