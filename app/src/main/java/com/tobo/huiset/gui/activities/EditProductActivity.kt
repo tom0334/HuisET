@@ -161,6 +161,7 @@ class EditProductActivity : HuisEtActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->
+                Toast.makeText(this, "Product ${oldProduct!!.name} is verwijderd", Toast.LENGTH_SHORT).show()
                 db.removeProduct(oldProduct!!)
                 db.updateProductRows()
                 this.finish()
@@ -219,7 +220,7 @@ class EditProductActivity : HuisEtActivity() {
 
         Toast.makeText(
             this,
-            "Product $newName of ${newPrice.toCurrencyString()} added/edited",
+            "Product $newName van ${newPrice.toCurrencyString()} toegevoegd/aangepast",
             Toast.LENGTH_SHORT
         ).show()
         this.finish()
