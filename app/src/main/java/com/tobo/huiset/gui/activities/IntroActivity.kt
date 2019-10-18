@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.activities
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -46,6 +47,9 @@ class IntroActivity : AppIntro2(){
 
     override fun onDonePressed(currentFragment: Fragment?) {
         super.onDonePressed(currentFragment)
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        prefs.edit().putBoolean("shownIntro",true).apply()
         this.finish()
     }
 

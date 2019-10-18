@@ -19,11 +19,12 @@ class MyApplication : Application() {
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if(prefs.getBoolean("firstLaunch", true)){
-            prefs.edit {
-                it.putBoolean("firstLaunch",false)
-            }
             createInitialData()
-
+            prefs.edit {
+                it.putBoolean("firstLaunch",true)
+            }
+        }
+        if(! prefs.getBoolean("shownIntro",false)){
             val intent = Intent(this, IntroActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
