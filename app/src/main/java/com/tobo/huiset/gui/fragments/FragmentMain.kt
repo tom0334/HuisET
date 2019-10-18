@@ -1,19 +1,20 @@
+import android.app.ActionBar
 import android.app.AlertDialog
-import android.os.Build
+import android.drm.DrmStore
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
@@ -32,7 +33,9 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+
+
 
 
 class FragmentMain : HuisEtFragment() {
@@ -187,6 +190,26 @@ class FragmentMain : HuisEtFragment() {
             .findAll()
 
         val onDeleteClicked = fun (trans: Transaction, person: Person){
+
+            val savedProduct = db.copyFromRealm(trans)
+
+            val snackbar = Snackbar.make(view, "${trans.amount} ${trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
+                .setAction("Undo") {
+                    db.createAndSaveTransaction(savedProduct)
+                }
+
+            val snackbarView = snackbar.view
+            val mainActivity = this.activity as MainActivity
+            val params = snackbarView.layoutParams as FrameLayout.LayoutParams
+            params.setMargins(
+                params.leftMargin,
+                params.topMargin,
+                params.rightMargin,
+                params.bottomMargin + mainActivity.getSnackbarBottomMargin()
+                )
+            snackbarView.layoutParams = params
+
+            snackbar.show()
 
             db.deleteTransaction(trans)
 

@@ -177,7 +177,6 @@ class HuisETDB(private val realm: Realm) {
         return savedTrans!!
     }
 
-
     /**
      * Gets a list of all transactions
      * if personId is provided, it findss any with that personid
@@ -234,6 +233,7 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun removeProduct(oldProduct: Product) {
+
         realm.executeSafe {
             if (realm.where(Transaction::class.java)
                     .equalTo("productId", oldProduct.id)
@@ -423,6 +423,9 @@ class HuisETDB(private val realm: Realm) {
         return realm.where(Product::class.java).equalTo("kind",Product.BEERPRODUCT).findFirst()
     }
 
+    fun copyFromRealm(trans: Transaction): Transaction {
+        return realm.copyFromRealm(trans)
+    }
 
 
 }
