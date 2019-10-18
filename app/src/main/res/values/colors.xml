@@ -10,4 +10,6 @@
   <color name="secondaryTextColor">#212121</color>
   <color name="androidStandardTextColor">@android:color/tab_indicator_text</color>
   <color name="colorMaxContrast">#fff</color>
+    <color name="white">#ffffff</color>
+  <color name="greyHintTextColor">#888</color>
 </resources>

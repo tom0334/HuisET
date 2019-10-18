@@ -8,6 +8,7 @@ import io.realm.Realm
 
 
 object ProfileColors{
+    val huisrekeningColor =  "#000000"
     val PROFILECOLORS = arrayOf("#388E3C", //namegreen
         "#D50000", //namered
         "#1976D2", //nameblue
