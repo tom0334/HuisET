@@ -100,7 +100,7 @@
                     android:paddingTop="32sp"
                     android:paddingRight="16sp"
                     android:paddingBottom="32sp"
-                    android:text="Deze personen moeten als volgt overmaken:"
+                    android:text="Deze personen moeten als volgt geld overmaken:"
                     android:textColor="#000"
                     android:textSize="30sp"/>
 
@@ -109,6 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/MTcalculationInstruction"
+                    android:layout_above="@id/MThasPaidLinearBottomTransfer"
                     />
 
             <LinearLayout
