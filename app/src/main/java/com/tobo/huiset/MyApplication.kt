@@ -24,11 +24,10 @@ class MyApplication : Application() {
             }
             createInitialData()
 
-//            val intent = Intent(this, IntroActivity::class.java)
-//            startActivity(intent)
+            val intent = Intent(this, IntroActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
-        val intent = Intent(this, IntroActivity::class.java)
-        startActivity(intent)
 
 
     }
