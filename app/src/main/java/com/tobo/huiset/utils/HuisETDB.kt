@@ -1,6 +1,5 @@
 package com.tobo.huiset.utils
 
-import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -300,6 +299,80 @@ class HuisETDB(private val realm: Realm) {
         realm.commitTransaction()
         return comp
     }
+
+    fun getHuisRekening(): Person {
+        return realm.where(Person::class.java).equalTo("huisRekening",true).findFirst()!!
+    }
+
+    fun setHuisRekeningActive(active:Boolean){
+        val huisRekening = getHuisRekening()
+        realm.executeTransaction {
+            huisRekening.isDeleted =  ! active
+        }
+    }
+
+    fun createAndSavePerson(name:String, guest:Boolean, show:Boolean, huisEtRekening:Boolean, first:Boolean) {
+        this.updateProfileRows()
+
+        val row =  if(first) -1 else findAllCurrentPersons(true).size
+        realm.executeTransaction {
+            val person = Person.create(name,ProfileColors.getNextColor(this),guest,true,row,huisEtRekening)
+            realm.copyToRealm(person)
+        }
+
+        this.updateProfileRows()
+    }
+
+    fun hasAtLeastOnePerson(): Boolean {
+        return realm.where(Person::class.java).equalTo("huisRekening",false).findFirst() != null
+    }
+
+    fun close() {
+        realm.close()
+    }
+
+    fun createDemoCrateOrSetPrice(price:Int){
+        val current = getCrateIfExists()
+
+        if(current != null){
+            realm.executeTransaction {
+                current.price = price
+            }
+        }else{
+            realm.executeTransaction {
+                val crate = Product.create("Kratje", price, Product.ONLY_BUYABLE, 1, Product.CRATEPRODUCT)
+                realm.copyToRealm(crate)
+            }
+        }
+
+        realm.refresh()
+    }
+
+    fun createDemoBeerOrSetPrice(price:Int){
+        val current = getBeerIfExists()
+
+        if(current != null){
+            realm.executeTransaction {
+                current.price = price
+            }
+        }else{
+            realm.executeTransaction {
+                val beer = Product.create("Bier", price, Product.ONLY_TURFABLE, 0, Product.BEERPRODUCT)
+                realm.copyToRealm(beer)
+            }
+        }
+
+    }
+
+
+    fun getCrateIfExists(): Product? {
+        return realm.where(Product::class.java).equalTo("kind",Product.CRATEPRODUCT).findFirst()
+    }
+
+    fun getBeerIfExists(): Product? {
+        return realm.where(Product::class.java).equalTo("kind",Product.BEERPRODUCT).findFirst()
+    }
+
 
 
 }
