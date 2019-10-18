@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.utils.HandyFunctions
 import com.tobo.huiset.utils.ProfileColors
 
 /**
@@ -117,7 +118,7 @@ class EditProfileActivity : HuisEtActivity() {
         val nameEditText = findViewById<EditText>(R.id.name)
         val newName = nameEditText.text.toString()
 
-        if (!nameValidate(newName, nameEditText)) {
+        if (!HandyFunctions.nameValidate(newName, nameEditText, db)) {
             return
         }
 
@@ -153,36 +154,6 @@ class EditProfileActivity : HuisEtActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
-    }
-
-    /**
-     * Validates the input name
-     */
-    private fun nameValidate(name: String, editText: EditText): Boolean {
-        // empty fields are not accepted
-        if (name == "") {
-            editText.error = "Vul een naam in"
-            return false
-        }
-        // duplicate names are not accepted, except if the old person is deleted
-        if (realm.where(Person::class.java)
-                .equalTo("deleted", false)
-                .findAll().map { it.name }
-                .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
-        )
-        {
-            if (new) {
-                editText.error = "Naam bestaat al"
-                return false
-            }
-        }
-        // name is too long
-        val maxNameLength = 12
-        if (name.length > maxNameLength) {
-            editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
-            return false
-        }
-        return true
     }
 
     /**

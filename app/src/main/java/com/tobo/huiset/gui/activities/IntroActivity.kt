@@ -1,7 +1,10 @@
 package com.tobo.huiset.gui.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -40,8 +43,6 @@ class IntroActivity : AppIntro2(){
         val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje?","Dit is gebaseerd op de gekozen prijs per krat, en is later ook nog aan te passen. Het is eventueel afhankelijk van hoe jullie statiegeld verdelen.","Prijs in Euro",false)
         addSlide(beerPriceSlide)
 
-
-
         skipButtonEnabled = false
     }
 
@@ -77,10 +78,20 @@ class IntroActivity : AppIntro2(){
             huisEtRekening = false,
             first = false
         )
-        Toast.makeText(this,"Profiel gemaakt:$name",Toast.LENGTH_SHORT).show()
-
-
+        Toast.makeText(this,"Profiel gemaakt: $name",Toast.LENGTH_SHORT).show()
     }
+
+    /**
+     * Hides keyboard when something else is clicked
+     * param view is needed
+     */
+    fun hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (currentFocus != null) {
+            imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        }
+    }
+
 }
 
 

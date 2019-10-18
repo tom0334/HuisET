@@ -19,6 +19,7 @@ import com.tobo.huiset.utils.extensions.toNumberDecimal
 import android.text.Editable
 import android.text.TextWatcher
 import com.google.android.material.textfield.TextInputEditText
+import com.tobo.huiset.utils.HandyFunctions
 
 
 /**
@@ -180,7 +181,8 @@ class EditProductActivity : HuisEtActivity() {
         val priceEditText = findViewById<EditText>(R.id.price)
         val priceString = priceEditText.text.toString().replace(',','.')
 
-        if (!nameValidate(newName, nameEditText) || !priceValidate(priceString, priceEditText)) {
+        if (!HandyFunctions.nameValidate(newName, nameEditText, db)
+            || !HandyFunctions.priceValidate(priceString, priceEditText)) {
             return
         }
         val newPrice = priceString.euroToCent()
@@ -224,54 +226,6 @@ class EditProductActivity : HuisEtActivity() {
             Toast.LENGTH_SHORT
         ).show()
         this.finish()
-    }
-
-    /**
-     * Validates the input price
-     */
-    private fun priceValidate(price: String, editText: EditText): Boolean {
-        // empty fields are not accepted
-        if (price == "") {
-            editText.error = "Vul een prijs in"
-            return false
-        }
-        // name is too long
-        val maxPriceLength = 6
-        if (price.split('.')[0].length > maxPriceLength) {
-            editText.error = "Er mogen niet meer dan $maxPriceLength voor de komma staan"
-            return false
-        }
-
-        return true
-    }
-
-    /**
-     * Validates the input name
-     */
-    private fun nameValidate(name: String, editText: EditText): Boolean {
-        // empty fields are not accepted
-        if (name == "") {
-            editText.error = "Vul een naam in"
-            return false
-        }
-        // duplicate names are not accepted, except if the old product is deleted
-        if (realm.where(Product::class.java)
-                .equalTo("deleted", false)
-                .findAll().map { it.name }
-                .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
-        ) {
-            if (new) {
-                editText.error = "Naam bestaat al"
-                return false
-            }
-        }
-        // name is too long
-        val maxNameLength = 12
-        if (name.length > maxNameLength) {
-            editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
-            return false
-        }
-        return true
     }
 
     /**

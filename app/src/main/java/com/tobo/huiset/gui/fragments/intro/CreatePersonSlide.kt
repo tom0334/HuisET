@@ -4,26 +4,27 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.github.paolorotolo.appintro.ISlidePolicy
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_BUTTON_TEXT
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
+import com.tobo.huiset.utils.HandyFunctions
 
 
-class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
+class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener {
 
     private lateinit var buttonText:String
     private lateinit var hint:String
 
 
     override fun isPolicyRespected(): Boolean {
-        return db.hasAtLeastOnePerson()
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        return HandyFunctions.nameValidate(editText.text.toString(), editText, db)
     }
 
     override fun onUserIllegallyRequestedNextPage() {
-        Toast.makeText(this.context,"Maak minstens 1 profiel!",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this.context,"Voer een naam in.",Toast.LENGTH_SHORT).show()
     }
 
 
@@ -41,19 +42,26 @@ class CreatePersonSlide : AbstractCustomIntroSlide() , ISlidePolicy{
         }
     }
 
+    override fun onSlideDismissed() {
+
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        val name = editText.text.toString()
+
+        if(HandyFunctions.nameValidate(name, editText, db)){
+            (this.activity as IntroActivity).createPerson(name)
+        }
+        else{
+            Toast.makeText(this.context,"Er is nog geen naam ingevoerd.", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val createButton = view.findViewById<MaterialButton>(R.id.button_intro_textfield_create)
         val editText = view.findViewById<TextInputEditText>(R.id.intro_name)
 
         editText.hint = hint
 
-        //todo Check input of user here. Same as used in editprofile
-        createButton.setOnClickListener {
-            (this.activity as IntroActivity).createPerson(editText.text.toString())
-            editText.setText(charArrayOf(),0,0)
-        }
     }
+
 }
