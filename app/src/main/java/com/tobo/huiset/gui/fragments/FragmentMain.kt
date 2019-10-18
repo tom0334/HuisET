@@ -114,6 +114,13 @@ class FragmentMain : HuisEtFragment() {
     }
 
     private fun checkIfAnyTurfableProductExists(): Boolean {
+        
+        // If intro is shown, this message doesn't have to show because a profile is created.
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        if (!prefs.getBoolean("shownIntro", false)) {
+            return true
+        }
+
         if (db.findAllCurrentProducts(Product.ONLY_TURFABLE).size <= 0) {
             val context = this.context as MainActivity
 
@@ -136,6 +143,13 @@ class FragmentMain : HuisEtFragment() {
     }
 
     private fun checkIfAnyShownPersonExists() {
+
+        // If intro is shown, this message doesn't have to show because a profile is created.
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        if (!prefs.getBoolean("shownIntro", false)) {
+            return
+        }
+
         if (db.findAllCurrentPersons(false).size <= 0) {
             val context = this.context as MainActivity
 
