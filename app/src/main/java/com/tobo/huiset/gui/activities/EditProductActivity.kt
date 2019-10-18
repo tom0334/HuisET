@@ -71,7 +71,6 @@ class EditProductActivity : HuisEtActivity() {
         val editText = findViewById<TextInputEditText>(R.id.price)
         editText.addTextChangedListener(object : TextWatcher {
             lateinit var sBackup: String
-            var twoDecimals = false
 
             /**
              * Backup string before comma
@@ -181,10 +180,11 @@ class EditProductActivity : HuisEtActivity() {
         val priceEditText = findViewById<EditText>(R.id.price)
         val priceString = priceEditText.text.toString().replace(',','.')
 
-        if (!HandyFunctions.nameValidate(newName, nameEditText, db)
+        if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 1)
             || !HandyFunctions.priceValidate(priceString, priceEditText)) {
             return
         }
+
         val newPrice = priceString.euroToCent()
 
         val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId

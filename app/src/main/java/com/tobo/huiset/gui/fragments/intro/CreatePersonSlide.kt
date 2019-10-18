@@ -9,6 +9,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_BUTTON_TEXT
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.HandyFunctions
 
 
@@ -19,7 +20,7 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
 
     override fun isPolicyRespected(): Boolean {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
-        return HandyFunctions.nameValidate(editText.text.toString(), editText, db)
+        return HandyFunctions.nameValidate(editText.text.toString(), editText, db, true, 0)
     }
 
     override fun onUserIllegallyRequestedNextPage() {
@@ -46,7 +47,7 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val name = editText.text.toString()
 
-        if(HandyFunctions.nameValidate(name, editText, db)){
+        if(HandyFunctions.nameValidate(name, editText, db, true, 0)) {
             (this.activity as IntroActivity).createPerson(name)
             editText.setText("")
         }

@@ -7,7 +7,13 @@ object HandyFunctions {
     /**
      * Validates the input name
      */
-    fun nameValidate(name: String, editText: EditText, db: HuisETDB): Boolean {
+    fun nameValidate(
+        name: String,
+        editText: EditText,
+        db: HuisETDB,
+        checkForDuplicateName: Boolean,
+        zeroIfPerson_oneIfProduct: Int
+    ): Boolean {
 
         // empty fields are not accepted
         if (name == "") {
@@ -16,11 +22,11 @@ object HandyFunctions {
         }
 
         // duplicate names are not accepted, except if the old person is deleted
-        if (db.findDuplicatePersonName(name)) {
-//            if (new) {
+        if (checkForDuplicateName
+            && db.findDuplicatePersonName(name, zeroIfPerson_oneIfProduct)
+        ) {
             editText.error = "Naam bestaat al"
             return false
-//            }
         }
 
         // name is too long
