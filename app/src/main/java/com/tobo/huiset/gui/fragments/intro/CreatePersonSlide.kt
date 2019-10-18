@@ -17,7 +17,6 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
     private lateinit var buttonText:String
     private lateinit var hint:String
 
-
     override fun isPolicyRespected(): Boolean {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         return HandyFunctions.nameValidate(editText.text.toString(), editText, db)
@@ -49,6 +48,7 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
 
         if(HandyFunctions.nameValidate(name, editText, db)){
             (this.activity as IntroActivity).createPerson(name)
+            editText.setText("")
         }
         else{
             Toast.makeText(this.context,"Er is nog geen naam ingevoerd.", Toast.LENGTH_SHORT).show()
@@ -61,7 +61,6 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
         val editText = view.findViewById<TextInputEditText>(R.id.intro_name)
 
         editText.hint = hint
-
     }
 
 }
