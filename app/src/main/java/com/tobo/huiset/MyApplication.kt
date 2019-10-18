@@ -21,7 +21,7 @@ class MyApplication : Application() {
         if(prefs.getBoolean("firstLaunch", true)){
             createInitialData()
             prefs.edit {
-                it.putBoolean("firstLaunch",true)
+                it.putBoolean("firstLaunch",false)
             }
         }
         if(! prefs.getBoolean("shownIntro",false)){
