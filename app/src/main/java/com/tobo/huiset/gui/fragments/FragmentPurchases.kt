@@ -84,13 +84,20 @@ class FragmentPurchases : HuisEtFragment() {
 
         view.findViewById<MaterialButton>(R.id.purchaseSaveButton).setOnClickListener {
             val person = db.getPersonWithId(pickedPersonId)!!
+            var anythingBought = false
             products.forEach {
                 val amount = prodRecAdapter.getFromMap(it.id)
                 if (amount > 0) {
                     db.createAndSaveTransaction(person, it, amount, true)
+                    anythingBought = true
                 }
             }
-            Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
+            if (!anythingBought) {
+                Toast.makeText(context, "Geen producten geselecteerd", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
+            }
             setPersonAndUpdate(null)
             db.mergeTransactionsIfPossible(System.currentTimeMillis())
             val changes = AchievementManager.updateAchievementsAfterBuy(person)

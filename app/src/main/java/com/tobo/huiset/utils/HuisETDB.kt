@@ -171,7 +171,7 @@ class HuisETDB(private val realm: Realm) {
     fun createAndSaveTransaction(transaction: Transaction): Transaction {
         var savedTrans:Transaction? = null
         realm.executeTransaction {
-            transaction.getPerson(realm).addTransaction(transaction)
+            transaction.getPerson(realm, transaction.personId).addTransaction(transaction)
             savedTrans = realm.copyToRealmOrUpdate(transaction)
         }
         return savedTrans!!
@@ -220,7 +220,9 @@ class HuisETDB(private val realm: Realm) {
 
     fun removeProfile(oldProfile: Person) {
         realm.executeTransaction {
-            if (realm.where(Transaction::class.java).equalTo("personId", oldProfile.id).findFirst() == null) {
+            if (realm.where(Transaction::class.java)
+                    .equalTo("personId", oldProfile.id)
+                    .findFirst() == null) {
                 // Actually delete the product from the realm if it isn't involved in any transactions
                 oldProfile.deleteFromRealm()
             } else {
@@ -232,27 +234,24 @@ class HuisETDB(private val realm: Realm) {
 
     fun removeProduct(oldProduct: Product) {
 
-        realm.executeTransaction {
-            if (realm.where(Transaction::class.java).equalTo(
-                    "productId",
-                    oldProduct!!.id
-                ).findFirst() == null
+        realm.executeSafe {
+            if (realm.where(Transaction::class.java)
+                    .equalTo("productId", oldProduct.id)
+                    .findFirst() == null
             ) {
                 // Actually delete the profile from the realm if it isn't involved in any transactions
-                oldProduct!!.deleteFromRealm()
+                oldProduct.deleteFromRealm()
             } else {
                 // fake delete profile from the realm
-                oldProduct!!.isDeleted = true
+                oldProduct.isDeleted = true
             }
         }
     }
 
-
     fun getTransactionsBetween(timeStamp1:Long, timeStamp2:Long): RealmResults<Transaction> {
-        val recentTransactions = realm.where(Transaction::class.java)
+        return realm.where(Transaction::class.java)
             .between("time",timeStamp1, timeStamp2)
             .findAll()
-        return recentTransactions
     }
 
     fun mergeTransactionsIfPossible(tooRecentLimit:Long){
@@ -284,6 +283,12 @@ class HuisETDB(private val realm: Realm) {
 
     }
 
+    fun findPersonsWithIDInArray(arr: Array<String>): RealmResults<Person>? {
+        return realm.where(Person::class.java)
+            .`in`("id", arr)
+            .findAll()
+    }
+
     fun removeAllAchievementCompletionsForPerson(person: Person) {
         realm.executeTransaction {
             //removes all completions completely
@@ -294,9 +299,9 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun deleteTransaction(trans: Transaction, person: Person) {
+    fun deleteTransaction(trans: Transaction) {
         realm.executeSafe {
-            person.undoTransaction(trans)
+            trans.getPerson(realm, trans.personId).undoTransaction(trans)
             trans.deleteFromRealm()
         }
     }
@@ -308,6 +313,41 @@ class HuisETDB(private val realm: Realm) {
         person.addAchievement(comp)
         realm.commitTransaction()
         return comp
+    }
+
+    fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
+        val query = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .sort("row", Sort.ASCENDING)
+
+        /** People who can transfer:
+         *  - Roommates or guests with balance < 0
+         *  - Guests with balance > 0
+         */
+        val selectablePersons =
+            query.lessThan("balance", 0)
+                    .or().greaterThan("balance", 0)
+                            .and().equalTo("guest", true)
+
+        return selectablePersons.findAll()
+    }
+
+    fun findRoommateWithMostTheoreticalBalanceNotInArray(arr: Array<String>): Person? {
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("guest", false)
+            .not().`in`("id", arr)
+            .sort("balance", Sort.DESCENDING)
+            .findFirst()
+    }
+
+    fun findAllRoommatesMinusInArray(chosenArray: Array<String>): List<Person> {
+        val query = realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .equalTo("guest", false)
+            .sort("row", Sort.ASCENDING)
+
+        return query.findAll().minus(findPersonsWithIDInArray(chosenArray)!!)
     }
 
     fun getHuisRekening(): Person {

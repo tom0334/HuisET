@@ -193,7 +193,7 @@ class FragmentMain : HuisEtFragment() {
 
             val savedProduct = db.copyFromRealm(trans)
 
-            val snackbar = Snackbar.make(view, "${trans.amount} ${trans.product.name} van ${trans.getPerson(realm).name} verwijderd", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, "${trans.amount} ${trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
                 .setAction("Undo") {
                     db.createAndSaveTransaction(savedProduct)
                 }
@@ -211,7 +211,7 @@ class FragmentMain : HuisEtFragment() {
 
             snackbar.show()
 
-            db.deleteTransaction(trans,person)
+            db.deleteTransaction(trans)
 
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself

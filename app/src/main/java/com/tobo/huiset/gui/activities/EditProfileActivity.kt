@@ -2,6 +2,7 @@ package com.tobo.huiset.gui.activities
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Person
@@ -80,23 +82,34 @@ class EditProfileActivity : HuisEtActivity() {
     }
 
     private fun deleteClicked() {
-        if (new) {
-            this.finish()
-            return
-        }
-        // if profile isn't new, then ask "are you sure?"
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
-            .setPositiveButton("verwijderen") { _, _ ->
-                db.removeProfile(oldProfile!!)
-                db.updateProfileRows()
+        when {
+            new -> {
                 this.finish()
+                return
             }
-            .setNegativeButton("annuleren") { _, _ ->
-                // User cancelled the dialog, do nothing
+            oldProfile!!.balance != 0 -> {
+                Snackbar.make(findViewById(R.id.editProfileView), "Dit persoon moet eerst afrekenen voordat hij verwijderd kan worden", Snackbar.LENGTH_LONG).setAction("Afrekenen", View.OnClickListener {
+                    val intent = Intent(this, TransferMoneyActivity::class.java)
+                    startActivity(intent)
+                }).show()
             }
-        // Create the AlertDialog object and return it
-        builder.create().show()
+            else -> {
+                // if profile isn't new, then ask "are you sure?"
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
+                    .setPositiveButton("verwijderen") { _, _ ->
+                        Toast.makeText(this, "Profiel ${oldProfile!!.name} is verwijderd", Toast.LENGTH_SHORT).show()
+                        db.removeProfile(oldProfile!!)
+                        db.updateProfileRows()
+                        this.finish()
+                    }
+                    .setNegativeButton("annuleren") { _, _ ->
+                        // User cancelled the dialog, do nothing
+                    }
+                // Create the AlertDialog object and return it
+                builder.create().show()
+            }
+        }
     }
 
     private fun doneClicked() {
@@ -129,8 +142,7 @@ class EditProfileActivity : HuisEtActivity() {
             }
         }
 
-        Toast.makeText(this, "Profile $newName added/edited", Toast.LENGTH_SHORT)
-            .show()
+        Toast.makeText(this, "Profiel $newName toegevoegd/aangepast", Toast.LENGTH_SHORT).show()
 
         this.finish()
     }
