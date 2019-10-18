@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -52,10 +53,12 @@ class TransferPersonRecAdapter(
         if (chosenMap.contains(person.id)) {
             holder.nameTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
             holder.selectedTv.visibility = View.VISIBLE
+            holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
         }
         else {
             holder.nameTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
             holder.selectedTv.visibility = View.GONE
+            holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.grey))
         }
 
         holder.itemView.setOnClickListener {
@@ -79,6 +82,7 @@ class TransferPersonRecAdapter(
         val nameTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_name)!!
         val selectedTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_selected)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_balance)!!
+        val checkedIv = itemView.findViewById<ImageView>(R.id.MTcheckedImage)!!
         val colorLine = itemView.findViewById<View>(R.id.MTpersonRec_item_color)!!
     }
 }

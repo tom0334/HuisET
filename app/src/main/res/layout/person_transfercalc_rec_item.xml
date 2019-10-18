@@ -9,6 +9,7 @@
         >
 
     <ImageView
+            android:tint="#BCBCBC"
             android:id="@+id/MTCcheckedImage"
             android:layout_width="50dp"
             android:layout_height="match_parent"

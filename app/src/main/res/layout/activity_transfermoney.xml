@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="6dp"
-                        android:text="Bereken"
+                        android:text="Berekenen"
                         android:textSize="20sp"
                         android:shadowColor="#FFFFFF"
                         app:backgroundTint="@color/primaryColor"
@@ -100,7 +100,7 @@
                     android:paddingTop="32sp"
                     android:paddingRight="16sp"
                     android:paddingBottom="32sp"
-                    android:text="Deze personen moeten als volgt geld overmaken:"
+                    android:text="Vink de personen aan die geld hebben overgemaakt:"
                     android:textColor="#000"
                     android:textSize="30sp"/>
 
@@ -156,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="6dp"
-                        android:text="Klaar"
+                        android:text="Afronden"
                         android:textSize="20sp"
                         android:shadowColor="#FFFFFF"
                         app:backgroundTint="@color/primaryColor"

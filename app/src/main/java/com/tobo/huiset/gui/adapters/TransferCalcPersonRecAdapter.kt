@@ -50,10 +50,10 @@ class TransferCalcPersonRecAdapter(
         if (hasPaidMap.contains(person)) {
             if (hasPaidMap[person]!! > 0) {
                 holder.actionTv.text = "heeft ${hasPaidMap[person]!!.toCurrencyString()} overgemaakt naar ${personMatchMap[person]!!.name}"
-                holder.checkedIv.setImageResource(R.drawable.baseline_done_black_48)
+                holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
             } else {
                 holder.actionTv.text = "heeft ${(-hasPaidMap[person]!!).toCurrencyString()} ontvangen van ${personMatchMap[person]!!.name}"
-                holder.checkedIv.setImageResource(R.drawable.baseline_done_black_48)
+                holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
             }
             holder.actionTv.setTextColor(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
             ownTheoreticalBalance += hasPaidMap[person]!!
@@ -66,10 +66,10 @@ class TransferCalcPersonRecAdapter(
 
             if (person.balance < 0) {
                 holder.actionTv.text = "moet ${(-person.balance).toCurrencyString()} overmaken naar ${otherPerson!!.name}"
-                holder.checkedIv.setImageResource(R.drawable.baseline_done_white_48)
+                holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.grey))
             } else {
                 holder.actionTv.text = "moet ${person.balance.toCurrencyString()} ontvangen van ${otherPerson!!.name}"
-                holder.checkedIv.setImageResource(R.drawable.baseline_done_white_48)
+                holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.grey))
             }
             holder.actionTv.setTextColor(ContextCompat.getColor(transferMoneyActivity, R.color.androidStandardTextColor))
 
