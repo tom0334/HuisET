@@ -18,13 +18,13 @@ import io.realm.RealmResults
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
  */
 class PurchaseProductRecAdapter(
-    val fragmentPurchases: FragmentPurchases,
+    private val fragmentPurchases: FragmentPurchases,
     val realm: Realm,
     data: RealmResults<Product>,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Product, PurchaseProductRecAdapter.ProductViewHolder>(data, autoUpdate) {
 
-    val amountMap: MutableMap<String, Int> = mutableMapOf()
+    private val amountMap: MutableMap<String, Int> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val view = LayoutInflater.from(fragmentPurchases.context).inflate(R.layout.product_purchase_rec_item, parent, false)
