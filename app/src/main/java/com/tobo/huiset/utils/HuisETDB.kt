@@ -231,6 +231,7 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun removeProduct(oldProduct: Product) {
+
         realm.executeTransaction {
             if (realm.where(Transaction::class.java).equalTo(
                     "productId",
@@ -382,6 +383,9 @@ class HuisETDB(private val realm: Realm) {
         return realm.where(Product::class.java).equalTo("kind",Product.BEERPRODUCT).findFirst()
     }
 
+    fun copyFromRealm(trans: Transaction): Transaction {
+        return realm.copyFromRealm(trans)
+    }
 
 
 }

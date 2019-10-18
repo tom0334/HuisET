@@ -1,10 +1,14 @@
+import android.app.ActionBar
 import android.app.AlertDialog
+import android.drm.DrmStore
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +33,9 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+
+
 
 
 class FragmentMain : HuisEtFragment() {
@@ -184,9 +191,23 @@ class FragmentMain : HuisEtFragment() {
 
         val onDeleteClicked = fun (trans: Transaction, person: Person){
 
-            Snackbar.make(view, "Transaction deleted", Snackbar.LENGTH_LONG).setAction("Undo") {
-                    db.createAndSaveTransaction(trans)
-                }.show()
+            val savedProduct = db.copyFromRealm(trans)
+
+            val snackbar = Snackbar.make(view, "Transaction deleted", Snackbar.LENGTH_LONG).setAction("Undo") {
+                    db.createAndSaveTransaction(savedProduct)
+                }
+
+            val snackbarView = snackbar.view
+            val mainActivity = this.activity as MainActivity
+            val params = snackbarView.layoutParams as FrameLayout.LayoutParams
+            params.setMargins(
+                params.leftMargin,
+                params.topMargin,
+                params.rightMargin,
+                params.bottomMargin + mainActivity.getSnackbarBottomMargin()
+                )
+            snackbarView.layoutParams = params
+            snackbar.show()
 
             db.deleteTransaction(trans,person)
 
