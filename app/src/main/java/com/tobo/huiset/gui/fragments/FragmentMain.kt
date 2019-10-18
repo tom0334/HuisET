@@ -193,7 +193,8 @@ class FragmentMain : HuisEtFragment() {
 
             val savedProduct = db.copyFromRealm(trans)
 
-            val snackbar = Snackbar.make(view, "Transaction deleted", Snackbar.LENGTH_LONG).setAction("Undo") {
+            val snackbar = Snackbar.make(view, "${trans.amount} ${trans.product.name} van ${trans.getPerson(realm).name} verwijderd", Snackbar.LENGTH_LONG)
+                .setAction("Undo") {
                     db.createAndSaveTransaction(savedProduct)
                 }
 
@@ -207,6 +208,7 @@ class FragmentMain : HuisEtFragment() {
                 params.bottomMargin + mainActivity.getSnackbarBottomMargin()
                 )
             snackbarView.layoutParams = params
+
             snackbar.show()
 
             db.deleteTransaction(trans,person)
