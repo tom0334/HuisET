@@ -19,6 +19,7 @@ public class Person extends RealmObject {
     private boolean show;
     private int row;
     private boolean deleted = false;
+    private boolean huisRekening;
 
     private RealmList<AchievementCompletion> completions = new RealmList<>();
 
@@ -27,7 +28,7 @@ public class Person extends RealmObject {
     public Person() {
     }
 
-    static public Person create(String name, String color, boolean guest, boolean show, int row) {
+    static public Person create(String name, String color, boolean guest, boolean show, int row, boolean isHuisrekening) {
         Person p = new Person();
         p.name = name;
         p.color = color;
@@ -35,6 +36,7 @@ public class Person extends RealmObject {
         p.show = show;
         p.row = row;
         p.selectedInHistoryView = false;
+        p.huisRekening = isHuisrekening;
 
         return p;
     }
@@ -132,6 +134,10 @@ public class Person extends RealmObject {
 
     public void setRow(int row) {
         this.row = row;
+    }
+
+    public boolean isHuisRekening() {
+        return huisRekening;
     }
 
     public RealmList<AchievementCompletion> getCompletions() {

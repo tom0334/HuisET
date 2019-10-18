@@ -20,6 +20,7 @@ class SettingsActivity : HuisEtActivity() {
     private lateinit var fullscreenSwitch: SwitchCompat
     private lateinit var hideAppBarSwitch: SwitchCompat
     private lateinit var turfConfettiSwitch: SwitchCompat
+    private lateinit var huisRekeningSwitch: SwitchCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,7 @@ class SettingsActivity : HuisEtActivity() {
         fullscreenSwitch = findViewById(R.id.fullScreenSwitch)
         hideAppBarSwitch = findViewById(R.id.hideAppBarSwitch)
         turfConfettiSwitch = findViewById(R.id.turfConfettiSwitch)
+        huisRekeningSwitch = findViewById(R.id.huisRekeningSwitch)
     }
 
     /**
@@ -57,6 +59,7 @@ class SettingsActivity : HuisEtActivity() {
         fullscreenSwitch.isChecked = prefs.getBoolean(PREFS_FULLSCREEN_ID, false)
         hideAppBarSwitch.isChecked = prefs.getBoolean(PREFS_HIDEAPPBAR_ID, false)
         turfConfettiSwitch.isChecked = prefs.getBoolean(PREFS_TURF_CONFETTI_ID,false)
+        huisRekeningSwitch.isChecked = ! db.getHuisRekening().isDeleted
     }
 
     private fun saveChanges() {
@@ -65,6 +68,8 @@ class SettingsActivity : HuisEtActivity() {
             it.putBoolean(PREFS_HIDEAPPBAR_ID, hideAppBarSwitch.isChecked)
             it.putBoolean(PREFS_TURF_CONFETTI_ID, turfConfettiSwitch.isChecked)
         }
+
+        db.setHuisRekeningActive(huisRekeningSwitch.isChecked)
     }
 
 
