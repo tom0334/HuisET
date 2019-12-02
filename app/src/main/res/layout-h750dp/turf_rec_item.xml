@@ -3,51 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="170dp"
     android:layout_gravity="center_horizontal"
     android:orientation="horizontal"
     app:contentPadding="16dp">
 
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.appcompat.widget.AppCompatTextView
+            android:paddingTop="8dp"
             android:id="@+id/turfRecItem_name"
-            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_above="@id/turfRecItem_color_line"
-
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/turfRecItem_balance"
+            android:layout_weight="1"
+            android:textAlignment="center"
             android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical"
             android:lines="1"
-            android:paddingRight="16dp"
             app:autoSizeTextType="uniform"
-            tools:text="Bobbert" />
+            tools:text="Bobbert"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/turfRecItem_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="€4.00" />
 
         <View
             android:id="@+id/turfRecItem_color_line"
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_alignParentBottom="true"
             android:background="#f00" />
 
 
-        <TextView
-            android:id="@+id/turfRecItem_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            tools:text="€4.00" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>
