@@ -1,67 +1,80 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:layout_width="0dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/mainAmountRec"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_alignParentTop="true"
+        android:id="@+id/mainAmountRec"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mainProductRec"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/fragmentMain_product_height"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mainPersonRec"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/mainAmountRec"
+        android:id="@+id/mainProductRec"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragmentMain_product_height" />
 
 
     <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
+        android:layout_below="@id/mainProductRec"
+        android:id="@+id/dividerBelowProducts"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:background="#333333" />
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:textSize="24sp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:text="Recent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_marginTop="4dp"
-            android:background="#333333"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recentRecyclerView"
+        android:layout_below="@id/dividerBelowProducts"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-</LinearLayout>
+        android:orientation="horizontal">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mainPersonRec"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
 
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#333333" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="Recent"
+                android:id="@+id/recentText"
+                android:textSize="24sp" />
+
+            <View
+                android:id="@+id/recentTextDivider"
+                android:layout_below="@id/recentText"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:background="#333333" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_below="@id/recentTextDivider"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/recentRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                />
+        </RelativeLayout>
     </LinearLayout>
+
+
+</RelativeLayout>
