@@ -76,6 +76,8 @@ class MainActivity : CelebratingHuisEtActivity() {
     override fun onResume() {
         super.onResume()
 
+        db.mergeTransactionsIfPossible(System.currentTimeMillis())
+
         val changes = mutableListOf<AchievementCompletion>()
         db.findAllCurrentPersons(true).forEach {
             val new = AchievementManager.updateAchievementsAfterLaunch(it)

@@ -326,7 +326,6 @@ class FragmentMain : HuisEtFragment() {
             transactionTimeRefreshHandler!!.removeCallbacks(updateTransactionRecRunnable)
 
         }
-        db.mergeTransactionsIfPossible(System.currentTimeMillis())
         mergeTransactionsHandler!!.removeCallbacks(mergeTransactionsRunnable)
 
     }
