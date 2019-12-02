@@ -1,7 +1,10 @@
 package com.tobo.huiset.gui.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -28,19 +31,17 @@ class IntroActivity : AppIntro2(){
         addSlide(AppIntroFragment.newInstance(firstSlide))
 
 
-        val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Met een huisrekening bedoelen we een gedeelde bankrekening waar je alle inkopen van betaalt.", "Ja, wij gebruiken een huisrekening waar we inkopen van betalen.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
+        val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Een huisrekening is een gedeelde bankrekening waar gezamenlijke inkopen van worden betaald.", "Ja, wij gebruiken een huisrekening.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
         addSlide(huisRekeningSlide)
 
-        val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een profiel", "Je kan er meerdere maken als je wilt, maar het is aangeraden om er minstens eentje te maken","Maak profiel","Naam")
+        val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een huisgenoot profiel", "Er moet minimaal één profiel aangemaakt worden. Later kun je er nog meer aanmaken (ook voor gasten).","Maak profiel","Naam")
         addSlide(createPersonSlide)
 
-        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een krat bier?","Dit kun je later nog aanpassen, en je kan ook losse prijzen voor een verschillende merken doen. Toch vragen we je voor nu even voor een standaardprijs.","Prijs in Euro",true)
+        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een krat bier?","Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen voor nu om een standaard bierprijs in te voeren.","Prijs in Euro's",true)
         addSlide(cratePriceSlide)
 
-        val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje?","Dit is nu gebaseerd op jullie prijs per kratje, maar kan je later aanpassen. Eventueel afhankelijk van hoe jullie statiegeld verdelen.","Prijs in Euro",false)
+        val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje?","Dit is gebaseerd op de gekozen prijs per krat, en is later ook nog aan te passen. Het is eventueel afhankelijk van hoe jullie statiegeld verdelen.","Prijs in Euro",false)
         addSlide(beerPriceSlide)
-
-
 
         skipButtonEnabled = false
     }
@@ -77,10 +78,20 @@ class IntroActivity : AppIntro2(){
             huisEtRekening = false,
             first = false
         )
-        Toast.makeText(this,"Profiel gemaakt:$name",Toast.LENGTH_SHORT).show()
-
-
+        Toast.makeText(this,"Profiel gemaakt: $name",Toast.LENGTH_SHORT).show()
     }
+
+    /**
+     * Hides keyboard when something else is clicked
+     * param view is needed
+     */
+    fun hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (currentFocus != null) {
+            imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        }
+    }
+
 }
 
 

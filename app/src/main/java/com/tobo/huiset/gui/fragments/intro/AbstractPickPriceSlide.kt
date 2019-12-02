@@ -8,42 +8,44 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.tobo.huiset.R
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
+import com.tobo.huiset.utils.HandyFunctions
 import com.tobo.huiset.utils.extensions.euroToCent
 import java.lang.Exception
 
 
-abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide() , ISlidePolicy, SlideDismissListener,SlideShowListener{
+abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener, SlideShowListener {
 
     abstract fun processPrice(price:Int)
     abstract fun getInitialPrice():String
 
-    private lateinit var hint:String
+    private lateinit var hint: String
 
     override fun onSlideDismissed() {
-        val price = getPrice()
-        if(price!= null){
-            this.processPrice(price)
-            db.createDemoBeerOrSetPrice(price)
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        val price = editText.text.toString().replace(',','.')
+
+        if(HandyFunctions.priceValidate(price, editText)){
+            this.processPrice(price.euroToCent())
+            db.createDemoBeerOrSetPrice(price.euroToCent())
         }
         else{
-            Toast.makeText(this.context,"Prijs input klopt niet!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context,"Prijs input klopt niet.", Toast.LENGTH_SHORT).show()
         }
     }
-    override fun onSlideShown() {
-        view!!.findViewById<MaterialButton>(R.id.button_intro_textfield_create).visibility = View.GONE
 
+    override fun onSlideShown() {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val text = getInitialPrice().toCharArray()
         editText.setText(text,0,text.size)
     }
 
-
     override fun isPolicyRespected(): Boolean {
-        return getPrice() != null
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        return HandyFunctions.priceValidate(editText.text.toString(), editText)
     }
 
     override fun onUserIllegallyRequestedNextPage() {
-        Toast.makeText(this.context,"Prijs is geen correct bedrag!",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this.context,"Prijs input klopt niet!",Toast.LENGTH_SHORT).show()
     }
 
     override fun getLayoutResId(): Int {
@@ -60,17 +62,4 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide() , ISlidePolic
         }
     }
 
-
-    internal fun getPrice(): Int? {
-        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
-        return parsePrice(editText.text.toString())
-    }
-
-    private fun parsePrice(toString: String): Int? {
-        return try{
-            toString.euroToCent()
-        }catch (e:Exception){
-            return null
-        }
-    }
 }

@@ -427,5 +427,20 @@ class HuisETDB(private val realm: Realm) {
         return realm.copyFromRealm(trans)
     }
 
+    fun findDuplicatePersonName(name: String, zeroIfPerson_OneIfProduct: Int): Boolean {
+        return if (zeroIfPerson_OneIfProduct == 0) {
+            realm.where(Person::class.java)
+                .equalTo("deleted", false)
+                .findAll().map { it.name }
+                .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
+        } else {
+            // so if (zeroIfPerson_OneIfProduct == 1)
+            realm.where(Product::class.java)
+                .equalTo("deleted", false)
+                .findAll().map { it.name }
+                .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
+        }
+    }
+
 
 }
