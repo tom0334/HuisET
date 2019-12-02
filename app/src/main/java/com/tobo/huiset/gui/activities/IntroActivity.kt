@@ -31,7 +31,7 @@ class IntroActivity : AppIntro2(){
         addSlide(AppIntroFragment.newInstance(firstSlide))
 
 
-        val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Een huisrekening is een gedeelde bankrekening waar gezamenlijke inkopen van worden betaalt.", "Ja, wij gebruiken een huisrekening.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
+        val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Een huisrekening is een gedeelde bankrekening waar gezamenlijke inkopen van worden betaald.", "Ja, wij gebruiken een huisrekening.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
         addSlide(huisRekeningSlide)
 
         val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een huisgenoot profiel", "Er moet minimaal één profiel aangemaakt worden. Later kun je er nog meer aanmaken (ook voor gasten).","Maak profiel","Naam")
