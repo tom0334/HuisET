@@ -3,5 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fragmentMain_product_height">76dp</dimen>
-    <dimen name="personRecWeight">1</dimen>
+    <dimen name="personRecWeight">3</dimen>
 </resources>
