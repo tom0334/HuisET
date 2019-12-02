@@ -1,6 +1,7 @@
 package com.tobo.huiset.utils
 
 import android.widget.EditText
+import com.google.android.material.snackbar.Snackbar
 
 object HandyFunctions {
 
@@ -21,6 +22,12 @@ object HandyFunctions {
             return false
         }
 
+        // name is huisrekening
+        if (name.toLowerCase().trim() == "huisrekening") {
+            editText.error = "Huisrekening kan alleen via instellingen aangezet worden"
+            return false
+        }
+
         // duplicate names are not accepted, except if the old person is deleted
         if (checkForDuplicateName
             && db.findDuplicatePersonName(name, zeroIfPerson_oneIfProduct)
@@ -35,6 +42,7 @@ object HandyFunctions {
             editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
             return false
         }
+
         return true
     }
 
