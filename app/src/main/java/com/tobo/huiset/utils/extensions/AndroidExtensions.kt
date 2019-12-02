@@ -3,13 +3,12 @@ package com.tobo.huiset.utils.extensions
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.Point
 import android.util.TypedValue
 import android.widget.TextView
-import com.tobo.huiset.MyApplication
+import androidx.appcompat.app.AppCompatActivity
 import com.tobo.huiset.utils.ToboTime
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.util.*
 
 fun Int.toPixel(context: Context): Int {
     val r = context.resources
@@ -122,3 +121,11 @@ inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit)
     operation(editor)
     editor.apply()
 }
+fun AppCompatActivity.getDisplayWith(): Float {
+    return resources.displayMetrics.widthPixels.toFloat()
+}
+
+fun AppCompatActivity.getDisplayHeight(): Float {
+    return resources.displayMetrics.heightPixels.toFloat()
+}
+

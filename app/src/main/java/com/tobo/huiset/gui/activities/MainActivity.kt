@@ -23,6 +23,8 @@ import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.utils.extensions.getDisplayWith
+import kotlinx.android.synthetic.main.activity_main.*
 import nl.dionsegijn.konfetti.KonfettiView
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
@@ -271,7 +273,7 @@ class MainActivity : CelebratingHuisEtActivity() {
             .setTimeToLive(2000L)
             .addShapes( Shape.CIRCLE, Shape.RECT)
             .addSizes(Size(12))
-            .setPosition(-50f, viewKonfetti.width + 50f, 0f, -50f)
+            .setPosition(-50f, this.getDisplayWith() + 50f, 0f, -50f)
             .burst(300)
     }
 
