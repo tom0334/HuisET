@@ -354,7 +354,7 @@ class HuisETDB(private val realm: Realm) {
         return realm.where(Person::class.java).equalTo("huisRekening",true).findFirst()!!
     }
 
-    fun setHuisRekeningActive(active:Boolean){
+    fun setHuisRekeningActive(active: Boolean){
         val huisRekening = getHuisRekening()
         realm.executeTransaction {
             huisRekening.isDeleted =  ! active

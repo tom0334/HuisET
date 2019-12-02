@@ -31,17 +31,20 @@ class IntroActivity : AppIntro2(){
         addSlide(AppIntroFragment.newInstance(firstSlide))
 
 
-        val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Een huisrekening is een gedeelde bankrekening waar gezamenlijke inkopen van worden betaald.", "Ja, wij gebruiken een huisrekening.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
-        addSlide(huisRekeningSlide)
-
         val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een huisgenoot profiel", "Er moet minimaal één profiel aangemaakt worden. Later kun je er nog meer aanmaken (ook voor gasten).","Maak profiel","Naam")
         addSlide(createPersonSlide)
 
-        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een krat bier?","Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen voor nu om een standaard bierprijs in te voeren.","Prijs in Euro's",true)
+        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs (zonder statiegeld) voor een krat bier?","Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen voor nu om een standaard bierprijs in te voeren.","Prijs in Euro's",true)
         addSlide(cratePriceSlide)
 
-        val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje?","Dit is gebaseerd op de gekozen prijs per krat, en is later ook nog aan te passen. Het is eventueel afhankelijk van hoe jullie statiegeld verdelen.","Prijs in Euro",false)
+        val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs (zonder statiegeld) voor een biertje?","Dit is gebaseerd op de gekozen prijs per krat, en is later ook nog aan te passen.","Prijs in Euro",false)
         addSlide(beerPriceSlide)
+
+        val depositSlide = SlideFactory.newYesNoInstance("Willen jullie dat de app statiegeld verrekent?", "Bij het inkopen van producten die gedefinieerd zijn als kratje of biertje, zal het statiegeld gelijkmatig verdeeld worden over de huisgenoten, zodat jullie dit bij het retourneren ook gelijkmatig kunnen verdelen.", "Ja, wij willen dat statiegeld direct wordt verdeeld.", "Nee, wij regelen zelf ons statiegeld.", false, false)
+        addSlide(depositSlide)
+
+        val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Een huisrekening is een gedeelde bankrekening waar gezamenlijke inkopen van worden betaald.", "Ja, wij gebruiken een huisrekening.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false, true)
+        addSlide(huisRekeningSlide)
 
         skipButtonEnabled = false
     }
@@ -50,7 +53,7 @@ class IntroActivity : AppIntro2(){
         super.onDonePressed(currentFragment)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefs.edit().putBoolean("shownIntro",true).apply()
+        prefs.edit().putBoolean("shownIntro", true).apply()
         this.finish()
     }
 

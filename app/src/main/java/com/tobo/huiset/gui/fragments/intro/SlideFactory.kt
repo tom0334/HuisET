@@ -10,6 +10,7 @@ object SlideFactory{
     val ARG_YES_TEXT = "yes_text"
     val ARG_NO_TEXT = "no_text"
     val ARG_DEFAULT_CHOICE = "def_choice"
+    val ARG_HUISREKENING_OR_DEPOSIT = "trueHuisRekening_falseDeposit"
 
     val ARG_HINT ="slide_hint"
     val ARG_BUTTON_TEXT = "slide_createButtonText"
@@ -19,17 +20,19 @@ object SlideFactory{
         description: String,
         yesText: String,
         noText: String,
-        defaultChoice: Boolean
+        defaultChoice: Boolean,
+        trueHuisRekening_falseDeposit: Boolean
     ): YesNoIntroFragment {
 
         val yesNoIntroFragment = YesNoIntroFragment()
         val args = Bundle()
 
         args.putString(ARG_TITLE, title)
-        args.putString(ARG_DESCRIPTION,description)
-        args.putString(ARG_YES_TEXT,yesText)
-        args.putString(ARG_NO_TEXT,noText)
-        args.putBoolean(ARG_DEFAULT_CHOICE,defaultChoice)
+        args.putString(ARG_DESCRIPTION, description)
+        args.putString(ARG_YES_TEXT, yesText)
+        args.putString(ARG_NO_TEXT, noText)
+        args.putBoolean(ARG_DEFAULT_CHOICE, defaultChoice)
+        args.putBoolean(ARG_HUISREKENING_OR_DEPOSIT, trueHuisRekening_falseDeposit)
 
         yesNoIntroFragment.arguments = args
         return yesNoIntroFragment
@@ -62,7 +65,7 @@ object SlideFactory{
         hint:String,
         crate:Boolean
     ): AbstractPickPriceSlide {
-        val sampleSlide =  if(crate)PickCratePriceSlide() else PickBeerSlide()
+        val sampleSlide =  if (crate) PickCratePriceSlide() else PickBeerSlide()
 
         val args = Bundle()
 
