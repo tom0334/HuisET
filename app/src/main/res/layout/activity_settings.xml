@@ -37,7 +37,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="16dp"
-                    android:layout_toLeftOf="@id/fullScreenSwitch"
+                    android:layout_toLeftOf="@id/huisRekeningSwitch"
                     android:text="Toont een extra \'Profiel\' waar je je huisuitgaven op kunt zetten. " />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -46,6 +46,40 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/depositSettingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Statiegeld"
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="16sp" />
+
+                <TextView
+                        android:id="@+id/depositSettingExplain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/depositSettingText"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@id/depositSwitch"
+                        android:text="Statiegeld wordt na het inkopen van een kratje of biertje in de app verrekend zodat ontvangen statiegeld bij het retourneren gelijkmatig over alle huisgenoten verdeeld kan worden." />
+
+                <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/depositSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -72,7 +106,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginRight="16dp"
                         android:layout_toLeftOf="@id/fullScreenSwitch"
-                        android:text="Verberg de statusbar en de knoppenbalk onder aan uw scherm(home, terug en recents)." />
+                        android:text="Verberg de statusbar en de knoppenbalk onder aan uw scherm (home, terug en recents)." />
 
                 <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/fullScreenSwitch"

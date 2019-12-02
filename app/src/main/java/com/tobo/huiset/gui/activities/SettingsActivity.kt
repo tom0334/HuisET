@@ -8,8 +8,9 @@ import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.utils.extensions.edit
 
+const val PREFS_DEPOSIT_ID = "DepositEnabled"
 const val PREFS_FULLSCREEN_ID = "FullscreenEnabled"
-const val PREFS_HIDEAPPBAR_ID = "HideAppBarEnabled"
+const val PREFS_HIDE_APPBAR_ID = "HideAppBarEnabled"
 const val PREFS_TURF_CONFETTI_ID = "TurfConfettiEnabled"
 
 class SettingsActivity : HuisEtActivity() {
@@ -17,10 +18,11 @@ class SettingsActivity : HuisEtActivity() {
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
     private lateinit var hideAppBarSetting: RelativeLayout
+    private lateinit var huisRekeningSwitch: SwitchCompat
+    private lateinit var depositSwitch: SwitchCompat
     private lateinit var fullscreenSwitch: SwitchCompat
     private lateinit var hideAppBarSwitch: SwitchCompat
     private lateinit var turfConfettiSwitch: SwitchCompat
-    private lateinit var huisRekeningSwitch: SwitchCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +36,14 @@ class SettingsActivity : HuisEtActivity() {
             showOrHideAppBarSetting()
         }
     }
+
     private fun initViewFields(){
+        huisRekeningSwitch = findViewById(R.id.huisRekeningSwitch)
+        depositSwitch = findViewById(R.id.depositSwitch)
         hideAppBarSetting = findViewById(R.id.hideAppBarSetting)
         fullscreenSwitch = findViewById(R.id.fullScreenSwitch)
         hideAppBarSwitch = findViewById(R.id.hideAppBarSwitch)
         turfConfettiSwitch = findViewById(R.id.turfConfettiSwitch)
-        huisRekeningSwitch = findViewById(R.id.huisRekeningSwitch)
     }
 
     /**
@@ -56,20 +60,22 @@ class SettingsActivity : HuisEtActivity() {
     }
 
     private fun showStatus() {
-        fullscreenSwitch.isChecked = prefs.getBoolean(PREFS_FULLSCREEN_ID, false)
-        hideAppBarSwitch.isChecked = prefs.getBoolean(PREFS_HIDEAPPBAR_ID, false)
-        turfConfettiSwitch.isChecked = prefs.getBoolean(PREFS_TURF_CONFETTI_ID,false)
         huisRekeningSwitch.isChecked = ! db.getHuisRekening().isDeleted
+        depositSwitch.isChecked = prefs.getBoolean(PREFS_DEPOSIT_ID, false)
+        fullscreenSwitch.isChecked = prefs.getBoolean(PREFS_FULLSCREEN_ID, false)
+        hideAppBarSwitch.isChecked = prefs.getBoolean(PREFS_HIDE_APPBAR_ID, false)
+        turfConfettiSwitch.isChecked = prefs.getBoolean(PREFS_TURF_CONFETTI_ID,false)
     }
 
     private fun saveChanges() {
+        db.setHuisRekeningActive(huisRekeningSwitch.isChecked)
+
         prefs.edit {
+            it.putBoolean(PREFS_DEPOSIT_ID, depositSwitch.isChecked)
             it.putBoolean(PREFS_FULLSCREEN_ID, fullscreenSwitch.isChecked)
-            it.putBoolean(PREFS_HIDEAPPBAR_ID, hideAppBarSwitch.isChecked)
+            it.putBoolean(PREFS_HIDE_APPBAR_ID, hideAppBarSwitch.isChecked)
             it.putBoolean(PREFS_TURF_CONFETTI_ID, turfConfettiSwitch.isChecked)
         }
-
-        db.setHuisRekeningActive(huisRekeningSwitch.isChecked)
     }
 
 

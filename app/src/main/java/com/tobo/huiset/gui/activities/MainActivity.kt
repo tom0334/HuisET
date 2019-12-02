@@ -15,7 +15,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
@@ -24,7 +23,6 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.getDisplayWith
-import kotlinx.android.synthetic.main.activity_main.*
 import nl.dionsegijn.konfetti.KonfettiView
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
@@ -44,7 +42,7 @@ class MainActivity : CelebratingHuisEtActivity() {
 
     private val fullScreenMode get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_FULLSCREEN_ID,false)
 
-    private val hideAppBar get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_HIDEAPPBAR_ID,false)
+    private val hideAppBar get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_HIDE_APPBAR_ID,false)
 
     // for hiding the appbar and navbar in fullscreen mode
     private val systemUIHandler = Handler()
