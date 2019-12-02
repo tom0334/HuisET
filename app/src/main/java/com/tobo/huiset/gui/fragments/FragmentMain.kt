@@ -298,11 +298,12 @@ class FragmentMain : HuisEtFragment() {
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 
         return when{
-            amountOfProfilesToShow >= 8 && dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
-            amountOfProfilesToShow >= 7 && dpWidth > 900 -> 3
-            amountOfProfilesToShow >= 4 && dpWidth > 600 -> 2 // 7 inch tablet in portrait
+            amountOfProfilesToShow > 12 && dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
+            amountOfProfilesToShow > 6 && dpWidth > 900 -> 3
+            amountOfProfilesToShow >= 2 && dpWidth > 500 -> 2
             else -> 1
         }
+
     }
 
     private fun setupSpacingForTurfRec(columns: Int) {
