@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentPurchases
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,12 +32,20 @@ class PurchaseProductRecAdapter(
         return ProductViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = data?.get(position) ?: return
 
         holder.amountTv.text = getFromMap(product.id).toString()
         holder.nameTv.text = product.name
-        holder.priceTv.text = product.price.toCurrencyString()
+        holder.priceTv.text = if (fragmentPurchases.calcDeposit) {
+            "${product.price.toCurrencyString()}${when (product.species) {
+                Product.CRATEPRODUCT -> " (+ €3,90)"
+                Product.BEERPRODUCT -> " (+ €0,10)"
+                else -> ""
+            }}"
+        } else
+            product.price.toCurrencyString()
 
         if (getFromMap(product.id) > 0) {
             holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))

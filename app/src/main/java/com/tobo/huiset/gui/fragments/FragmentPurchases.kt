@@ -1,4 +1,5 @@
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.activities.PREFS_DEPOSIT_ID
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.realmModels.Product
@@ -22,14 +24,23 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 class FragmentPurchases : HuisEtFragment() {
 
 
+    val calcDeposit: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_DEPOSIT_ID, false)
+    
     private var pickedPersonId: String? = null
-    private var totalPurchasePrice: Int = 0
-    set(value) {
-        field = value
-        view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = "Totaal: ${value.toCurrencyString()}"
-    }
 
-    private val prodRecAdapter get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
+    //TODO: change (+ enig statiegeld) to a new variable, calculate it and adjust roommates' balance automatically
+    private var totalPurchasePrice: Int = 0
+        set(value) {
+            field = value
+            view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = if (calcDeposit) {
+                "Totaal: ${value.toCurrencyString()} (+ enig statiegeld)"
+            } else
+                "Totaal: ${value.toCurrencyString()}"
+        }
+
+    private val prodRecAdapter
+        get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_purchases, container, false)
@@ -39,7 +50,6 @@ class FragmentPurchases : HuisEtFragment() {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
         initProductsRec(view)
-        view.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
     }
 
     override fun onTabReactivated(){
