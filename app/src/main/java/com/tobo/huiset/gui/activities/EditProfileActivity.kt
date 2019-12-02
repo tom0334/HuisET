@@ -89,8 +89,18 @@ class EditProfileActivity : HuisEtActivity() {
                 return
             }
             oldProfile!!.balance != 0 -> {
-                Snackbar.make(findViewById(R.id.editProfileView), "Dit persoon moet eerst afrekenen voordat hij verwijderd kan worden", Snackbar.LENGTH_LONG).setAction("Afrekenen", View.OnClickListener {
+                val view = findViewById<View>(R.id.editProfileView)
+                hideKeyboard(view)
+                Snackbar.make(view, "Dit persoon moet eerst afrekenen voordat hij verwijderd kan worden", Snackbar.LENGTH_LONG).setAction("Afrekenen", View.OnClickListener {
                     val intent = Intent(this, TransferMoneyActivity::class.java)
+                    startActivity(intent)
+                }).show()
+            }
+            oldProfile!!.isHuisRekening -> {
+                val view = findViewById<View>(R.id.editProfileView)
+                hideKeyboard(view)
+                Snackbar.make(view, "De huisrekening kan alleen uitgezet worden via de instellingen", Snackbar.LENGTH_LONG).setAction("Instellingen", View.OnClickListener {
+                    val intent = Intent(this, SettingsActivity::class.java)
                     startActivity(intent)
                 }).show()
             }
