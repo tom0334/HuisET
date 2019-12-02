@@ -104,8 +104,6 @@ class StatsActivity : HuisEtActivity() {
         val transactions = db.getTransactions(buy = false,personId = p.id)
 
         var soFar = 0
-        //todo add 0 at profile createon date if needed
-
 
         val entries:MutableList<Entry> = mutableListOf()
         for(t in transactions){
