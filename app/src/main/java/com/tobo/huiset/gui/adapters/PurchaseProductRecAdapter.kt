@@ -44,6 +44,7 @@ class PurchaseProductRecAdapter(
     }
 
 
+    //Its a java hashmap instead of a kotlin map because the java one is serialisable.
     private var amountMap: HashMap<String, Int> = HashMap()
 
 

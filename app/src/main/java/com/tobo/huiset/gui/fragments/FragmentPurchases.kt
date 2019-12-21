@@ -46,20 +46,15 @@ class FragmentPurchases : HuisEtFragment() {
 
     override fun onTabReactivated(userTapped:Boolean){
         if(userTapped){
-            // this resets the chosen person to none, putting you back to the pick person screen
-            setPersonAndUpdate(null)
-            // clear amounts in recyclerview
-            prodRecAdapter.resetMapValues()
-            totalPurchasePrice = 0
+            reset()
         }
-
     }
 
     override fun onBackButtonPressed(): Boolean {
         //if we are already on the profiles screen, the activity must handle the back button
         if (pickedPersonId == null) return false
         //else we will handle it here
-        setPersonAndUpdate(null)
+        reset()
 
         return true
     }
@@ -106,11 +101,10 @@ class FragmentPurchases : HuisEtFragment() {
             else {
                 Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
             }
-            setPersonAndUpdate(null)
+            reset()
             db.mergeTransactionsIfPossible(System.currentTimeMillis())
             val changes = AchievementManager.updateAchievementsAfterBuy(person)
             (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
-
 
         }
     }
@@ -143,6 +137,14 @@ class FragmentPurchases : HuisEtFragment() {
         val intent = Intent(this.context, EditProductActivity::class.java)
         startActivityForResult(intent,2)
     }
+    
+    private fun reset(){
+        // this resets the chosen person to none, putting you back to the pick person screen
+        setPersonAndUpdate(null)
+        // clear amounts in recyclerview
+        prodRecAdapter.resetMapValues()
+        totalPurchasePrice = 0
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -160,6 +162,7 @@ class FragmentPurchases : HuisEtFragment() {
             prodRecAdapter.restoreInstanceState(savedInstanceState)
         }
     }
+
 
 
 }
