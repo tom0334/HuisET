@@ -25,7 +25,7 @@
             android:fontFamily="sans-serif-medium"
             android:textSize="16sp"
             android:gravity="center_vertical"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             tools:text="Biertje"
     />
