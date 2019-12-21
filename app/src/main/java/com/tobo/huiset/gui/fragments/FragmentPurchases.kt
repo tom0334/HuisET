@@ -45,6 +45,7 @@ class FragmentPurchases : HuisEtFragment() {
     override fun onTabReactivated(){
         // this resets the chosen person to none, putting you back to the pick person screen
         setPersonAndUpdate(null)
+    override fun onTabReactivated(userTapped:Boolean){
     }
 
     override fun onBackButtonPressed(): Boolean {

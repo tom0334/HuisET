@@ -75,7 +75,9 @@ class PurchaseProductRecAdapter(
 
 
     private fun bindNewProductButton(holder: NewProductRecViewHolder) {
-
+        holder.itemView.setOnClickListener {
+            fragmentPurchases.onCreateNewProductClicked()
+        }
     }
 
     private fun bindProduct(holder:ProductViewHolder , product: Product, position: Int) {
