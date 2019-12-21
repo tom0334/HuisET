@@ -18,6 +18,7 @@ import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
 
@@ -26,17 +27,23 @@ class FragmentPurchases : HuisEtFragment() {
 
     val calcDeposit: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_DEPOSIT_ID, false)
-    
+
     private var pickedPersonId: String? = null
 
-    //TODO: change (+ enig statiegeld) to a new variable, calculate it and adjust roommates' balance automatically
     private var totalPurchasePrice: Int = 0
         set(value) {
             field = value
-            view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = if (calcDeposit) {
-                "Totaal: ${value.toCurrencyString()} (+ enig statiegeld)"
-            } else
-                "Totaal: ${value.toCurrencyString()}"
+            view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = "Totaal: ${value.toCurrencyString()}"
+        }
+
+    private var depositPrice: Int = 0
+        set(value) {
+            field = value
+            view?.findViewById<TextView>(R.id.depositMoneyCounter)?.text =
+                if (calcDeposit)
+                    " (+ ${value.toCurrencyString()})"
+                else
+                    ""
         }
 
     private val prodRecAdapter
@@ -140,10 +147,13 @@ class FragmentPurchases : HuisEtFragment() {
         prodRecAdapter.resetMapValues()
 
         totalPurchasePrice = 0
+        depositPrice = 0
     }
 
-    fun increaseCounter(inc: Int) {
-        totalPurchasePrice += inc
+    //TODO: fix the error here with these placeholders, then move onto actually adjusting it and changing roommates' saldo
+    fun increaseCounter(productPriceInc: Int, depositInc: Int) {
+        totalPurchasePrice += productPriceInc
+        if (calcDeposit) depositPrice += depositInc
     }
 
     override fun onResume() {

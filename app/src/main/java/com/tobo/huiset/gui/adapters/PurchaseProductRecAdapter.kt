@@ -2,6 +2,7 @@ package com.tobo.huiset.gui.adapters
 
 import FragmentPurchases
 import android.annotation.SuppressLint
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
+import com.tobo.huiset.gui.activities.PREFS_DEPOSIT_ID
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
@@ -24,6 +26,7 @@ class PurchaseProductRecAdapter(
     data: RealmResults<Product>,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Product, PurchaseProductRecAdapter.ProductViewHolder>(data, autoUpdate) {
+
 
     private val amountMap: MutableMap<String, Int> = mutableMapOf()
 
@@ -58,7 +61,12 @@ class PurchaseProductRecAdapter(
 
         holder.itemView.setOnClickListener {
             amountMap[product.id] = getFromMap(product.id) + 1
-            fragmentPurchases.increaseCounter(product.price)
+            val deposit = when (product.species) {
+                Product.BEERPRODUCT -> 10
+                Product.CRATEPRODUCT -> 390
+                else -> 0
+            }
+            fragmentPurchases.increaseCounter(product.price, deposit)
             notifyItemChanged(position)
         }
     }
