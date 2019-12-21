@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentPurchases
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 import java.lang.IllegalArgumentException
+import java.util.HashMap
 
 /**
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
@@ -42,7 +44,7 @@ class PurchaseProductRecAdapter(
     }
 
 
-    private val amountMap: MutableMap<String, Int> = mutableMapOf()
+    private var amountMap: HashMap<String, Int> = HashMap()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -116,6 +118,14 @@ class PurchaseProductRecAdapter(
     fun resetMapValues() {
         amountMap.clear()
         notifyDataSetChanged()
+    }
+
+    fun saveOutState(outState: Bundle) {
+        outState.putSerializable("amountMap",amountMap)
+    }
+
+    fun restoreInstanceState(outState: Bundle){
+        amountMap = outState.getSerializable("amountMap") as HashMap<String, Int>
     }
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
