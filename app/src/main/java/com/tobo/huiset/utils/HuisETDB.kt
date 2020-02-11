@@ -77,16 +77,24 @@ class HuisETDB(private val realm: Realm) {
      * Adds a new transaction on the selected product
      * @param person the person to put the transaction on
      */
-    fun doTransactionWithSelectedProduct(person: Person, amount: Int) {
+    fun doTransactionWithSelectedProduct(person: Person, amount: Float) {
         realm.executeSafe {
             val selectedProduct = getSelectedProduct()
             val t = Transaction.create(person, selectedProduct, amount, false)
-            selectedProduct?.isSelected = false
 
             realm.copyToRealmOrUpdate(t)
             person.addTransaction(t)
         }
     }
+
+    fun doTransactionWithMultiplePersons(persons : List<Person>, amount: Float){
+        val amountPerPerson = amount/ persons.size.toFloat()
+        persons.forEach {
+            doTransactionWithSelectedProduct(it,amountPerPerson)
+        }
+    }
+
+
 
     /**
      * Gets the person that is selected in history
@@ -158,7 +166,7 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Creates a new transaction with the supplied arguments and saves it in the database.
      */
-    fun createAndSaveTransaction(person: Person, product: Product, amount: Int, buy: Boolean):Transaction{
+    fun createAndSaveTransaction(person: Person, product: Product, amount: Float, buy: Boolean):Transaction{
         var savedTrans:Transaction? = null
         realm.executeTransaction{
             val trans = Transaction.create(person, product, amount, buy)
@@ -446,6 +454,5 @@ class HuisETDB(private val realm: Realm) {
                 .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
         }
     }
-
 
 }

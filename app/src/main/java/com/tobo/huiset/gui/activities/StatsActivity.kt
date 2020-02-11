@@ -104,7 +104,7 @@ class StatsActivity : HuisEtActivity() {
     fun getEntriesForPerson(p:Person):List<Entry>{
         val transactions = db.getTransactions(buy = false,personId = p.id).filter { it.product.species == Product.BEERPRODUCT }
 
-        var soFar = 0
+        var soFar = 0.0
 
         val entries:MutableList<Entry> = mutableListOf()
         for(t in transactions){

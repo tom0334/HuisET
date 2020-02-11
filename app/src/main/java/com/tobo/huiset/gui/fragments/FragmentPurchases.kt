@@ -114,7 +114,7 @@ class FragmentPurchases : HuisEtFragment() {
             products.forEach {
                 val amount = prodRecAdapter.getFromMap(it.id)
                 if (amount > 0) {
-                    db.createAndSaveTransaction(person, it, amount, true)
+                    db.createAndSaveTransaction(person, it, amount.toFloat(), true)
                     anythingBought = true
                 }
             }

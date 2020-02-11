@@ -143,4 +143,5 @@ public class Person extends RealmObject {
     public RealmList<AchievementCompletion> getCompletions() {
         return completions;
     }
+
 }

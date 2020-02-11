@@ -33,7 +33,7 @@ const val A_BEGINNENDE_DRINKER = 10
  * Finds the amount of products turfed in a list of transactions, even when the amount of products in a transaction
  * is greater than 1.
  */
-fun List<Transaction>.amountOfProducts(): Int {
+fun List<Transaction>.amountOfProducts(): Float {
     return this.map {it.amount }.sum()
 }
 
@@ -70,7 +70,7 @@ class Nice : BaseAchievement() {
     override val updateOnLaunch = false
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        var count = 0
+        var count = 0.0
         for (t in helpData.beerTurfTransactionsByPerson){
             count+= t.amount
             if(count>= 69 ) return t.time

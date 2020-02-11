@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
@@ -27,12 +28,13 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.extensions.toFormattedAmount
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
 
 
-class FragmentMain : HuisEtFragment() {
+class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
     private lateinit var spacer: ConsistentSpacingDecoration
 
@@ -78,14 +80,23 @@ class FragmentMain : HuisEtFragment() {
         setupProductRec(view)
 
         val transActionRec = setupTransactionsRec(view)
-        setupTurfRec(view, transActionRec)
+        setupTurfRec(view, transActionRec,savedInstanceState)
 
         if (savedInstanceState != null) {
             val amountAdapter = view.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
             amountAdapter.selectedPos = savedInstanceState.getInt("selectedPos")
             amountAdapter.notifyDataSetChanged()
         }
+
+        val fab = view.findViewById<FloatingActionButton>(R.id.multiTurfAcceptFab)
+        fab.setOnClickListener {
+            val turfRecAdapter = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
+            handleMultiTurf(turfRecAdapter.selectedPersonIds.mapNotNull {db.getPersonWithId(it)})
+            clearSelection()
+        }
+
     }
+
 
     override fun onTabReactivated(userTapped:Boolean) {
 
@@ -100,7 +111,20 @@ class FragmentMain : HuisEtFragment() {
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
         setupSpacingForTurfRec(columns)
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
+
+        if(userTapped){
+            clearSelection()
+        }
     }
+
+    private fun clearSelection(){
+        val turfRecAdapter = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
+
+        turfRecAdapter.selectedPersonIds.clear()
+        turfRecAdapter.selecting = false
+        turfRecAdapter.notifyDataSetChanged()
+    }
+
 
     private fun confirmationChecks() {
         val needToCheckPerson = checkIfAnyTurfableProductExists()
@@ -204,7 +228,7 @@ class FragmentMain : HuisEtFragment() {
 
             val savedTransaction = db.copyFromRealm(trans)
 
-            val snackbar = Snackbar.make(view, "${trans.amount} ${if (trans.product == null) "Transactie" else trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, "${trans.amount.toFormattedAmount()} ${if (trans.product == null) "Transactie" else trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
                 .setAction("Undo") {
                     db.createAndSaveTransaction(savedTransaction)
                 }
@@ -253,41 +277,19 @@ class FragmentMain : HuisEtFragment() {
     /**
      * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
      */
-    private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
+    private fun setupTurfRec(view: View, transitionRec: RecyclerView, savedInstanceState:Bundle?) {
 
         val profiles = db.findAllCurrentPersons(false)
         val columns = this.getNumOfColumns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
-        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
+        val adapter = TurfRecAdapter(this.context!!, profiles, true,realm,this)
+        turfRec.adapter = adapter
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
+        adapter.restoreState(savedInstanceState)
+
 
         setupSpacingForTurfRec(columns)
-
-        val amountAdapter = view.findViewById<RecyclerView>(R.id.mainAmountRec).adapter as AmountMainRecAdapter
-
-        ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
-            val person = profiles[position]
-            if (person != null) {
-
-                db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
-                val changed = AchievementManager.updateAchievementsAfterTurf(person)
-                (activity as MainActivity).showAchievements(changed)
-
-                if(changed.isEmpty() && showConfettiOnTurf){
-                    (activity as MainActivity).showTurfConfetti(person)
-                }
-
-                db.selectFirstTurfProduct()
-
-                amountAdapter.resetAmountToFirst()
-
-                //scroll to the top, because the item is added at the top
-                transitionRec.scrollToPosition(0)
-                mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable,30 * 1000)
-
-            }
-        }
     }
 
     private fun getNumOfColumns(amountOfProfilesToShow: Int):Int{
@@ -318,19 +320,90 @@ class FragmentMain : HuisEtFragment() {
 
         val amountAdapter = view?.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
         outState.putInt("selectedPos", amountAdapter.selectedPos)
+
+        val turfRecAdapter = view?.findViewById<RecyclerView>(R.id.mainPersonRec)?.adapter as TurfRecAdapter
+        turfRecAdapter.saveState(outState)
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        val rec: RecyclerView? = view?.findViewById(R.id.mainPersonRec)
-        if (rec != null) {
-            ItemClickSupport.removeFrom(rec)
-        }
         if (transactionTimeRefreshHandler != null) {
             transactionTimeRefreshHandler!!.removeCallbacks(updateTransactionRecRunnable)
 
         }
         mergeTransactionsHandler!!.removeCallbacks(mergeTransactionsRunnable)
+
+    }
+
+
+    override fun handleSingleTurf(person: Person) {
+        val amountAdapter =
+            view!!.findViewById<RecyclerView>(R.id.mainAmountRec).adapter as AmountMainRecAdapter
+        val transActionRec = view!!.findViewById<RecyclerView>(R.id.recentRecyclerView)
+
+        db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount().toFloat())
+        val changed = AchievementManager.updateAchievementsAfterTurf(person)
+        (activity as MainActivity).showAchievements(changed)
+
+        if (changed.isEmpty() && showConfettiOnTurf) {
+            (activity as MainActivity).showTurfConfetti(person)
+        }
+
+        db.selectFirstTurfProduct()
+
+        amountAdapter.resetAmountToFirst()
+
+        //scroll to the top, because the item is added at the top
+        transActionRec.scrollToPosition(0)
+        mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
+    }
+
+    private fun handleMultiTurf(persons: List<Person>) {
+        val amountAdapter =
+            view!!.findViewById<RecyclerView>(R.id.mainAmountRec).adapter as AmountMainRecAdapter
+        val transActionRec = view!!.findViewById<RecyclerView>(R.id.recentRecyclerView)
+
+
+        val amount = amountAdapter.getSelectedAmount()
+
+
+        db.doTransactionWithMultiplePersons(persons, amount.toFloat())
+
+
+        persons.forEach {person ->
+            val changed = AchievementManager.updateAchievementsAfterTurf(person)
+            (activity as MainActivity).showAchievements(changed)
+
+            if (changed.isEmpty() && showConfettiOnTurf) {
+                (activity as MainActivity).showTurfConfetti(person)
+            }
+        }
+
+
+        db.selectFirstTurfProduct()
+
+        amountAdapter.resetAmountToFirst()
+
+        //scroll to the top, because the item is added at the top
+        transActionRec.scrollToPosition(0)
+        mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
+
+    }
+
+    override fun onSelectionChanged(selecting: Boolean) {
+        val fab = view!!.findViewById<FloatingActionButton>(R.id.multiTurfAcceptFab)
+        if(selecting){
+            fab.show()
+        }
+        else {
+            fab.hide()
+        }
+
+        val rec = view!!.findViewById<RecyclerView>(R.id.mainPersonRec)
+        //update the padding at the bottom to create space for the rec
+        val newBotPad = if(selecting) 88 else 0
+        rec.setPadding(rec.paddingLeft, rec.paddingTop, rec.paddingRight, newBotPad.toPixel(this.context!!))
 
     }
 

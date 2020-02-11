@@ -11,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
-import com.tobo.huiset.utils.extensions.toTimeAgoString
-import com.tobo.huiset.utils.extensions.getBalanceColorString
-import com.tobo.huiset.utils.extensions.setTextColorFromHex
-import com.tobo.huiset.utils.extensions.toCurrencyString
+import com.tobo.huiset.utils.extensions.*
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
@@ -49,7 +46,7 @@ class TransactionRecAdapter(
             holder.productTv.text = "Aan ${trans.getPerson(realmInstance, trans.otherPersonId).name}"
         }
         else {
-            holder.productTv.text = "${trans.amount} ${trans.product.name}"
+            holder.productTv.text = "${trans.amount.toFormattedAmount()} ${trans.product.name}"
         }
 
         if (trans.isBuy) {

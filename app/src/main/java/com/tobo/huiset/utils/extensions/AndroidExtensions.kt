@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.tobo.huiset.utils.ToboTime
 import java.text.SimpleDateFormat
+import kotlin.math.roundToInt
 
 fun Int.toPixel(context: Context): Int {
     val r = context.resources
@@ -127,5 +128,34 @@ fun AppCompatActivity.getDisplayWith(): Float {
 
 fun AppCompatActivity.getDisplayHeight(): Float {
     return resources.displayMetrics.heightPixels.toFloat()
+}
+
+
+//sumbyFloat does not exist.
+/**
+ * Returns the sum of all values produced by [selector] function applied to each element in the collection.
+ */
+ inline fun <T> Iterable<T>.sumByFloat(selector: (T) -> Float): Float{
+    var sum: Float = 0.0f
+    for (element in this) {
+        sum += selector(element)
+    }
+    return sum
+}
+
+
+fun Float.toFormattedAmount(): String {
+    var formatted = "%.2f".format(this)
+    //remove the last one, that is the  zero in "123.50". Then
+    while(formatted.last() === '0'){
+        formatted = formatted.dropLast(1)
+    }
+
+    //remove the trailing . or , if needed
+    if(! formatted.last().isDigit()){
+        formatted = formatted.dropLast(1)
+    }
+
+    return formatted
 }
 
