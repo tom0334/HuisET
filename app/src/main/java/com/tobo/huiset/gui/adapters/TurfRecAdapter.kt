@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
@@ -67,7 +68,7 @@ class TurfRecAdapter(
         holder.balanceTv.setTextColorFromHex(person.balance.getBalanceColorString())
 
         val bgColor = if(personIsSelected(person)){
-            Color.parseColor("#ff0000")
+            ContextCompat.getColor(context,R.color.secondaryLightColor)
         }else{
             Color.parseColor("#ffffff")
 
