@@ -55,7 +55,6 @@ class MyApplication : Application() {
                 var current = oldVersion
                 if (oldVersion == 0L) {
 
-
                     val transactions = realm.where("Transaction").findAll()
                     val oldAmounts  = transactions.groupBy { x: DynamicRealmObject -> x.getString("id") }.mapValues { entry ->  entry.value.first().getInt("amount")}
 
