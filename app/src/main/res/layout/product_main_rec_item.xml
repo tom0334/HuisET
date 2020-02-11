@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:maxWidth="120dp"
+                android:maxWidth="125dp"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
             tools:text="hele lange woorden moeten hier afgeknipt worden"
