@@ -17,6 +17,7 @@ import com.tobo.huiset.gui.adapters.HistoryPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.extensions.sumByFloat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -199,6 +200,7 @@ class FragmentHistory : HuisEtFragment() {
          * class key starts with a lowercase letter, because it can't be found otherwise
          */
         data class key(val productId: String, val isBuy: Boolean)
+
         fun Transaction.tokey(): key {
             return key(this.productId, this.isBuy)
         }
@@ -207,14 +209,14 @@ class FragmentHistory : HuisEtFragment() {
             .filter { it.isBuy == showBuy}
             .filter { it.product != null }
             .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumBy { it.amount }, values.sumBy { it.saldoImpact }, false) }
+            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumByFloat { it.amount}, values.sumBy { it.saldoImpact }, false) }
             .sortedByDescending { it.amount }.toMutableList()
 
 
         if(res.isEmpty()) return res.toList()
 
 
-        val totalAmount = res.sumBy { it.amount }
+        val totalAmount = res.sumByFloat { it.amount }
         val totalPrice = res.sumBy { it.price }
         res.add(HistoryItem("Totaal", totalAmount, totalPrice, true))
         return res.toList()

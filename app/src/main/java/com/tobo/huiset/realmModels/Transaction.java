@@ -16,7 +16,7 @@ public class Transaction extends RealmObject {
     private String personId;
     private String productId;
     private int price;
-    private int amount;
+    private float amount;
     private boolean buy;
 
     private String otherPersonId = null;
@@ -62,8 +62,8 @@ public class Transaction extends RealmObject {
     }
 
     public int getSaldoImpact(){
-        if(isBuy()) return price;
-        else return -1 * price;
+        if(isBuy()) return  Math.round(amount * (float) price);
+        else return Math.round( -1f * amount * (float) price);
     }
 
     public boolean isBuy() {
@@ -90,11 +90,11 @@ public class Transaction extends RealmObject {
         return new ToboTime(this.getTime());
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 

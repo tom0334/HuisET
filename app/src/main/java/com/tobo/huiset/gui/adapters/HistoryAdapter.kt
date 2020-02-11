@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
-data class HistoryItem(val productName: String, val amount: Int, val price: Int, val total:Boolean)
+data class HistoryItem(val productName: String, val amount: Float, val price: Int, val total:Boolean)
 
 
 class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) :
