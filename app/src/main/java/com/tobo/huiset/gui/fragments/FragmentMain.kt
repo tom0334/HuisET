@@ -92,6 +92,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         fab.setOnClickListener {
             val turfRecAdapter = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
             handleMultiTurf(turfRecAdapter.selectedPersonIds.mapNotNull {db.getPersonWithId(it)})
+            clearSelection()
         }
 
     }
@@ -118,8 +119,10 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
     private fun clearSelection(){
         val turfRecAdapter = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
+
         turfRecAdapter.selectedPersonIds.clear()
         turfRecAdapter.selecting = false
+        turfRecAdapter.notifyDataSetChanged()
     }
 
 
