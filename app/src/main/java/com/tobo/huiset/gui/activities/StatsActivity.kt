@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.tobo.huiset.gui.Other.CustomMarkerView
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.DoubleLineXaxisRenderer
 import java.util.*
 
@@ -101,7 +102,7 @@ class StatsActivity : HuisEtActivity() {
 
 
     fun getEntriesForPerson(p:Person):List<Entry>{
-        val transactions = db.getTransactions(buy = false,personId = p.id)
+        val transactions = db.getTransactions(buy = false,personId = p.id).filter { it.product.species == Product.BEERPRODUCT }
 
         var soFar = 0
 

@@ -199,6 +199,10 @@ class FragmentMain : HuisEtFragment() {
 
         val onDeleteClicked = fun (trans: Transaction, person: Person){
 
+            //if the button is tapped really quickly twice, it might still be visible in the list, even if the transaction
+            //is already deleted. So we can just cancel if it isn't valid or managed.
+            if(! trans.isManaged ||  ! trans.isValid) return
+
             val savedTransaction = db.copyFromRealm(trans)
 
             val snackbar = Snackbar.make(view, "${trans.amount} ${if (trans.product == null) "Transactie" else trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
