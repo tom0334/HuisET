@@ -88,27 +88,22 @@ public class Person extends RealmObject {
             if (t.getOtherPersonId() != null) {
                 t.getPerson(getRealm(), t.getOtherPersonId()).balance += price;
             }
-//            if (depositEnabled) {
-//                int deposit = 0;
-//                if (t.getProduct().getSpecies() == Product.BEERPRODUCT)
-//                    deposit += 10;
-//                else if (t.getProduct().getSpecies() == Product.CRATEPRODUCT)
-//                    deposit += 390;
-//
-//                HuisETDB db = new HuisETDB(getRealm());
-//
-//                this.balance += deposit;
-//                if (huisRekeningEnabled) {
-//                    db.findHuisRekening().balance -= deposit;
-//                }
-//                else {
-//                    RealmResults<Person> roommates = db.findAllRoommates();
-//                    assert roommates != null;
-//                    for (Person p : roommates) {
-//                        p.balance -= deposit / roommates.size();
-//                    }
-//                }
-//            }
+            if (depositEnabled) {
+
+                HuisETDB db = new HuisETDB(getRealm());
+
+                this.balance -= t.getDepositPrice();
+                if (huisRekeningEnabled) {
+                    db.findHuisRekening().balance += t.getDepositPrice();
+                }
+                else {
+                    RealmResults<Person> roommates = db.findAllRoommatesExceptHuisRekening();
+                    assert roommates != null;
+                    for (Person p : roommates) {
+                        p.balance += t.getDepositPrice() / roommates.size();
+                    }
+                }
+            }
         } else {
             this.balance += price;
         }

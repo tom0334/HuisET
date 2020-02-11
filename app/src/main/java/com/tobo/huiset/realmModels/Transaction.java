@@ -26,6 +26,7 @@ public class Transaction extends RealmObject {
     }
 
     // todo: BUG huisrekening setting werd niet enabled toen ik hem bij de intro wel aan zette
+    // todo: undo a deletion has broken
 
     static public Transaction create(Person person, Product product, int amount, boolean buy, boolean depositEnabled) {
         Transaction t = new Transaction();
