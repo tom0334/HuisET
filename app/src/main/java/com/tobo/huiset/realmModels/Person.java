@@ -28,7 +28,7 @@ public class Person extends RealmObject {
     public Person() {
     }
 
-    static public Person create(String name, String color, boolean guest, boolean show, int row, boolean isHuisrekening) {
+    static public Person create(String name, String color, boolean guest, boolean show, int row, boolean isHuisRekening) {
         Person p = new Person();
         p.name = name;
         p.color = color;
@@ -36,7 +36,7 @@ public class Person extends RealmObject {
         p.show = show;
         p.row = row;
         p.selectedInHistoryView = false;
-        p.huisRekening = isHuisrekening;
+        p.huisRekening = isHuisRekening;
 
         return p;
     }
@@ -51,19 +51,28 @@ public class Person extends RealmObject {
     }
 
 
-    public void addTransaction(Transaction t) {
+    public void addTransaction(Transaction t, Boolean isDeposit, Boolean huisRekeningExists) {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance += price;
             if (t.getOtherPersonId() != null) {
                 t.getPerson(getRealm(), t.getOtherPersonId()).balance -= price;
             }
+            if (isDeposit) {
+                int deposit = 0;
+                if (t.getProduct().getSpecies() == Product.BEERPRODUCT)
+                    deposit = 10;
+                else if (t.getProduct().getSpecies() == Product.CRATEPRODUCT)
+                    deposit = 390;
+                this.balance += deposit;
+                // todo: aftrekken van de andere boys, of alleen van huisrekening als die bestaat
+            }
         } else {
             this.balance -= price;
         }
     }
 
-    public void undoTransaction(Transaction t) {
+    public void undoTransaction(Transaction t, Boolean isDeposit, Boolean huisRekeningExists) {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance -= price;

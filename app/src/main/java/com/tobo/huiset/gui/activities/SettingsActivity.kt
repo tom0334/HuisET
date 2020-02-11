@@ -9,6 +9,7 @@ import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.utils.extensions.edit
 
 const val PREFS_DEPOSIT_ID = "DepositEnabled"
+const val PREFS_HUISREKENING_ID = "HuisRekeningEnabled"
 const val PREFS_FULLSCREEN_ID = "FullscreenEnabled"
 const val PREFS_HIDE_APPBAR_ID = "HideAppBarEnabled"
 const val PREFS_TURF_CONFETTI_ID = "TurfConfettiEnabled"
@@ -60,7 +61,7 @@ class SettingsActivity : HuisEtActivity() {
     }
 
     private fun showStatus() {
-        huisRekeningSwitch.isChecked = ! db.getHuisRekening().isDeleted
+        huisRekeningSwitch.isChecked = prefs.getBoolean(PREFS_HUISREKENING_ID, false)
         depositSwitch.isChecked = prefs.getBoolean(PREFS_DEPOSIT_ID, false)
         fullscreenSwitch.isChecked = prefs.getBoolean(PREFS_FULLSCREEN_ID, false)
         hideAppBarSwitch.isChecked = prefs.getBoolean(PREFS_HIDE_APPBAR_ID, false)
@@ -75,6 +76,7 @@ class SettingsActivity : HuisEtActivity() {
             it.putBoolean(PREFS_FULLSCREEN_ID, fullscreenSwitch.isChecked)
             it.putBoolean(PREFS_HIDE_APPBAR_ID, hideAppBarSwitch.isChecked)
             it.putBoolean(PREFS_TURF_CONFETTI_ID, turfConfettiSwitch.isChecked)
+            it.putBoolean(PREFS_HUISREKENING_ID, huisRekeningSwitch.isChecked)
         }
     }
 

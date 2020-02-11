@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.activities
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +19,11 @@ import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
 class TransferMoneyActivity : HuisEtActivity() {
+
+    val isDeposit: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_DEPOSIT_ID, false)
+    val isHuisRekening: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_HUISREKENING_ID, false)
 
     private var amountOfPersonsSelected: Int = 0
         set(value) {
@@ -90,7 +96,7 @@ class TransferMoneyActivity : HuisEtActivity() {
             }
             else {
                 transactionMap.toList().forEach {
-                    db.createAndSaveTransaction(it.second)
+                    db.createAndSaveTransaction(it.second, isDeposit, isHuisRekening)
                 }
                 Toast.makeText(this, "Totaal ${amountOfMoneyPaid.toCurrencyString()} overgemaakt door $amountOfPersonsPaid personen", Toast.LENGTH_SHORT).show()
             }

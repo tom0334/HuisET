@@ -2,7 +2,6 @@ package com.tobo.huiset.gui.adapters
 
 import FragmentPurchases
 import android.annotation.SuppressLint
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.activities.PREFS_DEPOSIT_ID
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
@@ -41,7 +39,7 @@ class PurchaseProductRecAdapter(
 
         holder.amountTv.text = getFromMap(product.id).toString()
         holder.nameTv.text = product.name
-        holder.priceTv.text = if (fragmentPurchases.calcDeposit) {
+        holder.priceTv.text = if (fragmentPurchases.isDeposit) {
             "${product.price.toCurrencyString()}${when (product.species) {
                 Product.CRATEPRODUCT -> " (+ €3,90)"
                 Product.BEERPRODUCT -> " (+ €0,10)"

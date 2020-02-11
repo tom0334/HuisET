@@ -77,14 +77,14 @@ class HuisETDB(private val realm: Realm) {
      * Adds a new transaction on the selected product
      * @param person the person to put the transaction on
      */
-    fun doTransactionWithSelectedProduct(person: Person, amount: Int) {
+    fun doTransactionWithSelectedProduct(person: Person, amount: Int, isDeposit: Boolean, isHuisrekening: Boolean) {
         realm.executeSafe {
             val selectedProduct = getSelectedProduct()
             val t = Transaction.create(person, selectedProduct, amount, false)
             selectedProduct?.isSelected = false
 
             realm.copyToRealmOrUpdate(t)
-            person.addTransaction(t)
+            person.addTransaction(t, isDeposit, isHuisrekening)
         }
     }
 
@@ -158,20 +158,20 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Creates a new transaction with the supplied arguments and saves it in the database.
      */
-    fun createAndSaveTransaction(person: Person, product: Product, amount: Int, buy: Boolean):Transaction{
+    fun createAndSaveTransaction(person: Person, product: Product, amount: Int, buy: Boolean, isDeposit: Boolean, isHuisrekening: Boolean): Transaction {
         var savedTrans:Transaction? = null
         realm.executeTransaction{
             val trans = Transaction.create(person, product, amount, buy)
-            person.addTransaction(trans)
+            person.addTransaction(trans, isDeposit, isHuisrekening)
             savedTrans = realm.copyToRealmOrUpdate(trans)
         }
         return savedTrans!!
     }
 
-    fun createAndSaveTransaction(transaction: Transaction): Transaction {
+    fun createAndSaveTransaction(transaction: Transaction, isDeposit: Boolean, isHuisrekening: Boolean): Transaction {
         var savedTrans:Transaction? = null
         realm.executeTransaction {
-            transaction.getPerson(realm, transaction.personId).addTransaction(transaction)
+            transaction.getPerson(realm, transaction.personId).addTransaction(transaction, isDeposit, isHuisrekening)
             savedTrans = realm.copyToRealmOrUpdate(transaction)
         }
         return savedTrans!!
@@ -366,7 +366,7 @@ class HuisETDB(private val realm: Realm) {
 
         val row =  if(first) -1 else findAllCurrentPersons(true).size
         realm.executeTransaction {
-            val person = Person.create(name,ProfileColors.getNextColor(this),guest,true,row,huisEtRekening)
+            val person = Person.create(name,ProfileColors.getNextColor(this),guest,show,row,huisEtRekening)
             realm.copyToRealm(person)
         }
 
@@ -441,6 +441,5 @@ class HuisETDB(private val realm: Realm) {
                 .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
         }
     }
-
 
 }

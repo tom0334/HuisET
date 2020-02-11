@@ -14,19 +14,22 @@ import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.PREFS_DEPOSIT_ID
+import com.tobo.huiset.gui.activities.PREFS_HUISREKENING_ID
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
 
 class FragmentPurchases : HuisEtFragment() {
 
 
-    val calcDeposit: Boolean
+    val isDeposit: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_DEPOSIT_ID, false)
+    val isHuisRekening: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_HUISREKENING_ID, false)
+
 
     private var pickedPersonId: String? = null
 
@@ -40,7 +43,7 @@ class FragmentPurchases : HuisEtFragment() {
         set(value) {
             field = value
             view?.findViewById<TextView>(R.id.depositMoneyCounter)?.text =
-                if (calcDeposit)
+                if (isDeposit)
                     " (+ ${value.toCurrencyString()})"
                 else
                     ""
@@ -105,7 +108,7 @@ class FragmentPurchases : HuisEtFragment() {
             products.forEach {
                 val amount = prodRecAdapter.getFromMap(it.id)
                 if (amount > 0) {
-                    db.createAndSaveTransaction(person, it, amount, true)
+                    db.createAndSaveTransaction(person, it, amount, true, isDeposit, isHuisRekening)
                     anythingBought = true
                 }
             }
@@ -119,7 +122,6 @@ class FragmentPurchases : HuisEtFragment() {
             db.mergeTransactionsIfPossible(System.currentTimeMillis())
             val changes = AchievementManager.updateAchievementsAfterBuy(person)
             (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
-
 
         }
     }
@@ -145,15 +147,13 @@ class FragmentPurchases : HuisEtFragment() {
 
         // clear amounts in recyclerview
         prodRecAdapter.resetMapValues()
-
         totalPurchasePrice = 0
         depositPrice = 0
     }
 
-    //TODO: fix the error here with these placeholders, then move onto actually adjusting it and changing roommates' saldo
     fun increaseCounter(productPriceInc: Int, depositInc: Int) {
         totalPurchasePrice += productPriceInc
-        if (calcDeposit) depositPrice += depositInc
+        if (isDeposit) depositPrice += depositInc
     }
 
     override fun onResume() {

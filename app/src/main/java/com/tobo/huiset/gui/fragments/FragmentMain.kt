@@ -17,6 +17,8 @@ import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.MainActivity
+import com.tobo.huiset.gui.activities.PREFS_DEPOSIT_ID
+import com.tobo.huiset.gui.activities.PREFS_HUISREKENING_ID
 import com.tobo.huiset.gui.activities.PREFS_TURF_CONFETTI_ID
 import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
@@ -35,6 +37,11 @@ import io.realm.Sort
 class FragmentMain : HuisEtFragment() {
 
     private lateinit var spacer: ConsistentSpacingDecoration
+
+    val isDeposit: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_DEPOSIT_ID, false)
+    val isHuisRekening: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_HUISREKENING_ID, false)
 
     private val TRANSACTION_VIEW_REFRESH_TIME = 5000L
 
@@ -203,7 +210,7 @@ class FragmentMain : HuisEtFragment() {
 
             val snackbar = Snackbar.make(view, "${trans.amount} ${if (trans.product == null) "Transactie" else trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
                 .setAction("Undo") {
-                    db.createAndSaveTransaction(savedTransaction)
+                    db.createAndSaveTransaction(savedTransaction, isDeposit, isHuisRekening)
                 }
 
             val snackbarView = snackbar.view
@@ -267,7 +274,7 @@ class FragmentMain : HuisEtFragment() {
             val person = profiles[position]
             if (person != null) {
 
-                db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
+                db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount(), isDeposit, isHuisRekening)
                 val changed = AchievementManager.updateAchievementsAfterTurf(person)
                 (activity as MainActivity).showAchievements(changed)
 
@@ -327,7 +334,7 @@ class FragmentMain : HuisEtFragment() {
             transactionTimeRefreshHandler!!.removeCallbacks(updateTransactionRecRunnable)
 
         }
-        mergeTransactionsHandler!!.removeCallbacks(mergeTransactionsRunnable)
+        mergeTransactionsHandler.removeCallbacks(mergeTransactionsRunnable)
 
     }
 
