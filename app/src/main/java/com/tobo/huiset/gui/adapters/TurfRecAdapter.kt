@@ -30,14 +30,22 @@ class TurfRecAdapter(
 ) :
     RealmRecyclerViewAdapter<Person, TurfRecAdapter.TurfRecViewHolder>(data, autoUpdate) {
 
-    val db by lazy { HuisETDB(realm) }
-
     interface TurfHandler{
         fun handleSingleTurf(person: Person)
         fun onSelectionChanged(selecting:Boolean)
 
 //        fun handleMultiTurf(){}
     }
+
+
+
+
+    val db by lazy { HuisETDB(realm) }
+
+    val selectedPersonIds = mutableSetOf<String>()
+
+    private fun personIsSelected(person:Person) = selectedPersonIds.contains(person.id)
+
 
     var selecting = false
     set(value) {
@@ -59,7 +67,7 @@ class TurfRecAdapter(
         holder.balanceTv.text = person.balance.toCurrencyString()
         holder.balanceTv.setTextColorFromHex(person.balance.getBalanceColorString())
 
-        val bgColor = if(person.isSelectedForMultiPersonTurf){
+        val bgColor = if(personIsSelected(person)){
             Color.parseColor("#ff0000")
         }else{
             Color.parseColor("#ffffff")
@@ -68,12 +76,12 @@ class TurfRecAdapter(
 
         holder.itemView.setOnClickListener {
             if (selecting) {
-                db.toggleSelectionInTurfRec(person)
+                val reversed = ! personIsSelected(person)
+                setPersonSelected(person,position,reversed)
 
-                if(db.getSelectedPersonsInTurfRec().isEmpty()){
+                if(selectedPersonIds.isEmpty()){
                     selecting = false
                 }
-                notifyItemChanged(position)
 
             } else {
                 callback.handleSingleTurf(person)
@@ -94,25 +102,24 @@ class TurfRecAdapter(
     fun onLongPress(person: Person, position: Int){
         selecting = ! selecting
 
-        val realm = person.realm
-
-
         if(selecting){
-            db.selectPersonInTurfRec(person)
-            notifyItemChanged(position)
+            setPersonSelected(person,position,true)
         }
         else if(! selecting){
-            realm.beginTransaction()
             data?.forEachIndexed { index, p ->
-                p.isSelectedForMultiPersonTurf = false
-                this.notifyItemChanged(index)
+                setPersonSelected(person,index,false)
             }
-            realm.commitTransaction()
         }
     }
 
-
-
+    private fun setPersonSelected(person: Person, index: Int, selected:Boolean) {
+        if(selected){
+            selectedPersonIds.add(person.id)
+        }else{
+            selectedPersonIds.remove(person.id)
+        }
+        this.notifyItemChanged(index)
+    }
 
 
 

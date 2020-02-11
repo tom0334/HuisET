@@ -20,7 +20,6 @@ public class Person extends RealmObject {
     private int row;
     private boolean deleted = false;
     private boolean huisRekening;
-    private boolean selectedForMultiPersonTurf = false;
 
     private RealmList<AchievementCompletion> completions = new RealmList<>();
 
@@ -145,11 +144,4 @@ public class Person extends RealmObject {
         return completions;
     }
 
-    public void setSelectedForMultiPersonTurf(boolean selectedForMultiPersonTurf) {
-        this.selectedForMultiPersonTurf = selectedForMultiPersonTurf;
-    }
-
-    public boolean isSelectedForMultiPersonTurf() {
-        return selectedForMultiPersonTurf;
-    }
 }
