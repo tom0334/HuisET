@@ -61,7 +61,7 @@ class PilsBaas : BaseAchievement() {
 class Nice : BaseAchievement() {
     override val id = A_NICE
     override val name = "Nice"
-    override val description = "Drink 69 bier."
+    override val description = "Drink 69 bier in totaal."
 
     override val updateOnTurf = true
     override val updateOnBuy = false
@@ -80,7 +80,7 @@ class Nice : BaseAchievement() {
 class CollegeWinnaar : BaseAchievement(){
     override val id = A_COLLEGE_WINNAAR
     override val name = "Collegewinnaar"
-    override val description = "Drink een biertje op een doordeweekse dag voor 8:45. Telt vanaf 6 uur s'ochtends."
+    override val description = "Drink een biertje op een doordeweekse dag voor 8:45. Telt vanaf 6 uur 's ochtends."
 
     override val updateOnTurf = true
     override val updateOnBuy = false
@@ -100,8 +100,8 @@ class CollegeWinnaar : BaseAchievement(){
 
 class MVP: BaseAchievement() {
     override val id = A_MVP
-    override val name = "MVP (Most Valuable Pilser"
-    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
+    override val name = "MVP (Most Valuable Pilser)"
+    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur 's ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
 
     override val updateOnTurf = false
     override val updateOnBuy = false
@@ -166,7 +166,7 @@ class GroteBoodschap: BaseAchievement(){
 class ReparatieBiertje :BaseAchievement(){
     override val id = A_REPARATIE_PILSJE
     override val name = "Reparatie Biertje"
-    override val description = "Drink een biertje voor 12 uur s'ochtends, als je de vorige avond minimaal 10 bier hebt gedronken.\n"
+    override val description = "Drink een biertje voor 12 uur 's ochtends, als je de vorige avond minimaal 10 bier hebt gedronken.\n"
 
     override val updateOnTurf = true
     override val updateOnBuy = false
