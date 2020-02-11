@@ -54,46 +54,61 @@ public class Person extends RealmObject {
     }
 
 
-    public void addTransaction(Transaction t, Boolean isDeposit, Boolean huisRekeningExists) {
+    public void addTransaction(Transaction t, Boolean huisRekeningEnabled) {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance += price;
             if (t.getOtherPersonId() != null) {
                 t.getPerson(getRealm(), t.getOtherPersonId()).balance -= price;
             }
-            if (isDeposit) {
-                int deposit = 0;
-                if (t.getProduct().getSpecies() == Product.BEERPRODUCT)
-                    deposit += 10;
-                else if (t.getProduct().getSpecies() == Product.CRATEPRODUCT)
-                    deposit += 390;
 
-                HuisETDB db = new HuisETDB(getRealm());
+            HuisETDB db = new HuisETDB(getRealm());
 
-                this.balance += deposit;
-                if (huisRekeningExists) {
-                    db.findHuisRekening().balance -= deposit;
-                }
-                else {
-                    RealmResults<Person> roommates = db.findAllRoommates();
-                    assert roommates != null;
+            this.balance += t.getDepositPrice();
+            if (huisRekeningEnabled)
+                db.findHuisRekening().balance -= t.getDepositPrice();
+            else {
+                RealmResults<Person> roommates = db.findAllRoommatesExceptHuisRekening();
+                if (roommates != null) {
                     for (Person p : roommates) {
-                        p.balance -= deposit / roommates.size();
+                        p.balance -= t.getDepositPrice() / roommates.size();
                     }
                 }
             }
-        } else {
+        }
+        else {
             this.balance -= price;
         }
     }
 
-    public void undoTransaction(Transaction t) {
+    public void undoTransaction(Transaction t, boolean depositEnabled, boolean huisRekeningEnabled) {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance -= price;
             if (t.getOtherPersonId() != null) {
                 t.getPerson(getRealm(), t.getOtherPersonId()).balance += price;
             }
+//            if (depositEnabled) {
+//                int deposit = 0;
+//                if (t.getProduct().getSpecies() == Product.BEERPRODUCT)
+//                    deposit += 10;
+//                else if (t.getProduct().getSpecies() == Product.CRATEPRODUCT)
+//                    deposit += 390;
+//
+//                HuisETDB db = new HuisETDB(getRealm());
+//
+//                this.balance += deposit;
+//                if (huisRekeningEnabled) {
+//                    db.findHuisRekening().balance -= deposit;
+//                }
+//                else {
+//                    RealmResults<Person> roommates = db.findAllRoommates();
+//                    assert roommates != null;
+//                    for (Person p : roommates) {
+//                        p.balance -= deposit / roommates.size();
+//                    }
+//                }
+//            }
         } else {
             this.balance += price;
         }

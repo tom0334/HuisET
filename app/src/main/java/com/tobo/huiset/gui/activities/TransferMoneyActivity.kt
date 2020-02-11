@@ -20,9 +20,7 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 
 class TransferMoneyActivity : HuisEtActivity() {
 
-    val isDeposit: Boolean
-        get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_DEPOSIT_ID, false)
-    val isHuisRekening: Boolean
+    val huisRekeningEnabled: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_HUISREKENING_ID, false)
 
     private var amountOfPersonsSelected: Int = 0
@@ -96,7 +94,7 @@ class TransferMoneyActivity : HuisEtActivity() {
             }
             else {
                 transactionMap.toList().forEach {
-                    db.createAndSaveTransaction(it.second, isDeposit, isHuisRekening)
+                    db.createAndSaveTransaction(it.second, huisRekeningEnabled)
                 }
                 Toast.makeText(this, "Totaal ${amountOfMoneyPaid.toCurrencyString()} overgemaakt door $amountOfPersonsPaid personen", Toast.LENGTH_SHORT).show()
             }

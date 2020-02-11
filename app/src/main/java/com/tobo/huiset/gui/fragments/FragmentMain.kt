@@ -38,9 +38,9 @@ class FragmentMain : HuisEtFragment() {
 
     private lateinit var spacer: ConsistentSpacingDecoration
 
-    val isDeposit: Boolean
+    val depositEnabled: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_DEPOSIT_ID, false)
-    val isHuisRekening: Boolean
+    val huisRekeningEnabled: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_HUISREKENING_ID, false)
 
     private val TRANSACTION_VIEW_REFRESH_TIME = 5000L
@@ -210,7 +210,7 @@ class FragmentMain : HuisEtFragment() {
 
             val snackbar = Snackbar.make(view, "${trans.amount} ${if (trans.product == null) "Transactie" else trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
                 .setAction("Undo") {
-                    db.createAndSaveTransaction(savedTransaction, isDeposit, isHuisRekening)
+                    db.createAndSaveTransaction(savedTransaction, huisRekeningEnabled)
                 }
 
             val snackbarView = snackbar.view
@@ -226,7 +226,7 @@ class FragmentMain : HuisEtFragment() {
 
             snackbar.show()
 
-            db.deleteTransaction(trans)
+            db.deleteTransaction(trans, depositEnabled, huisRekeningEnabled)
 
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
@@ -274,7 +274,7 @@ class FragmentMain : HuisEtFragment() {
             val person = profiles[position]
             if (person != null) {
 
-                db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount(), isDeposit, isHuisRekening)
+                db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount(), depositEnabled, huisRekeningEnabled)
                 val changed = AchievementManager.updateAchievementsAfterTurf(person)
                 (activity as MainActivity).showAchievements(changed)
 

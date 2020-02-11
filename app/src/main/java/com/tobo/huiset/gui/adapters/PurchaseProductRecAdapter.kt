@@ -39,7 +39,7 @@ class PurchaseProductRecAdapter(
 
         holder.amountTv.text = getFromMap(product.id).toString()
         holder.nameTv.text = product.name
-        holder.priceTv.text = if (fragmentPurchases.isDeposit) {
+        holder.priceTv.text = if (fragmentPurchases.depositEnabled) {
             "${product.price.toCurrencyString()}${when (product.species) {
                 Product.CRATEPRODUCT -> " (+ €3,90)"
                 Product.BEERPRODUCT -> " (+ €0,10)"

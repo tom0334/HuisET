@@ -16,6 +16,7 @@ public class Transaction extends RealmObject {
     private String personId;
     private String productId;
     private int price;
+    private int depositPrice;
     private int amount;
     private boolean buy;
 
@@ -24,13 +25,25 @@ public class Transaction extends RealmObject {
     public Transaction() {
     }
 
-    static public Transaction create(Person person, Product product, int amount, boolean buy) {
+    // todo: BUG huisrekening setting werd niet enabled toen ik hem bij de intro wel aan zette
+
+    static public Transaction create(Person person, Product product, int amount, boolean buy, boolean depositEnabled) {
         Transaction t = new Transaction();
         t.personId = person.getId();
         t.productId = product.getId();
         t.buy = buy;
         t.amount = amount;
         t.price = product.getPrice() * amount;
+
+        int depositPrice = 0;
+        if (depositEnabled) {
+            if (product.getSpecies() == Product.BEERPRODUCT)
+                depositPrice += 10 * amount;
+            if (product.getSpecies() == Product.CRATEPRODUCT)
+                depositPrice += 390 * amount;
+        }
+        t.depositPrice = depositPrice;
+
         return t;
     }
 
@@ -104,5 +117,13 @@ public class Transaction extends RealmObject {
 
     public void setOtherPersonId(String otherPersonId) {
         this.otherPersonId = otherPersonId;
+    }
+
+    public int getDepositPrice() {
+        return depositPrice;
+    }
+
+    public void setDepositPrice(int depositPrice) {
+        this.depositPrice = depositPrice;
     }
 }

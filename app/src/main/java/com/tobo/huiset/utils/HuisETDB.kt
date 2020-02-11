@@ -77,14 +77,14 @@ class HuisETDB(private val realm: Realm) {
      * Adds a new transaction on the selected product
      * @param person the person to put the transaction on
      */
-    fun doTransactionWithSelectedProduct(person: Person, amount: Int, isDeposit: Boolean, isHuisrekening: Boolean) {
+    fun doTransactionWithSelectedProduct(person: Person, amount: Int, depositEnabled: Boolean, huisRekeningEnabled: Boolean) {
         realm.executeSafe {
             val selectedProduct = getSelectedProduct()
-            val t = Transaction.create(person, selectedProduct, amount, false)
+            val t = Transaction.create(person, selectedProduct, amount, false, depositEnabled)
             selectedProduct?.isSelected = false
 
             realm.copyToRealmOrUpdate(t)
-            person.addTransaction(t, isDeposit, isHuisrekening)
+            person.addTransaction(t, huisRekeningEnabled)
         }
     }
 
@@ -158,20 +158,20 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Creates a new transaction with the supplied arguments and saves it in the database.
      */
-    fun createAndSaveTransaction(person: Person, product: Product, amount: Int, buy: Boolean, isDeposit: Boolean, isHuisrekening: Boolean): Transaction {
+    fun createAndSaveTransaction(person: Person, product: Product, amount: Int, buy: Boolean, depositEnabled: Boolean, huisRekeningEnabled: Boolean): Transaction {
         var trans:Transaction? = null
         realm.executeTransaction{
-            trans = Transaction.create(person, product, amount, buy)
+            trans = Transaction.create(person, product, amount, buy, depositEnabled)
             trans = realm.copyToRealmOrUpdate(trans)
-            person.addTransaction(trans, isDeposit, isHuisrekening);
+            person.addTransaction(trans, huisRekeningEnabled)
         }
         return trans!!
     }
 
-    fun createAndSaveTransaction(transaction: Transaction, isDeposit: Boolean, isHuisrekening: Boolean): Transaction {
+    fun createAndSaveTransaction(transaction: Transaction, huisRekeningEnabled: Boolean): Transaction {
 //        var savedTrans:Transaction? = null
         realm.executeTransaction {
-            transaction.getPerson(realm, transaction.personId).addTransaction(transaction, isDeposit, isHuisrekening)
+            transaction.getPerson(realm, transaction.personId).addTransaction(transaction, huisRekeningEnabled)
 //            savedTrans = realm.copyToRealmOrUpdate(transaction)
         }
         return transaction
@@ -299,10 +299,13 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun deleteTransaction(trans: Transaction) {
+    fun deleteTransaction(
+        trans: Transaction,
+        depositEnabled: Boolean,
+        huisRekeningEnabled: Boolean
+    ) {
         realm.executeSafe {
-            trans.getPerson(realm, trans.personId).undoTransaction(trans)
-            // todo: als er een huisrekening is kan daar gewoon al het statiegeld vandaan worden geregeld
+            trans.getPerson(realm, trans.personId).undoTransaction(trans, depositEnabled, huisRekeningEnabled)
             trans.deleteFromRealm()
         }
     }
@@ -449,9 +452,10 @@ class HuisETDB(private val realm: Realm) {
             .findFirst()!!
     }
 
-    fun findAllRoommates(): RealmResults<Person>? {
+    fun findAllRoommatesExceptHuisRekening(): RealmResults<Person>? {
         return realm.where(Person::class.java)
             .equalTo("guest", false)
+            .equalTo("huisRekening", false)
             .findAll()
     }
 

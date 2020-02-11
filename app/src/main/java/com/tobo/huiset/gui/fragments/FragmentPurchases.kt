@@ -25,9 +25,9 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 class FragmentPurchases : HuisEtFragment() {
 
 
-    val isDeposit: Boolean
+    val depositEnabled: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_DEPOSIT_ID, false)
-    val isHuisRekening: Boolean
+    val huisRekeningEnabled: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFS_HUISREKENING_ID, false)
 
 
@@ -43,7 +43,7 @@ class FragmentPurchases : HuisEtFragment() {
         set(value) {
             field = value
             view?.findViewById<TextView>(R.id.depositMoneyCounter)?.text =
-                if (isDeposit)
+                if (depositEnabled)
                     " (+ ${value.toCurrencyString()})"
                 else
                     ""
@@ -108,7 +108,7 @@ class FragmentPurchases : HuisEtFragment() {
             products.forEach {
                 val amount = prodRecAdapter.getFromMap(it.id)
                 if (amount > 0) {
-                    db.createAndSaveTransaction(person, it, amount, true, isDeposit, isHuisRekening)
+                    db.createAndSaveTransaction(person, it, amount, true, depositEnabled, huisRekeningEnabled)
                     anythingBought = true
                 }
             }
@@ -153,7 +153,7 @@ class FragmentPurchases : HuisEtFragment() {
 
     fun increaseCounter(productPriceInc: Int, depositInc: Int) {
         totalPurchasePrice += productPriceInc
-        if (isDeposit) depositPrice += depositInc
+        if (depositEnabled) depositPrice += depositInc
     }
 
     override fun onResume() {
