@@ -42,7 +42,7 @@ class FragmentMain : HuisEtFragment() {
 
     private var mergeTransactionsHandler:Handler = Handler()
 
-    private val showConfettiOnTurf by lazy{ PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(PREFS_TURF_CONFETTI_ID,false)}
+    private val showConfettiOnTurf by lazy{ PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(PREFS_TURF_CONFETTI_ID,true)}
 
     private val updateTransactionRecRunnable = object : Runnable {
         override fun run() {
