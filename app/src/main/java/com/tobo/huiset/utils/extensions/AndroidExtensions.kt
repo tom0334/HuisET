@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.tobo.huiset.utils.ToboTime
 import java.text.SimpleDateFormat
+import kotlin.math.roundToInt
 
 fun Int.toPixel(context: Context): Int {
     val r = context.resources
@@ -140,5 +141,12 @@ fun AppCompatActivity.getDisplayHeight(): Float {
         sum += selector(element)
     }
     return sum
+}
+
+
+fun Float.toFormattedAmount(): String {
+    val formatted = "%.2f".format(this)
+    if(formatted.last() == '0') return this.roundToInt().toString()
+    return formatted
 }
 

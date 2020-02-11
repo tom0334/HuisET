@@ -28,6 +28,7 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.extensions.toFormattedAmount
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
@@ -213,7 +214,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
             val savedTransaction = db.copyFromRealm(trans)
 
-            val snackbar = Snackbar.make(view, "${trans.amount} ${if (trans.product == null) "Transactie" else trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, "${trans.amount.toFormattedAmount()} ${if (trans.product == null) "Transactie" else trans.product.name} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
                 .setAction("Undo") {
                     db.createAndSaveTransaction(savedTransaction)
                 }
