@@ -61,7 +61,7 @@ class PilsBaas : BaseAchievement() {
 class Nice : BaseAchievement() {
     override val id = A_NICE
     override val name = "Nice"
-    override val description = "Drink 69 bier."
+    override val description = "Drink 69 bier in totaal."
 
     override val updateOnTurf = true
     override val updateOnBuy = false
@@ -100,7 +100,7 @@ class CollegeWinnaar : BaseAchievement(){
 
 class MVP: BaseAchievement() {
     override val id = A_MVP
-    override val name = "MVP (Most Valuable Pilser"
+    override val name = "MVP (Most Valuable Pilser)"
     override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur s'ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
 
     override val updateOnTurf = false
