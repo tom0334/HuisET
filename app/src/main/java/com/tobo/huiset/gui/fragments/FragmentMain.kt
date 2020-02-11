@@ -42,7 +42,7 @@ class FragmentMain : HuisEtFragment() {
 
     private var mergeTransactionsHandler:Handler = Handler()
 
-    private val showConfettiOnTurf by lazy{ PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(PREFS_TURF_CONFETTI_ID,false)}
+    private val showConfettiOnTurf by lazy{ PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(PREFS_TURF_CONFETTI_ID,true)}
 
     private val updateTransactionRecRunnable = object : Runnable {
         override fun run() {
@@ -163,8 +163,7 @@ class FragmentMain : HuisEtFragment() {
     private fun setupAmountRec(view: View): RecyclerView {
         // this sets up the amount recyclerview
         val amountRec = view.findViewById<RecyclerView>(R.id.mainAmountRec)
-        val amountList = (1..20).toList()
-        amountRec.adapter = AmountMainRecAdapter(amountList, this.context!!)
+        amountRec.adapter = AmountMainRecAdapter((1..50).toList(), this.context!!)
         amountRec.layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
         amountRec.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
 

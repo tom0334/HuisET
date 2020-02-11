@@ -409,9 +409,14 @@ class HuisETDB(private val realm: Realm) {
             realm.executeTransaction {
                 val beer = Product.create("Bier", price, Product.ONLY_TURFABLE, 0, Product.BEERPRODUCT)
                 realm.copyToRealm(beer)
+
+                val statiegeld = Product.create("Statiegeld terug", 390, Product.ONLY_TURFABLE, 1, Product.OTHERPRODUCT)
+                realm.copyToRealm(statiegeld)
             }
+            HuisETDB(realm).selectFirstTurfProduct()
         }
 
+        realm.refresh()
     }
 
 

@@ -8,7 +8,7 @@ class PickCratePriceSlide :AbstractPickPriceSlide(){
         if(crate!= null){
             return crate.price.toNumberDecimal()
         }
-        return "15.00"
+        return "13.90"
     }
 
 

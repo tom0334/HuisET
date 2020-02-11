@@ -52,7 +52,7 @@ class MyApplication : Application() {
 
         //create a standard huisrekening thing
         realm.executeTransaction {
-            val huisRekening = Person.create("Huisrekening", ProfileColors.huisrekeningColor, false, false, 0,true)
+            val huisRekening = Person.create("Huisrekening", ProfileColors.huisrekeningColor, false, true, 0,true)
             realm.copyToRealm(huisRekening)
         }
     }
