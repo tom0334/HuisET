@@ -5,11 +5,10 @@ import android.content.Intent
 import android.preference.PreferenceManager
 import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ProfileColors
 import com.tobo.huiset.utils.extensions.edit
-import io.realm.Realm
-import io.realm.RealmConfiguration
+import io.realm.*
+
 
 class MyApplication : Application() {
 
@@ -40,11 +39,41 @@ class MyApplication : Application() {
         // The Realm file will be located in Context.getFilesDir() with name "myrealm.realm"
         val config = RealmConfiguration.Builder()
             .name("myrealm.realm")
-            .schemaVersion(0)
+            .schemaVersion(1)
+            .migration(getMigration())
             .build()
 
         // Set the config as default configuration
         Realm.setDefaultConfiguration(config)
+    }
+
+    private fun getMigration(): RealmMigration {
+
+        class MyMigrations : RealmMigration {
+            override fun migrate(realm: DynamicRealm,oldVersion: Long, newVersion: Long ) {
+                val schema = realm.schema
+                var current = oldVersion
+                if (oldVersion == 0L) {
+
+
+                    val transactions = realm.where("Transaction").findAll()
+                    val oldAmounts  = transactions.groupBy { x: DynamicRealmObject -> x.getString("id") }.mapValues { entry ->  entry.value.first().getInt("amount")}
+
+                    schema.get("Transaction")?.apply {
+                        removeField("amount")
+                        addField("amount",Float::class.java)
+                    }
+                    transactions.forEach { t->
+                        val id = t.getString("id")
+                        t.setFloat("amount", oldAmounts.get(id)!!.toFloat())
+                    }
+
+                    current ++
+                }
+            }
+        }
+
+        return MyMigrations()
     }
 
     private fun createInitialData() {
