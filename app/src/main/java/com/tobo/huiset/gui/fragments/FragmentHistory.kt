@@ -48,7 +48,7 @@ class FragmentHistory : HuisEtFragment() {
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
-    override fun onTabReactivated(){
+    override fun onTabReactivated(userTapped:Boolean){
         initTimePoints(view!!)
         updatePersons()
         updateHistory()
