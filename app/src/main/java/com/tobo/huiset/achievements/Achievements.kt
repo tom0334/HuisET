@@ -216,11 +216,11 @@ class SnackKoning : BaseAchievement(){
     override val updateOnBuy = false
     override val updateOnLaunch = false
     override val name = "SnackKoning"
-    override val description = "Turf 3 snacks op 1 dag."
+    override val description = "Turf minstens 5 snacks op 1 dag."
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val snacksForPerson = helpData.allTurfTrans.filter { it.product.species == Product.SNACKPRODUCT && it.personId == person.id}
 
-        val moreThan3OnADay = snacksForPerson.groupBy { it.toboTime.getZuipDay() }.values.find { it.amountOfProducts() > 3 }
+        val moreThan3OnADay = snacksForPerson.groupBy { it.toboTime.getZuipDay() }.values.find { it.amountOfProducts() > 5 }
 
         if(moreThan3OnADay == null) return null
 
