@@ -34,11 +34,16 @@ class TurfRecAdapter(
 
     interface TurfHandler{
         fun handleSingleTurf(person: Person)
+        fun onSelectionChanged(selecting:Boolean)
 
 //        fun handleMultiTurf(){}
     }
 
     var selecting = false
+    set(value) {
+        field = value
+        callback.onSelectionChanged(selecting)
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TurfRecViewHolder {
@@ -105,6 +110,7 @@ class TurfRecAdapter(
             realm.commitTransaction()
         }
     }
+
 
 
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
@@ -85,6 +86,8 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
             amountAdapter.selectedPos = savedInstanceState.getInt("selectedPos")
             amountAdapter.notifyDataSetChanged()
         }
+
+        //restore the
     }
 
     override fun onTabReactivated(userTapped:Boolean) {
@@ -325,6 +328,22 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         //scroll to the top, because the item is added at the top
         transActionRec.scrollToPosition(0)
         mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
+    }
+
+    override fun onSelectionChanged(selecting: Boolean) {
+        val fab = view!!.findViewById<FloatingActionButton>(R.id.multiTurfAcceptFab)
+        if(selecting){
+            fab.show()
+        }
+        else {
+            fab.hide()
+        }
+
+        val rec = view!!.findViewById<RecyclerView>(R.id.mainPersonRec)
+        //update the padding at the bottom to create space for the rec
+        val newBotPad = if(selecting) 88 else 0
+        rec.setPadding(rec.paddingLeft, rec.paddingTop, rec.paddingRight, newBotPad.toPixel(this.context!!))
+
     }
 
 
