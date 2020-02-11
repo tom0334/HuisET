@@ -61,9 +61,9 @@ public class Transaction extends RealmObject {
         return productId;
     }
 
-    public int getSaldoImpact(){
-        if(isBuy()) return  Math.round(amount * (float) price);
-        else return Math.round( -1f * amount * (float) price);
+    public float getSaldoImpact(){
+        if(isBuy()) return  price;
+        else return -1 * price;
     }
 
     public boolean isBuy() {

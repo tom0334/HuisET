@@ -20,6 +20,7 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.sumByFloat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 class FragmentHistory : HuisEtFragment() {
 
@@ -209,7 +210,7 @@ class FragmentHistory : HuisEtFragment() {
             .filter { it.isBuy == showBuy}
             .filter { it.product != null }
             .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumByFloat { it.amount}, values.sumBy { it.saldoImpact }, false) }
+            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumByFloat { it.amount}, values.sumByFloat{ it.saldoImpact }.roundToInt(), false) }
             .sortedByDescending { it.amount }.toMutableList()
 
 
