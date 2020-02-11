@@ -23,8 +23,10 @@ const val A_MVP = 3
 const val A_GROTE_BOODSCHAP = 4
 const val A_REPARATIE_PILSJE = 5
 const val A_COLLEGE_WINNAAR = 6
-
+const val A_SNACK_KONING = 7
+const val A_BEGINNENDE_SNACKER = 8
 const val A_DOE_HET_VOOR_DE_KONING = 9
+const val A_BEGINNENDE_DRINKER = 10
 
 
 /**
@@ -208,11 +210,69 @@ class DoeHetVoorDeKoning : BaseAchievement() {
 
 }
 
+
+class SnackKoning : BaseAchievement(){
+    override val id = A_SNACK_KONING
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
+    override val name = "SnackKoning"
+    override val description = "Turf minstens 5 snacks op 1 dag."
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val snacksForPerson = helpData.allTurfTrans.filter { it.product.species == Product.SNACKPRODUCT && it.personId == person.id}
+
+        val moreThan3OnADay = snacksForPerson.groupBy { it.toboTime.getZuipDay() }.values.find { it.amountOfProducts() > 5 }
+
+        if(moreThan3OnADay == null) return null
+
+        return moreThan3OnADay.last().time
+
+    }
+
+}
+
+class BeginnendeDrinker : BaseAchievement(){
+    override val id = A_BEGINNENDE_DRINKER
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
+    override val name = "Beginnende drinker"
+    override val description = "Turf je eerste biertje!"
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val firstBeer = helpData.allBeerTurfTrans.find{ it.personId == person.id}
+
+        if(firstBeer == null) return null
+        return firstBeer.time
+    }
+}
+
+
+class BeginnendeSnacker : BaseAchievement(){
+    override val id = A_BEGINNENDE_SNACKER
+    override val updateOnTurf = true
+    override val updateOnBuy = false
+    override val updateOnLaunch = false
+    override val name = "Beginnende snacker"
+    override val description = "Turf je eerste snack!"
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val firstSnack = helpData.allTurfTrans.find{ it.product.species == Product.SNACKPRODUCT && it.personId == person.id}
+
+        if(firstSnack == null) return null
+        return firstSnack.time
+
+    }
+
+}
+
+
 object AchievementManager {
 
     fun getAllAchievements(): List<BaseAchievement>{
         return listOf(
+            BeginnendeDrinker(),
+            BeginnendeSnacker(),
             PilsBaas(),
+            SnackKoning(),
             ReparatieBiertje(),
             Nice(),
             CollegeWinnaar(),
