@@ -57,12 +57,12 @@ fun Long.toTimeAgoString(includeNewLine:Boolean):String{
     val text = when {
         secondsAgo < 10 -> "Nu"
         secondsAgo < 60 -> "Zojuist"
-        minutesAgo < 60 -> "$minutesAgo min.\ngeleden"
-        hoursAgo < 24 -> "$hoursAgo uur\ngeleden"
-        daysAgo < 7 -> "$daysAgo dagen\ngeleden"
-        daysAgo < 30 -> "$weeksAgo weken\ngeleden"
-        monthsAgo < 12 -> "$monthsAgo  maanden\ngeleden"
-        else -> "$yearsAgo jaar\ngeleden"
+        minutesAgo < 60 -> "$minutesAgo min."
+        hoursAgo < 24 -> "$hoursAgo uur"
+        daysAgo < 7 -> "$daysAgo dagen"
+        daysAgo < 30 -> "$weeksAgo weken"
+        monthsAgo < 12 -> "$monthsAgo  maanden"
+        else -> "$yearsAgo jaar"
     }
     return if (includeNewLine) text else text.replace("\n", " ")
 }

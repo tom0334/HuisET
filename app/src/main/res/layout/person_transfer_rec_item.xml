@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="horizontal"
         android:layout_margin="16dp"
@@ -16,20 +16,24 @@
             android:src="@drawable/baseline_done_white_48"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_alignParentLeft="true"
             android:contentDescription="Select" />
 
     <View
             android:id="@+id/MTpersonRec_item_color"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
             android:layout_width="4dp"
             android:background="@color/secondaryLightColor"
             android:layout_height="32dp"
+            android:layout_toRightOf="@id/MTcheckedImage"
             android:layout_marginEnd="16dp" />
 
 
     <LinearLayout android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_toRightOf="@id/MTpersonRec_item_color"
+            android:layout_toLeftOf="@id/MTpersonRecItem_balance"
             android:orientation="vertical">
 
         <TextView
@@ -40,7 +44,9 @@
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                tools:text="Bobbert"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Hayek lange naam brooooooooooooeder"
                 />
 
         <TextView
@@ -57,19 +63,14 @@
     </LinearLayout>
 
 
-    <View
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            />
-
-
     <TextView
             android:id="@+id/MTpersonRecItem_balance"
             android:gravity="center_vertical"
+            android:layout_marginLeft="8dp"
             tools:text ="€4.00"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 
 
-</LinearLayout>
+</RelativeLayout>

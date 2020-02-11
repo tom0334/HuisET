@@ -19,10 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_above="@id/turfRecItem_color_line"
-
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/turfRecItem_balance"
             android:fontFamily="sans-serif-medium"
