@@ -116,12 +116,8 @@ class PurchaseProductRecAdapter(
             notifyItemChanged(position)
 
             val decFAB: FloatingActionButton = fragmentPurchases.view!!.findViewById(R.id.decreaseFAB)
-            var empty = true
-            amountMap.values.forEach {
-                if (it != 0)
-                    empty = false
-            }
 
+            val empty = amountMap.any { it.value != 0 }
             if (empty) {
                 fragmentPurchases.decreasing = false
                 decFAB.hide()
