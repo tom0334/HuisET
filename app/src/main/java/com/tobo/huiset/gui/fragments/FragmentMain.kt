@@ -102,7 +102,14 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         turfRec.layoutManager = GridLayoutManager(this.context,columns)
         setupSpacingForTurfRec(columns)
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
+
+        if(userTapped){
+            val turfRec = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
+            turfRec.selectedPersonIds.clear()
+            turfRec.selecting = false
+        }
     }
+
 
     private fun confirmationChecks() {
         val needToCheckPerson = checkIfAnyTurfableProductExists()
