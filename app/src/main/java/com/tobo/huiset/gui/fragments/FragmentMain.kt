@@ -32,7 +32,7 @@ import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
 
 
-class FragmentMain : HuisEtFragment() {
+class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
     private lateinit var spacer: ConsistentSpacingDecoration
 
@@ -259,35 +259,10 @@ class FragmentMain : HuisEtFragment() {
         val columns = this.getNumOfColumns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
-        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true)
+        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true,realm,this)
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
 
         setupSpacingForTurfRec(columns)
-
-        val amountAdapter = view.findViewById<RecyclerView>(R.id.mainAmountRec).adapter as AmountMainRecAdapter
-
-        ItemClickSupport.addTo(turfRec).setOnItemClickListener { _, position, _ ->
-            val person = profiles[position]
-            if (person != null) {
-
-                db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
-                val changed = AchievementManager.updateAchievementsAfterTurf(person)
-                (activity as MainActivity).showAchievements(changed)
-
-                if(changed.isEmpty() && showConfettiOnTurf){
-                    (activity as MainActivity).showTurfConfetti(person)
-                }
-
-                db.selectFirstTurfProduct()
-
-                amountAdapter.resetAmountToFirst()
-
-                //scroll to the top, because the item is added at the top
-                transitionRec.scrollToPosition(0)
-                mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable,30 * 1000)
-
-            }
-        }
     }
 
     private fun getNumOfColumns(amountOfProfilesToShow: Int):Int{
@@ -322,16 +297,34 @@ class FragmentMain : HuisEtFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val rec: RecyclerView? = view?.findViewById(R.id.mainPersonRec)
-        if (rec != null) {
-            ItemClickSupport.removeFrom(rec)
-        }
         if (transactionTimeRefreshHandler != null) {
             transactionTimeRefreshHandler!!.removeCallbacks(updateTransactionRecRunnable)
 
         }
         mergeTransactionsHandler!!.removeCallbacks(mergeTransactionsRunnable)
 
+    }
+
+    override fun handleSingleTurf(person: Person) {
+        val amountAdapter =
+            view!!.findViewById<RecyclerView>(R.id.mainAmountRec).adapter as AmountMainRecAdapter
+        val transActionRec = view!!.findViewById<RecyclerView>(R.id.recentRecyclerView)
+
+        db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
+        val changed = AchievementManager.updateAchievementsAfterTurf(person)
+        (activity as MainActivity).showAchievements(changed)
+
+        if (changed.isEmpty() && showConfettiOnTurf) {
+            (activity as MainActivity).showTurfConfetti(person)
+        }
+
+        db.selectFirstTurfProduct()
+
+        amountAdapter.resetAmountToFirst()
+
+        //scroll to the top, because the item is added at the top
+        transActionRec.scrollToPosition(0)
+        mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
     }
 
 

@@ -448,4 +448,22 @@ class HuisETDB(private val realm: Realm) {
     }
 
 
+    fun toggleSelectionInTurfRec(person: Person){
+        realm.executeTransaction {
+            person.isSelectedForMultiPersonTurf =  ! person.isSelectedForMultiPersonTurf
+        }
+    }
+
+    fun selectPersonInTurfRec(person: Person){
+        person.realm.executeTransaction {
+            person.isSelectedForMultiPersonTurf = true
+        }
+    }
+
+    fun getSelectedPersonsInTurfRec(): List<Person> {
+        return realm.where(Person::class.java)
+            .equalTo("selectedForMultiPersonTurf",true)
+            .findAll().toList()
+    }
+
 }
