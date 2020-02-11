@@ -23,7 +23,7 @@ public class Product extends RealmObject {
     private String id = UUID.randomUUID().toString();
     private String name;
     private int price;
-    private int kind;   // what kind of product it is (see fields)
+    private int kind;   // what kind of product it is (Only turfable, only buyable or both)
     private int row;    // geeft row aan
     private int species;    // bier, kratje, snack, etc... (see fields)
     private boolean selected = false;
