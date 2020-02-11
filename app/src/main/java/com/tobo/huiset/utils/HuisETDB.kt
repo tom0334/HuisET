@@ -159,22 +159,22 @@ class HuisETDB(private val realm: Realm) {
      * Creates a new transaction with the supplied arguments and saves it in the database.
      */
     fun createAndSaveTransaction(person: Person, product: Product, amount: Int, buy: Boolean, isDeposit: Boolean, isHuisrekening: Boolean): Transaction {
-        var savedTrans:Transaction? = null
+        var trans:Transaction? = null
         realm.executeTransaction{
-            val trans = Transaction.create(person, product, amount, buy)
-            person.addTransaction(trans, isDeposit, isHuisrekening)
-            savedTrans = realm.copyToRealmOrUpdate(trans)
+            trans = Transaction.create(person, product, amount, buy)
+            trans = realm.copyToRealmOrUpdate(trans)
+            person.addTransaction(trans, isDeposit, isHuisrekening);
         }
-        return savedTrans!!
+        return trans!!
     }
 
     fun createAndSaveTransaction(transaction: Transaction, isDeposit: Boolean, isHuisrekening: Boolean): Transaction {
-        var savedTrans:Transaction? = null
+//        var savedTrans:Transaction? = null
         realm.executeTransaction {
             transaction.getPerson(realm, transaction.personId).addTransaction(transaction, isDeposit, isHuisrekening)
-            savedTrans = realm.copyToRealmOrUpdate(transaction)
+//            savedTrans = realm.copyToRealmOrUpdate(transaction)
         }
-        return savedTrans!!
+        return transaction
     }
 
     /**
@@ -302,6 +302,7 @@ class HuisETDB(private val realm: Realm) {
     fun deleteTransaction(trans: Transaction) {
         realm.executeSafe {
             trans.getPerson(realm, trans.personId).undoTransaction(trans)
+            // todo: als er een huisrekening is kan daar gewoon al het statiegeld vandaan worden geregeld
             trans.deleteFromRealm()
         }
     }
@@ -440,6 +441,18 @@ class HuisETDB(private val realm: Realm) {
                 .findAll().map { it.name }
                 .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
         }
+    }
+
+    fun findHuisRekening(): Person {
+        return realm.where(Person::class.java)
+            .equalTo("huisRekening", true)
+            .findFirst()!!
+    }
+
+    fun findAllRoommates(): RealmResults<Person>? {
+        return realm.where(Person::class.java)
+            .equalTo("guest", false)
+            .findAll()
     }
 
 }

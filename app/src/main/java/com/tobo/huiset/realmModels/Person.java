@@ -1,7 +1,10 @@
 package com.tobo.huiset.realmModels;
 
+import com.tobo.huiset.utils.HuisETDB;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,18 +64,30 @@ public class Person extends RealmObject {
             if (isDeposit) {
                 int deposit = 0;
                 if (t.getProduct().getSpecies() == Product.BEERPRODUCT)
-                    deposit = 10;
+                    deposit += 10;
                 else if (t.getProduct().getSpecies() == Product.CRATEPRODUCT)
-                    deposit = 390;
+                    deposit += 390;
+
+                HuisETDB db = new HuisETDB(getRealm());
+
                 this.balance += deposit;
-                // todo: aftrekken van de andere boys, of alleen van huisrekening als die bestaat
+                if (huisRekeningExists) {
+                    db.findHuisRekening().balance -= deposit;
+                }
+                else {
+                    RealmResults<Person> roommates = db.findAllRoommates();
+                    assert roommates != null;
+                    for (Person p : roommates) {
+                        p.balance -= deposit / roommates.size();
+                    }
+                }
             }
         } else {
             this.balance -= price;
         }
     }
 
-    public void undoTransaction(Transaction t, Boolean isDeposit, Boolean huisRekeningExists) {
+    public void undoTransaction(Transaction t) {
         int price = t.getPrice();
         if (t.isBuy()) {
             this.balance -= price;
