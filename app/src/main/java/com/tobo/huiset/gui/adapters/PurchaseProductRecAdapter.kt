@@ -117,7 +117,7 @@ class PurchaseProductRecAdapter(
 
             val decFAB: FloatingActionButton = fragmentPurchases.view!!.findViewById(R.id.decreaseFAB)
 
-            val empty = amountMap.any { it.value != 0 }
+            val empty = amountMap.all { it.value == 0 }
             if (empty) {
                 fragmentPurchases.decreasing = false
                 decFAB.hide()
