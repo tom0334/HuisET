@@ -13,7 +13,7 @@ android:layout_height="47.5dp"
             android:layout_height="match_parent"
             android:id="@+id/productRecItem_Naamcontainer"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/ProductRecItem_price"
+            android:layout_toLeftOf="@id/productRecItem_price"
             android:orientation="vertical">
 
         <TextView
@@ -46,7 +46,7 @@ android:layout_height="47.5dp"
 
 
     <TextView
-        android:id="@+id/ProductRecItem_price"
+        android:id="@+id/productRecItem_price"
         android:gravity="center_vertical"
         tools:text="€4.00"
         android:layout_marginLeft="8dp"
