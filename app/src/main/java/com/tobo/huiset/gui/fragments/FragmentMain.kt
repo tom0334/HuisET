@@ -88,7 +88,14 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
             amountAdapter.notifyDataSetChanged()
         }
 
+        val fab = view.findViewById<FloatingActionButton>(R.id.multiTurfAcceptFab)
+        fab.setOnClickListener {
+            val turfRecAdapter = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
+            handleMultiTurf(turfRecAdapter.selectedPersonIds.mapNotNull {db.getPersonWithId(it)})
+        }
+
     }
+
 
     override fun onTabReactivated(userTapped:Boolean) {
 
@@ -105,10 +112,14 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
 
         if(userTapped){
-            val turfRec = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
-            turfRec.selectedPersonIds.clear()
-            turfRec.selecting = false
+            clearSelection()
         }
+    }
+
+    private fun clearSelection(){
+        val turfRecAdapter = view!!.findViewById<RecyclerView>(R.id.mainPersonRec).adapter as TurfRecAdapter
+        turfRecAdapter.selectedPersonIds.clear()
+        turfRecAdapter.selecting = false
     }
 
 
@@ -322,12 +333,13 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
     }
 
+
     override fun handleSingleTurf(person: Person) {
         val amountAdapter =
             view!!.findViewById<RecyclerView>(R.id.mainAmountRec).adapter as AmountMainRecAdapter
         val transActionRec = view!!.findViewById<RecyclerView>(R.id.recentRecyclerView)
 
-        db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount())
+        db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount().toFloat())
         val changed = AchievementManager.updateAchievementsAfterTurf(person)
         (activity as MainActivity).showAchievements(changed)
 
@@ -342,6 +354,38 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         //scroll to the top, because the item is added at the top
         transActionRec.scrollToPosition(0)
         mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
+    }
+
+    private fun handleMultiTurf(persons: List<Person>) {
+        val amountAdapter =
+            view!!.findViewById<RecyclerView>(R.id.mainAmountRec).adapter as AmountMainRecAdapter
+        val transActionRec = view!!.findViewById<RecyclerView>(R.id.recentRecyclerView)
+
+
+        val amount = amountAdapter.getSelectedAmount()
+
+
+        db.doTransactionWithMultiplePersons(persons, amount.toFloat())
+
+
+        persons.forEach {person ->
+            val changed = AchievementManager.updateAchievementsAfterTurf(person)
+            (activity as MainActivity).showAchievements(changed)
+
+            if (changed.isEmpty() && showConfettiOnTurf) {
+                (activity as MainActivity).showTurfConfetti(person)
+            }
+        }
+
+
+        db.selectFirstTurfProduct()
+
+        amountAdapter.resetAmountToFirst()
+
+        //scroll to the top, because the item is added at the top
+        transActionRec.scrollToPosition(0)
+        mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
+
     }
 
     override fun onSelectionChanged(selecting: Boolean) {

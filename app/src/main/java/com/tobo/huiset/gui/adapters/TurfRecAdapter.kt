@@ -34,8 +34,6 @@ class TurfRecAdapter(
     interface TurfHandler{
         fun handleSingleTurf(person: Person)
         fun onSelectionChanged(selecting:Boolean)
-
-//        fun handleMultiTurf(){}
     }
 
 

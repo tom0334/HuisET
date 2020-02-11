@@ -24,13 +24,13 @@ public class Transaction extends RealmObject {
     public Transaction() {
     }
 
-    static public Transaction create(Person person, Product product, int amount, boolean buy) {
+    static public Transaction create(Person person, Product product, float amount, boolean buy) {
         Transaction t = new Transaction();
         t.personId = person.getId();
         t.productId = product.getId();
         t.buy = buy;
         t.amount = amount;
-        t.price = product.getPrice() * amount;
+        t.price =  Math.round((float) product.getPrice() * amount);
         return t;
     }
 

@@ -146,7 +146,8 @@ fun AppCompatActivity.getDisplayHeight(): Float {
 
 fun Float.toFormattedAmount(): String {
     val formatted = "%.2f".format(this)
-    if(formatted.last() == '0') return this.roundToInt().toString()
-    return formatted
+    //remove the last one, that is the  zero in "123.50". Then
+    return formatted.dropLastWhile { last -> last == '.' || last == '0' || last == ','}
+
 }
 
