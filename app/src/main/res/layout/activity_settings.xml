@@ -37,7 +37,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="16dp"
-                    android:layout_toLeftOf="@id/fullScreenSwitch"
+                    android:layout_toLeftOf="@id/huisRekeningSwitch"
                     android:text="Toont een extra \'Profiel\' waar je je huisuitgaven op kunt zetten. " />
 
                 <androidx.appcompat.widget.SwitchCompat
