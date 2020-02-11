@@ -1,3 +1,4 @@
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
 import com.tobo.huiset.realmModels.Product
@@ -42,16 +44,17 @@ class FragmentPurchases : HuisEtFragment() {
         view.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
     }
 
-    override fun onTabReactivated(){
-        // this resets the chosen person to none, putting you back to the pick person screen
-        setPersonAndUpdate(null)
+    override fun onTabReactivated(userTapped:Boolean){
+        if(userTapped){
+            reset()
+        }
     }
 
     override fun onBackButtonPressed(): Boolean {
         //if we are already on the profiles screen, the activity must handle the back button
         if (pickedPersonId == null) return false
         //else we will handle it here
-        setPersonAndUpdate(null)
+        reset()
 
         return true
     }
@@ -98,11 +101,10 @@ class FragmentPurchases : HuisEtFragment() {
             else {
                 Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
             }
-            setPersonAndUpdate(null)
+            reset()
             db.mergeTransactionsIfPossible(System.currentTimeMillis())
             val changes = AchievementManager.updateAchievementsAfterBuy(person)
             (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
-
 
         }
     }
@@ -125,21 +127,42 @@ class FragmentPurchases : HuisEtFragment() {
             userLayout.visibility = View.GONE
             productLayout.visibility = View.VISIBLE
         }
-
-        // clear amounts in recyclerview
-        prodRecAdapter.resetMapValues()
-
-        totalPurchasePrice = 0
     }
 
     fun increaseCounter(inc: Int) {
         totalPurchasePrice += inc
     }
 
-    override fun onResume() {
-        super.onResume()
-        setPersonAndUpdate(null)
+    fun onCreateNewProductClicked() {
+        val intent = Intent(this.context, EditProductActivity::class.java)
+        startActivityForResult(intent,2)
     }
+    
+    private fun reset(){
+        // this resets the chosen person to none, putting you back to the pick person screen
+        setPersonAndUpdate(null)
+        // clear amounts in recyclerview
+        prodRecAdapter.resetMapValues()
+        totalPurchasePrice = 0
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("pickedPersonId", pickedPersonId)
+        outState.putInt("totalPurchasePrice",totalPurchasePrice)
+        prodRecAdapter.saveOutState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if(savedInstanceState!= null){
+            totalPurchasePrice = savedInstanceState.getInt("totalPurchasePrice")
+            pickedPersonId = savedInstanceState.getString("pickedPersonId")
+            setPersonAndUpdate(pickedPersonId)
+            prodRecAdapter.restoreInstanceState(savedInstanceState)
+        }
+    }
+
 
 
 }

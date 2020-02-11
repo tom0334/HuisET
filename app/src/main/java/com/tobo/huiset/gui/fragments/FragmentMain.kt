@@ -87,7 +87,7 @@ class FragmentMain : HuisEtFragment() {
         }
     }
 
-    override fun onTabReactivated() {
+    override fun onTabReactivated(userTapped:Boolean) {
 
         confirmationChecks()
 
@@ -121,7 +121,7 @@ class FragmentMain : HuisEtFragment() {
             val builder = AlertDialog.Builder(context)
             builder.setMessage("Er zijn geen turfbare producten gekozen.")
                 .setPositiveButton("Naar \"Producten\"") { _, _ ->
-                    context.showFragment(context.PRODUCTS_TAB)
+                    context.showFragment(context.PRODUCTS_TAB,false)
                     val bottomNavigation =
                         context.findViewById<BottomNavigationView>(R.id.bottomNavigation)
                     bottomNavigation.selectedItemId =
@@ -150,7 +150,7 @@ class FragmentMain : HuisEtFragment() {
             val builder = AlertDialog.Builder(context)
             builder.setMessage("Er worden momenteel geen gebruikers getoond.")
                 .setPositiveButton("Naar \"Gebruikers\"") { _, _ ->
-                    context.showFragment(context.PROFILES_TAB)
+                    context.showFragment(context.PROFILES_TAB,false)
                     val bottomNavigation = context.findViewById<BottomNavigationView>(R.id.bottomNavigation)
                     bottomNavigation.selectedItemId = bottomNavigation.menu.getItem(context.PROFILES_TAB).itemId
                 }

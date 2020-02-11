@@ -29,7 +29,7 @@ abstract class HuisEtFragment : Fragment() {
     /**
      * Does nothing by default, but can be overridden by subclasses to checkIfAchieved dateMap for example.
      */
-    open fun onTabReactivated(){}
+    open fun onTabReactivated(userTapped: Boolean){}
 
     /**
      * Allows the fragment to respond to back button presses. Returns wheter the action was consumed by the fragment.

@@ -146,7 +146,7 @@ class MainActivity : CelebratingHuisEtActivity() {
                     0
                 }
             }
-            showFragment(fragToShow)
+            showFragment(fragToShow,true)
             return@setOnNavigationItemSelectedListener true
         }
     }
@@ -185,14 +185,14 @@ class MainActivity : CelebratingHuisEtActivity() {
         }
     }
 
-    fun showFragment(newFragIndex: Int) {
+    fun showFragment(newFragIndex: Int, userTapped:Boolean) {
         supportFragmentManager.beginTransaction()
             .hide(fragments[currentFragmentIndex])
             .show(fragments[newFragIndex])
             .commit()
         currentFragmentIndex = newFragIndex
         // tell the fragment that is is shown again
-        fragments[newFragIndex].onTabReactivated()
+        fragments[newFragIndex].onTabReactivated(userTapped)
 
     }
 

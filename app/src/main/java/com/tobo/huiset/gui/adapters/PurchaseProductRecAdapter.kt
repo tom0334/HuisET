@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentPurchases
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
+import java.lang.IllegalArgumentException
+import java.util.HashMap
 
 /**
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
@@ -22,18 +25,65 @@ class PurchaseProductRecAdapter(
     val realm: Realm,
     data: RealmResults<Product>,
     autoUpdate: Boolean
-) : RealmRecyclerViewAdapter<Product, PurchaseProductRecAdapter.ProductViewHolder>(data, autoUpdate) {
+) : RealmRecyclerViewAdapter<Product, RecyclerView.ViewHolder>(data, autoUpdate) {
 
-    private val amountMap: MutableMap<String, Int> = mutableMapOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(fragmentPurchases.context).inflate(R.layout.product_purchase_rec_item, parent, false)
-        return ProductViewHolder(view)
+    /**
+     * The different view types for this recyclerview.
+     *
+     * It has 2 types: a normal product and a new product button
+     */
+    companion object{
+        private const val VIEW_TYPE_PRODUCT = 1
+        private const val VIEW_TYPE_NEW_PRODUCT_BUTTON = 2
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val product = data?.get(position) ?: return
+    override fun getItemViewType(position: Int):Int = when(position ){
+        data?.size -> VIEW_TYPE_NEW_PRODUCT_BUTTON
+        else -> VIEW_TYPE_PRODUCT
+    }
 
+
+    //Its a java hashmap instead of a kotlin map because the java one is serialisable.
+    private var amountMap: HashMap<String, Int> = HashMap()
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutResId = when(viewType){
+            VIEW_TYPE_PRODUCT -> R.layout.product_purchase_rec_item
+            VIEW_TYPE_NEW_PRODUCT_BUTTON -> R.layout.product_purchase_rec_item_new_product
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
+
+        val view = LayoutInflater.from(fragmentPurchases.context).inflate(layoutResId, parent, false)
+
+        return when(viewType){
+            VIEW_TYPE_PRODUCT -> ProductViewHolder(view)
+            VIEW_TYPE_NEW_PRODUCT_BUTTON -> NewProductRecViewHolder(view)
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(position == data?.size){
+            bindNewProductButton(holder as NewProductRecViewHolder)
+
+        }else{
+            val product = data?.get(position)
+            if(product != null){
+                bindProduct(holder as ProductViewHolder,product, position)
+            }
+        }
+    }
+
+
+    private fun bindNewProductButton(holder: NewProductRecViewHolder) {
+        holder.itemView.setOnClickListener {
+            fragmentPurchases.onCreateNewProductClicked()
+        }
+    }
+
+    private fun bindProduct(holder:ProductViewHolder , product: Product, position: Int) {
         holder.amountTv.text = getFromMap(product.id).toString()
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
@@ -54,8 +104,11 @@ class PurchaseProductRecAdapter(
         }
     }
 
+
+
+    //THE NEW PRODUCT BUTTON IS ALSO AN ITEM
     override fun getItemCount(): Int {
-        return if (data == null) 0 else data!!.size
+        return if (data == null) 1 else data!!.size + 1
     }
 
     fun getFromMap(id: String): Int {
@@ -68,9 +121,20 @@ class PurchaseProductRecAdapter(
         notifyDataSetChanged()
     }
 
+    fun saveOutState(outState: Bundle) {
+        outState.putSerializable("amountMap",amountMap)
+    }
+
+    fun restoreInstanceState(outState: Bundle){
+        amountMap = outState.getSerializable("amountMap") as HashMap<String, Int>
+    }
+
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.productRecItem_name)!!
         val priceTv = itemView.findViewById<TextView>(R.id.productRecItem_price)!!
         val amountTv = itemView.findViewById<TextView>(R.id.productRecItem_purch_amount)!!
+    }
+
+    class NewProductRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 }
