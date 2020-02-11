@@ -7,10 +7,10 @@ class PickBeerSlide :AbstractPickPriceSlide(){
     override fun getInitialPrice(): String {
         val crate = db.getCrateIfExists()
 
-        if(crate!=null){
-            return ((crate.price - 390) / 24).toNumberDecimal()
-        }else{
-            return Product.STANDARD_PRICE_BEER.toNumberDecimal()
+        return if(crate!=null){
+            ((crate.price - 390) / 24).toNumberDecimal()
+        } else{
+            Product.STANDARD_PRICE_BEER.toNumberDecimal()
         }
     }
 
