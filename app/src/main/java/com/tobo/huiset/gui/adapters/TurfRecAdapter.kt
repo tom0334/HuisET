@@ -2,6 +2,7 @@ package com.tobo.huiset.gui.adapters
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -125,6 +126,23 @@ class TurfRecAdapter(
 
     override fun getItemCount(): Int {
         return if (data == null) 0 else data!!.size
+    }
+
+    fun saveState(outState:Bundle) {
+        outState.putStringArrayList("Selected",ArrayList(selectedPersonIds.toList()))
+        outState.putBoolean("Selecting",selecting)
+    }
+
+    fun restoreState(savedInstanceState:Bundle?){
+        if(savedInstanceState == null) return
+        val saved = savedInstanceState.getStringArrayList("Selected") ?: return
+        this.selectedPersonIds.addAll(saved)
+
+        if(saved.size > 0){
+            this.notifyDataSetChanged()
+        }
+        this.selecting = savedInstanceState.getBoolean("Selecting")
+
     }
 
     class TurfRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

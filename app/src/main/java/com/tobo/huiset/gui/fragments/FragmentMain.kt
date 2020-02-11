@@ -79,7 +79,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         setupProductRec(view)
 
         val transActionRec = setupTransactionsRec(view)
-        setupTurfRec(view, transActionRec)
+        setupTurfRec(view, transActionRec,savedInstanceState)
 
         if (savedInstanceState != null) {
             val amountAdapter = view.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
@@ -87,7 +87,6 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
             amountAdapter.notifyDataSetChanged()
         }
 
-        //restore the
     }
 
     override fun onTabReactivated(userTapped:Boolean) {
@@ -256,14 +255,17 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
     /**
      * This sets up the right recyclerview containing the persons that can be tapped to add a beer.
      */
-    private fun setupTurfRec(view: View, transitionRec: RecyclerView) {
+    private fun setupTurfRec(view: View, transitionRec: RecyclerView, savedInstanceState:Bundle?) {
 
         val profiles = db.findAllCurrentPersons(false)
         val columns = this.getNumOfColumns(profiles.count())
 
         val turfRec = view.findViewById<RecyclerView>(R.id.mainPersonRec)
-        turfRec.adapter = TurfRecAdapter(this.context!!, profiles, true,realm,this)
+        val adapter = TurfRecAdapter(this.context!!, profiles, true,realm,this)
+        turfRec.adapter = adapter
         turfRec.layoutManager = GridLayoutManager(this.context, columns)
+        adapter.restoreState(savedInstanceState)
+
 
         setupSpacingForTurfRec(columns)
     }
@@ -296,6 +298,10 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
         val amountAdapter = view?.findViewById<RecyclerView>(R.id.mainAmountRec)?.adapter as AmountMainRecAdapter
         outState.putInt("selectedPos", amountAdapter.selectedPos)
+
+        val turfRecAdapter = view?.findViewById<RecyclerView>(R.id.mainPersonRec)?.adapter as TurfRecAdapter
+        turfRecAdapter.saveState(outState)
+
     }
 
     override fun onDestroy() {
