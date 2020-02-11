@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_margin="16dp"
-    android:layout_gravity="center_horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="47.5dp"
-    >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:orientation="horizontal"
+android:layout_margin="16dp"
+android:layout_gravity="center_horizontal"
+android:layout_width="match_parent"
+android:layout_height="47.5dp"
+        >
 
 
     <LinearLayout android:layout_width="wrap_content"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:id="@+id/productRecItem_Naamcontainer"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/ProductRecItem_price"
+            android:orientation="vertical">
 
         <TextView
                 android:id="@+id/productRecItem_name"
@@ -21,58 +24,56 @@
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                tools:text="Biertje"
-        />
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="hele lange productnaam komt hier te staan"
+                />
 
         <TextView
                 android:id="@+id/productRecItem_hidden"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="14sp"
                 android:textStyle="italic"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Verborgen"
-        />
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Alleen turfbaar"
+                />
 
     </LinearLayout>
 
 
-    <View
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        />
-
-
     <TextView
-        android:id="@+id/productRecItem_price"
+        android:id="@+id/ProductRecItem_price"
         android:gravity="center_vertical"
-        tools:text ="€0,44"
+        tools:text="€4.00"
+        android:layout_marginLeft="8dp"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_toLeftOf="@id/productRecItem_up"
+        android:layout_height="match_parent"/>
 
-    <View
-            android:layout_width="25dp"
-            android:layout_height="match_parent"
-    />
 
     <ImageView
             android:id="@+id/productRecItem_up"
-            android:layout_width="?listPreferredItemHeight"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24dp"
             android:layout_gravity="center_vertical|right"
             android:scaleType="center"
-            android:src="@drawable/baseline_keyboard_arrow_up_black_24" />
+            android:layout_toLeftOf="@id/productRecItem_down"
+            android:src="@drawable/baseline_keyboard_arrow_up_black_24"/>
+
 
     <ImageView
             android:id="@+id/productRecItem_down"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
             android:layout_gravity="center_vertical|right"
             android:scaleType="center"
-            android:src="@drawable/baseline_keyboard_arrow_down_black_24" />
+            android:layout_alignParentRight="true"
+            android:src="@drawable/baseline_keyboard_arrow_down_black_24"/>
 
-
-</LinearLayout>
+</RelativeLayout>
