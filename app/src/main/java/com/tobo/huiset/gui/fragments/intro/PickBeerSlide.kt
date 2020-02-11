@@ -8,7 +8,7 @@ class PickBeerSlide :AbstractPickPriceSlide(){
         val crate = db.getCrateIfExists()
 
         if(crate!=null){
-            return (crate.price / 24).toNumberDecimal()
+            return ((crate.price - 390) / 24).toNumberDecimal()
         }else{
             return Product.STANDARD_PRICE_BEER.toNumberDecimal()
         }
