@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
@@ -33,21 +35,43 @@ class FragmentPurchases : HuisEtFragment() {
 
     private val prodRecAdapter get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
 
+    var decreasing: Boolean = false
+        set(value) {
+            val decFAB: FloatingActionButton = view!!.findViewById(R.id.decreaseFAB)
+            if (value)
+                decFAB.setImageResource(R.drawable.baseline_add_white_48)
+            else
+                decFAB.setImageResource(R.drawable.baseline_remove_white_48)
+
+            field = value
+        }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_purchases, container, false)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
         initProductsRec(view)
         view.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
+
+        val decFAB = view.findViewById<FloatingActionButton>(R.id.decreaseFAB)
+        decFAB.setOnClickListener {
+            decreasing = !decreasing
+        }
+        decFAB.hide()
+        decreasing = false
     }
 
     override fun onTabReactivated(userTapped:Boolean){
-        if(userTapped){
+        if(userTapped)
             reset()
-        }
+
+        val decFAB = view!!.findViewById<FloatingActionButton>(R.id.decreaseFAB)
+        decFAB.hide()
+        decreasing = false
     }
 
     override fun onBackButtonPressed(): Boolean {
@@ -77,7 +101,6 @@ class FragmentPurchases : HuisEtFragment() {
         val pickProductsRec = view.findViewById<RecyclerView>(R.id.pickProductsRec)
         pickProductsRec.visibility = View.VISIBLE
         pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
-
 
         val products = db.findAllCurrentProducts(Product.ONLY_BUYABLE)
 

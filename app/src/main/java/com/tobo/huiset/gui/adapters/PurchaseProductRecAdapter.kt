@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
@@ -98,9 +100,31 @@ class PurchaseProductRecAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            amountMap[product.id] = getFromMap(product.id) + 1
-            fragmentPurchases.increaseCounter(product.price)
+            if (fragmentPurchases.decreasing) {
+                if (amountMap[product.id] == 0) {
+                    Toast.makeText(fragmentPurchases.context, "Mag niet negatief zijn", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                else
+                    amountMap[product.id] = getFromMap(product.id) - 1
+                fragmentPurchases.increaseCounter(-product.price)
+            }
+            else {
+                amountMap[product.id] = getFromMap(product.id) + 1
+                fragmentPurchases.increaseCounter(product.price)
+            }
             notifyItemChanged(position)
+
+            val decFAB: FloatingActionButton = fragmentPurchases.view!!.findViewById(R.id.decreaseFAB)
+
+            val empty = amountMap.all { it.value == 0 }
+            if (empty) {
+                fragmentPurchases.decreasing = false
+                decFAB.hide()
+            }
+            else {
+                decFAB.show()
+            }
         }
     }
 
