@@ -28,9 +28,12 @@
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="120dp"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
-            tools:text="kar"
+            tools:text="hele lange woorden moeten hier afgeknipt worden"
             />
 
         <TextView
