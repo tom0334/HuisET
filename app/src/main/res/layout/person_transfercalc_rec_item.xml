@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="horizontal"
         android:layout_margin="16dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="47.5dp"
+        android:layout_height="57.5dp"
         >
 
     <ImageView
@@ -16,20 +16,25 @@
             android:src="@drawable/baseline_done_white_48"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
-            android:contentDescription="Done" />
+            android:layout_alignParentLeft="true"
+            android:contentDescription="Done"
+            />
 
 
     <View
             android:id="@+id/MTCpersonRec_item_color"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:background="@color/secondaryLightColor"
             android:layout_marginRight="16dp"
             android:layout_width="4dp"
             android:layout_height="32dp"
+            android:layout_toRightOf="@id/MTCcheckedImage"
             android:layout_marginEnd="16dp" />
 
     <LinearLayout android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_toRightOf="@id/MTCpersonRec_item_color"
+            android:layout_toLeftOf="@id/MTCpersonRecItem_balance"
             android:orientation="vertical"
             >
 
@@ -41,7 +46,9 @@
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                tools:text="Bobbert"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="deze moet een kaulo lange naam gewoon kunnen handelen"
                 android:textColor="@color/primaryTextColor"
                 />
 
@@ -52,25 +59,20 @@
                 android:textStyle="italic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text=" - moet XX overmaken aan XX"
+                android:ellipsize="end"
+                android:maxLines="2"
+                tools:text=" - moet XX overmaken aan XX, ook als iemand een lange naam heeft, zoals ali mohammed"
                 />
 
     </LinearLayout>
-
-
-    <View
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            />
-
 
     <TextView
             android:id="@+id/MTCpersonRecItem_balance"
             android:gravity="center_vertical"
             tools:text ="€4.00"
             android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_height="match_parent" />
 
 
-</LinearLayout>
+</RelativeLayout>
