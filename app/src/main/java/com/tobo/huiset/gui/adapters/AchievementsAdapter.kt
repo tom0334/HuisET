@@ -12,10 +12,9 @@ import com.tobo.huiset.R
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.utils.extensions.toMixedTimeString
-import com.tobo.huiset.utils.extensions.toTimeAgoString
 
 
-class AchievementsAdapter(val items: List<BaseAchievement>, val persons: List<Person>, val context: Context) :
+class AchievementsAdapter(private val items: List<BaseAchievement>, val persons: List<Person>, val context: Context) :
     RecyclerView.Adapter<AchievementsAdapter.AchievementViewHolder>() {
 
 
@@ -35,12 +34,12 @@ class AchievementsAdapter(val items: List<BaseAchievement>, val persons: List<Pe
         val placeHolder = holder.nameHolder
         placeHolder.removeAllViews()
 
-        val personsThatArchievedThis = persons.filter { item.wasAchieved(it) }.sortedBy { it.row }
+        val personsThatAchievedThis = persons.filter { item.wasAchieved(it) }.sortedBy { it.row }
 
-        holder.noOneText.visibility = if(personsThatArchievedThis.isEmpty()) View.VISIBLE else View.GONE
+        holder.noOneText.visibility = if(personsThatAchievedThis.isEmpty()) View.VISIBLE else View.GONE
 
 
-        for (p in personsThatArchievedThis){
+        for (p in personsThatAchievedThis){
             val child = View.inflate(context,R.layout.achievement_person,null)
             child.findViewById<TextView>(R.id.achievement_person_name).text = p.name
             child.findViewById<TextView>(R.id.achievement_person_date).text = item.getAchievemoment(p)?.timeStamp?.toMixedTimeString()
@@ -51,10 +50,10 @@ class AchievementsAdapter(val items: List<BaseAchievement>, val persons: List<Pe
     }
 
     class AchievementViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        val achievementName = view.findViewById<TextView>(R.id.achievement_name)
-        val description = view.findViewById<TextView>(R.id.achievement_description)
-        val nameHolder = view.findViewById<LinearLayout>(R.id.achivement_person_container)
-        val noOneText = view.findViewById<TextView>(R.id.achivement_noOneText)
+        val achievementName = view.findViewById<TextView>(R.id.achievement_name)!!
+        val description = view.findViewById<TextView>(R.id.achievement_description)!!
+        val nameHolder = view.findViewById<LinearLayout>(R.id.achivement_person_container)!!
+        val noOneText = view.findViewById<TextView>(R.id.achivement_noOneText)!!
 
     }
 }
