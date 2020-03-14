@@ -417,9 +417,6 @@ class HuisETDB(private val realm: Realm) {
             realm.executeTransaction {
                 val beer = Product.create("Bier", price, Product.ONLY_TURFABLE, 0, Product.BEERPRODUCT)
                 realm.copyToRealm(beer)
-
-                val statiegeld = Product.create("Statiegeld terug", 390, Product.ONLY_TURFABLE, 1, Product.OTHERPRODUCT)
-                realm.copyToRealm(statiegeld)
             }
             HuisETDB(realm).selectFirstTurfProduct()
         }
@@ -453,6 +450,21 @@ class HuisETDB(private val realm: Realm) {
                 .findAll().map { it.name }
                 .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
         }
+    }
+
+    fun createDepositProducts() {
+        realm.executeTransaction {
+            val depositCrate = Product.create("Statiegeld kratje", 390, Product.BOTH_TURF_AND_BUY, 1, Product.OTHERPRODUCT)
+            realm.copyToRealm(depositCrate)
+
+            val depositPET = Product.create("Statieg. PET-fles", 25, Product.BOTH_TURF_AND_BUY, 2, Product.OTHERPRODUCT)
+            realm.copyToRealm(depositPET)
+
+            val depositBottle = Product.create("Statiegeld biertje", 10, Product.BOTH_TURF_AND_BUY, 3, Product.OTHERPRODUCT)
+            realm.copyToRealm(depositBottle)
+        }
+
+        realm.refresh()
     }
 
 }

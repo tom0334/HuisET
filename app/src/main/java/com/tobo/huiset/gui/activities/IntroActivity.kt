@@ -37,7 +37,7 @@ class IntroActivity : AppIntro2(){
         val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een huisgenoot profiel", "Er moet minimaal één profiel aangemaakt worden. Later kun je er nog meer aanmaken (ook voor gasten).","Maak profiel","Naam")
         addSlide(createPersonSlide)
 
-        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een krat bier (inclusief statiegeld)?","Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen we voor nu om een standaard bierprijs in te voeren.","Prijs in Euro's",true)
+        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een krat bier (exclusief statiegeld)?","Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen we voor nu om een standaard bierprijs in te voeren.","Prijs in Euro's",true)
         addSlide(cratePriceSlide)
 
         val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje (exclusief statiegeld)?","Dit is gebaseerd op de gekozen prijs per krat, en is later ook nog aan te passen. Het is eventueel afhankelijk van hoe jullie statiegeld verdelen.","Prijs in Euro",false)

@@ -35,7 +35,7 @@
                 android:layout_height="match_parent"
                 android:inputType="numberDecimal"
                 android:digits="0123456789,."
-                android:hint="Prijs (in euro)"
+                android:hint="Prijs (exclusief statiegeld)"
         />
 
     </com.google.android.material.textfield.TextInputLayout>
