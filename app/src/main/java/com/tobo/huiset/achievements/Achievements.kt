@@ -50,7 +50,7 @@ class PilsBaas : BaseAchievement() {
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
         val maxBeerOnADay = helpData.beerTurfTransactionsByPerson
-            .groupBy {it.toboTime.toboDay}
+            .groupBy {it.toboTime.getZuipDay()}
 
         // a map entry for each day. Find one that meets our needs
         val goodDayEntry = maxBeerOnADay.entries.find { it.value.amountOfProducts() >= 10}
