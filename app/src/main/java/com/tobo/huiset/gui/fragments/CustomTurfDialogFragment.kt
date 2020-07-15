@@ -31,7 +31,7 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
         val rec = view.findViewById<RecyclerView>(R.id.customturfRec)
 
         val adapter = TurfRecAdapter(this.context!!,db.findAllCurrentPersons(true),false,db.realm,this)
-        adapter.selecting = true
+        adapter.setAlwaysSelecting(true)
         rec.adapter = adapter
         rec.layoutManager = GridLayoutManager(this.context,2)
     }
