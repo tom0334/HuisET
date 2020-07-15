@@ -10,14 +10,15 @@ public class Product extends RealmObject {
     public static final int STANDARD_PRICE_BEER = 44;
     public static final int STANDARD_PRICE_CRATE = 1050;
 
-    public static final int ONLY_TURFABLE = 0;
-    public static final int ONLY_BUYABLE = 1;
-    public static final int BOTH_TURF_AND_BUY = 2;
+    public static final int KIND_TURFABLE = 0;
+    public static final int KIND_BUYABLE = 1;
+    public static final int KIND_BOTH = 2;
+    public static final int KIND_NEITHER = 3;
 
-    public static final int BEERPRODUCT = 0;
-    public static final int CRATEPRODUCT = 1;
-    public static final int SNACKPRODUCT = 2;
-    public static final int OTHERPRODUCT = 3;
+    public static final int SPECIES_BEER = 0;
+    public static final int SPECIES_CRATE = 1;
+    public static final int SPECIES_SNACK = 2;
+    public static final int SPECIES_OTHER = 3;
 
     @PrimaryKey
     private String id = UUID.randomUUID().toString();

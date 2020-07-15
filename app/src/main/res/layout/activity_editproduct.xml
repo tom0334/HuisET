@@ -49,32 +49,43 @@
     <RadioGroup
             android:id="@+id/radiogroup_kindProd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="horizontal"
     >
 
         <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radio_OnlyTurf_Prod"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:checked="true"
                 android:text="Alleen turfbaar"/>
 
         <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radio_OnlyBuy_Prod"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="Alleen inkoopbaar"/>
 
         <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radio_Both_Prod"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:checked="true"
                 android:text="Beide"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radio_Neither_Prod"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Geen"/>
 
     </RadioGroup>
 

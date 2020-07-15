@@ -11,7 +11,6 @@ import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
-import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.ItemDoubleClickSupport
@@ -36,7 +35,7 @@ class FragmentProducts : HuisEtFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val products = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY)
+        val products = db.findAllCurrentProducts(Product.KIND_BOTH)
 
         // this sets up the recyclerview to show the products
         val rec = view.findViewById<RecyclerView>(R.id.productsTabRec)
@@ -79,7 +78,7 @@ class FragmentProducts : HuisEtFragment() {
 
                     realm.executeTransaction {
                         product.kind =
-                            if (prevShow == Product.BOTH_TURF_AND_BUY) Product.ONLY_TURFABLE 
+                            if (prevShow == Product.KIND_NEITHER) Product.KIND_TURFABLE
                             else prevShow + 1
                     }
                 }

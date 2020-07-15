@@ -102,7 +102,7 @@ class FragmentPurchases : HuisEtFragment() {
         pickProductsRec.visibility = View.VISIBLE
         pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
 
-        val products = db.findAllCurrentProducts(Product.ONLY_BUYABLE)
+        val products = db.findAllCurrentProducts(Product.KIND_BUYABLE)
 
         // this sets up the recyclerview to show the persons
         pickProductsRec.adapter = PurchaseProductRecAdapter(this, realm, products, true)
