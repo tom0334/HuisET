@@ -15,6 +15,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.fragments.CustomTurfDialogFragment
 import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
@@ -187,7 +188,9 @@ class FragmentPurchases : HuisEtFragment() {
     }
 
     fun startCustomTurf() {
-   
+        val alertDialog =
+            CustomTurfDialogFragment()
+        alertDialog.show(this.fragmentManager, "fragment_alert")
     }
 
 

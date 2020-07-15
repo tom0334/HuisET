@@ -10,7 +10,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 
-class HuisETDB(private val realm: Realm) {
+class HuisETDB(val realm: Realm) {
 
 
     /**
