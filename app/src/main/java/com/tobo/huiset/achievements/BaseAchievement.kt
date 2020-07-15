@@ -22,9 +22,7 @@ abstract class BaseAchievement {
     fun update(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion?{
         if(wasAchieved(person)) return null
 
-        val completionTimeStamp = checkIfAchieved(person,helpData)
-
-        if(completionTimeStamp == null)return null
+        val completionTimeStamp = checkIfAchieved(person,helpData) ?: return null
 
         return person.getDb().createAndSaveAchievementCompletion(this, completionTimeStamp,person)
 
