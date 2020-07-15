@@ -13,6 +13,7 @@ public class Product extends RealmObject {
     public static final int ONLY_TURFABLE = 0;
     public static final int ONLY_BUYABLE = 1;
     public static final int BOTH_TURF_AND_BUY = 2;
+    public static final int NEITHER = 3;
 
     public static final int BEERPRODUCT = 0;
     public static final int CRATEPRODUCT = 1;

@@ -42,6 +42,7 @@ class ProductRecAdapter(
         when {
             product.kind == Product.ONLY_TURFABLE -> holder.hiddenTv.text = "Alleen turfbaar"
             product.kind == Product.ONLY_BUYABLE -> holder.hiddenTv.text = "Alleen inkoopbaar"
+            product.kind == Product.BOTH_TURF_AND_BUY -> holder.hiddenTv.text = "turf- en inkoopbaar"
             else -> holder.hiddenTv.visibility = View.GONE
         }
 

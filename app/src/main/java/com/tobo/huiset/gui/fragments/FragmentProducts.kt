@@ -79,7 +79,7 @@ class FragmentProducts : HuisEtFragment() {
 
                     realm.executeTransaction {
                         product.kind =
-                            if (prevShow == Product.BOTH_TURF_AND_BUY) Product.ONLY_TURFABLE 
+                            if (prevShow == Product.NEITHER) Product.ONLY_TURFABLE
                             else prevShow + 1
                     }
                 }
