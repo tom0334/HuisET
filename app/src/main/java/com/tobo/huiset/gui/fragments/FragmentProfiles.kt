@@ -76,7 +76,7 @@ class FragmentProfiles : HuisEtFragment() {
                 }
 
                 override fun onItemDoubleClicked(recyclerView: RecyclerView, position: Int, v: View) {
-                    val person = persons[position] as Person
+                    val person = persons[position]!!
                     val prevShow = person.show
 
                     realm.executeTransaction {

@@ -74,7 +74,7 @@ class FragmentProducts : HuisEtFragment() {
                 }
 
                 override fun onItemDoubleClicked(recyclerView: RecyclerView, position: Int, v: View) {
-                    val product = products[position] as Product
+                    val product = products[position]!!
                     val prevShow = product.kind
 
                     realm.executeTransaction {
