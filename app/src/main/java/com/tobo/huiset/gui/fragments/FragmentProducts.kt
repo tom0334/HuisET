@@ -11,8 +11,10 @@ import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.ProductRecAdapter
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
+import com.tobo.huiset.utils.ItemDoubleClickSupport
 
 class FragmentProducts : HuisEtFragment() {
 
@@ -61,13 +63,27 @@ class FragmentProducts : HuisEtFragment() {
             startActivity(intent)
         }
 
-        // opens EditProductActivity on the correct product if a product is clicked
-        ItemClickSupport.addTo(rec).setOnItemClickListener { _, position, _ ->
-            val product = products[position]
-            val intent = Intent(this.activity, EditProductActivity::class.java)
-                .putExtra("PRODUCT_ID", product?.id)
-            startActivity(intent)
-        }
+        // opens EditProfileActivity on the correct profile if a profile is clicked
+        ItemDoubleClickSupport.addTo(rec)
+            .setOnItemClickListener(object : ItemDoubleClickSupport.OnItemClickListener {
+                override fun onItemClicked(recyclerView: RecyclerView, position: Int, v: View) {
+                    val product = products[position]
+                    val intent = Intent(activity, EditProductActivity::class.java)
+                        .putExtra("PRODUCT_ID", product?.id)
+                    startActivity(intent)
+                }
+
+                override fun onItemDoubleClicked(recyclerView: RecyclerView, position: Int, v: View) {
+                    val product = products[position]!!
+                    val prevShow = product.kind
+
+                    realm.executeTransaction {
+                        product.kind =
+                            if (prevShow == Product.BOTH_TURF_AND_BUY) Product.ONLY_TURFABLE 
+                            else prevShow + 1
+                    }
+                }
+            })
     }
 
     fun updateRows() {
