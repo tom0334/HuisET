@@ -116,7 +116,7 @@ class MVP: BaseAchievement() {
             .groupBy { it.toboTime.getZuipDay() }
 
 
-        for ((day, transactionsOnDay) in perDay) {
+        for ((_, transactionsOnDay) in perDay) {
             val amountOfBeersOnDay = transactionsOnDay
                 .groupBy { it.personId }
                 //entry.value is a list of transactions
@@ -143,7 +143,7 @@ class MVP: BaseAchievement() {
 class GroteBoodschap: BaseAchievement(){
     override val id = A_GROTE_BOODSCHAP
     override val name = "Grote boodschap"
-    override val description ="Koop 2 kratjes in een keer in. Haha nummer 2."
+    override val description ="Koop 2 dezelfde kratjes in een keer in."
 
     override val updateOnTurf = false
     override val updateOnBuy = true
@@ -222,8 +222,7 @@ class SnackKoning : BaseAchievement(){
         val snacksForPerson = helpData.allTurfTrans.filter { it.product.species == Product.SPECIES_SNACK && it.personId == person.id}
 
         val moreThan3OnADay = snacksForPerson.groupBy { it.toboTime.getZuipDay() }.values.find { it.amountOfProducts() > 5 }
-
-        if(moreThan3OnADay == null) return null
+            ?: return null
 
         return moreThan3OnADay.last().time
 
@@ -239,9 +238,8 @@ class BeginnendeDrinker : BaseAchievement(){
     override val name = "Beginnende drinker"
     override val description = "Turf je eerste biertje!"
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val firstBeer = helpData.allBeerTurfTrans.find{ it.personId == person.id}
+        val firstBeer = helpData.allBeerTurfTrans.find{ it.personId == person.id} ?: return null
 
-        if(firstBeer == null) return null
         return firstBeer.time
     }
 }
@@ -255,11 +253,11 @@ class BeginnendeSnacker : BaseAchievement(){
     override val name = "Beginnende snacker"
     override val description = "Turf je eerste snack!"
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val firstSnack = helpData.allTurfTrans.find{ it.product.species == Product.SPECIES_SNACK && it.personId == person.id}
+        val firstSnack = helpData.allTurfTrans
+            .find{ it.product.species == Product.SPECIES_SNACK && it.personId == person.id}
+            ?: return null
 
-        if(firstSnack == null) return null
         return firstSnack.time
-
     }
 
 }
