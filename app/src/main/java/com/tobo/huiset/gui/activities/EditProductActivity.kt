@@ -49,7 +49,8 @@ class EditProductActivity : HuisEtActivity() {
             when {
                 oldProduct!!.kind == Product.ONLY_TURFABLE -> kindRadioGroup.check(R.id.radio_OnlyTurf_Prod)
                 oldProduct!!.kind == Product.ONLY_BUYABLE -> kindRadioGroup.check(R.id.radio_OnlyBuy_Prod)
-                else -> kindRadioGroup.check(R.id.radio_Both_Prod)
+                oldProduct!!.kind == Product.BOTH_TURF_AND_BUY -> kindRadioGroup.check(R.id.radio_Both_Prod)
+                else -> kindRadioGroup.check(R.id.radio_Neither_Prod)
             }
 
             val speciesRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_productSpecies)
