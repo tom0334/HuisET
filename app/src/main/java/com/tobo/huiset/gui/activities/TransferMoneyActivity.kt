@@ -120,7 +120,7 @@ class TransferMoneyActivity : HuisEtActivity() {
     fun someonePaidSomeone(payer: Person, receiver: Person, money: Int, undo: Boolean) {
 
         if (!undo) {
-            val product = Product.create("Overgemaakt", money, Product.NEITHER, 13, Product.OTHERPRODUCT)
+            val product = Product.create("Overgemaakt", money, Product.KIND_NEITHER, 13, Product.SPECIES_OTHER)
 
             val transaction: Transaction = if (money > 0) {
                 Transaction.createTransfer(payer, receiver, money, product)
