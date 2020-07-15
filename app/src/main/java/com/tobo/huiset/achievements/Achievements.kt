@@ -103,7 +103,7 @@ class CollegeWinnaar : BaseAchievement(){
 class MVP: BaseAchievement() {
     override val id = A_MVP
     override val name = "MVP (Most Valuable Pilser)"
-    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur 's ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
+    override val description = "Drink het meeste bier van de avond. De avond eindigt om 6 uur 's ochtends, daarna wordt de MVP bepaald. tussen 5-10 bier is er 1 winnaar, bij 10+ bier kan het winnaarsschap gedeeld worden."
 
     override val updateOnTurf = false
     override val updateOnBuy = false
@@ -122,19 +122,22 @@ class MVP: BaseAchievement() {
                 //entry.value is a list of transactions
                 .mapValues { entry -> entry.value.amountOfProducts() }
 
-            val pair = amountOfBeersOnDay.maxBy { it.value }!!
+            val ownAmount = amountOfBeersOnDay[person.id] ?: continue
+            val mostBeers = amountOfBeersOnDay.maxBy { it.value }!!.value
 
-            val mvpID = pair.key
-            val amount = pair.value
+            // this person has not drunk the most beers last night
+            if (amountOfBeersOnDay[person.id] != mostBeers) continue
 
+            // too little beer drunk
+            if (ownAmount < 5)
+                continue
+            else if (ownAmount < 10) {
+                // Multiple people drank the same amount under 10 beers. No winner then.
+                if (amountOfBeersOnDay.values.count { it == ownAmount } > 1) continue
+            }
 
-            //someone else is the mvp
-            if (mvpID != person.id) continue
-            //its a tie! There are multiple people that drank the same amount. No winner then.
-            if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
-
-            //return the last
-            if (amount > 5) return transactionsOnDay.last().time
+            //return
+            return transactionsOnDay.last().time
         }
         return null
     }
