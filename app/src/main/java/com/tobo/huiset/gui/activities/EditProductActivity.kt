@@ -189,20 +189,18 @@ class EditProductActivity : HuisEtActivity() {
         val newPrice = priceString.euroToCent()
 
         val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
-        var newKind = Product.BOTH_TURF_AND_BUY
-        if (selectedKindButton == R.id.radio_OnlyTurf_Prod) {
-            newKind = Product.ONLY_TURFABLE
-        }
-        else if (selectedKindButton == R.id.radio_OnlyBuy_Prod) {
-            newKind = Product.ONLY_BUYABLE
+        val newKind = when (selectedKindButton) {
+            R.id.radio_OnlyTurf_Prod -> Product.ONLY_TURFABLE
+            R.id.radio_OnlyBuy_Prod -> Product.ONLY_BUYABLE
+            R.id.radio_Both_Prod -> Product.BOTH_TURF_AND_BUY
+            else -> Product.NEITHER
         }
 
         db.updateProductRows()
         val newRow = db.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY).size
 
         val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
-        val newSpecies: Int
-        newSpecies = when (selectedSpeciesButton) {
+        val newSpecies = when (selectedSpeciesButton) {
             R.id.radio_beerProduct -> Product.BEERPRODUCT
             R.id.radio_crateProduct -> Product.CRATEPRODUCT
             R.id.radio_snackProduct -> Product.SNACKPRODUCT
