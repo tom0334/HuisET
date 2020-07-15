@@ -122,15 +122,6 @@ class MVP: BaseAchievement() {
                 //entry.value is a list of transactions
                 .mapValues { entry -> entry.value.amountOfProducts() }
 
-//            // this gives only 1 max
-//            val pair = amountOfBeersOnDay.maxBy { it.value }!!
-//
-//            val mvpID = pair.key
-//            val amount = pair.value
-//
-//            //someone else is the mvp
-//            if (mvpID != person.id) continue
-
             val ownAmount = amountOfBeersOnDay[person.id] ?: continue
             val mostBeers = amountOfBeersOnDay.maxBy { it.value }!!.value
 
