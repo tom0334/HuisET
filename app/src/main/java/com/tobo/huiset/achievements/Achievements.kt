@@ -27,6 +27,8 @@ const val A_SNACK_KONING = 7
 const val A_BEGINNENDE_SNACKER = 8
 const val A_DOE_HET_VOOR_DE_KONING = 9
 const val A_BEGINNENDE_DRINKER = 10
+const val A_OKTOBERFEST = 11
+const val A_INHAALSLAG = 12
 
 
 /**
@@ -265,6 +267,39 @@ class BeginnendeSnacker : BaseAchievement(){
 
 }
 
+class Oktoberfest : BaseAchievement() {
+    override val updateOnTurf: Boolean = true
+    override val updateOnBuy: Boolean = false
+    override val updateOnLaunch: Boolean = false
+    override val id: Int = A_OKTOBERFEST
+    override val name: String = "Oktoberfest"
+    override val description: String = "Drink een biertje in oktober. Bonuspunten als je een lederhose/dirndl draagt."
+
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val octoberBeer = helpData.beerTurfTransactionsByPerson
+            .find { it.toboTime.month == Calendar.OCTOBER }
+        return octoberBeer?.time
+    }
+}
+
+class Inhaalslag: BaseAchievement() {
+    override val updateOnTurf: Boolean = true
+    override val updateOnBuy: Boolean = false
+    override val updateOnLaunch: Boolean = false
+
+    override val id: Int = A_INHAALSLAG
+
+    override val name: String = "Inhaalslag"
+    override val description: String = "turf 5 bier in 1 keer."
+
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val fiveOrMoreBeer = helpData.beerTurfTransactionsByPerson
+            .find { it.amount >= 5 }
+        return fiveOrMoreBeer?.time
+    }
+
+}
+
 
 object AchievementManager {
 
@@ -272,6 +307,7 @@ object AchievementManager {
         return listOf(
             BeginnendeDrinker(),
             BeginnendeSnacker(),
+            Inhaalslag(),
             PilsBaas(),
             SnackKoning(),
             ReparatieBiertje(),
@@ -279,6 +315,7 @@ object AchievementManager {
             CollegeWinnaar(),
             MVP(),
             GroteBoodschap(),
+            Oktoberfest(),
             DoeHetVoorDeKoning()
         )
     }
