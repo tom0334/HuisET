@@ -162,10 +162,6 @@ class GroteBoodschap: BaseAchievement(){
 
         if( doubleCreateBuy != null) return  doubleCreateBuy.time
         return null
-
-//        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
-//        return  crateBuys.groupBy { it.time / 60000 }
-//            .values.find { it.size >= 2 } != null
     }
 
 }
@@ -293,9 +289,11 @@ class Inhaalslag: BaseAchievement() {
     override val description: String = "turf 5 bier in 1 keer."
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val fiveOrMoreBeer = helpData.beerTurfTransactionsByPerson
-            .find { it.amount >= 5 }
-        return fiveOrMoreBeer?.time
+        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
+        val groupOfFiveOrMoreBeer = helpData.beerTurfTransactionsByPerson.groupBy { it.time / 60000 }
+            .values.find { it.amountOfProducts() >= 5 }
+
+        return groupOfFiveOrMoreBeer?.firstOrNull()?.time
     }
 
 }
