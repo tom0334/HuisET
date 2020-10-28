@@ -61,6 +61,8 @@ class EditProductActivity : HuisEtActivity() {
                 else -> speciesRadioGroup.check(R.id.radio_otherProduct)
             }
 
+            findViewById<EditText>(R.id.buyPerAmount).setText(oldProduct!!.buyPerAmount.toString())
+
             new = false
         }
         else {
@@ -181,12 +183,17 @@ class EditProductActivity : HuisEtActivity() {
         val priceEditText = findViewById<EditText>(R.id.price)
         val priceString = priceEditText.text.toString().replace(',','.')
 
+        val amountEditText = findViewById<EditText>(R.id.buyPerAmount)
+        val amountString = amountEditText.text.toString()
+
         if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 1)
-            || !HandyFunctions.priceValidate(priceString, priceEditText)) {
+            || !HandyFunctions.priceValidate(priceString, priceEditText)
+            || !HandyFunctions.buyPerAmountValidate(amountString, amountEditText)) {
             return
         }
 
         val newPrice = priceString.euroToCent()
+        val newAmount = amountString.toInt()
 
         val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
         val newKind = when (selectedKindButton) {
@@ -209,19 +216,20 @@ class EditProductActivity : HuisEtActivity() {
 
         realm.executeTransaction {
             if (new) {
-                val product = Product.create(newName, newPrice, newKind, newRow, newSpecies)
+                val product = Product.create(newName, newPrice, newKind, newRow, newSpecies, newAmount)
                 realm.copyToRealm(product)
             } else {
                 oldProduct!!.name = newName
                 oldProduct!!.price = newPrice
                 oldProduct!!.kind = newKind
                 oldProduct!!.species = newSpecies
+                oldProduct!!.buyPerAmount = newAmount
             }
         }
 
         Toast.makeText(
             this,
-            "Product $newName van ${newPrice.toCurrencyString()} toegevoegd/aangepast",
+            "Product $newName van ${newPrice.toCurrencyString()} per $newAmount stuk(s) toegevoegd/aangepast",
             Toast.LENGTH_SHORT
         ).show()
         this.finish()

@@ -39,7 +39,7 @@ class MyApplication : Application() {
         // The Realm file will be located in Context.getFilesDir() with name "myrealm.realm"
         val config = RealmConfiguration.Builder()
             .name("myrealm.realm")
-            .schemaVersion(1)
+            .schemaVersion(2)
             .migration(getMigration())
             .build()
 
@@ -52,8 +52,8 @@ class MyApplication : Application() {
         class MyMigrations : RealmMigration {
             override fun migrate(realm: DynamicRealm,oldVersion: Long, newVersion: Long ) {
                 val schema = realm.schema
-                var current = oldVersion
-                if (oldVersion == 0L) {
+                var currentVersion = oldVersion
+                if (currentVersion == 0L) {
 
                     val transactions = realm.where("Transaction").findAll()
                     val oldAmounts  = transactions.groupBy { x: DynamicRealmObject -> x.getString("id") }.mapValues { entry ->  entry.value.first().getInt("amount")}
@@ -67,8 +67,21 @@ class MyApplication : Application() {
                         t.setFloat("amount", oldAmounts.get(id)!!.toFloat())
                     }
 
-                    current ++
+                    currentVersion ++
                 }
+                if (currentVersion == 1L) {
+                    val products = realm.where("Product").findAll()
+
+                    schema.get("Product")?.apply {
+                        addField("buyPerAmount", Int::class.java)
+                    }
+                    products.forEach { p ->
+                        p.setInt("buyPerAmount", 1)
+                    }
+
+                    currentVersion++
+                }
+
             }
         }
 

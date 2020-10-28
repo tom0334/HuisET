@@ -398,7 +398,7 @@ class HuisETDB(private val realm: Realm) {
             }
         }else{
             realm.executeTransaction {
-                val crate = Product.create("Kratje", price, Product.KIND_BUYABLE, 1, Product.SPECIES_CRATE)
+                val crate = Product.create("Bier", price, Product.KIND_BUYABLE, 1, Product.SPECIES_CRATE, 24)
                 realm.copyToRealm(crate)
             }
         }
@@ -415,10 +415,10 @@ class HuisETDB(private val realm: Realm) {
             }
         }else{
             realm.executeTransaction {
-                val beer = Product.create("Bier", price, Product.KIND_TURFABLE, 0, Product.SPECIES_BEER)
+                val beer = Product.create("Bier", price, Product.KIND_TURFABLE, 0, Product.SPECIES_BEER, 1)
                 realm.copyToRealm(beer)
 
-                val statiegeld = Product.create("Statiegeld terug", 390, Product.KIND_TURFABLE, 1, Product.SPECIES_OTHER)
+                val statiegeld = Product.create("Statiegeld terug", 390, Product.KIND_TURFABLE, 1, Product.SPECIES_OTHER, 1)
                 realm.copyToRealm(statiegeld)
             }
             HuisETDB(realm).selectFirstTurfProduct()
