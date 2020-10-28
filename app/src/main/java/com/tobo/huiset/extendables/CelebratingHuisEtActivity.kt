@@ -11,6 +11,11 @@ import nl.dionsegijn.konfetti.KonfettiView
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
 
+/**
+ * Adds the option to show confetti in a ring in the center of the screen.
+ *
+ * This kind of confetti is used for achievements.
+ */
 abstract class CelebratingHuisEtActivity: HuisEtActivity(){
 
     fun showAchievements(changed: List<AchievementCompletion>) {
@@ -20,7 +25,7 @@ abstract class CelebratingHuisEtActivity: HuisEtActivity(){
         }
         if (changed.size > 0) {
 
-            //this is more aggressive confetti than the other one
+            //this is more aggressive confetti than one that shows when turfing something
             val viewKonfetti = findViewById<KonfettiView>(R.id.viewKonfetti)
             viewKonfetti.build()
                 .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
