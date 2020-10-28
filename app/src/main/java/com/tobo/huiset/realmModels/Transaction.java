@@ -29,8 +29,9 @@ public class Transaction extends RealmObject {
         t.personId = person.getId();
         t.productId = product.getId();
         t.buy = buy;
-        t.amount = amount;
-        t.price =  Math.round((float) product.getPrice() * amount);
+        t.amount = buy ? product.getBuyPerAmount() : amount;
+        int divideBy = buy ? 1 : product.getBuyPerAmount();
+        t.price =  Math.round((float) product.getPrice() / divideBy * amount);
         return t;
     }
 

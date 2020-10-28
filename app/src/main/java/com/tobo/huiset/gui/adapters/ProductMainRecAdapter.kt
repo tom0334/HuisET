@@ -13,6 +13,7 @@ import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
+import kotlin.math.roundToInt
 
 /**
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
@@ -33,7 +34,7 @@ class ProductMainRecAdapter(
         val product = data?.get(position) ?: return
 
         holder.nameTv.text = product.name
-        holder.priceTv.text = product.price.toCurrencyString()
+        holder.priceTv.text = (product.price.toFloat() / product.buyPerAmount).roundToInt().toCurrencyString()
 
         val colorResId = if (product.isSelected) R.color.secondaryDarkColor else R.color.primaryDarkColor
         holder.card.setBackgroundColor(ContextCompat.getColor(context, colorResId))
