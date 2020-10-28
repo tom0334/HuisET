@@ -25,8 +25,9 @@ class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(conte
         return mOffset!!
     }
 
-    // callbacks everytime the MarkerView is redrawn, can be used to update the
-    // content (user-interface)
+    /**
+     * Called everytime the MarkerView is redrawn. Shows date and amount
+     */
     override fun refreshContent(e: Entry, highlight: Highlight) {
         topTv.setText("${e.y.toInt()} bier")
         val date = e.x.toLong()
