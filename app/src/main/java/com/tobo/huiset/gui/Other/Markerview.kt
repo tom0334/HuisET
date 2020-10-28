@@ -10,16 +10,12 @@ import com.tobo.huiset.R
 import java.text.SimpleDateFormat
 
 /**
- * Constructor. Sets up the MarkerView with a custom layout resource.
- *
- * @param context
- * @param layoutResource the layout resource to use for the MarkerView
+ * This is he view that is shown when clicking on a datapoint in a graph
  */
 class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
     private val bottomTv: TextView = findViewById(R.id.markerViewDate)
     private val topTv: TextView = findViewById(R.id.markerViewTV)
     private var mOffset: MPPointF? = null
-
 
     override fun getOffset(): MPPointF {
         if (mOffset == null) {
@@ -41,5 +37,3 @@ class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(conte
 
 
 }
-
-
