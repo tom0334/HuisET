@@ -50,7 +50,7 @@ class PilsBaas : BaseAchievement() {
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
 
         val maxBeerOnADay = helpData.beerTurfTransactionsByPerson
-            .groupBy {it.toboTime.toboDay}
+            .groupBy {it.toboTime.getZuipDay()}
 
         // a map entry for each day. Find one that meets our needs
         val goodDayEntry = maxBeerOnADay.entries.find { it.value.amountOfProducts() >= 10}
@@ -103,7 +103,7 @@ class CollegeWinnaar : BaseAchievement(){
 class MVP: BaseAchievement() {
     override val id = A_MVP
     override val name = "MVP (Most Valuable Pilser)"
-    override val description = "Drink het meeste bier van de avond. Avond eindigt om 6 uur 's ochtends, daarna wordt pas de MVP bepaald. Minstens 5 bier, anders verdien je het niet."
+    override val description = "Drink het meeste bier van de avond. De avond eindigt om 6 uur 's ochtends, daarna wordt de MVP bepaald. tussen 5-10 bier is er 1 winnaar, bij 10+ bier kan het winnaarsschap gedeeld worden."
 
     override val updateOnTurf = false
     override val updateOnBuy = false
@@ -122,19 +122,22 @@ class MVP: BaseAchievement() {
                 //entry.value is a list of transactions
                 .mapValues { entry -> entry.value.amountOfProducts() }
 
-            val pair = amountOfBeersOnDay.maxBy { it.value }!!
+            val ownAmount = amountOfBeersOnDay[person.id] ?: continue
+            val mostBeers = amountOfBeersOnDay.maxBy { it.value }!!.value
 
-            val mvpID = pair.key
-            val amount = pair.value
+            // this person has not drunk the most beers last night
+            if (amountOfBeersOnDay[person.id] != mostBeers) continue
 
+            // too little beer drunk
+            if (ownAmount < 5)
+                continue
+            else if (ownAmount < 10) {
+                // Multiple people drank the same amount under 10 beers. No winner then.
+                if (amountOfBeersOnDay.values.count { it == ownAmount } > 1) continue
+            }
 
-            //someone else is the mvp
-            if (mvpID != person.id) continue
-            //its a tie! There are multiple people that drank the same amount. No winner then.
-            if(amountOfBeersOnDay.values.count { it == amount} > 1 ) continue
-
-            //return the last
-            if (amount > 5) return transactionsOnDay.last().time
+            //return
+            return transactionsOnDay.last().time
         }
         return null
     }
@@ -151,7 +154,7 @@ class GroteBoodschap: BaseAchievement(){
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val crateBuys = person.getDb().getTransactions(personId = person.id, buy = true)
-            .filter { it.product?.species == Product.CRATEPRODUCT }
+            .filter { it.product?.species == Product.SPECIES_CRATE }
 
         val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
 
@@ -219,7 +222,7 @@ class SnackKoning : BaseAchievement(){
     override val name = "SnackKoning"
     override val description = "Turf minstens 5 snacks op 1 dag."
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val snacksForPerson = helpData.allTurfTrans.filter { it.product.species == Product.SNACKPRODUCT && it.personId == person.id}
+        val snacksForPerson = helpData.allTurfTrans.filter { it.product.species == Product.SPECIES_SNACK && it.personId == person.id}
 
         val moreThan3OnADay = snacksForPerson.groupBy { it.toboTime.getZuipDay() }.values.find { it.amountOfProducts() > 5 }
             ?: return null
@@ -253,11 +256,11 @@ class BeginnendeSnacker : BaseAchievement(){
     override val name = "Beginnende snacker"
     override val description = "Turf je eerste snack!"
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val firstSnack = helpData.allTurfTrans.find{ it.product.species == Product.SNACKPRODUCT && it.personId == person.id}
+        val firstSnack = helpData.allTurfTrans
+            .find{ it.product.species == Product.SPECIES_SNACK && it.personId == person.id}
             ?: return null
 
         return firstSnack.time
-
     }
 
 }
@@ -342,7 +345,7 @@ data class AchievementUpdateHelpData(private val person:Person){
     }
 
     val allBeerTurfTrans by lazy {
-        allTurfTrans.filter { it.product.species == Product.BEERPRODUCT }
+        allTurfTrans.filter { it.product.species == Product.SPECIES_BEER }
     }
 
     val turfTransactionsByPerson by lazy {

@@ -102,7 +102,7 @@ class StatsActivity : HuisEtActivity() {
 
 
     fun getEntriesForPerson(p:Person):List<Entry>{
-        val transactions = db.getTransactions(buy = false,personId = p.id).filter { it.product.species == Product.BEERPRODUCT }
+        val transactions = db.getTransactions(buy = false,personId = p.id).filter { it.product.species == Product.SPECIES_BEER }
 
         var soFar = 0.0
 

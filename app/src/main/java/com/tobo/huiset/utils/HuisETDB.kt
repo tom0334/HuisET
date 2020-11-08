@@ -19,7 +19,7 @@ class HuisETDB(val realm: Realm) {
     fun getFirstTurfProduct(): Product? {
         return this.realm.where(Product::class.java)
             .equalTo("deleted", false)
-            .`in`("kind", arrayOf(Product.ONLY_TURFABLE, Product.BOTH_TURF_AND_BUY))
+            .`in`("kind", arrayOf(Product.KIND_TURFABLE, Product.KIND_BOTH))
             .sort("row", Sort.ASCENDING)
             .findFirst()
     }
@@ -121,11 +121,11 @@ class HuisETDB(val realm: Realm) {
         val query = realm.where(Product::class.java)
             .equalTo("deleted", false)
 
-        if (kind == Product.ONLY_BUYABLE) {
-            query.`in`("kind", arrayOf(Product.ONLY_BUYABLE, Product.BOTH_TURF_AND_BUY))
+        if (kind == Product.KIND_BUYABLE) {
+            query.`in`("kind", arrayOf(Product.KIND_BUYABLE, Product.KIND_BOTH))
         }
-        else if (kind == Product.ONLY_TURFABLE) {
-            query.`in`("kind", arrayOf(Product.ONLY_TURFABLE, Product.BOTH_TURF_AND_BUY))
+        else if (kind == Product.KIND_TURFABLE) {
+            query.`in`("kind", arrayOf(Product.KIND_TURFABLE, Product.KIND_BOTH))
         }
 
         return query.sort("row", Sort.ASCENDING).findAll()
@@ -202,7 +202,7 @@ class HuisETDB(val realm: Realm) {
     }
 
     fun updateProductRows() {
-        val products = this.findAllCurrentProducts(Product.BOTH_TURF_AND_BUY)
+        val products = this.findAllCurrentProducts(Product.KIND_BOTH)
 
         realm.executeTransaction {
             products.sort("row")
@@ -398,7 +398,7 @@ class HuisETDB(val realm: Realm) {
             }
         }else{
             realm.executeTransaction {
-                val crate = Product.create("Kratje", price, Product.ONLY_BUYABLE, 1, Product.CRATEPRODUCT)
+                val crate = Product.create("Kratje", price, Product.KIND_BUYABLE, 1, Product.SPECIES_CRATE)
                 realm.copyToRealm(crate)
             }
         }
@@ -415,10 +415,10 @@ class HuisETDB(val realm: Realm) {
             }
         }else{
             realm.executeTransaction {
-                val beer = Product.create("Bier", price, Product.ONLY_TURFABLE, 0, Product.BEERPRODUCT)
+                val beer = Product.create("Bier", price, Product.KIND_TURFABLE, 0, Product.SPECIES_BEER)
                 realm.copyToRealm(beer)
 
-                val statiegeld = Product.create("Statiegeld terug", 390, Product.ONLY_TURFABLE, 1, Product.OTHERPRODUCT)
+                val statiegeld = Product.create("Statiegeld terug", 390, Product.KIND_TURFABLE, 1, Product.SPECIES_OTHER)
                 realm.copyToRealm(statiegeld)
             }
             HuisETDB(realm).selectFirstTurfProduct()
@@ -429,11 +429,11 @@ class HuisETDB(val realm: Realm) {
 
 
     fun getCrateIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.CRATEPRODUCT).findFirst()
+        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_CRATE).findFirst()
     }
 
     fun getBeerIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.BEERPRODUCT).findFirst()
+        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_BEER).findFirst()
     }
 
     fun copyFromRealm(trans: Transaction): Transaction {

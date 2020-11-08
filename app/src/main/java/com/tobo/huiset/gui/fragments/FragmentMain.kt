@@ -139,7 +139,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
             return true
         }
 
-        if (db.findAllCurrentProducts(Product.ONLY_TURFABLE).size <= 0) {
+        if (db.findAllCurrentProducts(Product.KIND_TURFABLE).size <= 0) {
             val context = this.context as MainActivity
 
             val builder = AlertDialog.Builder(context)
@@ -196,7 +196,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
     }
 
     private fun setupProductRec(view: View): RecyclerView {
-        val products = db.findAllCurrentProducts(Product.ONLY_TURFABLE)
+        val products = db.findAllCurrentProducts(Product.KIND_TURFABLE)
 
         // this sets up the product recyclerview
         val prodRec = view.findViewById<RecyclerView>(R.id.mainProductRec)
