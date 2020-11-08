@@ -188,8 +188,8 @@ class FragmentPurchases : HuisEtFragment() {
     }
 
     fun startCustomTurf() {
-        val alertDialog =
-            CustomTurfDialogFragment()
+        if(pickedPersonId == null) return
+        val alertDialog = CustomTurfDialogFragment.newInstance(pickedPersonId!!)
         alertDialog.show(this.fragmentManager, "fragment_alert")
     }
 

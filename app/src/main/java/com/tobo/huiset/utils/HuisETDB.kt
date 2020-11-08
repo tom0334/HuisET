@@ -9,6 +9,7 @@ import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
+import kotlin.math.roundToInt
 
 class HuisETDB(val realm: Realm) {
 
@@ -452,6 +453,44 @@ class HuisETDB(val realm: Realm) {
                 .equalTo("deleted", false)
                 .findAll().map { it.name }
                 .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
+        }
+    }
+
+    fun getOrCreateCustomTurfProductWith(): Product {
+        val customTurfProduct = realm.where(Product::class.java).equalTo("kind",Product.KIND_CUSTOMTURF).findFirst()
+        if(customTurfProduct != null) return customTurfProduct
+
+        else{
+            var res: Product? = null;
+            val totalAmountOfProducts = realm.where(Product::class.java).findAll().size
+            val productOutsideRealm = Product.create("Custom Turf",0, Product.KIND_CUSTOMTURF, totalAmountOfProducts,Product.SPECIES_OTHER)
+            productOutsideRealm.isDeleted = true
+            realm.executeTransaction {
+                res = realm.copyToRealm(productOutsideRealm)!!
+            }
+            return res!!
+        }
+    }
+
+    fun doCustomTurf(price: Float, title: String, selectedPersons: List<Person>, personThatPaid: Person) {
+        //todo what if selected is leeg
+        val product = getOrCreateCustomTurfProductWith()
+
+        //First, lets add the expense for everyone that is being paid for. This may include
+        //the person that is paying.
+        realm.executeTransaction {
+            product.price = (price * 100f).roundToInt()
+            val amountPerPerson = 1.0f / selectedPersons.size.toFloat()
+            selectedPersons.forEach {
+                val trans = Transaction.create(it,product,amountPerPerson,false)
+                realm.copyToRealm(trans)
+            }
+        }
+
+        //Now add the money to the person that paid
+        realm.executeTransaction {
+            val paidPersonTrans = Transaction.create(personThatPaid, product, 1.0f,true)
+            realm.copyToRealm(paidPersonTrans)
         }
     }
 
