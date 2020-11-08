@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,24 +8,64 @@
     android:minHeight="10000dp"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/customTurfPriceED"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#000000"
-        android:textSize="40sp"
-        android:text="4.00"
-        android:minWidth="80dp"
-        android:digits="1234567890,."
-        android:imeOptions="actionDone"
-        android:maxLines="1"
-        android:inputType="numberDecimal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </EditText>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/customturfRec"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
+        <EditText
+            android:layout_marginBottom="4dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/customTurfPriceED"
+            android:textColor="#000000"
+            android:textSize="40sp"
+            android:text="0.00"
+            android:minWidth="80dp"
+            android:digits="1234567890,."
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:inputType="numberDecimal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </EditText>
+
+        <EditText
+            android:layout_marginBottom="4dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/customTurfPriceED"
+            android:id="@+id/customTurfTitle"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:text=""
+            android:hint="Naam uitgave"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </EditText>
+
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@id/customTurfTitle"
+            android:layout_above="@id/customTurfOkButton"
+            android:id="@+id/customturfRec"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+
+        <Button
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:id="@+id/customTurfOkButton"
+            android:layout_alignParentBottom="true"
+            android:text="OK"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 </LinearLayout>
