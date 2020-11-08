@@ -473,7 +473,8 @@ class HuisETDB(val realm: Realm) {
     }
 
     fun doCustomTurf(price: Float, title: String, selectedPersons: List<Person>, personThatPaid: Person) {
-        //todo what if selected is leeg
+        //todo what if selected is empty
+        //todo fix title, it needs a field in the transaction class.
         val product = getOrCreateCustomTurfProductWith()
 
         //First, lets add the expense for everyone that is being paid for. This may include
