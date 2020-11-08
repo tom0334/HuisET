@@ -66,10 +66,12 @@ class FragmentProducts : HuisEtFragment() {
         ItemDoubleClickSupport.addTo(rec)
             .setOnItemClickListener(object : ItemDoubleClickSupport.OnItemClickListener {
                 override fun onItemClicked(recyclerView: RecyclerView, position: Int, v: View) {
-                    val product = products[position]
-                    val intent = Intent(activity, EditProductActivity::class.java)
-                        .putExtra("PRODUCT_ID", product?.id)
-                    startActivity(intent)
+                    if (position >= 0 && position < products.size) {
+                        val product = products[position]!!
+                        val intent = Intent(activity, EditProductActivity::class.java)
+                            .putExtra("PRODUCT_ID", product.id)
+                        startActivity(intent)
+                    }
                 }
 
                 override fun onItemDoubleClicked(recyclerView: RecyclerView, position: Int, v: View) {
