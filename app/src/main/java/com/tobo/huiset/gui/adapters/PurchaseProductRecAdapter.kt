@@ -31,7 +31,7 @@ class PurchaseProductRecAdapter(
 
 
     /**
-     * The different view types for this recyclerview.k
+     * The different view types for this recyclerview.
      *
      * It has 2 types: a normal product and a new product button
      */
