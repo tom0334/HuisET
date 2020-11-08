@@ -1,5 +1,7 @@
 package com.tobo.huiset.utils
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.EditText
 import com.google.android.material.snackbar.Snackbar
 
@@ -63,5 +65,57 @@ object HandyFunctions {
         }
 
         return true
+    }
+    //this makes it only possible to input valid prices, only 2 numbers after a "." or a "," are allowed
+    fun addPriceTextLimiter(editText: EditText){
+        editText.addTextChangedListener(object : TextWatcher {
+            lateinit var sBackup: String
+
+            /**
+             * Backup string before comma
+             */
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+                sBackup = s.toString()
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+            }
+
+            /**
+             * Makes sure only 1 comma or dot is used.
+             * And only 2 decimals are allowed.
+             */
+            override fun afterTextChanged(editable: Editable) {
+                try {
+                    val s = editable.toString()
+
+                    // Make sure only 1 comma or dot is used
+                    if (s != "") {
+                        java.lang.Double.valueOf(editable.toString().replace(',', '.'))
+                    }
+
+                    // format should be _.cc (only 2 decimals)
+                    if (s.contains(',') && editable.toString().split(",")[1].length > 2) {
+                        editText.setText(sBackup)
+                        editText.setSelection(editText.text.toString().length)
+                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
+                    }
+                    if (s.contains('.') && editable.toString().split(".")[1].length > 2) {
+                        editText.setText(sBackup)
+                        editText.setSelection(editText.text.toString().length)
+                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
+                    }
+                } catch (e: Exception) {
+                    editText.setText(sBackup)
+                    editText.setSelection(editText.text.toString().length)
+                }
+            }
+        })
     }
 }

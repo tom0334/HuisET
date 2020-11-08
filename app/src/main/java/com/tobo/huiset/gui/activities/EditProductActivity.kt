@@ -16,8 +16,6 @@ import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
-import android.text.Editable
-import android.text.TextWatcher
 import com.google.android.material.textfield.TextInputEditText
 import com.tobo.huiset.utils.HandyFunctions
 
@@ -35,7 +33,9 @@ class EditProductActivity : HuisEtActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editproduct)
 
-        priceInitOnlyOneSeparatorValidator()
+        val priceEditText = findViewById<TextInputEditText>(R.id.price)
+        //this makes it only possible to input valid prices, only 2 numbers after a "." or a "," are allowed
+        HandyFunctions.addPriceTextLimiter(priceEditText)
 
         // reset old values of product is edited
         val extras = intent.extras
@@ -68,59 +68,6 @@ class EditProductActivity : HuisEtActivity() {
         }
     }
 
-    private fun priceInitOnlyOneSeparatorValidator() {
-        val editText = findViewById<TextInputEditText>(R.id.price)
-        editText.addTextChangedListener(object : TextWatcher {
-            lateinit var sBackup: String
-
-            /**
-             * Backup string before comma
-             */
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-                sBackup = s.toString()
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-
-            /**
-             * Makes sure only 1 comma or dot is used.
-             * And only 2 decimals are allowed.
-             */
-            override fun afterTextChanged(editable: Editable) {
-                try {
-                    val s = editable.toString()
-
-                    // Make sure only 1 comma or dot is used
-                    if (s != "") {
-                        java.lang.Double.valueOf(editable.toString().replace(',', '.'))
-                    }
-
-                    // format should be _.cc (only 2 decimals)
-                    if (s.contains(',') && editable.toString().split(",")[1].length > 2) {
-                        editText.setText(sBackup)
-                        editText.setSelection(editText.text.toString().length)
-                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
-                    }
-                    if (s.contains('.') && editable.toString().split(".")[1].length > 2) {
-                        editText.setText(sBackup)
-                        editText.setSelection(editText.text.toString().length)
-                        editText.error = "Er mogen maximaal 2 getallen achter de komma staan"
-                    }
-                } catch (e: Exception) {
-                    editText.setText(sBackup)
-                    editText.setSelection(editText.text.toString().length)
-                }
-
-            }
-        })
-    }
 
     // create an action bar button
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
