@@ -46,18 +46,18 @@ class EditProductActivity : HuisEtActivity() {
             findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
 
             val kindRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_kindProd)
-            when {
-                oldProduct!!.kind == Product.KIND_TURFABLE -> kindRadioGroup.check(R.id.radio_OnlyTurf_Prod)
-                oldProduct!!.kind == Product.KIND_BUYABLE -> kindRadioGroup.check(R.id.radio_OnlyBuy_Prod)
-                oldProduct!!.kind == Product.KIND_BOTH -> kindRadioGroup.check(R.id.radio_Both_Prod)
+            when (oldProduct!!.kind) {
+                Product.KIND_TURFABLE -> kindRadioGroup.check(R.id.radio_OnlyTurf_Prod)
+                Product.KIND_BUYABLE -> kindRadioGroup.check(R.id.radio_OnlyBuy_Prod)
+                Product.KIND_BOTH -> kindRadioGroup.check(R.id.radio_Both_Prod)
                 else -> kindRadioGroup.check(R.id.radio_Neither_Prod)
             }
 
             val speciesRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_productSpecies)
-            when {
-                oldProduct!!.species == Product.SPECIES_BEER -> speciesRadioGroup.check(R.id.radio_beerProduct)
-                oldProduct!!.species == Product.SPECIES_CRATE -> speciesRadioGroup.check(R.id.radio_crateProduct)
-                oldProduct!!.species == Product.SPECIES_SNACK -> speciesRadioGroup.check(R.id.radio_snackProduct)
+            when (oldProduct!!.species) {
+                Product.SPECIES_BEER -> speciesRadioGroup.check(R.id.radio_beerProduct)
+                Product.SPECIES_CRATE -> speciesRadioGroup.check(R.id.radio_crateProduct)
+                Product.SPECIES_SNACK -> speciesRadioGroup.check(R.id.radio_snackProduct)
                 else -> speciesRadioGroup.check(R.id.radio_otherProduct)
             }
 
@@ -214,19 +214,12 @@ class EditProductActivity : HuisEtActivity() {
             else -> Product.SPECIES_OTHER
         }
 
-        realm.executeTransaction {
-            if (new) {
-                val product = Product.create(newName, newPrice, newKind, newRow, newSpecies, newAmount)
-                realm.copyToRealm(product)
-            } else {
-                oldProduct!!.name = newName
-                oldProduct!!.price = newPrice
-                oldProduct!!.kind = newKind
-                oldProduct!!.species = newSpecies
-                oldProduct!!.buyPerAmount = newAmount
-            }
+        if (new) {
+            db.createProduct(newName, newPrice, newKind, newRow, newSpecies, newAmount)
+        } else {
+            db.editProduct(oldProduct!!, newName, newPrice, newKind, newRow, newSpecies, newAmount)
         }
-
+        
         Toast.makeText(
             this,
             "Product $newName van ${newPrice.toCurrencyString()} per $newAmount stuk(s) toegevoegd/aangepast",

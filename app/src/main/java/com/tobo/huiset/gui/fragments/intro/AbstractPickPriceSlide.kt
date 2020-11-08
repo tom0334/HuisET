@@ -26,7 +26,6 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
 
         if(HandyFunctions.priceValidate(price, editText)){
             this.processPrice(price.euroToCent())
-            db.createDemoBeerOrSetPrice(price.euroToCent())
         }
         else{
             Toast.makeText(this.context,"Prijs input klopt niet.", Toast.LENGTH_SHORT).show()

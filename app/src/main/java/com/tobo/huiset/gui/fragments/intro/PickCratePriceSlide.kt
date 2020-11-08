@@ -8,10 +8,8 @@ class PickCratePriceSlide :AbstractPickPriceSlide(){
         if(crate!= null){
             return crate.price.toNumberDecimal()
         }
-        return "13.90"
+        return "10.50"
     }
-
-
 
     override fun processPrice(price: Int) {
         db.createDemoCrateOrSetPrice(price)
