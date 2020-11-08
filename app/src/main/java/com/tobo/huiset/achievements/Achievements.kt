@@ -156,7 +156,8 @@ class GroteBoodschap: BaseAchievement(){
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val crateBuys = person.getDb().getTransactions(personId = person.id, buy = true)
-            .filter { it.product?.species == Product.SPECIES_CRATE }
+            .filter { it.product?.species == Product.SPECIES_BEER }
+            .filter { it.product?.buyPerAmount == 24 }
 
         val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
 

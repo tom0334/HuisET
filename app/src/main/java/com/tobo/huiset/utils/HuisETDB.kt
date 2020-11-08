@@ -407,7 +407,7 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun getCrateIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_CRATE).findFirst()
+        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_BEER).equalTo("buyPerAmount",  24 as Int).findFirst()
     }
 
     fun copyFromRealm(trans: Transaction): Transaction {
@@ -437,21 +437,20 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun editProduct(
-        oldProduct: Product,
+        product: Product,
         newName: String,
         newPrice: Int,
         newKind: Int,
-        newRow: Int,
         newSpecies: Int,
         newAmount: Int
     ) {
         realm.executeTransaction {
-            oldProduct.name = newName
-            oldProduct.price = newPrice
-            oldProduct.kind = newKind
-            oldProduct.row = newRow
-            oldProduct.species = newSpecies
-            oldProduct.buyPerAmount = newAmount
+            product.name = newName
+            product.price = newPrice
+            product.kind = newKind
+            // product.row should not change
+            product.species = newSpecies
+            product.buyPerAmount = newAmount
         }
     }
 

@@ -7,16 +7,12 @@ import java.util.UUID;
 
 public class Product extends RealmObject {
 
-    public static final int STANDARD_PRICE_BEER = 44;
-    public static final int STANDARD_PRICE_CRATE = 1050;
-
     public static final int KIND_TURFABLE = 0;
     public static final int KIND_BUYABLE = 1;
     public static final int KIND_BOTH = 2;
     public static final int KIND_NEITHER = 3;
 
     public static final int SPECIES_BEER = 0;
-    public static final int SPECIES_CRATE = 1;
     public static final int SPECIES_SNACK = 2;
     public static final int SPECIES_OTHER = 3;
 

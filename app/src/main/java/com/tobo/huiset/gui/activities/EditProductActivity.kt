@@ -56,7 +56,6 @@ class EditProductActivity : HuisEtActivity() {
             val speciesRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_productSpecies)
             when (oldProduct!!.species) {
                 Product.SPECIES_BEER -> speciesRadioGroup.check(R.id.radio_beerProduct)
-                Product.SPECIES_CRATE -> speciesRadioGroup.check(R.id.radio_crateProduct)
                 Product.SPECIES_SNACK -> speciesRadioGroup.check(R.id.radio_snackProduct)
                 else -> speciesRadioGroup.check(R.id.radio_otherProduct)
             }
@@ -209,7 +208,6 @@ class EditProductActivity : HuisEtActivity() {
         val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
         val newSpecies = when (selectedSpeciesButton) {
             R.id.radio_beerProduct -> Product.SPECIES_BEER
-            R.id.radio_crateProduct -> Product.SPECIES_CRATE
             R.id.radio_snackProduct -> Product.SPECIES_SNACK
             else -> Product.SPECIES_OTHER
         }
@@ -217,9 +215,9 @@ class EditProductActivity : HuisEtActivity() {
         if (new) {
             db.createProduct(newName, newPrice, newKind, newRow, newSpecies, newAmount)
         } else {
-            db.editProduct(oldProduct!!, newName, newPrice, newKind, newRow, newSpecies, newAmount)
+            db.editProduct(oldProduct!!, newName, newPrice, newKind, newSpecies, newAmount)
         }
-        
+
         Toast.makeText(
             this,
             "Product $newName van ${newPrice.toCurrencyString()} per $newAmount stuk(s) toegevoegd/aangepast",

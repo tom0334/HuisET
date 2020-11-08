@@ -5,6 +5,7 @@ import android.content.Intent
 import android.preference.PreferenceManager
 import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.realmModels.Person
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ProfileColors
 import com.tobo.huiset.utils.extensions.edit
 import io.realm.*
@@ -77,6 +78,9 @@ class MyApplication : Application() {
                     }
                     products.forEach { p ->
                         p.setInt("buyPerAmount", 1)
+                        if (p.getInt("species") == 1) {
+                            p.set("species", Product.SPECIES_BEER)
+                        }
                     }
 
                     currentVersion++
