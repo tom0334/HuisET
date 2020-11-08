@@ -7,6 +7,7 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
@@ -126,6 +127,7 @@ class FragmentHistory : HuisEtFragment() {
     private fun setupPersonRec(view: View) {
         val historyPersonRec = view.findViewById<RecyclerView>(R.id.historyPersonRec)
         personAdap = HistoryPersonRecAdapter(mutableListOf(), this.context!!, realm)
+        historyPersonRec.addItemDecoration(DividerItemDecoration(historyPersonRec.context, DividerItemDecoration.VERTICAL))
         historyPersonRec.adapter = personAdap
         historyPersonRec.layoutManager = LinearLayoutManager(this.context!!)
 

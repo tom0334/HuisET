@@ -18,8 +18,8 @@
             android:ellipsize="end"
             android:maxLines="2"
         android:paddingRight="16dp"
-        android:paddingTop="32dp"
-        android:paddingBottom="32dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
