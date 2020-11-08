@@ -28,7 +28,7 @@ abstract class HuisEtActivity : AppCompatActivity() {
     }
 
     /**
-     * Override this to add a custom margin to snackbars.
+     * Override this to add a custom margin to SnackBars.
      */
     open fun getSnackbarBottomMargin(): Int{
         return 0
