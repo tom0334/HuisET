@@ -324,20 +324,10 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
-        val query = realm.where(Person::class.java)
+        return realm.where(Person::class.java)
             .equalTo("deleted", false)
             .sort("row", Sort.ASCENDING)
-
-        /** People who can transfer:
-         *  - Roommates or guests with balance < 0
-         *  - Guests with balance > 0
-         */
-        val selectablePersons =
-            query.lessThan("balance", 0)
-                    .or().greaterThan("balance", 0)
-                            .and().equalTo("guest", true)
-
-        return selectablePersons.findAll()
+            .findAll()
     }
 
     fun findRoommateWithMostTheoreticalBalanceNotInArray(arr: Array<String>): Person? {
