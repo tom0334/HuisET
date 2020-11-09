@@ -22,13 +22,16 @@ import kotlin.math.roundToInt
 
 class FragmentHistory : HuisEtFragment() {
 
+    val SHOW_BOUGHT = 0
+    val SHOW_TURFED = 1
+    val SHOW_NETTO = 2
+
     private lateinit var personAdap: HistoryPersonRecAdapter
     private lateinit var historyAdapter: HistoryAdapter
     private var lateTimePoint: Long = 0
     private var earlyTimePoint: Long = 0
 
-    private var showBuy = false
-
+    private var showBuy = SHOW_TURFED
 
     private val timeNames =
         arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar")
@@ -48,7 +51,7 @@ class FragmentHistory : HuisEtFragment() {
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
-    override fun onTabReactivated(userTapped:Boolean){
+    override fun onTabReactivated(userTapped: Boolean){
         initTimePoints(view!!)
         updatePersons()
         updateHistory()
@@ -92,7 +95,12 @@ class FragmentHistory : HuisEtFragment() {
         val radioGroup = view.findViewById<RadioGroup>(R.id.radiogroup_history_bought)
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            showBuy = checkedId == R.id.radioHistoryBought
+            showBuy = when (checkedId) {
+                R.id.radioHistoryBought -> SHOW_BOUGHT
+                R.id.radioHistoryGeturft -> SHOW_TURFED
+                R.id.radioHistoryNetto -> SHOW_NETTO
+                else -> SHOW_TURFED
+            }
             updateHistory()
             updateTimePointsText()
         }
@@ -107,7 +115,8 @@ class FragmentHistory : HuisEtFragment() {
         builder.setTitle("Kies tijdperiode")
 
 
-        builder.setSingleChoiceItems(timeNames, timeDiffSelected
+        builder.setSingleChoiceItems(
+            timeNames, timeDiffSelected
         ) { dialog, item: Int ->
             timeDiffSelected = item
 
@@ -154,9 +163,12 @@ class FragmentHistory : HuisEtFragment() {
             val selectedPerson = db.getSelectedPersonInHistory()
 
             noDataTextView.text = when{
-                selectedPerson != null && showBuy -> "${selectedPerson.name} heeft niets gekocht deze periode!"
-                selectedPerson != null && !showBuy -> "${selectedPerson.name} heeft niets geturft deze periode!"
-                selectedPerson == null && !showBuy -> "Niemand heeft iets geturft deze periode!"
+                selectedPerson != null && showBuy == SHOW_BOUGHT -> "${selectedPerson.name} heeft niets gekocht deze periode!"
+                selectedPerson == null && showBuy == SHOW_BOUGHT -> "Niemand heeft iets gekocht deze periode!"
+                selectedPerson != null && showBuy == SHOW_TURFED -> "${selectedPerson.name} heeft niets geturft deze periode!"
+                selectedPerson == null && showBuy == SHOW_TURFED -> "Niemand heeft iets geturft deze periode!"
+                selectedPerson != null && showBuy == SHOW_NETTO -> "De balans van ${selectedPerson.name} is niet veranderd deze periode!"
+                selectedPerson == null && showBuy == SHOW_NETTO -> "De totale balans is niet veranderd deze periode!"
                 else-> "Niemand heeft iets gekocht deze periode!"
 
             }
@@ -204,23 +216,63 @@ class FragmentHistory : HuisEtFragment() {
         fun Transaction.tokey(): key {
             return key(this.productId, this.isBuy)
         }
-        val res = inTimeSpan
+        var res = inTimeSpan
             .asSequence()
-            .filter { it.isBuy == showBuy}
+            .filter { it.isBuy == (showBuy == SHOW_BOUGHT) }
             .filter { it.product != null }
-            .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumByFloat { it.amount}, values.sumByFloat{ it.saldoImpact }.roundToInt(), false) }
-            .sortedByDescending { it.amount }.toMutableList()
+            .groupBy { it.tokey() }
+            .map { (key, values) -> HistoryItem(
+                    db.getProductWithId(key.productId)!!.name,
+                    values.sumByFloat { it.amount },
+                    values.sumByFloat { it.saldoImpact }.roundToInt(),
+                    false
+                )
+            }
+            .sortedByDescending { it.amount }
+            .toMutableList()
 
+        if (showBuy == SHOW_NETTO) {
+            // calculate bought items in a similar fashion
+            var buyRes = inTimeSpan
+                .asSequence()
+                .filter { it.isBuy }
+                .filter { it.product != null }
+                .groupBy { it.tokey() }
+                .map { (key, values) ->
+                    HistoryItem(
+                        db.getProductWithId(key.productId)!!.name,
+                        values.sumByFloat { it.amount },
+                        values.sumByFloat { it.saldoImpact }.roundToInt(),
+                        false
+                    )
+                }
+                .sortedBy { it.productName }
 
-        if(res.isEmpty()) return res.toList()
+            // if res item and bought item are the same, subtract amount and add priceImpacts.
+            res = res.map { t ->
+                if (buyRes.any { b -> b.productName == t.productName }) {
+                    val b = buyRes.first { b -> b.productName == t.productName }
+                    buyRes = buyRes.minus(b)
+                    HistoryItem(
+                        t.productName,
+                        b.amount - t.amount,
+                        b.price + t.price,
+                        false
+                    )
+                } else {
+                    t
+                }
+            }.toMutableList()
+            res = res.union(buyRes).toMutableList()
+        }
+        if (res.isEmpty()) return emptyList()
 
-
+        // Calculate total amount and price
         val totalAmount = res.sumByFloat { it.amount }
         val totalPrice = res.sumBy { it.price }
         res.add(HistoryItem("Totaal", totalAmount, totalPrice, true))
-        return res.toList()
 
+        return res.toList()
     }
 
     /**
