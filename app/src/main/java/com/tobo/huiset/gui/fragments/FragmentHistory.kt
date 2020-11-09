@@ -2,10 +2,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,14 +61,14 @@ class FragmentHistory : HuisEtFragment() {
         setupHistoryRec(view)
 
 
-        view.findViewById<Button>(R.id.historyGoBackwardsButton).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.historyGoBackwardsButton).setOnClickListener {
             this.lateTimePoint = getAdvancedTime(lateTimePoint, backwards = true)
             this.earlyTimePoint = getAdvancedTime(earlyTimePoint, backwards = true)
             updateHistory()
             updateTimePointsText()
         }
 
-        view.findViewById<Button>(R.id.historyGoFowardsButton).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.historyGoFowardsButton).setOnClickListener {
             val newLate = getAdvancedTime(lateTimePoint, backwards = false)
 
             if (newLate > System.currentTimeMillis()) {
@@ -259,7 +256,7 @@ class FragmentHistory : HuisEtFragment() {
     private fun updateTimePointsText() {
         val view = this.view!!
         val timeFormat = SimpleDateFormat("HH:mm")
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+        val dateFormat = SimpleDateFormat("dd-MM\nyyyy")
 
 
         val lateTimepointDay = view.findViewById<TextView>(R.id.lateTimePointDate)

@@ -23,13 +23,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
+            <ImageButton
                 android:id="@+id/historyGoBackwardsButton"
                 android:textSize="20sp"
                 android:padding="0dp"
-                android:layout_width="48dp"
-                android:text="←"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_keyboard_arrow_left_white_24"
+                android:background="@color/secondaryColor"
+                 />
 
 
             <LinearLayout
@@ -108,13 +110,15 @@
             </LinearLayout>
 
 
-            <Button
+            <ImageButton
                 android:id="@+id/historyGoFowardsButton"
                 android:textSize="20sp"
                 android:padding="0dp"
-                android:layout_width="48dp"
-                android:text="→"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_keyboard_arrow_right_white_24"
+                android:background="@color/secondaryColor"
+                />
 
         </LinearLayout>
 
