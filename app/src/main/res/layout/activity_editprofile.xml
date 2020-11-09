@@ -19,6 +19,7 @@
                 android:layout_height="match_parent"
                 android:hint="Naam"
                 android:inputType="textCapWords"
+                android:imeOptions="actionDone"
                 android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
