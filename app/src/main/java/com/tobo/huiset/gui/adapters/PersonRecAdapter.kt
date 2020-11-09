@@ -1,11 +1,14 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentProfiles
+import android.R.attr.*
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
@@ -16,6 +19,7 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
+
 
 /**
  * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
@@ -36,6 +40,12 @@ class PersonRecAdapter(
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = data?.get(position) ?: return
+
+        if (person.isHuisRekening) {
+            holder.iconIv.visibility = View.VISIBLE
+        } else {
+            holder.iconIv.visibility = View.GONE
+        }
 
         holder.nameTv.text = person.name
 
@@ -81,6 +91,7 @@ class PersonRecAdapter(
     }
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val iconIv = itemView.findViewById<ImageView>(R.id.personRecItem_icon)!!
         val nameTv = itemView.findViewById<TextView>(R.id.personRecItem_name)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.personRecItem_balance)!!
         val upIv = itemView.findViewById<ImageView>(R.id.personRecItem_up)!!
