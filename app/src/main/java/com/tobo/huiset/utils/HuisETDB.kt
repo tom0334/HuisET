@@ -1,5 +1,7 @@
 package com.tobo.huiset.utils
 
+import android.content.Context
+import android.widget.Toast
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -359,13 +361,29 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun createAndSavePerson(name:String, guest:Boolean, show:Boolean, huisEtRekening:Boolean, first:Boolean) {
+    fun createOrUpdateIntroPerson(
+        name: String,
+        guest: Boolean,
+        isHuisRekening: Boolean,
+        first: Boolean,
+        context: Context
+    ) {
         this.updateProfileRows()
 
         val row =  if(first) -1 else findAllCurrentPersons(true).size
-        realm.executeTransaction {
-            val person = Person.create(name,ProfileColors.getNextColor(this),guest,true,row,huisEtRekening)
-            realm.copyToRealm(person)
+
+        val existingPerson = getFirstNonHuisrekeningPerson()
+        if (existingPerson != null) {
+            realm.executeTransaction {
+                existingPerson.name = name
+                Toast.makeText(context,"Profiel aangepast: $name",Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            realm.executeTransaction {
+                val newPerson = Person.create(name, ProfileColors.getNextColor(this), guest, true, row, isHuisRekening)
+                realm.copyToRealm(newPerson)
+                Toast.makeText(context,"Profiel aangemaakt: $name", Toast.LENGTH_SHORT).show()
+            }
         }
 
         this.updateProfileRows()
@@ -442,6 +460,13 @@ class HuisETDB(private val realm: Realm) {
             product.species = newSpecies
             product.buyPerAmount = newAmount
         }
+    }
+
+    fun getFirstNonHuisrekeningPerson(): Person? {
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .notEqualTo("huisRekening", true)
+            .findFirst()
     }
 
 }

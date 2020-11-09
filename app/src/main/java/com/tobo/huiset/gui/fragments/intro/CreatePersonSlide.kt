@@ -6,11 +6,11 @@ import android.widget.Toast
 import com.github.paolorotolo.appintro.ISlidePolicy
 import com.google.android.material.textfield.TextInputEditText
 import com.tobo.huiset.R
-import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_BUTTON_TEXT
 import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
-import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.HandyFunctions
+import com.tobo.huiset.utils.HuisETDB
+import io.realm.Realm
 
 
 class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener, SlideShowListener {
@@ -20,11 +20,13 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
 
     override fun isPolicyRespected(): Boolean {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
-        return HandyFunctions.nameValidate(editText.text.toString(), editText, db, true, 0)
+        return db.getFirstNonHuisrekeningPerson() != null
+                || HandyFunctions.nameValidate(editText.text.toString(), editText, db, true, 0)
     }
 
     override fun onUserIllegallyRequestedNextPage() {
-        Toast.makeText(this.context,"Voer een naam in.",Toast.LENGTH_SHORT).show()
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        Toast.makeText(this.context, editText.error, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -47,12 +49,14 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val name = editText.text.toString()
 
-        if(HandyFunctions.nameValidate(name, editText, db, true, 0)) {
-            (this.activity as IntroActivity).createPerson(name)
-            editText.setText("")
-        }
-        else{
-            Toast.makeText(this.context,"Er is nog geen naam ingevoerd.", Toast.LENGTH_SHORT).show()
+        if (db.getFirstNonHuisrekeningPerson() == null) {
+            if (HandyFunctions.nameValidate(name, editText, db, true, 0)) {
+                val realm = Realm.getDefaultInstance()
+                val db = HuisETDB(realm)
+                db.createOrUpdateIntroPerson(name, false, false, false, context!!)
+
+                editText.setText("")
+            }
         }
     }
 
