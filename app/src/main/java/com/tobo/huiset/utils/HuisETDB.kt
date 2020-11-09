@@ -149,8 +149,11 @@ class HuisETDB(private val realm: Realm) {
      * Finds all persons, even if they are hidden or deleted.
      */
     fun findPersonsIncludingDeleted(): RealmResults<Person> {
-        return realm.where(Person::class.java)
-            .sort("row", Sort.ASCENDING)
+        val query = realm.where(Person::class.java)
+        if (this.getHuisRekening().isDeleted) {
+            query.notEqualTo("huisRekening", true)
+        }
+        return query.sort("row", Sort.ASCENDING)
             .findAll()
     }
 
