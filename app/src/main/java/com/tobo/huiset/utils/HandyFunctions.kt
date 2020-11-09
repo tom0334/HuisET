@@ -64,4 +64,27 @@ object HandyFunctions {
 
         return true
     }
+
+    /**
+     * Validates buyPerAmount amount
+     */
+    fun buyPerAmountValidate(amount: String, editText: EditText): Boolean {
+        if (amount == "") {
+            editText.error = "Vul een aantal in"
+            return false
+        }
+        // amount is 0 or negative
+        if (amount.toInt() < 1) {
+            editText.error = "Aantal moet minimaal 1 zijn"
+            return false
+        }
+        // too big amount
+        val maxPriceLength = 2
+        if (amount.toString().length > maxPriceLength) {
+            editText.error = "Aantal mag niet meer dan $maxPriceLength tekens lang zijn"
+            return false
+        }
+
+        return true
+    }
 }

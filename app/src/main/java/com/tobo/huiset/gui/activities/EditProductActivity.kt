@@ -46,20 +46,21 @@ class EditProductActivity : HuisEtActivity() {
             findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
 
             val kindRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_kindProd)
-            when {
-                oldProduct!!.kind == Product.KIND_TURFABLE -> kindRadioGroup.check(R.id.radio_OnlyTurf_Prod)
-                oldProduct!!.kind == Product.KIND_BUYABLE -> kindRadioGroup.check(R.id.radio_OnlyBuy_Prod)
-                oldProduct!!.kind == Product.KIND_BOTH -> kindRadioGroup.check(R.id.radio_Both_Prod)
+            when (oldProduct!!.kind) {
+                Product.KIND_TURFABLE -> kindRadioGroup.check(R.id.radio_OnlyTurf_Prod)
+                Product.KIND_BUYABLE -> kindRadioGroup.check(R.id.radio_OnlyBuy_Prod)
+                Product.KIND_BOTH -> kindRadioGroup.check(R.id.radio_Both_Prod)
                 else -> kindRadioGroup.check(R.id.radio_Neither_Prod)
             }
 
             val speciesRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_productSpecies)
-            when {
-                oldProduct!!.species == Product.SPECIES_BEER -> speciesRadioGroup.check(R.id.radio_beerProduct)
-                oldProduct!!.species == Product.SPECIES_CRATE -> speciesRadioGroup.check(R.id.radio_crateProduct)
-                oldProduct!!.species == Product.SPECIES_SNACK -> speciesRadioGroup.check(R.id.radio_snackProduct)
+            when (oldProduct!!.species) {
+                Product.SPECIES_BEER -> speciesRadioGroup.check(R.id.radio_beerProduct)
+                Product.SPECIES_SNACK -> speciesRadioGroup.check(R.id.radio_snackProduct)
                 else -> speciesRadioGroup.check(R.id.radio_otherProduct)
             }
+
+            findViewById<EditText>(R.id.buyPerAmount).setText(oldProduct!!.buyPerAmount.toString())
 
             new = false
         }
@@ -181,12 +182,17 @@ class EditProductActivity : HuisEtActivity() {
         val priceEditText = findViewById<EditText>(R.id.price)
         val priceString = priceEditText.text.toString().replace(',','.')
 
+        val amountEditText = findViewById<EditText>(R.id.buyPerAmount)
+        val amountString = amountEditText.text.toString()
+
         if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 1)
-            || !HandyFunctions.priceValidate(priceString, priceEditText)) {
+            || !HandyFunctions.priceValidate(priceString, priceEditText)
+            || !HandyFunctions.buyPerAmountValidate(amountString, amountEditText)) {
             return
         }
 
         val newPrice = priceString.euroToCent()
+        val newAmount = amountString.toInt()
 
         val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
         val newKind = when (selectedKindButton) {
@@ -202,26 +208,19 @@ class EditProductActivity : HuisEtActivity() {
         val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
         val newSpecies = when (selectedSpeciesButton) {
             R.id.radio_beerProduct -> Product.SPECIES_BEER
-            R.id.radio_crateProduct -> Product.SPECIES_CRATE
             R.id.radio_snackProduct -> Product.SPECIES_SNACK
             else -> Product.SPECIES_OTHER
         }
 
-        realm.executeTransaction {
-            if (new) {
-                val product = Product.create(newName, newPrice, newKind, newRow, newSpecies)
-                realm.copyToRealm(product)
-            } else {
-                oldProduct!!.name = newName
-                oldProduct!!.price = newPrice
-                oldProduct!!.kind = newKind
-                oldProduct!!.species = newSpecies
-            }
+        if (new) {
+            db.createProduct(newName, newPrice, newKind, newRow, newSpecies, newAmount)
+        } else {
+            db.editProduct(oldProduct!!, newName, newPrice, newKind, newSpecies, newAmount)
         }
 
         Toast.makeText(
             this,
-            "Product $newName van ${newPrice.toCurrencyString()} toegevoegd/aangepast",
+            "Product $newName van ${newPrice.toCurrencyString()} per $newAmount stuk(s) toegevoegd/aangepast",
             Toast.LENGTH_SHORT
         ).show()
         this.finish()

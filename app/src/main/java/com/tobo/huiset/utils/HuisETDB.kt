@@ -398,7 +398,7 @@ class HuisETDB(private val realm: Realm) {
             }
         }else{
             realm.executeTransaction {
-                val crate = Product.create("Kratje", price, Product.KIND_BUYABLE, 1, Product.SPECIES_CRATE)
+                val crate = Product.create("Bier", price, Product.KIND_BOTH, 0, Product.SPECIES_BEER, 24)
                 realm.copyToRealm(crate)
             }
         }
@@ -406,34 +406,8 @@ class HuisETDB(private val realm: Realm) {
         realm.refresh()
     }
 
-    fun createDemoBeerOrSetPrice(price:Int){
-        val current = getBeerIfExists()
-
-        if(current != null){
-            realm.executeTransaction {
-                current.price = price
-            }
-        }else{
-            realm.executeTransaction {
-                val beer = Product.create("Bier", price, Product.KIND_TURFABLE, 0, Product.SPECIES_BEER)
-                realm.copyToRealm(beer)
-
-                val statiegeld = Product.create("Statiegeld terug", 390, Product.KIND_TURFABLE, 1, Product.SPECIES_OTHER)
-                realm.copyToRealm(statiegeld)
-            }
-            HuisETDB(realm).selectFirstTurfProduct()
-        }
-
-        realm.refresh()
-    }
-
-
     fun getCrateIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_CRATE).findFirst()
-    }
-
-    fun getBeerIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_BEER).findFirst()
+        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_BEER).equalTo("buyPerAmount",  24 as Int).findFirst()
     }
 
     fun copyFromRealm(trans: Transaction): Transaction {
@@ -452,6 +426,31 @@ class HuisETDB(private val realm: Realm) {
                 .equalTo("deleted", false)
                 .findAll().map { it.name }
                 .count { it.toLowerCase().trim() == name.toLowerCase().trim() } > 0
+        }
+    }
+
+    fun createProduct(newName: String, newPrice: Int, newKind: Int, newRow: Int, newSpecies: Int, newAmount: Int) {
+        realm.executeTransaction {
+            val product = Product.create(newName, newPrice, newKind, newRow, newSpecies, newAmount)
+            realm.copyToRealm(product)
+        }
+    }
+
+    fun editProduct(
+        product: Product,
+        newName: String,
+        newPrice: Int,
+        newKind: Int,
+        newSpecies: Int,
+        newAmount: Int
+    ) {
+        realm.executeTransaction {
+            product.name = newName
+            product.price = newPrice
+            product.kind = newKind
+            // product.row should not change
+            product.species = newSpecies
+            product.buyPerAmount = newAmount
         }
     }
 

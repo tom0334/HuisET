@@ -15,6 +15,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.gui.fragments.intro.SlideDismissListener
 import com.tobo.huiset.gui.fragments.intro.SlideFactory
 import com.tobo.huiset.gui.fragments.intro.SlideShowListener
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.HuisETDB
 import io.realm.Realm
 
@@ -37,11 +38,12 @@ class IntroActivity : AppIntro2(){
         val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een huisgenoot profiel", "Er moet minimaal één profiel aangemaakt worden. Later kun je er nog meer aanmaken (ook voor gasten).","Maak profiel","Naam")
         addSlide(createPersonSlide)
 
-        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een krat bier (inclusief statiegeld)?","Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen we voor nu om een standaard bierprijs in te voeren.","Prijs in Euro's",true)
+        val cratePriceSlide = SlideFactory.newPriceSlide(
+            "Wat is de gemiddelde prijs voor een krat bier (excl. statiegeld)?",
+            "Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen we voor nu om een standaard bierprijs in te voeren.",
+            "Prijs in Euro's"
+        )
         addSlide(cratePriceSlide)
-
-        val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje (exclusief statiegeld)?","Dit is gebaseerd op de gekozen prijs per krat, en is later ook nog aan te passen. Het is eventueel afhankelijk van hoe jullie statiegeld verdelen.","Prijs in Euro",false)
-        addSlide(beerPriceSlide)
 
         skipButtonEnabled = false
     }
@@ -51,6 +53,12 @@ class IntroActivity : AppIntro2(){
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         prefs.edit().putBoolean("shownIntro",true).apply()
+
+        val db = HuisETDB(Realm.getDefaultInstance())
+        db.createProduct("Statie krat", 390, Product.KIND_BOTH, 1, Product.SPECIES_OTHER, 1)
+        db.createProduct("Statie fles", 25, Product.KIND_BOTH, 2, Product.SPECIES_OTHER, 1)
+
+        db.close()
         this.finish()
     }
 
