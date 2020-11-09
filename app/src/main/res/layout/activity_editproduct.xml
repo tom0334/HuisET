@@ -24,22 +24,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/buyPerAmountWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/buyPerAmount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="numberDecimal"
-                android:digits="0123456789"
-                android:hint="Aantal per verpakking"
-                />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/priceWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -52,6 +36,22 @@
                 android:digits="0123456789,."
                 android:hint="Prijs totaal (in euro)"
         />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/buyPerAmountWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/buyPerAmount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:digits="0123456789"
+                android:hint="Aantal per verpakking"
+                />
 
     </com.google.android.material.textfield.TextInputLayout>
 
