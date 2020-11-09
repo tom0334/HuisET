@@ -17,6 +17,7 @@ import com.tobo.huiset.gui.fragments.intro.SlideFactory
 import com.tobo.huiset.gui.fragments.intro.SlideShowListener
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.HuisETDB
+import com.tobo.huiset.utils.extensions.edit
 import io.realm.Realm
 
 
@@ -52,13 +53,17 @@ class IntroActivity : AppIntro2(){
         super.onDonePressed(currentFragment)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefs.edit().putBoolean("shownIntro",true).apply()
 
         val db = HuisETDB(Realm.getDefaultInstance())
         db.createProduct("Statie krat", 390, Product.KIND_BOTH, 1, Product.SPECIES_OTHER, 1)
         db.createProduct("Statie fles", 25, Product.KIND_BOTH, 2, Product.SPECIES_OTHER, 1)
-
         db.close()
+        
+        prefs.edit {
+            it.putBoolean(PREFS_INTRO_SHOWN, true)
+            it.putBoolean(PREFS_TURF_CONFETTI_ID, true)
+        }
+
         this.finish()
     }
 

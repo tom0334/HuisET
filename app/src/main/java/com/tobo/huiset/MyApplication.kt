@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.preference.PreferenceManager
 import com.tobo.huiset.gui.activities.IntroActivity
+import com.tobo.huiset.gui.activities.PREFS_INTRO_SHOWN
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ProfileColors
@@ -24,7 +25,7 @@ class MyApplication : Application() {
                 it.putBoolean("firstLaunch",false)
             }
         }
-        if(! prefs.getBoolean("shownIntro",false)){
+        if(! prefs.getBoolean(PREFS_INTRO_SHOWN,false)){
             val intent = Intent(this, IntroActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
