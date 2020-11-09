@@ -409,6 +409,7 @@ class HuisETDB(private val realm: Realm) {
                 val crate = Product.create("Bier", price, Product.KIND_BOTH, 0, Product.SPECIES_BEER, 24)
                 realm.copyToRealm(crate)
             }
+            selectFirstTurfProduct()
         }
 
         realm.refresh()
