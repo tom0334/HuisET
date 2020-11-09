@@ -42,7 +42,11 @@ class EditProductActivity : HuisEtActivity() {
         if (extras != null) {
             val oldId = extras.getString("PRODUCT_ID")
             oldProduct = realm.where(Product::class.java).equalTo("id", oldId).findFirst()!!
-            findViewById<EditText>(R.id.name).setText(oldProduct!!.name)
+            
+            val nameEditText = findViewById<EditText>(R.id.name)
+            nameEditText.setText(oldProduct!!.name)
+            nameEditText.requestFocus()
+
             findViewById<EditText>(R.id.price).setText(oldProduct!!.price.toNumberDecimal())
 
             val kindRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_kindProd)

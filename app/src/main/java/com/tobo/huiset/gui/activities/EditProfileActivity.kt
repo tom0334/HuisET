@@ -36,7 +36,10 @@ class EditProfileActivity : HuisEtActivity() {
         if (extras != null) {
             val oldId = extras.getString("PERSON_ID")
             oldProfile = db.getPersonWithId(oldId)
-            findViewById<EditText>(R.id.name).setText(oldProfile!!.name)
+
+            val nameEditText = findViewById<EditText>(R.id.name)
+            nameEditText.setText(oldProfile!!.name)
+            nameEditText.requestFocus()
 
             val guestRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_guest)
             if (oldProfile!!.isGuest) {

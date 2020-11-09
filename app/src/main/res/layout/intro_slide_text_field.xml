@@ -36,7 +36,7 @@
             android:inputType="textCapWords"
             android:maxLength="12"
             android:maxLines="1"
-
+            android:imeOptions="actionDone"
             android:textColor="@color/white"
             android:textColorHint="@color/greyHintTextColor" />
 

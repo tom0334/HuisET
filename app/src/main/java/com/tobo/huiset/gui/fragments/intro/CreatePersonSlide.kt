@@ -13,7 +13,7 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.HandyFunctions
 
 
-class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener {
+class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener, SlideShowListener {
 
     private lateinit var buttonText:String
     private lateinit var hint:String
@@ -62,6 +62,11 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
         val editText = view.findViewById<TextInputEditText>(R.id.intro_name)
 
         editText.hint = hint
+    }
+
+    override fun onSlideShown() {
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        editText.requestFocus()
     }
 
 }
