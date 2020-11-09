@@ -415,7 +415,7 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun getCrateIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_BEER).equalTo("buyPerAmount",  24 as Int).findFirst()
+        return realm.where(Product::class.java).equalTo("species",Product.SPECIES_BEER).equalTo("buyPerAmount",  24 as Int).findFirst()
     }
 
     fun copyFromRealm(trans: Transaction): Transaction {
