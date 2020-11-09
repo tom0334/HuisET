@@ -39,7 +39,7 @@ class IntroActivity : AppIntro2(){
         addSlide(createPersonSlide)
 
         val cratePriceSlide = SlideFactory.newPriceSlide(
-            "Wat is de prijs voor een krat bier (inclusief statiegeld)?",
+            "Wat is de gemiddelde prijs voor een krat bier (excl. statiegeld)?",
             "Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen we voor nu om een standaard bierprijs in te voeren.",
             "Prijs in Euro's"
         )
