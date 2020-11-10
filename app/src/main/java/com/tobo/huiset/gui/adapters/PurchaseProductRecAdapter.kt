@@ -16,8 +16,7 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
-import java.lang.IllegalArgumentException
-import java.util.HashMap
+import java.util.*
 
 /**
  * Shows products in a recyclerview. These should be updated automatically when the objects are changed in realm
@@ -35,12 +34,12 @@ class PurchaseProductRecAdapter(
      *
      * It has 2 types: a normal product and a new product button
      */
-    companion object{
+    companion object {
         private const val VIEW_TYPE_PRODUCT = 1
         private const val VIEW_TYPE_NEW_PRODUCT_BUTTON = 2
     }
 
-    override fun getItemViewType(position: Int):Int = when(position ){
+    override fun getItemViewType(position: Int): Int = when (position) {
         data?.size -> VIEW_TYPE_NEW_PRODUCT_BUTTON
         else -> VIEW_TYPE_PRODUCT
     }
@@ -51,15 +50,16 @@ class PurchaseProductRecAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val layoutResId = when(viewType){
+        val layoutResId = when (viewType) {
             VIEW_TYPE_PRODUCT -> R.layout.product_purchase_rec_item
             VIEW_TYPE_NEW_PRODUCT_BUTTON -> R.layout.product_purchase_rec_item_new_product
             else -> throw IllegalArgumentException("Invalid view type")
         }
 
-        val view = LayoutInflater.from(fragmentPurchases.context).inflate(layoutResId, parent, false)
+        val view =
+            LayoutInflater.from(fragmentPurchases.context).inflate(layoutResId, parent, false)
 
-        return when(viewType){
+        return when (viewType) {
             VIEW_TYPE_PRODUCT -> ProductViewHolder(view)
             VIEW_TYPE_NEW_PRODUCT_BUTTON -> NewProductRecViewHolder(view)
             else -> throw IllegalArgumentException("Invalid view type")
@@ -67,13 +67,13 @@ class PurchaseProductRecAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(position == data?.size){
+        if (position == data?.size) {
             bindNewProductButton(holder as NewProductRecViewHolder)
 
-        }else{
+        } else {
             val product = data?.get(position)
-            if(product != null){
-                bindProduct(holder as ProductViewHolder,product, position)
+            if (product != null) {
+                bindProduct(holder as ProductViewHolder, product, position)
             }
         }
     }
@@ -85,7 +85,7 @@ class PurchaseProductRecAdapter(
         }
     }
 
-    private fun bindProduct(holder:ProductViewHolder , product: Product, position: Int) {
+    private fun bindProduct(holder: ProductViewHolder, product: Product, position: Int) {
         holder.amountTv.text = getFromMap(product.id).toString()
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
@@ -98,45 +98,75 @@ class PurchaseProductRecAdapter(
         }
 
         if (getFromMap(product.id) > 0) {
-            holder.amountPerBuyTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
-            holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
-            holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
-        }
-        else {
-            holder.amountPerBuyTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
-            holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
-            holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
+            holder.amountPerBuyTv.setTextColor(
+                ContextCompat.getColor(
+                    fragmentPurchases.context!!,
+                    R.color.primaryTextColor
+                )
+            )
+            holder.amountTv.setTextColor(
+                ContextCompat.getColor(
+                    fragmentPurchases.context!!,
+                    R.color.primaryTextColor
+                )
+            )
+            holder.nameTv.setTextColor(
+                ContextCompat.getColor(
+                    fragmentPurchases.context!!,
+                    R.color.primaryTextColor
+                )
+            )
+        } else {
+            holder.amountPerBuyTv.setTextColor(
+                ContextCompat.getColor(
+                    fragmentPurchases.context!!,
+                    R.color.androidStandardTextColor
+                )
+            )
+            holder.amountTv.setTextColor(
+                ContextCompat.getColor(
+                    fragmentPurchases.context!!,
+                    R.color.androidStandardTextColor
+                )
+            )
+            holder.nameTv.setTextColor(
+                ContextCompat.getColor(
+                    fragmentPurchases.context!!,
+                    R.color.androidStandardTextColor
+                )
+            )
         }
 
         holder.itemView.setOnClickListener {
             if (fragmentPurchases.decreasing) {
                 if (amountMap[product.id] == 0) {
-                    Toast.makeText(fragmentPurchases.context, "Mag niet negatief zijn", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        fragmentPurchases.context,
+                        "Mag niet negatief zijn",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
-                }
-                else
+                } else
                     amountMap[product.id] = getFromMap(product.id) - 1
                 fragmentPurchases.increaseCounter(-product.price)
-            }
-            else {
+            } else {
                 amountMap[product.id] = getFromMap(product.id) + 1
                 fragmentPurchases.increaseCounter(product.price)
             }
             notifyItemChanged(position)
 
-            val decFAB: FloatingActionButton = fragmentPurchases.view!!.findViewById(R.id.decreaseFAB)
+            val decFAB: FloatingActionButton =
+                fragmentPurchases.view!!.findViewById(R.id.decreaseFAB)
 
             val empty = amountMap.all { it.value == 0 }
             if (empty) {
                 fragmentPurchases.decreasing = false
                 decFAB.hide()
-            }
-            else {
+            } else {
                 decFAB.show()
             }
         }
     }
-
 
 
     //THE NEW PRODUCT BUTTON IS ALSO AN ITEM
@@ -155,10 +185,10 @@ class PurchaseProductRecAdapter(
     }
 
     fun saveOutState(outState: Bundle) {
-        outState.putSerializable("amountMap",amountMap)
+        outState.putSerializable("amountMap", amountMap)
     }
 
-    fun restoreInstanceState(outState: Bundle){
+    fun restoreInstanceState(outState: Bundle) {
         amountMap = outState.getSerializable("amountMap") as HashMap<String, Int>
     }
 
@@ -169,6 +199,5 @@ class PurchaseProductRecAdapter(
         val amountPerBuyTv = itemView.findViewById<TextView>(R.id.productRecItem_amount)!!
     }
 
-    class NewProductRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    }
+    class NewProductRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }

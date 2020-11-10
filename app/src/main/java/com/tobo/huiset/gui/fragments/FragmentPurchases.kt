@@ -28,10 +28,11 @@ class FragmentPurchases : HuisEtFragment() {
 
     private var pickedPersonId: String? = null
     private var totalPurchasePrice: Int = 0
-    set(value) {
-        field = value
-        view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = "Totaal: ${value.toCurrencyString()}"
-    }
+        set(value) {
+            field = value
+            view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text =
+                "Totaal: ${value.toCurrencyString()}"
+        }
 
     private val prodRecAdapter get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
 
@@ -46,7 +47,11 @@ class FragmentPurchases : HuisEtFragment() {
             field = value
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_purchases, container, false)
     }
 
@@ -55,7 +60,8 @@ class FragmentPurchases : HuisEtFragment() {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
         initProductsRec(view)
-        view.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
+        view.findViewById<TextView>(R.id.purchaseMoneyCounter).text =
+            "Totaal: ${totalPurchasePrice.toCurrencyString()}"
 
         val decFAB = view.findViewById<FloatingActionButton>(R.id.decreaseFAB)
         decFAB.setOnClickListener {
@@ -65,8 +71,8 @@ class FragmentPurchases : HuisEtFragment() {
         decreasing = false
     }
 
-    override fun onTabReactivated(userTapped:Boolean){
-        if(userTapped)
+    override fun onTabReactivated(userTapped: Boolean) {
+        if (userTapped)
             reset()
 
         val decFAB = view!!.findViewById<FloatingActionButton>(R.id.decreaseFAB)
@@ -85,7 +91,12 @@ class FragmentPurchases : HuisEtFragment() {
 
     private fun initProfileRec(view: View) {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
-        pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
+        pickUserRec.addItemDecoration(
+            DividerItemDecoration(
+                pickUserRec.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         val profiles = db.findAllCurrentPersons(true)
 
@@ -100,7 +111,12 @@ class FragmentPurchases : HuisEtFragment() {
     private fun initProductsRec(view: View) {
         val pickProductsRec = view.findViewById<RecyclerView>(R.id.pickProductsRec)
         pickProductsRec.visibility = View.VISIBLE
-        pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
+        pickProductsRec.addItemDecoration(
+            DividerItemDecoration(
+                pickProductsRec.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         val products = db.findAllCurrentProducts(Product.KIND_BUYABLE)
 
@@ -120,9 +136,12 @@ class FragmentPurchases : HuisEtFragment() {
             }
             if (!anythingBought) {
                 Toast.makeText(context, "Geen producten geselecteerd", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    context,
+                    "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             reset()
             db.mergeTransactionsIfPossible(System.currentTimeMillis())
@@ -158,10 +177,10 @@ class FragmentPurchases : HuisEtFragment() {
 
     fun onCreateNewProductClicked() {
         val intent = Intent(this.context, EditProductActivity::class.java)
-        startActivityForResult(intent,2)
+        startActivityForResult(intent, 2)
     }
-    
-    private fun reset(){
+
+    private fun reset() {
         // this resets the chosen person to none, putting you back to the pick person screen
         setPersonAndUpdate(null)
         // clear amounts in recyclerview
@@ -172,20 +191,19 @@ class FragmentPurchases : HuisEtFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("pickedPersonId", pickedPersonId)
-        outState.putInt("totalPurchasePrice",totalPurchasePrice)
+        outState.putInt("totalPurchasePrice", totalPurchasePrice)
         prodRecAdapter.saveOutState(outState)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if(savedInstanceState!= null){
+        if (savedInstanceState != null) {
             totalPurchasePrice = savedInstanceState.getInt("totalPurchasePrice")
             pickedPersonId = savedInstanceState.getString("pickedPersonId")
             setPersonAndUpdate(pickedPersonId)
             prodRecAdapter.restoreInstanceState(savedInstanceState)
         }
     }
-
 
 
 }

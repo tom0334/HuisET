@@ -35,7 +35,7 @@ class HuisETDB(private val realm: Realm) {
      * Deselects all products and changes the selection to the param supplied.
      * if null is supplied, don't select any.
      */
-    fun selectProduct(productToSelect: Product?){
+    fun selectProduct(productToSelect: Product?) {
         realm.executeTransaction {
             // deselect selected product
             realm.where(Product::class.java)
@@ -56,7 +56,7 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Gets the product that was selected in the main.
      */
-    fun getSelectedProduct():Product?{
+    fun getSelectedProduct(): Product? {
         return realm.where(Product::class.java)
             .equalTo("deleted", false)
             .equalTo("selected", true)
@@ -89,19 +89,18 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun doTransactionWithMultiplePersons(persons : List<Person>, amount: Float){
-        val amountPerPerson = amount/ persons.size.toFloat()
+    fun doTransactionWithMultiplePersons(persons: List<Person>, amount: Float) {
+        val amountPerPerson = amount / persons.size.toFloat()
         persons.forEach {
-            doTransactionWithSelectedProduct(it,amountPerPerson)
+            doTransactionWithSelectedProduct(it, amountPerPerson)
         }
     }
-
 
 
     /**
      * Gets the person that is selected in history
      */
-     fun getSelectedPersonInHistory(): Person? {
+    fun getSelectedPersonInHistory(): Person? {
         return realm.where(Person::class.java)
             .equalTo("selectedInHistoryView", true)
             .findFirst()
@@ -125,8 +124,7 @@ class HuisETDB(private val realm: Realm) {
 
         if (kind == Product.KIND_BUYABLE) {
             query.`in`("kind", arrayOf(Product.KIND_BUYABLE, Product.KIND_BOTH))
-        }
-        else if (kind == Product.KIND_TURFABLE) {
+        } else if (kind == Product.KIND_TURFABLE) {
             query.`in`("kind", arrayOf(Product.KIND_TURFABLE, Product.KIND_BOTH))
         }
 
@@ -139,8 +137,8 @@ class HuisETDB(private val realm: Realm) {
     fun findAllCurrentPersons(includeHidden: Boolean): RealmResults<Person> {
         val query = realm.where(Person::class.java)
             .equalTo("deleted", false)
-        if (! includeHidden){
-            query.equalTo("show",true)
+        if (!includeHidden) {
+            query.equalTo("show", true)
         }
         return query.sort("row", Sort.ASCENDING).findAll()
     }
@@ -158,7 +156,7 @@ class HuisETDB(private val realm: Realm) {
      * Find a person with given id. Returns null if argument is null
      */
     fun getPersonWithId(pickedPersonId: String?): Person? {
-        if(pickedPersonId == null) return null
+        if (pickedPersonId == null) return null
         return realm.where(Person::class.java)
             .equalTo("deleted", false)
             .equalTo("id", pickedPersonId)
@@ -168,9 +166,14 @@ class HuisETDB(private val realm: Realm) {
     /**
      * Creates a new transaction with the supplied arguments and saves it in the database.
      */
-    fun createAndSaveTransaction(person: Person, product: Product, amount: Float, buy: Boolean):Transaction{
-        var savedTrans:Transaction? = null
-        realm.executeTransaction{
+    fun createAndSaveTransaction(
+        person: Person,
+        product: Product,
+        amount: Float,
+        buy: Boolean
+    ): Transaction {
+        var savedTrans: Transaction? = null
+        realm.executeTransaction {
             val trans = Transaction.create(person, product, amount, buy)
             person.addTransaction(trans)
             savedTrans = realm.copyToRealmOrUpdate(trans)
@@ -179,7 +182,7 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun createAndSaveTransaction(transaction: Transaction): Transaction {
-        var savedTrans:Transaction? = null
+        var savedTrans: Transaction? = null
         realm.executeTransaction {
             transaction.getPerson(realm, transaction.personId).addTransaction(transaction)
             savedTrans = realm.copyToRealmOrUpdate(transaction)
@@ -192,12 +195,12 @@ class HuisETDB(private val realm: Realm) {
      * if personId is provided, it findss any with that personid
      * if buy i provided, it gives all with that buy value
      */
-    fun getTransactions(personId:String? = null, buy:Boolean? = null): List<Transaction> {
+    fun getTransactions(personId: String? = null, buy: Boolean? = null): List<Transaction> {
         val query = realm.where(Transaction::class.java)
-        if(personId != null){
+        if (personId != null) {
             query.equalTo("personId", personId)
         }
-        if (buy!= null){
+        if (buy != null) {
             query.equalTo("buy", buy)
         }
         return query.findAll()
@@ -232,7 +235,8 @@ class HuisETDB(private val realm: Realm) {
         realm.executeTransaction {
             if (realm.where(Transaction::class.java)
                     .equalTo("personId", oldProfile.id)
-                    .findFirst() == null) {
+                    .findFirst() == null
+            ) {
                 // Actually delete the product from the realm if it isn't involved in any transactions
                 oldProfile.deleteFromRealm()
             } else {
@@ -258,34 +262,35 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun getTransactionsBetween(timeStamp1:Long, timeStamp2:Long): RealmResults<Transaction> {
+    fun getTransactionsBetween(timeStamp1: Long, timeStamp2: Long): RealmResults<Transaction> {
         return realm.where(Transaction::class.java)
-            .between("time",timeStamp1, timeStamp2)
+            .between("time", timeStamp1, timeStamp2)
             .findAll()
     }
 
-    fun mergeTransactionsIfPossible(tooRecentLimit:Long){
+    fun mergeTransactionsIfPossible(tooRecentLimit: Long) {
         ///all transactions from the last 3 minutes, but don't merge ones that are too recent just yet. That could
         // be confusing for the user.
         val threeMinutesAgo = System.currentTimeMillis() - 3 * 60 * 1000
-        val recentTransactions = getTransactionsBetween(threeMinutesAgo,tooRecentLimit).sort("time").toMutableList()
+        val recentTransactions =
+            getTransactionsBetween(threeMinutesAgo, tooRecentLimit).sort("time").toMutableList()
 
 
         var i = 0
-        while((i +1) in recentTransactions.indices){
+        while ((i + 1) in recentTransactions.indices) {
             val first = recentTransactions[i]!!
-            val other = recentTransactions[i+1]!!
+            val other = recentTransactions[i + 1]!!
 
-            if(first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId){
+            if (first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId) {
                 realm.executeTransaction {
                     first.amount += other.amount
                     first.price += other.price
                     other.deleteFromRealm()
-                    recentTransactions.removeAt(i +1)
+                    recentTransactions.removeAt(i + 1)
                 }
                 //Either delete the item that was merged or go on to the next one.
                 //Don't do both at the same time, because the merge result may need to be merged with the next one
-            }else{
+            } else {
                 i++
             }
 
@@ -316,9 +321,13 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun createAndSaveAchievementCompletion(achievement: BaseAchievement,completionTimeStamp: Long,person: Person) : AchievementCompletion{
+    fun createAndSaveAchievementCompletion(
+        achievement: BaseAchievement,
+        completionTimeStamp: Long,
+        person: Person
+    ): AchievementCompletion {
         realm.beginTransaction()
-        val comp = AchievementCompletion.create(achievement.id,completionTimeStamp,person.id)
+        val comp = AchievementCompletion.create(achievement.id, completionTimeStamp, person.id)
         realm.copyToRealm(comp)
         person.addAchievement(comp)
         realm.commitTransaction()
@@ -351,13 +360,13 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun getHuisRekening(): Person {
-        return realm.where(Person::class.java).equalTo("huisRekening",true).findFirst()!!
+        return realm.where(Person::class.java).equalTo("huisRekening", true).findFirst()!!
     }
 
-    fun setHuisRekeningActive(active:Boolean){
+    fun setHuisRekeningActive(active: Boolean) {
         val huisRekening = getHuisRekening()
         realm.executeTransaction {
-            huisRekening.isDeleted =  ! active
+            huisRekening.isDeleted = !active
         }
     }
 
@@ -370,19 +379,26 @@ class HuisETDB(private val realm: Realm) {
     ) {
         this.updateProfileRows()
 
-        val row =  if(first) -1 else findAllCurrentPersons(true).size
+        val row = if (first) -1 else findAllCurrentPersons(true).size
 
         val existingPerson = getFirstNonHuisrekeningPerson()
         if (existingPerson != null) {
             realm.executeTransaction {
                 existingPerson.name = name
-                Toast.makeText(context,"Profiel aangepast: $name",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Profiel aangepast: $name", Toast.LENGTH_SHORT).show()
             }
         } else {
             realm.executeTransaction {
-                val newPerson = Person.create(name, ProfileColors.getNextColor(this), guest, true, row, isHuisRekening)
+                val newPerson = Person.create(
+                    name,
+                    ProfileColors.getNextColor(this),
+                    guest,
+                    true,
+                    row,
+                    isHuisRekening
+                )
                 realm.copyToRealm(newPerson)
-                Toast.makeText(context,"Profiel aangemaakt: $name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Profiel aangemaakt: $name", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -390,23 +406,24 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun hasAtLeastOnePerson(): Boolean {
-        return realm.where(Person::class.java).equalTo("huisRekening",false).findFirst() != null
+        return realm.where(Person::class.java).equalTo("huisRekening", false).findFirst() != null
     }
 
     fun close() {
         realm.close()
     }
 
-    fun createDemoCrateOrSetPrice(price:Int){
+    fun createDemoCrateOrSetPrice(price: Int) {
         val current = getCrateIfExists()
 
-        if(current != null){
+        if (current != null) {
             realm.executeTransaction {
                 current.price = price
             }
-        }else{
+        } else {
             realm.executeTransaction {
-                val crate = Product.create("Bier", price, Product.KIND_BOTH, 0, Product.SPECIES_BEER, 24)
+                val crate =
+                    Product.create("Bier", price, Product.KIND_BOTH, 0, Product.SPECIES_BEER, 24)
                 realm.copyToRealm(crate)
             }
             selectFirstTurfProduct()
@@ -416,7 +433,8 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun getCrateIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("species",Product.SPECIES_BEER).equalTo("buyPerAmount",  24 as Int).findFirst()
+        return realm.where(Product::class.java).equalTo("species", Product.SPECIES_BEER)
+            .equalTo("buyPerAmount", 24).findFirst()
     }
 
     fun copyFromRealm(trans: Transaction): Transaction {
@@ -438,7 +456,14 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun createProduct(newName: String, newPrice: Int, newKind: Int, newRow: Int, newSpecies: Int, newAmount: Int) {
+    fun createProduct(
+        newName: String,
+        newPrice: Int,
+        newKind: Int,
+        newRow: Int,
+        newSpecies: Int,
+        newAmount: Int
+    ) {
         realm.executeTransaction {
             val product = Product.create(newName, newPrice, newKind, newRow, newSpecies, newAmount)
             realm.copyToRealm(product)

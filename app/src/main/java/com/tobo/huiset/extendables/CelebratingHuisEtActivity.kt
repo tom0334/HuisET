@@ -16,12 +16,16 @@ import nl.dionsegijn.konfetti.models.Size
  *
  * This kind of confetti is used for achievements.
  */
-abstract class CelebratingHuisEtActivity: HuisEtActivity(){
+abstract class CelebratingHuisEtActivity : HuisEtActivity() {
 
     fun showAchievements(changed: List<AchievementCompletion>) {
         changed.forEach {
             val a = AchievementManager.getAchievementForCompletion(it)
-            Toast.makeText(this, "Achievement unlocked door ${it.getPerson(realm).name}:\n\"${a.name}\"", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Achievement unlocked door ${it.getPerson(realm).name}:\n\"${a.name}\"",
+                Toast.LENGTH_LONG
+            ).show()
         }
         if (changed.size > 0) {
 
@@ -35,7 +39,7 @@ abstract class CelebratingHuisEtActivity: HuisEtActivity(){
                 .setTimeToLive(2000L)
                 .addShapes(Shape.CIRCLE)
                 .addSizes(Size(12))
-                .setPosition(getDisplayWith() / 2f, getDisplayHeight()/ 2f)
+                .setPosition(getDisplayWith() / 2f, getDisplayHeight() / 2f)
                 .burst(300)
         }
     }

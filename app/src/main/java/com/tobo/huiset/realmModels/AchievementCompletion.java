@@ -1,7 +1,5 @@
 package com.tobo.huiset.realmModels;
 
-import org.jetbrains.annotations.NotNull;
-
 import io.realm.Realm;
 import io.realm.RealmObject;
 
@@ -11,9 +9,10 @@ public class AchievementCompletion extends RealmObject {
     private long timeStamp;
     private String personID;
 
-    public AchievementCompletion(){}
+    public AchievementCompletion() {
+    }
 
-    public static AchievementCompletion create(int achievement, long timeStamp, String personID){
+    public static AchievementCompletion create(int achievement, long timeStamp, String personID) {
         AchievementCompletion comp = new AchievementCompletion();
 
         comp.personID = personID;
@@ -35,6 +34,6 @@ public class AchievementCompletion extends RealmObject {
     }
 
     public Person getPerson(Realm realm) {
-        return realm.where(Person.class).equalTo("id",personID).findFirst();
+        return realm.where(Person.class).equalTo("id", personID).findFirst();
     }
 }

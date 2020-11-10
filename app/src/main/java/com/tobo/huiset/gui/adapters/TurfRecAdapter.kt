@@ -32,26 +32,24 @@ class TurfRecAdapter(
 ) :
     RealmRecyclerViewAdapter<Person, TurfRecAdapter.TurfRecViewHolder>(data, autoUpdate) {
 
-    interface TurfHandler{
+    interface TurfHandler {
         fun handleSingleTurf(person: Person)
-        fun onSelectionChanged(selecting:Boolean)
+        fun onSelectionChanged(selecting: Boolean)
     }
-
-
 
 
     val db by lazy { HuisETDB(realm) }
 
     val selectedPersonIds = mutableSetOf<String>()
 
-    private fun personIsSelected(person:Person) = selectedPersonIds.contains(person.id)
+    private fun personIsSelected(person: Person) = selectedPersonIds.contains(person.id)
 
 
     var selecting = false
-    set(value) {
-        field = value
-        callback.onSelectionChanged(selecting)
-    }
+        set(value) {
+            field = value
+            callback.onSelectionChanged(selecting)
+        }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TurfRecViewHolder {
@@ -67,19 +65,19 @@ class TurfRecAdapter(
         holder.balanceTv.text = person.balance.toCurrencyString()
         holder.balanceTv.setTextColorFromHex(person.balance.getBalanceColorString())
 
-        val bgColor = if(personIsSelected(person)){
-            ContextCompat.getColor(context,R.color.secondaryLightColor)
-        }else{
+        val bgColor = if (personIsSelected(person)) {
+            ContextCompat.getColor(context, R.color.secondaryLightColor)
+        } else {
             Color.parseColor("#ffffff")
 
         }
 
         holder.itemView.setOnClickListener {
             if (selecting) {
-                val reversed = ! personIsSelected(person)
-                setPersonSelected(person,position,reversed)
+                val reversed = !personIsSelected(person)
+                setPersonSelected(person, position, reversed)
 
-                if(selectedPersonIds.isEmpty()){
+                if (selectedPersonIds.isEmpty()) {
                     selecting = false
                 }
 
@@ -90,7 +88,7 @@ class TurfRecAdapter(
 
 
         holder.itemView.setOnLongClickListener {
-            onLongPress(person,position)
+            onLongPress(person, position)
             return@setOnLongClickListener true
         }
 
@@ -99,45 +97,43 @@ class TurfRecAdapter(
     }
 
 
-    fun onLongPress(person: Person, position: Int){
-        selecting = ! selecting
+    fun onLongPress(person: Person, position: Int) {
+        selecting = !selecting
 
-        if(selecting){
-            setPersonSelected(person,position,true)
-        }
-        else if(! selecting){
+        if (selecting) {
+            setPersonSelected(person, position, true)
+        } else if (!selecting) {
             data?.forEachIndexed { index, p ->
-                setPersonSelected(person,index,false)
+                setPersonSelected(person, index, false)
             }
         }
     }
 
-    private fun setPersonSelected(person: Person, index: Int, selected:Boolean) {
-        if(selected){
+    private fun setPersonSelected(person: Person, index: Int, selected: Boolean) {
+        if (selected) {
             selectedPersonIds.add(person.id)
-        }else{
+        } else {
             selectedPersonIds.remove(person.id)
         }
         this.notifyItemChanged(index)
     }
 
 
-
     override fun getItemCount(): Int {
         return if (data == null) 0 else data!!.size
     }
 
-    fun saveState(outState:Bundle) {
-        outState.putStringArrayList("Selected",ArrayList(selectedPersonIds.toList()))
-        outState.putBoolean("Selecting",selecting)
+    fun saveState(outState: Bundle) {
+        outState.putStringArrayList("Selected", ArrayList(selectedPersonIds.toList()))
+        outState.putBoolean("Selecting", selecting)
     }
 
-    fun restoreState(savedInstanceState:Bundle?){
-        if(savedInstanceState == null) return
+    fun restoreState(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) return
         val saved = savedInstanceState.getStringArrayList("Selected") ?: return
         this.selectedPersonIds.addAll(saved)
 
-        if(saved.size > 0){
+        if (saved.size > 0) {
             this.notifyDataSetChanged()
         }
         this.selecting = savedInstanceState.getBoolean("Selecting")

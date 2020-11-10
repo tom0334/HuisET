@@ -12,7 +12,11 @@ import com.tobo.huiset.realmModels.Person
 import io.realm.Realm
 
 
-class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Context, val realm: Realm) :
+class HistoryPersonRecAdapter(
+    val items: MutableList<Person?>,
+    val context: Context,
+    val realm: Realm
+) :
     RecyclerView.Adapter<HistoryPersonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryPersonViewHolder {
@@ -30,15 +34,26 @@ class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Cont
 
         fun setColors(selected: Boolean) {
             if (selected) {
-                holder.rootV.setBackgroundColor(ContextCompat.getColor(context, R.color.secondaryDarkColor))
+                holder.rootV.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.secondaryDarkColor
+                    )
+                )
             } else {
-                holder.rootV.setBackgroundColor(ContextCompat.getColor(context, R.color.primaryDarkColor))
+                holder.rootV.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.primaryDarkColor
+                    )
+                )
             }
         }
 
         if (p == null) {
             holder.personNameTv.text = "Totaal"
-            val selected = realm.where(Person::class.java).equalTo("selectedInHistoryView", true).count() == 0L
+            val selected =
+                realm.where(Person::class.java).equalTo("selectedInHistoryView", true).count() == 0L
             setColors(selected)
         } else {
             holder.personNameTv.text = p.name

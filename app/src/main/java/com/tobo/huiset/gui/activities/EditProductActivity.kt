@@ -3,6 +3,8 @@ package com.tobo.huiset.gui.activities
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -10,16 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
+import com.google.android.material.textfield.TextInputEditText
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.HandyFunctions
 import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
-import android.text.Editable
-import android.text.TextWatcher
-import com.google.android.material.textfield.TextInputEditText
-import com.tobo.huiset.utils.HandyFunctions
 
 
 /**
@@ -42,7 +42,7 @@ class EditProductActivity : HuisEtActivity() {
         if (extras != null) {
             val oldId = extras.getString("PRODUCT_ID")
             oldProduct = realm.where(Product::class.java).equalTo("id", oldId).findFirst()!!
-            
+
             val nameEditText = findViewById<EditText>(R.id.name)
             nameEditText.setText(oldProduct!!.name)
             nameEditText.requestFocus()
@@ -67,8 +67,7 @@ class EditProductActivity : HuisEtActivity() {
             findViewById<EditText>(R.id.buyPerAmount).setText(oldProduct!!.buyPerAmount.toString())
 
             new = false
-        }
-        else {
+        } else {
             showSoftKeyboard(findViewById(R.id.name))
         }
     }
@@ -167,7 +166,11 @@ class EditProductActivity : HuisEtActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->
-                Toast.makeText(this, "Product ${oldProduct!!.name} is verwijderd", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Product ${oldProduct!!.name} is verwijderd",
+                    Toast.LENGTH_SHORT
+                ).show()
                 db.removeProduct(oldProduct!!)
                 db.updateProductRows()
                 this.finish()
@@ -184,21 +187,23 @@ class EditProductActivity : HuisEtActivity() {
         val newName = nameEditText.text.toString()
 
         val priceEditText = findViewById<EditText>(R.id.price)
-        val priceString = priceEditText.text.toString().replace(',','.')
+        val priceString = priceEditText.text.toString().replace(',', '.')
 
         val amountEditText = findViewById<EditText>(R.id.buyPerAmount)
         val amountString = amountEditText.text.toString()
 
         if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 1)
             || !HandyFunctions.priceValidate(priceString, priceEditText)
-            || !HandyFunctions.buyPerAmountValidate(amountString, amountEditText)) {
+            || !HandyFunctions.buyPerAmountValidate(amountString, amountEditText)
+        ) {
             return
         }
 
         val newPrice = priceString.euroToCent()
         val newAmount = amountString.toInt()
 
-        val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
+        val selectedKindButton =
+            findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
         val newKind = when (selectedKindButton) {
             R.id.radio_OnlyTurf_Prod -> Product.KIND_TURFABLE
             R.id.radio_OnlyBuy_Prod -> Product.KIND_BUYABLE
@@ -209,7 +214,8 @@ class EditProductActivity : HuisEtActivity() {
         db.updateProductRows()
         val newRow = db.findAllCurrentProducts(Product.KIND_BOTH).size
 
-        val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
+        val selectedSpeciesButton =
+            findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
         val newSpecies = when (selectedSpeciesButton) {
             R.id.radio_beerProduct -> Product.SPECIES_BEER
             R.id.radio_snackProduct -> Product.SPECIES_SNACK

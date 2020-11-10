@@ -34,7 +34,8 @@ class TransferPersonRecAdapter(
     val chosenMap = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.person_transfer_rec_item, parent, false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.person_transfer_rec_item, parent, false)
         return PersonViewHolder(view)
     }
 
@@ -53,20 +54,33 @@ class TransferPersonRecAdapter(
         if (chosenMap.contains(person.id)) {
             holder.nameTv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor))
             holder.selectedTv.visibility = View.VISIBLE
-            holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.primaryTextColor))
-        }
-        else {
-            holder.nameTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
+            holder.checkedIv.setColorFilter(
+                ContextCompat.getColor(
+                    transferMoneyActivity,
+                    R.color.primaryTextColor
+                )
+            )
+        } else {
+            holder.nameTv.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.androidStandardTextColor
+                )
+            )
             holder.selectedTv.visibility = View.GONE
-            holder.checkedIv.setColorFilter(ContextCompat.getColor(transferMoneyActivity, R.color.grey))
+            holder.checkedIv.setColorFilter(
+                ContextCompat.getColor(
+                    transferMoneyActivity,
+                    R.color.grey
+                )
+            )
         }
 
         holder.itemView.setOnClickListener {
             if (!chosenMap.contains(person.id)) {
                 chosenMap.add(person.id)
                 transferMoneyActivity.increaseSelectedPersonsCounter(true)
-            }
-            else {
+            } else {
                 chosenMap.remove(person.id)
                 transferMoneyActivity.increaseSelectedPersonsCounter(false)
             }

@@ -1,18 +1,19 @@
 package com.tobo.huiset.realmModels;
 
 import com.tobo.huiset.utils.ToboTime;
+
+import java.util.UUID;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-import java.util.UUID;
-
 public class Transaction extends RealmObject {
 
     @PrimaryKey
-    private String id = UUID.randomUUID().toString();
+    private final String id = UUID.randomUUID().toString();
 
-    private long time = System.currentTimeMillis();
+    private final long time = System.currentTimeMillis();
     private String personId;
     private String productId;
     private int price;
@@ -31,7 +32,7 @@ public class Transaction extends RealmObject {
         t.buy = buy;
         t.amount = buy ? product.getBuyPerAmount() * amount : amount;
         int divideBy = buy ? 1 : product.getBuyPerAmount();
-        t.price =  Math.round((float) product.getPrice() / divideBy * amount);
+        t.price = Math.round((float) product.getPrice() / divideBy * amount);
         return t;
     }
 
@@ -62,8 +63,8 @@ public class Transaction extends RealmObject {
         return productId;
     }
 
-    public float getSaldoImpact(){
-        if(isBuy()) return  price;
+    public float getSaldoImpact() {
+        if (isBuy()) return price;
         else return -1 * price;
     }
 

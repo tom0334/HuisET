@@ -12,7 +12,8 @@ import java.text.SimpleDateFormat
 /**
  * This is he view that is shown when clicking on a datapoint in a graph
  */
-class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
+class CustomMarkerView(context: Context, layoutResource: Int) :
+    MarkerView(context, layoutResource) {
     private val bottomTv: TextView = findViewById(R.id.markerViewDate)
     private val topTv: TextView = findViewById(R.id.markerViewTV)
     private var mOffset: MPPointF? = null
@@ -29,7 +30,7 @@ class CustomMarkerView(context: Context, layoutResource: Int) : MarkerView(conte
      * Called everytime the MarkerView is redrawn. Shows date and amount
      */
     override fun refreshContent(e: Entry, highlight: Highlight) {
-        topTv.setText("${e.y.toInt()} bier")
+        topTv.text = "${e.y.toInt()} bier"
         val date = e.x.toLong()
         val mFormat = SimpleDateFormat("dd-MM HH:mm")
         bottomTv.text = mFormat.format(date)

@@ -5,30 +5,31 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.getDb
 
 abstract class BaseAchievement {
-    abstract val id:Int
+    abstract val id: Int
 
-    abstract val updateOnTurf:Boolean
-    abstract val updateOnBuy:Boolean
-    abstract val updateOnLaunch:Boolean
+    abstract val updateOnTurf: Boolean
+    abstract val updateOnBuy: Boolean
+    abstract val updateOnLaunch: Boolean
 
-    abstract val name:String
-    abstract val description:String
+    abstract val name: String
+    abstract val description: String
+
     //should check if
     abstract fun checkIfAchieved(
         person: Person,
         helpData: AchievementUpdateHelpData
-    ):Long?
+    ): Long?
 
-    fun update(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion?{
-        if(wasAchieved(person)) return null
+    fun update(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion? {
+        if (wasAchieved(person)) return null
 
-        val completionTimeStamp = checkIfAchieved(person,helpData) ?: return null
+        val completionTimeStamp = checkIfAchieved(person, helpData) ?: return null
 
-        return person.getDb().createAndSaveAchievementCompletion(this, completionTimeStamp,person)
+        return person.getDb().createAndSaveAchievementCompletion(this, completionTimeStamp, person)
 
     }
 
-    fun wasAchieved(person: Person):Boolean{
+    fun wasAchieved(person: Person): Boolean {
         return getAchievemoment(person) != null
     }
 

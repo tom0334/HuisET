@@ -1,7 +1,6 @@
 package com.tobo.huiset.utils
 
 import android.widget.EditText
-import com.google.android.material.snackbar.Snackbar
 
 object HandyFunctions {
 
@@ -26,7 +25,8 @@ object HandyFunctions {
         // name is huisrekening
         if (zeroIfPerson_oneIfProduct == 0
             && name.toLowerCase().trim() == "huisrekening"
-            && !isHuisRekening) {
+            && !isHuisRekening
+        ) {
             editText.error = "Huisrekening kan alleen via instellingen aangezet worden"
             return false
         }

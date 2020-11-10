@@ -20,7 +20,7 @@ abstract class HuisEtFragment : Fragment() {
         (this.activity as HuisEtActivity).realm
     }
 
-    val db by lazy{
+    val db by lazy {
         if (this.activity == null) throw Exception("HuisEtFragment: Error: tried to access db before activity was attached!")
         (this.activity as HuisEtActivity).db
     }
@@ -28,13 +28,13 @@ abstract class HuisEtFragment : Fragment() {
     /**
      * Does nothing by default, but can be overridden by subclasses. Used for merging transactions for example.
      */
-    open fun onTabReactivated(userTapped: Boolean){}
+    open fun onTabReactivated(userTapped: Boolean) {}
 
     /**
      * Allows the fragment to respond to back button presses. Returns whether the action was consumed by the fragment.
      * So: return false when you want the activity to handle it.
      */
-    open fun onBackButtonPressed():Boolean{
+    open fun onBackButtonPressed(): Boolean {
         return false
     }
 }

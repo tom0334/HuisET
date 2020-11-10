@@ -29,7 +29,8 @@ class PurchasePersonRecAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.person_purchase_rec_item, parent, false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.person_purchase_rec_item, parent, false)
         return PersonViewHolder(view)
     }
 

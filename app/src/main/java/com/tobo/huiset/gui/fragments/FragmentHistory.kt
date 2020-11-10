@@ -31,7 +31,16 @@ class FragmentHistory : HuisEtFragment() {
 
 
     private val timeNames =
-        arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar")
+        arrayOf<CharSequence>(
+            "1 uur",
+            "8 uur",
+            "1 dag",
+            "1 week",
+            "1 maand",
+            "3 maanden",
+            "6 maanden",
+            "1 jaar"
+        )
 
     private val TIMEDIFF_ONE_HOUR = 0
     private val TIMEDIFF_EIGHT_HOURS = 1
@@ -44,11 +53,15 @@ class FragmentHistory : HuisEtFragment() {
 
     private var timeDiffSelected: Int = TIMEDIFF_ONE_DAY
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
-    override fun onTabReactivated(userTapped:Boolean){
+    override fun onTabReactivated(userTapped: Boolean) {
         initTimePoints(view!!)
         updatePersons()
         updateHistory()
@@ -107,7 +120,8 @@ class FragmentHistory : HuisEtFragment() {
         builder.setTitle("Kies tijdperiode")
 
 
-        builder.setSingleChoiceItems(timeNames, timeDiffSelected
+        builder.setSingleChoiceItems(
+            timeNames, timeDiffSelected
         ) { dialog, item: Int ->
             timeDiffSelected = item
 
@@ -124,7 +138,12 @@ class FragmentHistory : HuisEtFragment() {
     private fun setupPersonRec(view: View) {
         val historyPersonRec = view.findViewById<RecyclerView>(R.id.historyPersonRec)
         personAdap = HistoryPersonRecAdapter(mutableListOf(), this.context!!, realm)
-        historyPersonRec.addItemDecoration(DividerItemDecoration(historyPersonRec.context, DividerItemDecoration.VERTICAL))
+        historyPersonRec.addItemDecoration(
+            DividerItemDecoration(
+                historyPersonRec.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         historyPersonRec.adapter = personAdap
         historyPersonRec.layoutManager = LinearLayoutManager(this.context!!)
 
@@ -153,11 +172,11 @@ class FragmentHistory : HuisEtFragment() {
 
             val selectedPerson = db.getSelectedPersonInHistory()
 
-            noDataTextView.text = when{
+            noDataTextView.text = when {
                 selectedPerson != null && showBuy -> "${selectedPerson.name} heeft niets gekocht deze periode!"
                 selectedPerson != null && !showBuy -> "${selectedPerson.name} heeft niets geturft deze periode!"
                 selectedPerson == null && !showBuy -> "Niemand heeft iets geturft deze periode!"
-                else-> "Niemand heeft iets gekocht deze periode!"
+                else -> "Niemand heeft iets gekocht deze periode!"
 
             }
         } else {
@@ -169,7 +188,7 @@ class FragmentHistory : HuisEtFragment() {
         this.historyAdapter.notifyDataSetChanged()
     }
 
-    private fun updatePersons(){
+    private fun updatePersons() {
         val persons = mutableListOf<Person?>(null)
         persons.addAll(db.findPersonsIncludingDeleted())
         personAdap.items.clear()
@@ -191,10 +210,12 @@ class FragmentHistory : HuisEtFragment() {
 
         val transactions = when (val selectedPerson = db.getSelectedPersonInHistory()) {
             null -> realm.where(Transaction::class.java).findAll()
-            else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id).findAll()
+            else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id)
+                .findAll()
         }
 
-        val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
+        val inTimeSpan =
+            transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
         /**
          * class key starts with a lowercase letter, because it can't be found otherwise
@@ -204,16 +225,24 @@ class FragmentHistory : HuisEtFragment() {
         fun Transaction.tokey(): key {
             return key(this.productId, this.isBuy)
         }
+
         val res = inTimeSpan
             .asSequence()
-            .filter { it.isBuy == showBuy}
+            .filter { it.isBuy == showBuy }
             .filter { it.product != null }
-            .groupBy { it.tokey()}
-            .map { (key, values) -> HistoryItem(db.getProductWithId(key.productId)!!.name, values.sumByFloat { it.amount}, values.sumByFloat{ it.saldoImpact }.roundToInt(), false) }
+            .groupBy { it.tokey() }
+            .map { (key, values) ->
+                HistoryItem(
+                    db.getProductWithId(key.productId)!!.name,
+                    values.sumByFloat { it.amount },
+                    values.sumByFloat { it.saldoImpact }.roundToInt(),
+                    false
+                )
+            }
             .sortedByDescending { it.amount }.toMutableList()
 
 
-        if(res.isEmpty()) return res.toList()
+        if (res.isEmpty()) return res.toList()
 
 
         val totalAmount = res.sumByFloat { it.amount }

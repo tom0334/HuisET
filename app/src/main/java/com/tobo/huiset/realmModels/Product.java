@@ -1,9 +1,9 @@
 package com.tobo.huiset.realmModels;
 
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-
-import java.util.UUID;
 
 public class Product extends RealmObject {
 
@@ -17,7 +17,7 @@ public class Product extends RealmObject {
     public static final int SPECIES_OTHER = 3;
 
     @PrimaryKey
-    private String id = UUID.randomUUID().toString();
+    private final String id = UUID.randomUUID().toString();
     private String name;
     private int price;
     private int kind;   // what kind of product it is (Only turfable, only buyable or both)

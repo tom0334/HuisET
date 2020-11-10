@@ -9,17 +9,23 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
-import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.achievements.BaseAchievement
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.toMixedTimeString
 
 
-class AchievementsAdapter(private val items: List<BaseAchievement>, val persons: List<Person>, val context: Context) :
+class AchievementsAdapter(
+    private val items: List<BaseAchievement>,
+    val persons: List<Person>,
+    val context: Context
+) :
     RecyclerView.Adapter<AchievementsAdapter.AchievementViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AchievementViewHolder {
-        return AchievementViewHolder(LayoutInflater.from(context).inflate(R.layout.achievement_rec_item, parent, false))
+        return AchievementViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.achievement_rec_item, parent, false)
+        )
     }
 
     override fun getItemCount(): Int {
@@ -36,20 +42,23 @@ class AchievementsAdapter(private val items: List<BaseAchievement>, val persons:
 
         val personsThatAchievedThis = persons.filter { item.wasAchieved(it) }.sortedBy { it.row }
 
-        holder.noOneText.visibility = if(personsThatAchievedThis.isEmpty()) View.VISIBLE else View.GONE
+        holder.noOneText.visibility =
+            if (personsThatAchievedThis.isEmpty()) View.VISIBLE else View.GONE
 
 
-        for (p in personsThatAchievedThis){
-            val child = View.inflate(context,R.layout.achievement_person,null)
+        for (p in personsThatAchievedThis) {
+            val child = View.inflate(context, R.layout.achievement_person, null)
             child.findViewById<TextView>(R.id.achievement_person_name).text = p.name
-            child.findViewById<TextView>(R.id.achievement_person_date).text = item.getAchievemoment(p)?.timeStamp?.toMixedTimeString()
-            child.findViewById<View>(R.id.achievement_person_color).setBackgroundColor(Color.parseColor(p.color))
+            child.findViewById<TextView>(R.id.achievement_person_date).text =
+                item.getAchievemoment(p)?.timeStamp?.toMixedTimeString()
+            child.findViewById<View>(R.id.achievement_person_color)
+                .setBackgroundColor(Color.parseColor(p.color))
             placeHolder.addView(child)
         }
 
     }
 
-    class AchievementViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class AchievementViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val achievementName = view.findViewById<TextView>(R.id.achievement_name)!!
         val description = view.findViewById<TextView>(R.id.achievement_description)!!
         val nameHolder = view.findViewById<LinearLayout>(R.id.achivement_person_container)!!

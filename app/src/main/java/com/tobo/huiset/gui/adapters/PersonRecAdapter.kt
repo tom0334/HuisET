@@ -1,14 +1,11 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentProfiles
-import android.R.attr.*
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
@@ -34,7 +31,8 @@ class PersonRecAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
-        val view = LayoutInflater.from(fragmentProfiles.context).inflate(R.layout.person_rec_item, parent, false)
+        val view = LayoutInflater.from(fragmentProfiles.context)
+            .inflate(R.layout.person_rec_item, parent, false)
         return PersonViewHolder(view)
     }
 
@@ -62,7 +60,8 @@ class PersonRecAdapter(
         holder.upIv.setOnClickListener {
             fragmentProfiles.updateRows()
             realm.executeTransaction {
-                val other = realm.where(Person::class.java).equalTo("row", person.row - 1).findFirst()
+                val other =
+                    realm.where(Person::class.java).equalTo("row", person.row - 1).findFirst()
                 if (other != null) {
                     other.row += 1
                     person.row -= 1
@@ -74,7 +73,8 @@ class PersonRecAdapter(
         holder.downIv.setOnClickListener {
             fragmentProfiles.updateRows()
             realm.executeTransaction {
-                val other = realm.where(Person::class.java).equalTo("row", person.row + 1).findFirst()
+                val other =
+                    realm.where(Person::class.java).equalTo("row", person.row + 1).findFirst()
                 if (other != null) {
                     other.row -= 1
                     person.row += 1
