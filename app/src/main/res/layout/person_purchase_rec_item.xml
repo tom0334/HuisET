@@ -17,6 +17,15 @@
             />
 
 
+    <ImageView
+            android:id="@+id/personRecItem_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_home_black_24"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            />
+
     <TextView
             android:id="@+id/personRecItem_name"
             android:fontFamily="sans-serif-medium"
