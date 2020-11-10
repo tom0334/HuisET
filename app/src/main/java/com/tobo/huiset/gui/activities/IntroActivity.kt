@@ -36,7 +36,7 @@ class IntroActivity : AppIntro2(){
         val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Een huisrekening is een gedeelde bankrekening waar gezamenlijke inkopen van worden betaald.", "Ja, wij gebruiken een huisrekening.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
         addSlide(huisRekeningSlide)
 
-        val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een huisgenoot profiel", "Er moet minimaal één profiel aangemaakt worden. Later kun je er nog meer aanmaken (ook voor gasten).","Maak profiel","Naam")
+        val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak een huisgenoot profiel aan.", "Later kun je meer profielen aanmaken (ook voor gasten).","Maak profiel","Naam")
         addSlide(createPersonSlide)
 
         val cratePriceSlide = SlideFactory.newPriceSlide(
@@ -76,22 +76,6 @@ class IntroActivity : AppIntro2(){
         if(newFragment is SlideShowListener){
             (newFragment as SlideShowListener).onSlideShown()
         }
-    }
-
-    fun createPerson(name: String) {
-        if(name.isEmpty()){
-            Toast.makeText(this,"Typ eerst een naam in!",Toast.LENGTH_SHORT).show()
-            return
-        }
-        val realm = Realm.getDefaultInstance()
-        val db = HuisETDB(realm)
-        db.createAndSavePerson(name,
-            guest = false,
-            show = true,
-            huisEtRekening = false,
-            first = false
-        )
-        Toast.makeText(this,"Profiel gemaakt: $name",Toast.LENGTH_SHORT).show()
     }
 
     /**
