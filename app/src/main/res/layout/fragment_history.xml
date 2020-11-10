@@ -30,7 +30,7 @@
                 android:layout_width="28dp"
                 android:layout_height="48dp"
                 android:src="@drawable/baseline_keyboard_arrow_left_white_24"
-                android:background="@color/secondaryColor"
+                android:background="@drawable/image_button_selector"
                  />
 
 
@@ -116,8 +116,8 @@
                 android:padding="0dp"
                 android:layout_width="28dp"
                 android:layout_height="48dp"
+                android:background="@drawable/image_button_selector"
                 android:src="@drawable/baseline_keyboard_arrow_right_white_24"
-                android:background="@color/secondaryColor"
                 />
 
         </LinearLayout>
