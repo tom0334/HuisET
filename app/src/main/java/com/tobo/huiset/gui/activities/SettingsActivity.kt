@@ -11,6 +11,7 @@ import com.tobo.huiset.utils.extensions.edit
 const val PREFS_FULLSCREEN_ID = "FullscreenEnabled"
 const val PREFS_HIDEAPPBAR_ID = "HideAppBarEnabled"
 const val PREFS_TURF_CONFETTI_ID = "TurfConfettiEnabled"
+const val PREFS_INTRO_SHOWN = "IntroIsShown"
 
 class SettingsActivity : HuisEtActivity() {
 
