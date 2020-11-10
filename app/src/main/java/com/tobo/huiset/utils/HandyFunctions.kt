@@ -24,11 +24,23 @@ object HandyFunctions {
         }
 
         // name is huisrekening
-        if (zeroIfPerson_oneIfProduct == 0
-            && name.toLowerCase().trim() == "huisrekening"
-            && !isHuisRekening) {
-            editText.error = "Huisrekening kan alleen via instellingen aangezet worden"
-            return false
+        if (zeroIfPerson_oneIfProduct == 0) { // if person
+            if (name.toLowerCase().trim() == "huisrekening" && !isHuisRekening) {
+                editText.error = "Huisrekening kan alleen via instellingen aangezet worden"
+                return false
+            }
+        }
+
+        if (zeroIfPerson_oneIfProduct == 1) { // if product
+            if (name.trim() == "Balans") {
+                editText.error = "Product mag niet Balans heten"
+                return false
+            }
+
+            if (name.trim() == "Verschil") {
+                editText.error = "Product mag niet Verschil heten"
+                return false
+            }
         }
 
         // duplicate names are not accepted, except if the old person is deleted
