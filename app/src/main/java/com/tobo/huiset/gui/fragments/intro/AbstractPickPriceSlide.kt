@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.fragments.intro
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -34,6 +35,7 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val text = getInitialPrice().toCharArray()
         editText.setText(text,0,text.size)
+        editText.setRawInputType(InputType.TYPE_CLASS_NUMBER)
     }
 
     override fun isPolicyRespected(): Boolean {
