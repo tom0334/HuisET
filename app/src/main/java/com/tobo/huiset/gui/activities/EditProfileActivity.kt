@@ -142,7 +142,8 @@ class EditProfileActivity : HuisEtActivity() {
         val nameEditText = findViewById<EditText>(R.id.name)
         val newName = nameEditText.text.toString()
 
-        if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 0, oldProfile!!.isHuisRekening)) {
+        val isHuisRekening = if (oldProfile != null) oldProfile!!.isHuisRekening else false
+        if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 0, isHuisRekening)) {
             return
         }
 
