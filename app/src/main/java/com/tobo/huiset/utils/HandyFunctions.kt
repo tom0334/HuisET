@@ -13,7 +13,8 @@ object HandyFunctions {
         editText: EditText,
         db: HuisETDB,
         checkForDuplicateName: Boolean,
-        zeroIfPerson_oneIfProduct: Int
+        zeroIfPerson_oneIfProduct: Int,
+        isHuisRekening: Boolean = false
     ): Boolean {
 
         // empty fields are not accepted
@@ -23,7 +24,9 @@ object HandyFunctions {
         }
 
         // name is huisrekening
-        if (name.toLowerCase().trim() == "huisrekening") {
+        if (zeroIfPerson_oneIfProduct == 0
+            && name.toLowerCase().trim() == "huisrekening"
+            && !isHuisRekening) {
             editText.error = "Huisrekening kan alleen via instellingen aangezet worden"
             return false
         }
