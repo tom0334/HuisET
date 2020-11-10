@@ -201,7 +201,8 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun findHistoryItems(): List<HistoryItem> {
 
-        val transactions = when (val selectedPerson = db.getSelectedPersonInHistory()) {
+        val selectedPerson = db.getSelectedPersonInHistory()
+        val transactions = when (selectedPerson) {
             null -> realm.where(Transaction::class.java).findAll()
             else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id).findAll()
         }
@@ -271,6 +272,18 @@ class FragmentHistory : HuisEtFragment() {
         val totalAmount = res.sumByFloat { it.amount }
         val totalPrice = res.sumBy { it.price }
         res.add(HistoryItem("Totaal", totalAmount, totalPrice, true))
+
+        // Calculate total balance
+        val persons = when (selectedPerson) {
+            null -> realm.where(Person::class.java).findAll()
+            else -> realm.where(Person::class.java).equalTo("id", selectedPerson.id).findAll()
+        }
+        val peopleWithBalance = persons.filter { it.balance != 0 }.size.toFloat()
+        val totalBalance = persons.sumByFloat { it.balance.toFloat() }.toInt()
+        res.add(HistoryItem("Balans", peopleWithBalance, totalBalance, false))
+
+        // Calculate difference between total balance and total price
+        res.add(HistoryItem("Verschil", -1f, totalBalance - totalPrice, false))
 
         return res.toList()
     }
