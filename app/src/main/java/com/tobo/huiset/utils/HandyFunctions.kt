@@ -37,8 +37,13 @@ object HandyFunctions {
                 return false
             }
 
-            if (name.trim() == "Verschil") {
-                editText.error = "Product mag niet Verschil heten"
+            if (name.trim() == "Ontvangen") {
+                editText.error = "Product mag niet Ontvangen heten"
+                return false
+            }
+
+            if (name.trim() == "Overgemaakt") {
+                editText.error = "Product mag niet Overgemaakt heten"
                 return false
             }
         }

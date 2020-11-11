@@ -283,7 +283,16 @@ class FragmentHistory : HuisEtFragment() {
         res.add(HistoryItem("Balans", peopleWithBalance, totalBalance, false))
 
         // Calculate difference between total balance and total price
-        res.add(HistoryItem("Verschil", -1f, totalBalance - totalPrice, false))
+        if (selectedPerson != null && showBuy == SHOW_NETTO) {
+            val historyItem: HistoryItem
+            val balancePriceDiff = totalBalance - totalPrice
+            historyItem = if (balancePriceDiff < 0) {
+                HistoryItem("Ontvangen", -1f, -balancePriceDiff, false)
+            } else {
+                HistoryItem("Overgemaakt", -1f, balancePriceDiff, false)
+            }
+            res.add(historyItem)
+        }
 
         return res.toList()
     }

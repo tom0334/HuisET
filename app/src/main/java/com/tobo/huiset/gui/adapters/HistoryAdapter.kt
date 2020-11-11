@@ -44,7 +44,7 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
                 layoutParams.topMargin = 0
                 layoutParams.bottomMargin = 0
             }
-            "Verschil" -> {
+            "Ontvangen", "Overgemaakt" -> {
                 holder.amountTv.text = ""
                 setAllTextColors(holder, ContextCompat.getColor(context, R.color.greyHintTextColor))
                 layoutParams.topMargin = 40
