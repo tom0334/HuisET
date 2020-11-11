@@ -328,7 +328,8 @@ class HuisETDB(private val realm: Realm) {
     fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
         return realm.where(Person::class.java)
             .equalTo("deleted", false)
-            .not().`in`("balance", arrayOf(0))
+            .equalTo("guest", false)
+            .or().not().`in`("balance", arrayOf(0))
             .sort("row", Sort.ASCENDING)
             .findAll()
     }
