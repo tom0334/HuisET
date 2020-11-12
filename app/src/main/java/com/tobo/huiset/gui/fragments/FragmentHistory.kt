@@ -34,7 +34,7 @@ class FragmentHistory : HuisEtFragment() {
     private var showBuy = SHOW_TURFED
 
     private val timeNames =
-        arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar")
+        arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar", "Altijd")
 
     private val TIMEDIFF_ONE_HOUR = 0
     private val TIMEDIFF_EIGHT_HOURS = 1
@@ -44,6 +44,7 @@ class FragmentHistory : HuisEtFragment() {
     private val TIMEDIFF_THREE_MONTHS = 5
     private val TIMEDIFF_HALF_YEAR = 6
     private val TIMEDIFF_YEAR = 7
+    private val TIMEDIFF_ALWAYS = 8
 
     private var timeDiffSelected: Int = TIMEDIFF_ONE_DAY
 
@@ -65,15 +66,24 @@ class FragmentHistory : HuisEtFragment() {
 
 
         view.findViewById<ImageButton>(R.id.historyGoBackwardsButton).setOnClickListener {
+            val newEarly = getAdvancedTime(earlyTimePoint, backwards = true)
+            if (newEarly < 0) {
+                Toast.makeText(
+                    this.context!!,
+                    "Oeps, onze tijdmachine gaat niet verder terug dan dit.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            this.earlyTimePoint = newEarly
             this.lateTimePoint = getAdvancedTime(lateTimePoint, backwards = true)
-            this.earlyTimePoint = getAdvancedTime(earlyTimePoint, backwards = true)
             updateHistory()
             updateTimePointsText()
         }
 
         view.findViewById<ImageButton>(R.id.historyGoFowardsButton).setOnClickListener {
             val newLate = getAdvancedTime(lateTimePoint, backwards = false)
-
             if (newLate > System.currentTimeMillis()) {
                 Toast.makeText(
                     this.context!!,
@@ -83,7 +93,7 @@ class FragmentHistory : HuisEtFragment() {
                 return@setOnClickListener
             }
 
-            this.lateTimePoint = getAdvancedTime(lateTimePoint, backwards = false)
+            this.lateTimePoint = newLate
             this.earlyTimePoint = getAdvancedTime(earlyTimePoint, backwards = false)
             updateHistory()
             updateTimePointsText()
@@ -322,6 +332,7 @@ class FragmentHistory : HuisEtFragment() {
             TIMEDIFF_THREE_MONTHS -> cal.add(Calendar.MONTH, multiplier * 3)
             TIMEDIFF_HALF_YEAR -> cal.add(Calendar.MONTH, multiplier * 6)
             TIMEDIFF_YEAR -> cal.add(Calendar.YEAR, multiplier * 1)
+            TIMEDIFF_ALWAYS -> cal.add(Calendar.YEAR, multiplier * Calendar.getInstance().get(Calendar.YEAR))
         }
         return cal.time.time
     }
