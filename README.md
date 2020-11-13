@@ -6,7 +6,7 @@ This app can keep track of who purchased and who used convenient to share grocer
 
 Apart from that, the app also lets you input custom expenses to easily share the costs of cooking a shared meal, or for other costs that you want to split among housemates.
 
-As long as everyone in the house tries to keep the balance, this means you well almost never have to transfer money to your housemates. But if you want to, the app lets you make corrections by transferring some money and inputting that in the app.
+As long as everyone in the house tries to keep the balance, this means you will almost never have to transfer money to your housemates. But if you want to, the app lets you make corrections by transferring some money and inputting that in the app.
 
 ![Screenshotafbeelding](https://play-lh.googleusercontent.com/O1ph6BMeH-YHy0bdKDP1sjnJhzknFFEgF79-RzSM1czG5Cku7UZUjjT3R5NFgOtYpvA=w1844-h900-rw)
 
