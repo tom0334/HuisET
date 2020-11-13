@@ -171,7 +171,7 @@ class FragmentHistory : HuisEtFragment() {
 
     private fun updatePersons(){
         val persons = mutableListOf<Person?>(null)
-        persons.addAll(db.findPersonsIncludingDeleted())
+        persons.addAll(db.findPersonsIncludingDeletedExceptHuisrekening())
         personAdap.items.clear()
         personAdap.items.addAll(persons)
         personAdap.notifyDataSetChanged()
