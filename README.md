@@ -1,5 +1,5 @@
 
-# HuisET: An Android app to manage the finances of a students living together
+# HuisET: An Android app to manage the finances of students living together
 [Play store link](https://play.google.com/store/apps/details?id=com.tobo.huiset&hl=nl)
 
 This app can keep track of who purchased and who used convenient to share groceries.  The app uses that information to keep track of the financial balance among housemates. This is extremely convenient for food that you want to share with your housemates like eggs, drinks, snacks and toilet paper.
