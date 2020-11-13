@@ -41,6 +41,12 @@ class TransferPersonRecAdapter(
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = data?.get(position) ?: return
 
+        if (person.isHuisRekening) {
+            holder.iconIv.visibility = View.VISIBLE
+        } else {
+            holder.iconIv.visibility = View.GONE
+        }
+
         holder.nameTv.text = person.name
         holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balance.getBalanceColorString()
@@ -79,6 +85,7 @@ class TransferPersonRecAdapter(
     }
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val iconIv = itemView.findViewById<ImageView>(R.id.MTpersonRec_item_icon)!!
         val nameTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_name)!!
         val selectedTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_selected)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.MTpersonRecItem_balance)!!

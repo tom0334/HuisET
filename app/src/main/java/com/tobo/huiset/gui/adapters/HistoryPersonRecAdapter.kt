@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,12 @@ class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Cont
             }
         }
 
+        if (p != null && p.isHuisRekening) {
+            holder.iconIv.visibility = View.VISIBLE
+        } else {
+            holder.iconIv.visibility = View.GONE
+        }
+
         if (p == null) {
             holder.personNameTv.text = "Totaal"
             val selected = realm.where(Person::class.java).equalTo("selectedInHistoryView", true).count() == 0L
@@ -54,6 +61,7 @@ class HistoryPersonRecAdapter(val items: MutableList<Person?>, val context: Cont
 }
 
 class HistoryPersonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    val iconIv = itemView.findViewById<ImageView>(R.id.historyPersonRec_icon)!!
     val personNameTv = view.findViewById<TextView>(R.id.historyPersonRec_name)!!
     val rootV = view.findViewById<View>(R.id.historyPersonRec_rootView)!!
 }

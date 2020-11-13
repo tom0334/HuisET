@@ -26,7 +26,6 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/personRecItem_color_line"
             android:layout_marginRight="16dp"
-            android:visibility="gone"
             android:layout_toEndOf="@id/personRecItem_color_line"
             />
 

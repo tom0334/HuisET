@@ -327,6 +327,9 @@ object AchievementManager {
     }
 
     private fun updateForPerson(achievementsToUpdate:List<BaseAchievement>, person:Person): List<AchievementCompletion> {
+        if (person.isHuisRekening) {
+            return emptyList()
+        }
         val completions = mutableListOf<AchievementCompletion>()
 
         val helpData = AchievementUpdateHelpData(person)

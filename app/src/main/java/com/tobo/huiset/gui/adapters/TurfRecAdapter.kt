@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -62,6 +63,12 @@ class TurfRecAdapter(
     override fun onBindViewHolder(holder: TurfRecViewHolder, position: Int) {
         val person = data?.get(position) ?: return
         holder.colorView.setBackgroundColor(Color.parseColor(person.color))
+
+        if (person.isHuisRekening) {
+            holder.iconIv.visibility = View.VISIBLE
+        } else {
+            holder.iconIv.visibility = View.GONE
+        }
 
         holder.nameTv.text = person.name
         holder.balanceTv.text = person.balance.toCurrencyString()
@@ -145,6 +152,7 @@ class TurfRecAdapter(
     }
 
     class TurfRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val iconIv = itemView.findViewById<ImageView>(R.id.turfRecItem_icon)!!
         val nameTv = itemView.findViewById<TextView>(R.id.turfRecItem_name)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.turfRecItem_balance)!!
         val colorView = itemView.findViewById<View>(R.id.turfRecItem_color_line)
