@@ -80,12 +80,12 @@ class IntroActivity : AppIntro2(){
 
     /**
      * Hides keyboard when something else is clicked
-     * param view is needed
+     * @param view: The view that is clicked.
      */
     fun hideKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (currentFocus != null) {
-            imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 
