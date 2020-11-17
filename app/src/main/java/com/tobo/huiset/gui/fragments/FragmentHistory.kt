@@ -54,6 +54,12 @@ class FragmentHistory : HuisEtFragment() {
     }
 
     override fun onTabReactivated(userTapped: Boolean){
+        showBuy = SHOW_NETTO
+        val radioGroup = view!!.findViewById<RadioGroup>(R.id.radiogroup_history_bought)
+        radioGroup.check(R.id.radioHistoryNetto)
+        timeDiffSelected = TIMEDIFF_ALWAYS
+        db.selectPersonInHistory(null)
+
         initTimePoints(view!!)
         updatePersons()
         updateHistory()
