@@ -18,6 +18,7 @@ import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.MainActivity
+import com.tobo.huiset.gui.activities.PREFS_INTRO_SHOWN
 import com.tobo.huiset.gui.activities.PREFS_TURF_CONFETTI_ID
 import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
@@ -135,7 +136,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         
         // If intro is shown, this message doesn't have to show because a profile is created.
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        if (!prefs.getBoolean("shownIntro", false)) {
+        if (!prefs.getBoolean(PREFS_INTRO_SHOWN, false)) {
             return true
         }
 
@@ -164,7 +165,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
         // If intro is shown, this message doesn't have to show because a profile is created.
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        if (!prefs.getBoolean("shownIntro", false)) {
+        if (!prefs.getBoolean(PREFS_INTRO_SHOWN, false)) {
             return
         }
 

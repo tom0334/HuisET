@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
@@ -36,6 +37,12 @@ class PurchasePersonRecAdapter(
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = data?.get(position) ?: return
 
+        if (person.isHuisRekening) {
+            holder.iconIv.visibility = View.VISIBLE
+        } else {
+            holder.iconIv.visibility = View.GONE
+        }
+        
         holder.nameTv.text = person.name
         holder.balanceTv.text = person.balance.toCurrencyString()
         val colorString = data?.get(position)!!.balance.getBalanceColorString()
@@ -48,6 +55,7 @@ class PurchasePersonRecAdapter(
     }
 
     class PersonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val iconIv = itemView.findViewById<ImageView>(R.id.personRecItem_icon)!!
         val nameTv = itemView.findViewById<TextView>(R.id.personRecItem_name)!!
         val balanceTv = itemView.findViewById<TextView>(R.id.personRecItem_balance)!!
         val colorLine = itemView.findViewById<View>(R.id.personRec_item_color)

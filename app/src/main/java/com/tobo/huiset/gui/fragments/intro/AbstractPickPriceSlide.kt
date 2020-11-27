@@ -1,7 +1,9 @@
 package com.tobo.huiset.gui.fragments.intro
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import com.github.paolorotolo.appintro.ISlidePolicy
 import com.google.android.material.button.MaterialButton
@@ -26,10 +28,6 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
 
         if(HandyFunctions.priceValidate(price, editText)){
             this.processPrice(price.euroToCent())
-            db.createDemoBeerOrSetPrice(price.euroToCent())
-        }
-        else{
-            Toast.makeText(this.context,"Prijs input klopt niet.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -37,6 +35,7 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val text = getInitialPrice().toCharArray()
         editText.setText(text,0,text.size)
+        editText.setRawInputType(InputType.TYPE_CLASS_NUMBER)
     }
 
     override fun isPolicyRespected(): Boolean {
@@ -45,7 +44,8 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
     }
 
     override fun onUserIllegallyRequestedNextPage() {
-        Toast.makeText(this.context,"Prijs input klopt niet!",Toast.LENGTH_SHORT).show()
+        val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
+        Toast.makeText(this.context, editText.error, Toast.LENGTH_SHORT).show()
     }
 
     override fun getLayoutResId(): Int {

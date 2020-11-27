@@ -15,7 +15,9 @@ import com.tobo.huiset.R
 import com.tobo.huiset.gui.fragments.intro.SlideDismissListener
 import com.tobo.huiset.gui.fragments.intro.SlideFactory
 import com.tobo.huiset.gui.fragments.intro.SlideShowListener
+import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.HuisETDB
+import com.tobo.huiset.utils.extensions.edit
 import io.realm.Realm
 
 
@@ -34,14 +36,15 @@ class IntroActivity : AppIntro2(){
         val huisRekeningSlide = SlideFactory.newYesNoInstance("Gebruiken jullie een huisrekening?","Een huisrekening is een gedeelde bankrekening waar gezamenlijke inkopen van worden betaald.", "Ja, wij gebruiken een huisrekening.","Nee, iedereen betaalt inkopen van zijn persoonlijke rekening.",false)
         addSlide(huisRekeningSlide)
 
-        val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak alvast een huisgenoot profiel", "Er moet minimaal één profiel aangemaakt worden. Later kun je er nog meer aanmaken (ook voor gasten).","Maak profiel","Naam")
+        val createPersonSlide = SlideFactory.newCreatePersonSlide("Maak een huisgenoot profiel aan.", "Later kun je meer profielen aanmaken (ook voor gasten).","Maak profiel","Naam")
         addSlide(createPersonSlide)
 
-        val cratePriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een krat bier (inclusief statiegeld)?","Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen we voor nu om een standaard bierprijs in te voeren.","Prijs in Euro's",true)
+        val cratePriceSlide = SlideFactory.newPriceSlide(
+            "Wat is de gemiddelde prijs voor een krat bier (excl. statiegeld)?",
+            "Dit kun je later nog aanpassen. Ook is het mogelijk om verschillende prijzen per merk toe te voegen. Toch vragen we voor nu om een standaard bierprijs in te voeren.",
+            "Prijs in Euro's"
+        )
         addSlide(cratePriceSlide)
-
-        val beerPriceSlide = SlideFactory.newPriceSlide("Wat is de prijs voor een biertje (exclusief statiegeld)?","Dit is gebaseerd op de gekozen prijs per krat, en is later ook nog aan te passen. Het is eventueel afhankelijk van hoe jullie statiegeld verdelen.","Prijs in Euro",false)
-        addSlide(beerPriceSlide)
 
         skipButtonEnabled = false
     }
@@ -50,7 +53,17 @@ class IntroActivity : AppIntro2(){
         super.onDonePressed(currentFragment)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefs.edit().putBoolean("shownIntro",true).apply()
+
+        val db = HuisETDB(Realm.getDefaultInstance())
+        db.createProduct("Statie krat", 390, Product.KIND_BOTH, 1, Product.SPECIES_OTHER, 1)
+        db.createProduct("Statie fles", 25, Product.KIND_BOTH, 2, Product.SPECIES_OTHER, 1)
+        db.close()
+        
+        prefs.edit {
+            it.putBoolean(PREFS_INTRO_SHOWN, true)
+            it.putBoolean(PREFS_TURF_CONFETTI_ID, true)
+        }
+
         this.finish()
     }
 
@@ -65,30 +78,14 @@ class IntroActivity : AppIntro2(){
         }
     }
 
-    fun createPerson(name: String) {
-        if(name.isEmpty()){
-            Toast.makeText(this,"Typ eerst een naam in!",Toast.LENGTH_SHORT).show()
-            return
-        }
-        val realm = Realm.getDefaultInstance()
-        val db = HuisETDB(realm)
-        db.createAndSavePerson(name,
-            guest = false,
-            show = true,
-            huisEtRekening = false,
-            first = false
-        )
-        Toast.makeText(this,"Profiel gemaakt: $name",Toast.LENGTH_SHORT).show()
-    }
-
     /**
      * Hides keyboard when something else is clicked
-     * param view is needed
+     * @param view: The view that is clicked.
      */
     fun hideKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (currentFocus != null) {
-            imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 

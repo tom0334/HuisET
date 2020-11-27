@@ -1,5 +1,7 @@
 package com.tobo.huiset.utils
 
+import android.content.Context
+import android.widget.Toast
 import com.tobo.huiset.achievements.BaseAchievement
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
@@ -147,9 +149,12 @@ class HuisETDB(val realm: Realm) {
     /**
      * Finds all persons, even if they are hidden or deleted.
      */
-    fun findPersonsIncludingDeleted(): RealmResults<Person> {
-        return realm.where(Person::class.java)
-            .sort("row", Sort.ASCENDING)
+    fun findPersonsIncludingDeletedExceptHuisrekening(): RealmResults<Person> {
+        val query = realm.where(Person::class.java)
+        if (this.getHuisRekening().isDeleted) {
+            query.notEqualTo("huisRekening", true)
+        }
+        return query.sort("row", Sort.ASCENDING)
             .findAll()
     }
 
@@ -325,20 +330,12 @@ class HuisETDB(val realm: Realm) {
     }
 
     fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
-        val query = realm.where(Person::class.java)
+        return realm.where(Person::class.java)
             .equalTo("deleted", false)
+            .equalTo("guest", false)
+            .or().not().`in`("balance", arrayOf(0))
             .sort("row", Sort.ASCENDING)
-
-        /** People who can transfer:
-         *  - Roommates or guests with balance < 0
-         *  - Guests with balance > 0
-         */
-        val selectablePersons =
-            query.lessThan("balance", 0)
-                    .or().greaterThan("balance", 0)
-                            .and().equalTo("guest", true)
-
-        return selectablePersons.findAll()
+            .findAll()
     }
 
     fun findRoommateWithMostTheoreticalBalanceNotInArray(arr: Array<String>): Person? {
@@ -370,13 +367,29 @@ class HuisETDB(val realm: Realm) {
         }
     }
 
-    fun createAndSavePerson(name:String, guest:Boolean, show:Boolean, huisEtRekening:Boolean, first:Boolean) {
+    fun createOrUpdateIntroPerson(
+        name: String,
+        guest: Boolean,
+        isHuisRekening: Boolean,
+        first: Boolean,
+        context: Context
+    ) {
         this.updateProfileRows()
 
         val row =  if(first) -1 else findAllCurrentPersons(true).size
-        realm.executeTransaction {
-            val person = Person.create(name,ProfileColors.getNextColor(this),guest,true,row,huisEtRekening)
-            realm.copyToRealm(person)
+
+        val existingPerson = getFirstNonHuisrekeningPerson()
+        if (existingPerson != null) {
+            realm.executeTransaction {
+                existingPerson.name = name
+                Toast.makeText(context,"Profiel aangepast: $name",Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            realm.executeTransaction {
+                val newPerson = Person.create(name, ProfileColors.getNextColor(this), guest, true, row, isHuisRekening)
+                realm.copyToRealm(newPerson)
+                Toast.makeText(context,"Profiel aangemaakt: $name", Toast.LENGTH_SHORT).show()
+            }
         }
 
         this.updateProfileRows()
@@ -399,42 +412,17 @@ class HuisETDB(val realm: Realm) {
             }
         }else{
             realm.executeTransaction {
-                val crate = Product.create("Kratje", price, Product.KIND_BUYABLE, 1, Product.SPECIES_CRATE)
+                val crate = Product.create("Bier", price, Product.KIND_BOTH, 0, Product.SPECIES_BEER, 24)
                 realm.copyToRealm(crate)
             }
+            selectFirstTurfProduct()
         }
 
         realm.refresh()
     }
-
-    fun createDemoBeerOrSetPrice(price:Int){
-        val current = getBeerIfExists()
-
-        if(current != null){
-            realm.executeTransaction {
-                current.price = price
-            }
-        }else{
-            realm.executeTransaction {
-                val beer = Product.create("Bier", price, Product.KIND_TURFABLE, 0, Product.SPECIES_BEER)
-                realm.copyToRealm(beer)
-
-                val statiegeld = Product.create("Statiegeld terug", 390, Product.KIND_TURFABLE, 1, Product.SPECIES_OTHER)
-                realm.copyToRealm(statiegeld)
-            }
-            HuisETDB(realm).selectFirstTurfProduct()
-        }
-
-        realm.refresh()
-    }
-
 
     fun getCrateIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_CRATE).findFirst()
-    }
-
-    fun getBeerIfExists(): Product? {
-        return realm.where(Product::class.java).equalTo("kind",Product.SPECIES_BEER).findFirst()
+        return realm.where(Product::class.java).equalTo("species",Product.SPECIES_BEER).equalTo("buyPerAmount",  24 as Int).findFirst()
     }
 
     fun copyFromRealm(trans: Transaction): Transaction {
@@ -463,7 +451,7 @@ class HuisETDB(val realm: Realm) {
         else{
             var res: Product? = null;
             val totalAmountOfProducts = realm.where(Product::class.java).findAll().size
-            val productOutsideRealm = Product.create("Custom Turf",0, Product.KIND_CUSTOMTURF, totalAmountOfProducts,Product.SPECIES_OTHER)
+            val productOutsideRealm = Product.create("Custom Turf",0, Product.KIND_CUSTOMTURF, totalAmountOfProducts,Product.SPECIES_OTHER,1)
             productOutsideRealm.isDeleted = true
             realm.executeTransaction {
                 res = realm.copyToRealm(productOutsideRealm)!!
@@ -495,4 +483,37 @@ class HuisETDB(val realm: Realm) {
         }
     }
 
+    fun createProduct(newName: String, newPrice: Int, newKind: Int, newRow: Int, newSpecies: Int, newAmount: Int) {
+        realm.executeTransaction {
+            val product = Product.create(newName, newPrice, newKind, newRow, newSpecies, newAmount)
+            realm.copyToRealm(product)
+        }
+    }
+
+    fun editProduct(
+        product: Product,
+        newName: String,
+        newPrice: Int,
+        newKind: Int,
+        newSpecies: Int,
+        newAmount: Int
+    ) {
+        realm.executeTransaction {
+            product.name = newName
+            product.price = newPrice
+            product.kind = newKind
+            // product.row should not change
+            product.species = newSpecies
+            product.buyPerAmount = newAmount
+        }
+    }
+
+    fun getFirstNonHuisrekeningPerson(): Person? {
+        return realm.where(Person::class.java)
+            .equalTo("deleted", false)
+            .notEqualTo("huisRekening", true)
+            .findFirst()
+    }
+
 }
+

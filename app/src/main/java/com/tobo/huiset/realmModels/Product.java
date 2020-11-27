@@ -7,9 +7,6 @@ import java.util.UUID;
 
 public class Product extends RealmObject {
 
-    public static final int STANDARD_PRICE_BEER = 44;
-    public static final int STANDARD_PRICE_CRATE = 1050;
-
     public static final int KIND_TURFABLE = 0;
     public static final int KIND_BUYABLE = 1;
     public static final int KIND_BOTH = 2;
@@ -17,7 +14,6 @@ public class Product extends RealmObject {
     public static final int KIND_CUSTOMTURF = 4;
 
     public static final int SPECIES_BEER = 0;
-    public static final int SPECIES_CRATE = 1;
     public static final int SPECIES_SNACK = 2;
     public static final int SPECIES_OTHER = 3;
 
@@ -28,20 +24,21 @@ public class Product extends RealmObject {
     private int kind;   // what kind of product it is (Only turfable, only buyable or both)
     private int row;    // geeft row aan
     private int species;    // bier, kratje, snack, etc... (see fields)
+    private int buyPerAmount; // how much is in a package of this product? a crate = 24, 6-pack = 6 etc...
     private boolean selected = false;
     private boolean deleted = false;
 
     public Product() {
     }
 
-    static public Product create(String name, int price, int kind, int row, int species) {
+    static public Product create(String name, int price, int kind, int row, int species, int buyPerAmount) {
         Product p = new Product();
         p.name = name;
         p.price = price;
         p.kind = kind;
         p.row = row;
         p.species = species;
-
+        p.buyPerAmount = buyPerAmount;
         return p;
     }
 
@@ -103,5 +100,13 @@ public class Product extends RealmObject {
 
     public void setSpecies(int species) {
         this.species = species;
+    }
+
+    public int getBuyPerAmount() {
+        return buyPerAmount;
+    }
+
+    public void setBuyPerAmount(int buyPerAmount) {
+        this.buyPerAmount = buyPerAmount;
     }
 }

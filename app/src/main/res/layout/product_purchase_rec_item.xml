@@ -18,20 +18,35 @@
             android:layout_alignParentLeft="true"
             android:textSize="16sp"
             android:text="3"
-            android:paddingRight="8dp"
+            android:paddingRight="6dp"
+            />
+
+    <TextView
+            android:id="@+id/productRecItem_amount"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/productRecItem_purch_amount"
+            android:text="x24"
+            android:maxLines="1"
+            android:paddingRight="4dp"
+            android:layout_toEndOf="@id/productRecItem_purch_amount"
             />
 
     <TextView
             android:id="@+id/productRecItem_name"
             android:fontFamily="sans-serif-medium"
             android:textSize="16sp"
-            android:layout_toRightOf="@id/productRecItem_purch_amount"
+            android:layout_toRightOf="@id/productRecItem_amount"
             android:layout_toLeftOf="@id/productRecItem_price"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingRight="4dp"
             tools:text="Stel nou eens dat hier een extreem lang product zou staan he, wat zou je er aan doen dan"
     />
 

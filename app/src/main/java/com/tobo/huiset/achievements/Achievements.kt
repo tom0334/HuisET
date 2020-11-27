@@ -27,6 +27,8 @@ const val A_SNACK_KONING = 7
 const val A_BEGINNENDE_SNACKER = 8
 const val A_DOE_HET_VOOR_DE_KONING = 9
 const val A_BEGINNENDE_DRINKER = 10
+const val A_OKTOBERFEST = 11
+const val A_INHAALSLAG = 12
 
 
 /**
@@ -154,16 +156,13 @@ class GroteBoodschap: BaseAchievement(){
 
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val crateBuys = person.getDb().getTransactions(personId = person.id, buy = true)
-            .filter { it.product?.species == Product.SPECIES_CRATE }
+            .filter { it.product?.species == Product.SPECIES_BEER }
+            .filter { it.product?.buyPerAmount == 24 }
 
         val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
 
         if( doubleCreateBuy != null) return  doubleCreateBuy.time
         return null
-
-//        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
-//        return  crateBuys.groupBy { it.time / 60000 }
-//            .values.find { it.size >= 2 } != null
     }
 
 }
@@ -265,6 +264,41 @@ class BeginnendeSnacker : BaseAchievement(){
 
 }
 
+class Oktoberfest : BaseAchievement() {
+    override val updateOnTurf: Boolean = true
+    override val updateOnBuy: Boolean = false
+    override val updateOnLaunch: Boolean = false
+    override val id: Int = A_OKTOBERFEST
+    override val name: String = "Oktoberfest"
+    override val description: String = "Drink een biertje in oktober. Bonuspunten als je een lederhose/dirndl draagt."
+
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        val octoberBeer = helpData.beerTurfTransactionsByPerson
+            .find { it.toboTime.month == Calendar.OCTOBER }
+        return octoberBeer?.time
+    }
+}
+
+class Inhaalslag: BaseAchievement() {
+    override val updateOnTurf: Boolean = true
+    override val updateOnBuy: Boolean = false
+    override val updateOnLaunch: Boolean = false
+
+    override val id: Int = A_INHAALSLAG
+
+    override val name: String = "Inhaalslag"
+    override val description: String = "turf 5 bier in 1 keer."
+
+    override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
+        //200 IQ groupBy right here. It splits all transactions up in 60 second windows.
+        val groupOfFiveOrMoreBeer = helpData.beerTurfTransactionsByPerson.groupBy { it.time / 60000 }
+            .values.find { it.amountOfProducts() >= 5 }
+
+        return groupOfFiveOrMoreBeer?.firstOrNull()?.time
+    }
+
+}
+
 
 object AchievementManager {
 
@@ -272,6 +306,7 @@ object AchievementManager {
         return listOf(
             BeginnendeDrinker(),
             BeginnendeSnacker(),
+            Inhaalslag(),
             PilsBaas(),
             SnackKoning(),
             ReparatieBiertje(),
@@ -279,6 +314,7 @@ object AchievementManager {
             CollegeWinnaar(),
             MVP(),
             GroteBoodschap(),
+            Oktoberfest(),
             DoeHetVoorDeKoning()
         )
     }
@@ -291,6 +327,9 @@ object AchievementManager {
     }
 
     private fun updateForPerson(achievementsToUpdate:List<BaseAchievement>, person:Person): List<AchievementCompletion> {
+        if (person.isHuisRekening) {
+            return emptyList()
+        }
         val completions = mutableListOf<AchievementCompletion>()
 
         val helpData = AchievementUpdateHelpData(person)

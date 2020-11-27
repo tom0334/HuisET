@@ -10,6 +10,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
@@ -36,9 +37,22 @@ class EditProfileActivity : HuisEtActivity() {
         if (extras != null) {
             val oldId = extras.getString("PERSON_ID")
             oldProfile = db.getPersonWithId(oldId)
-            findViewById<EditText>(R.id.name).setText(oldProfile!!.name)
 
+            val nameEditText = findViewById<EditText>(R.id.name)
+            nameEditText.setText(oldProfile!!.name)
+            nameEditText.requestFocus()
+
+            val guestText = findViewById<TextView>(R.id.radiogroup_guest_text)
             val guestRadioGroup = findViewById<RadioGroup>(R.id.radiogroup_guest)
+
+            if (oldProfile!!.isHuisRekening) {
+                guestText.visibility = View.GONE
+                guestRadioGroup.visibility = View.GONE
+            } else {
+                guestText.visibility = View.VISIBLE
+                guestRadioGroup.visibility = View.VISIBLE
+            }
+
             if (oldProfile!!.isGuest) {
                 guestRadioGroup.check(R.id.radioGuest)
             } else {
@@ -128,7 +142,8 @@ class EditProfileActivity : HuisEtActivity() {
         val nameEditText = findViewById<EditText>(R.id.name)
         val newName = nameEditText.text.toString()
 
-        if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 0)) {
+        val isHuisRekening = if (oldProfile != null) oldProfile!!.isHuisRekening else false
+        if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 0, isHuisRekening)) {
             return
         }
 
@@ -172,7 +187,7 @@ class EditProfileActivity : HuisEtActivity() {
      */
     fun hideKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

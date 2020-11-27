@@ -69,10 +69,12 @@ class FragmentProfiles : HuisEtFragment() {
         ItemDoubleClickSupport.addTo(rec)
             .setOnItemClickListener(object : ItemDoubleClickSupport.OnItemClickListener {
                 override fun onItemClicked(recyclerView: RecyclerView, position: Int, v: View) {
-                    val person = persons[position]
-                    val intent = Intent(activity, EditProfileActivity::class.java)
-                        .putExtra("PERSON_ID", person?.id)
-                    startActivity(intent)
+                    if (position >= 0 && position < persons.size) {
+                        val person = persons[position]
+                        val intent = Intent(activity, EditProfileActivity::class.java)
+                            .putExtra("PERSON_ID", person?.id)
+                        startActivity(intent)
+                    }
                 }
 
                 override fun onItemDoubleClicked(recyclerView: RecyclerView, position: Int, v: View) {

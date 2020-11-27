@@ -28,7 +28,7 @@
         android:icon="@drawable/baseline_history_white_24"
         android:id="@+id/action_history"
         android:enabled="true"
-        android:title="Geschiedenis"
+        android:title="Verleden"
         app:showAsAction="always" />
 
     <item

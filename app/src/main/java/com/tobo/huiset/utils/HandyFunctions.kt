@@ -15,7 +15,8 @@ object HandyFunctions {
         editText: EditText,
         db: HuisETDB,
         checkForDuplicateName: Boolean,
-        zeroIfPerson_oneIfProduct: Int
+        zeroIfPerson_oneIfProduct: Int,
+        isHuisRekening: Boolean = false
     ): Boolean {
 
         // empty fields are not accepted
@@ -25,9 +26,28 @@ object HandyFunctions {
         }
 
         // name is huisrekening
-        if (name.toLowerCase().trim() == "huisrekening") {
-            editText.error = "Huisrekening kan alleen via instellingen aangezet worden"
-            return false
+        if (zeroIfPerson_oneIfProduct == 0) { // if person
+            if (name.toLowerCase().trim() == "huisrekening" && !isHuisRekening) {
+                editText.error = "Huisrekening kan alleen via instellingen aangezet worden"
+                return false
+            }
+        }
+
+        if (zeroIfPerson_oneIfProduct == 1) { // if product
+            if (name.trim() == "Balans") {
+                editText.error = "Product mag niet Balans heten"
+                return false
+            }
+
+            if (name.trim() == "Ontvangen") {
+                editText.error = "Product mag niet Ontvangen heten"
+                return false
+            }
+
+            if (name.trim() == "Overgemaakt") {
+                editText.error = "Product mag niet Overgemaakt heten"
+                return false
+            }
         }
 
         // duplicate names are not accepted, except if the old person is deleted
@@ -66,8 +86,9 @@ object HandyFunctions {
 
         return true
     }
+
     //this makes it only possible to input valid prices, only 2 numbers after a "." or a "," are allowed
-    fun addPriceTextLimiter(editText: EditText){
+    fun addPriceTextLimiter(editText: EditText) {
         editText.addTextChangedListener(object : TextWatcher {
             lateinit var sBackup: String
 
@@ -117,5 +138,28 @@ object HandyFunctions {
                 }
             }
         })
+    }
+
+    /**
+     * Validates buyPerAmount amount
+     */
+    fun buyPerAmountValidate(amount: String, editText: EditText): Boolean {
+        if (amount == "") {
+            editText.error = "Vul een aantal in"
+            return false
+        }
+        // amount is 0 or negative
+        if (amount.toInt() < 1) {
+            editText.error = "Aantal moet minimaal 1 zijn"
+            return false
+        }
+        // too big amount
+        val maxPriceLength = 2
+        if (amount.toString().length > maxPriceLength) {
+            editText.error = "Aantal mag niet meer dan $maxPriceLength tekens lang zijn"
+            return false
+        }
+
+        return true
     }
 }

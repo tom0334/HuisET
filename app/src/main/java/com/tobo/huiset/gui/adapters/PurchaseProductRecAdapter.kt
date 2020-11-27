@@ -105,11 +105,20 @@ class PurchaseProductRecAdapter(
         holder.nameTv.text = product.name
         holder.priceTv.text = product.price.toCurrencyString()
 
+        if (product.buyPerAmount != 1) {
+            holder.amountPerBuyTv.text = "x${product.buyPerAmount}"
+            holder.amountPerBuyTv.visibility = View.VISIBLE
+        } else {
+            holder.amountPerBuyTv.visibility = View.GONE
+        }
+
         if (getFromMap(product.id) > 0) {
+            holder.amountPerBuyTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
             holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
             holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.primaryTextColor))
         }
         else {
+            holder.amountPerBuyTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
             holder.amountTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
             holder.nameTv.setTextColor(ContextCompat.getColor(fragmentPurchases.context!!, R.color.androidStandardTextColor))
         }
@@ -172,6 +181,7 @@ class PurchaseProductRecAdapter(
         val nameTv = itemView.findViewById<TextView>(R.id.productRecItem_name)!!
         val priceTv = itemView.findViewById<TextView>(R.id.productRecItem_price)!!
         val amountTv = itemView.findViewById<TextView>(R.id.productRecItem_purch_amount)!!
+        val amountPerBuyTv = itemView.findViewById<TextView>(R.id.productRecItem_amount)!!
     }
 
     class NewProductRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

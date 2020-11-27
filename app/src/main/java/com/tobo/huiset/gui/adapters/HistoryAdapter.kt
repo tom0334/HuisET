@@ -1,14 +1,18 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toFormattedAmount
+
 
 data class HistoryItem(val productName: String, val amount: Float, val price: Int, val total:Boolean)
 
@@ -30,7 +34,38 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
         }else{
             holder.totalDivider.visibility = View.GONE
         }
-        holder.amountTv.text = item.amount.toFormattedAmount()
+
+        val itemAmount = item.amount.toFormattedAmount()
+        val layoutParams = holder.itemLayout.layoutParams as RecyclerView.LayoutParams
+        when (holder.productNameTv.text) {
+            "Balans" -> {
+                holder.amountTv.text = if (itemAmount.toInt() <= 1) "" else "${itemAmount}p"
+                setAllTextColors(holder, ContextCompat.getColor(context, R.color.greyHintTextColor))
+                layoutParams.topMargin = 0
+                layoutParams.bottomMargin = 0
+            }
+            "Ontvangen", "Overgemaakt" -> {
+                holder.amountTv.text = ""
+                setAllTextColors(holder, ContextCompat.getColor(context, R.color.greyHintTextColor))
+                layoutParams.topMargin = 40
+                layoutParams.bottomMargin = 56
+            }
+            else -> {
+                holder.amountTv.text = itemAmount
+                setAllTextColors(holder, holder.defaultRecColor)
+                layoutParams.topMargin = 56
+                layoutParams.bottomMargin = 0
+            }
+        }
+    }
+
+    private fun setAllTextColors(
+        holder: HistoryViewholder,
+        textColor: Int
+    ) {
+        holder.productNameTv.setTextColor(textColor)
+        holder.amountTv.setTextColor(textColor)
+        holder.priceTv.setTextColor(textColor)
     }
 
     // Gets the number of animals in the list
@@ -41,8 +76,10 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
 }
 
 class HistoryViewholder(view: View) : RecyclerView.ViewHolder(view) {
+    val itemLayout = view.findViewById<RelativeLayout>(R.id.historyView_item)!!
     val productNameTv = view.findViewById<TextView>(R.id.historyView_product_name)!!
     val amountTv = view.findViewById<TextView>(R.id.historyView_productAmount)!!
     val priceTv = view.findViewById<TextView>(R.id.historyView_total_price)!!
     val totalDivider = view.findViewById<View>(R.id.historyView_item_divider)!!
+    val defaultRecColor: Int = productNameTv.textColors.defaultColor
 }

@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentProducts
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,13 @@ class ProductRecAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = data?.get(position) ?: return
+
+        if (product.buyPerAmount != 1) {
+            holder.amountTv.text = product.buyPerAmount.toString()
+            holder.amountTv.visibility = View.VISIBLE
+        } else {
+            holder.amountTv.visibility = View.GONE
+        }
 
         holder.nameTv.text = product.name
 
@@ -82,5 +90,6 @@ class ProductRecAdapter(
         val upIv = itemView.findViewById<ImageView>(R.id.productRecItem_up)!!
         val downIv = itemView.findViewById<ImageView>(R.id.productRecItem_down)!!
         val hiddenTv = itemView.findViewById<TextView>(R.id.productRecItem_hidden)!!
+        val amountTv = itemView.findViewById<TextView>(R.id.productRecItem_amount)!!
     }
 }

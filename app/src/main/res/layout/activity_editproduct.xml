@@ -18,11 +18,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Naam"
+                android:imeOptions="actionNext"
                 android:inputType="textCapWords"
         />
 
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/priceWrapper"
@@ -35,7 +35,25 @@
                 android:layout_height="match_parent"
                 android:inputType="numberDecimal"
                 android:digits="0123456789,."
-                android:hint="Prijs (in euro)"
+                android:hint="Prijs totaal (in euro)"
+                android:imeOptions="actionDone"
+                />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/buyPerAmountWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/buyPerAmount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:digits="0123456789"
+                android:hint="Aantal per verpakking"
+                android:imeOptions="actionNext"
         />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -110,13 +128,6 @@
                 android:layout_weight="1"
                 android:checked="true"
                 android:text="Bier"/>
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_crateProduct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Kratje"/>
 
         <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radio_snackProduct"

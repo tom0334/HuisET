@@ -14,20 +14,42 @@ android:layout_height="47.5dp"
             android:id="@+id/productRecItem_Naamcontainer"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/productRecItem_price"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            >
 
-        <TextView
-                android:id="@+id/productRecItem_name"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="18sp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
+        <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="hele lange productnaam komt hier te staan"
-                />
+                android:layout_height="wrap_content"
+                android:id="@+id/productRecItem_NaamNaamContainer"
+                android:orientation="horizontal"
+                >
+
+            <TextView
+                    android:id="@+id/productRecItem_amount"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="24"
+                    android:maxLines="1"
+                    android:paddingRight="4dp"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="2dp"
+                    />
+
+            <TextView
+                    android:id="@+id/productRecItem_name"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="hele lange productnaam komt hier te staan"
+                    />
+        </LinearLayout>
 
         <TextView
                 android:id="@+id/productRecItem_hidden"
