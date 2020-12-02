@@ -1,6 +1,6 @@
 package com.tobo.huiset.realmModels;
 
-public class AdditionalTransactionChange {
+public class TransactionSideEffect {
     private String personId;
     private int price;
     private float amount;

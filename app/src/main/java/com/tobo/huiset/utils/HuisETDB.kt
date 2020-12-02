@@ -460,7 +460,7 @@ class HuisETDB(val realm: Realm) {
         }
     }
 
-    fun doCustomTurf(price: Float, title: String, selectedPersons: List<Person>, personThatPaid: Person) {
+    fun doCustomTurf(price: Float, title: String, personsPaidFor: List<Person>, personThatPaid: Person) {
         //todo what if selected is empty
         //todo fix title, it needs a field in the transaction class.
         val product = getOrCreateCustomTurfProductWith()
@@ -469,8 +469,8 @@ class HuisETDB(val realm: Realm) {
         //the person that is paying.
         realm.executeTransaction {
             product.price = (price * 100f).roundToInt()
-            val amountPerPerson = 1.0f / selectedPersons.size.toFloat()
-            selectedPersons.forEach {
+            val amountPerPerson = 1.0f / personsPaidFor.size.toFloat()
+            personsPaidFor.forEach {
                 val trans = Transaction.create(it,product,amountPerPerson,false)
                 realm.copyToRealm(trans)
             }
