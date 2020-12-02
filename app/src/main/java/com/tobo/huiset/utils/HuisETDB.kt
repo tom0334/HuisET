@@ -3,10 +3,7 @@ package com.tobo.huiset.utils
 import android.content.Context
 import android.widget.Toast
 import com.tobo.huiset.achievements.BaseAchievement
-import com.tobo.huiset.realmModels.AchievementCompletion
-import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Product
-import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.realmModels.*
 import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
 import io.realm.RealmResults
@@ -462,24 +459,22 @@ class HuisETDB(val realm: Realm) {
 
     fun doCustomTurf(price: Float, title: String, personsPaidFor: List<Person>, personThatPaid: Person) {
         //todo what if selected is empty
-        //todo fix title, it needs a field in the transaction class.
-        val product = getOrCreateCustomTurfProductWith()
 
-        //First, lets add the expense for everyone that is being paid for. This may include
-        //the person that is paying.
-        realm.executeTransaction {
-            product.price = (price * 100f).roundToInt()
-            val amountPerPerson = 1.0f / personsPaidFor.size.toFloat()
-            personsPaidFor.forEach {
-                val trans = Transaction.create(it,product,amountPerPerson,false)
-                realm.copyToRealm(trans)
-            }
+        //First, create the side effect objects that contain the info about which persons
+        //is paid for. (These may include the payer)
+        val amountPerPerson = 1.0f / personsPaidFor.size.toFloat()
+        val pricePerPersonInCents = ((price / amountPerPerson) * 100f).roundToInt()
+        val transactionSideEffects = personsPaidFor.map {
+            TransactionSideEffect.create(it.id,pricePerPersonInCents,false)
         }
 
-        //Now add the money to the person that paid
         realm.executeTransaction {
-            val paidPersonTrans = Transaction.create(personThatPaid, product, 1.0f,true)
+            val paidPersonTrans = Transaction.create(personThatPaid,  (price * 100f).roundToInt(), title,true)
             realm.copyToRealm(paidPersonTrans)
+            transactionSideEffects.forEach { realm.copyToRealm(it) }
+            //now update the balances of everyone
+            //todo update the persons of the side effect
+            personThatPaid.addTransaction(paidPersonTrans)
         }
     }
 

@@ -46,7 +46,7 @@ class TransactionRecAdapter(
             holder.productTv.text = "Aan ${trans.getPerson(realmInstance, trans.otherPersonId).name}"
         }
         else {
-            holder.productTv.text = "${trans.amount.toFormattedAmount()} ${trans.product.name}"
+            holder.productTv.text = "${trans.amount.toFormattedAmount()} ${trans.messageOrProductName}"
         }
 
         if (trans.isBuy) {

@@ -221,7 +221,7 @@ class SnackKoning : BaseAchievement(){
     override val name = "SnackKoning"
     override val description = "Turf minstens 5 snacks op 1 dag."
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
-        val snacksForPerson = helpData.allTurfTrans.filter { it.product.species == Product.SPECIES_SNACK && it.personId == person.id}
+        val snacksForPerson = helpData.allTurfTrans.filter { it.product?.species == Product.SPECIES_SNACK && it.personId == person.id}
 
         val moreThan3OnADay = snacksForPerson.groupBy { it.toboTime.getZuipDay() }.values.find { it.amountOfProducts() > 5 }
             ?: return null
@@ -256,7 +256,7 @@ class BeginnendeSnacker : BaseAchievement(){
     override val description = "Turf je eerste snack!"
     override fun checkIfAchieved(person: Person, helpData: AchievementUpdateHelpData): Long? {
         val firstSnack = helpData.allTurfTrans
-            .find{ it.product.species == Product.SPECIES_SNACK && it.personId == person.id}
+            .find{ it.product?.species == Product.SPECIES_SNACK && it.personId == person.id}
             ?: return null
 
         return firstSnack.time
@@ -384,7 +384,7 @@ data class AchievementUpdateHelpData(private val person:Person){
     }
 
     val allBeerTurfTrans by lazy {
-        allTurfTrans.filter { it.product.species == Product.SPECIES_BEER }
+        allTurfTrans.filter { it.product?.species == Product.SPECIES_BEER }
     }
 
     val turfTransactionsByPerson by lazy {
