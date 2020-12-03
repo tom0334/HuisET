@@ -1,6 +1,7 @@
 package com.tobo.huiset.gui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,8 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.custom_turf_dialog_frag, container,false)
     }
+
+    private val TAG = "CustomTurfDialog"
 
     lateinit var db: HuisETDB
     lateinit var adapter:TurfRecAdapter
@@ -66,10 +69,21 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
             }
             val payingPerson = db.getPersonWithId(pickedPersonId)!!
             db.doCustomTurf(price,title,selectedPersons,payingPerson)
+            this.dismiss()
+            sendOnCustomTurfFinished(payingPerson.id, price)
         }
-
         initRec(view)
     }
+
+    private fun sendOnCustomTurfFinished(payingPersonId: String, price: Int) {
+        try{
+            val parent = parentFragment as CustomTurfDialogFragmentParent
+            parent.onCustomTurfDone(payingPersonId,price
+        }catch (e: Exception){
+            Log.e(TAG,"Parent of custom turfDialogFragment needs to implement CustomTurfDialogFragmentParent interface")
+        }
+    }
+
 
     private fun initRec(view: View){
         val rec = view.findViewById<RecyclerView>(R.id.customturfRec)

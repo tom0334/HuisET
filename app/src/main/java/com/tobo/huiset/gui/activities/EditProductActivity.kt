@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Product
-import com.tobo.huiset.utils.extensions.euroToCent
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
 import com.google.android.material.textfield.TextInputEditText
