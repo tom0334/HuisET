@@ -12,7 +12,7 @@ import io.realm.RealmObject;
 public class TransactionSideEffect extends RealmObject {
     private String personId;
     private int price;
-    //buy means the price will be added to the balance 
+    //buy means the price will be added to the balance
     private boolean buy;
 
     public TransactionSideEffect() {
@@ -26,8 +26,8 @@ public class TransactionSideEffect extends RealmObject {
         return effect;
     }
 
-    public float getSaldoImpact(){
-        if(isBuy()) return  price;
+    public int getBalanceImpact() {
+        if (isBuy()) return price;
         else return -1 * price;
     }
 

@@ -79,7 +79,7 @@ public class Transaction extends RealmObject {
         return productId;
     }
 
-    public float getSaldoImpact(){
+    public int getBalanceImpact(){
         if(isBuy()) return  price;
         else return -1 * price;
     }
@@ -141,11 +141,9 @@ public class Transaction extends RealmObject {
     private void doOrUndoTransaction(Realm realm, boolean undo){
         int undoSign = undo? -1 : 1;
         Person mainPerson = this.getPerson(realm,personId);
-        int mainPersonSign = this.isBuy() ? 1 : -1;
-        mainPerson.addToBalance(undoSign * mainPersonSign * this.price);
+        mainPerson.addToBalance(undoSign * this.getBalanceImpact());
         for(TransactionSideEffect sideEffect : this.sideEffects){
-            int sign = sideEffect.isBuy() ? 1 : -1;
-            sideEffect.getPerson(realm).addToBalance(undoSign * sign * sideEffect.getPrice());
+            sideEffect.getPerson(realm).addToBalance(undoSign * sideEffect.getBalanceImpact());
         }
     }
 

@@ -235,7 +235,7 @@ class FragmentHistory : HuisEtFragment() {
             .map { (key, values) -> HistoryItem(
                     db.getProductWithId(key.productId)!!.name,
                     values.sumByFloat { it.amount },
-                    values.sumByFloat { it.saldoImpact }.roundToInt(),
+                    values.sumBy { it.balanceImpact },
                     false
                 )
             }
@@ -253,7 +253,7 @@ class FragmentHistory : HuisEtFragment() {
                     HistoryItem(
                         db.getProductWithId(key.productId)!!.name,
                         values.sumByFloat { it.amount },
-                        values.sumByFloat { it.saldoImpact }.roundToInt(),
+                        values.sumBy { it.balanceImpact },
                         false
                     )
                 }
