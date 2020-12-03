@@ -40,7 +40,9 @@
             android:hint="Naam uitgave"
             android:imeOptions="actionDone"
             android:maxLines="1"
-            android:inputType="text"
+            android:inputType="textCapWords"
+            android:maxLength="20"
+            android:minWidth="250dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </EditText>

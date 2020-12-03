@@ -76,28 +76,11 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
         rec.layoutManager = GridLayoutManager(this.context,2)
     }
 
+    //Don't do anything, single turf is not possible in this dialog, because selection is always on.
     override fun handleSingleTurf(person: Person) {
-//        val selectedPersons = adapter.selectedPersonIds.size
-//
-//        val amountPerPerson = 0
-//        db.doTransactionWithSelectedProduct(person,amountPerPerson.toFloat())
-//
-//        val changed = AchievementManager.updateAchievementsAfterTurf(person)
-//        (activity as MainActivity).showAchievements(changed)
-//
-//
-//        db.selectFirstTurfProduct()
-//
-//        //amountAdapter.resetAmountToFirst()
-//
-//        //scroll to the top, because the item is added at the top
-//        //transActionRec.scrollToPosition(0)
-//        //mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
-
     }
 
     override fun onSelectionChanged(selecting: Boolean) {
-
     }
 
     companion object{
