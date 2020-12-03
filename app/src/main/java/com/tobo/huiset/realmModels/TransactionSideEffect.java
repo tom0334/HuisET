@@ -1,5 +1,6 @@
 package com.tobo.huiset.realmModels;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 public class TransactionSideEffect extends RealmObject {
@@ -22,6 +23,11 @@ public class TransactionSideEffect extends RealmObject {
         if(isBuy()) return  price;
         else return -1 * price;
     }
+
+    public Person getPerson(Realm realm){
+        return realm.where(Person.class).equalTo("id", this.personId).findFirst();
+    }
+
 
     public String getPersonId() {
         return personId;

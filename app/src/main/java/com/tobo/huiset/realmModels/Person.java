@@ -144,4 +144,7 @@ public class Person extends RealmObject {
         return completions;
     }
 
+    public void addToBalance(int amount) {
+        this.balance += amount;
+    }
 }

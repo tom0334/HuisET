@@ -6,6 +6,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -40,12 +41,13 @@ public class Transaction extends RealmObject {
         return t;
     }
 
-    static public Transaction create(Person person, int price, String message, boolean buy) {
+    static public Transaction create(Person person, int price, List<TransactionSideEffect> sideEffects, String message, boolean buy) {
         Transaction t = new Transaction();
         t.personId = person.getId();
         t.buy = buy;
         t.price =  price;
         t.message = message;
+        t.sideEffects.addAll(sideEffects);
         return t;
     }
 
@@ -125,5 +127,15 @@ public class Transaction extends RealmObject {
 
     public String getMessageOrProductName(){
         return message != null ? message : getProduct().getName();
+    }
+
+    public void execute(Realm realm){
+        Person mainPerson = this.getPerson(realm,personId);
+        int mainPersonSign = this.isBuy() ? 1 : -1;
+        mainPerson.addToBalance(mainPersonSign * this.price);
+        for(TransactionSideEffect sideEffect : this.sideEffects){
+            int sign = sideEffect.isBuy() ? 1 : -1;
+            sideEffect.getPerson(realm).addToBalance(sign * sideEffect.getPrice());
+        }
     }
 }

@@ -462,19 +462,19 @@ class HuisETDB(val realm: Realm) {
 
         //First, create the side effect objects that contain the info about which persons
         //is paid for. (These may include the payer)
-        val amountPerPerson = 1.0f / personsPaidFor.size.toFloat()
-        val pricePerPersonInCents = ((price / amountPerPerson) * 100f).roundToInt()
+        val pricePerPersonInCents = ((price / personsPaidFor.size.toFloat()) * 100f).roundToInt()
         val transactionSideEffects = personsPaidFor.map {
             TransactionSideEffect.create(it.id,pricePerPersonInCents,false)
         }
 
         realm.executeTransaction {
-            val paidPersonTrans = Transaction.create(personThatPaid,  (price * 100f).roundToInt(), title,true)
-            realm.copyToRealm(paidPersonTrans)
             transactionSideEffects.forEach { realm.copyToRealm(it) }
+
+            val paidPersonTrans = Transaction.create(personThatPaid,  (price * 100f).roundToInt(),transactionSideEffects, title,true)
+            realm.copyToRealm(paidPersonTrans)
+
             //now update the balances of everyone
-            //todo update the persons of the side effect
-            personThatPaid.addTransaction(paidPersonTrans)
+            paidPersonTrans.execute(realm)
         }
     }
 
