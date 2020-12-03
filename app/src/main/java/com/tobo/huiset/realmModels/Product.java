@@ -11,7 +11,6 @@ public class Product extends RealmObject {
     public static final int KIND_BUYABLE = 1;
     public static final int KIND_BOTH = 2;
     public static final int KIND_NEITHER = 3;
-    public static final int KIND_CUSTOMTURF = 4;
 
     public static final int SPECIES_BEER = 0;
     public static final int SPECIES_SNACK = 2;

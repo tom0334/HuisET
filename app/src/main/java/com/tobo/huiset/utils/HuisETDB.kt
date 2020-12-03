@@ -441,21 +441,6 @@ class HuisETDB(val realm: Realm) {
         }
     }
 
-    fun getOrCreateCustomTurfProductWith(): Product {
-        val customTurfProduct = realm.where(Product::class.java).equalTo("kind",Product.KIND_CUSTOMTURF).findFirst()
-        if(customTurfProduct != null) return customTurfProduct
-
-        else{
-            var res: Product? = null;
-            val totalAmountOfProducts = realm.where(Product::class.java).findAll().size
-            val productOutsideRealm = Product.create("Custom Turf",0, Product.KIND_CUSTOMTURF, totalAmountOfProducts,Product.SPECIES_OTHER,1)
-            productOutsideRealm.isDeleted = true
-            realm.executeTransaction {
-                res = realm.copyToRealm(productOutsideRealm)!!
-            }
-            return res!!
-        }
-    }
 
     fun doCustomTurf(price: Float, title: String, personsPaidFor: List<Person>, personThatPaid: Person) {
         //todo what if selected is empty
