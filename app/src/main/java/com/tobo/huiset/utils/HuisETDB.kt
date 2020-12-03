@@ -8,6 +8,7 @@ import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
+import java.lang.IllegalArgumentException
 import kotlin.math.roundToInt
 
 class HuisETDB(val realm: Realm) {
@@ -443,7 +444,7 @@ class HuisETDB(val realm: Realm) {
 
 
     fun doCustomTurf(price: Float, title: String, personsPaidFor: List<Person>, personThatPaid: Person) {
-        //todo what if selected is empty
+        if(personsPaidFor.isEmpty()) throw IllegalArgumentException("PersonsPaidFor cannot be empty!")
 
         //First, create the side effect objects that contain the info about which persons
         //is paid for. (These may include the payer)

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,15 +46,23 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
         HandyFunctions.addPriceTextLimiter(ed)
 
         view.findViewById<Button>(R.id.customTurfOkButton).setOnClickListener {
-            val price = ed.text.toString()
+
             val priceOk = HandyFunctions.priceValidate(ed.text.toString(),ed)
-            if(!priceOk){return@setOnClickListener}
+            if(!priceOk){
+                Toast.makeText(this.context,"Bedrag klopt niet",Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            val price = ed.text.toString().toFloat()
 
 
             val title = "PlaceHolder name"
             val selectedPersons = adapter.selectedPersonIds.map {  db.getPersonWithId(it)}.filterNotNull()
+            if(selectedPersons.isEmpty()){
+                Toast.makeText(this.context,"Selecter minstens 1 persoon",Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             val payingPerson = db.getPersonWithId(pickedPersonId)!!
-            db.doCustomTurf(price.toFloat(),title,selectedPersons,payingPerson)
+            db.doCustomTurf(price,title,selectedPersons,payingPerson)
         }
 
         initRec(view)
