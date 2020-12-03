@@ -3,9 +3,16 @@ package com.tobo.huiset.realmModels;
 import io.realm.Realm;
 import io.realm.RealmObject;
 
+/**
+ * This contains an effect to the balance of an user, additional to the main person of a transaction
+ *
+ * This is used for custom turfs for example, where the main person's balance increases and other
+ * users' balance decreases. (The side effect is the other users)
+ */
 public class TransactionSideEffect extends RealmObject {
     private String personId;
     private int price;
+    //buy means the price will be added to the balance 
     private boolean buy;
 
     public TransactionSideEffect() {
