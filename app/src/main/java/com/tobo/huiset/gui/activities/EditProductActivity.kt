@@ -131,7 +131,7 @@ class EditProductActivity : HuisEtActivity() {
         val newName = nameEditText.text.toString()
 
         val priceEditText = findViewById<EditText>(R.id.price)
-        val priceString = priceEditText.text.toString().replace(',','.')
+        val priceString = priceEditText.text.toString()
 
         val amountEditText = findViewById<EditText>(R.id.buyPerAmount)
         val amountString = amountEditText.text.toString()
@@ -142,7 +142,7 @@ class EditProductActivity : HuisEtActivity() {
             return
         }
 
-        val newPrice = priceString.euroToCent()
+        val newPrice = HandyFunctions.euroToCent(priceString)
         val newAmount = amountString.toInt()
 
         val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
