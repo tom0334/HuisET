@@ -19,7 +19,7 @@
             android:id="@+id/customTurfPriceED"
             android:textColor="#000000"
             android:textSize="40sp"
-            android:text="0.00"
+            android:hint="0.00"
             android:minWidth="80dp"
             android:digits="1234567890,."
             android:imeOptions="actionNext"

@@ -443,12 +443,12 @@ class HuisETDB(val realm: Realm) {
     }
 
 
-    fun doCustomTurf(price: Float, title: String, personsPaidFor: List<Person>, personThatPaid: Person) {
+    fun doCustomTurf(price: Int, title: String, personsPaidFor: List<Person>, personThatPaid: Person) {
         if(personsPaidFor.isEmpty()) throw IllegalArgumentException("PersonsPaidFor cannot be empty!")
 
         //First, create the side effect objects that contain the info about which persons
         //is paid for. (These may include the payer)
-        val pricePerPersonInCents = ((price / personsPaidFor.size.toFloat()) * 100f).roundToInt()
+        val pricePerPersonInCents = (price.toFloat() / personsPaidFor.size.toFloat()).roundToInt()
         val transactionSideEffects = personsPaidFor.map {
             TransactionSideEffect.create(it.id,pricePerPersonInCents,false)
         }
@@ -456,7 +456,7 @@ class HuisETDB(val realm: Realm) {
         realm.executeTransaction {
             transactionSideEffects.forEach { realm.copyToRealm(it) }
 
-            val paidPersonTrans = Transaction.create(personThatPaid,  (price * 100f).roundToInt(),transactionSideEffects, title,true)
+            val paidPersonTrans = Transaction.create(personThatPaid,  price,transactionSideEffects, title,true)
             realm.copyToRealm(paidPersonTrans)
 
             //now update the balances of everyone

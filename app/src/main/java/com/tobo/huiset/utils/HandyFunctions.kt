@@ -68,6 +68,27 @@ object HandyFunctions {
         return true
     }
 
+    fun euroToCent(euroString: String): Int {
+        var result = 0
+        val noCommas = euroString.replace(",", "")
+
+        if (noCommas.contains('.')) {
+            val split = noCommas.split('.')
+            if (split[0] != "") {
+                result += Integer.parseInt(split[0]) * 100
+            }
+            if (split[1].length == 1) {
+                result += Integer.parseInt(split[1]) * 10
+            }
+            else if (split[1].length == 2) {
+                result += Integer.parseInt(split[1])
+            }
+        } else {
+            result += Integer.parseInt(noCommas) * 100
+        }
+        return result
+    }
+
     /**
      * Validates the input price
      */

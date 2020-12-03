@@ -52,7 +52,7 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
                 Toast.makeText(this.context,"Bedrag klopt niet",Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            val price = priceEd.text.toString().toFloat()
+            val price = HandyFunctions.euroToCent(priceEd.text.toString())
 
             val title = nameEd.text.toString()
             if(title.length == 0){
