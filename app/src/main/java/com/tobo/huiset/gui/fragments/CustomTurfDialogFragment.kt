@@ -1,7 +1,6 @@
 package com.tobo.huiset.gui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,20 +41,24 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val ed = view.findViewById<EditText>(R.id.customTurfPriceED)
-        HandyFunctions.addPriceTextLimiter(ed)
+        val priceEd = view.findViewById<EditText>(R.id.customTurfPriceED)
+        HandyFunctions.addPriceTextLimiter(priceEd)
+
+        val nameEd = view.findViewById<EditText>(R.id.customTurfTitle)
 
         view.findViewById<Button>(R.id.customTurfOkButton).setOnClickListener {
-
-            val priceOk = HandyFunctions.priceValidate(ed.text.toString(),ed)
+            val priceOk = HandyFunctions.priceValidate(priceEd.text.toString(),priceEd)
             if(!priceOk){
                 Toast.makeText(this.context,"Bedrag klopt niet",Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            val price = ed.text.toString().toFloat()
+            val price = priceEd.text.toString().toFloat()
 
-
-            val title = "PlaceHolder name"
+            val title = nameEd.text.toString()
+            if(title.length == 0){
+                Toast.makeText(this.context,"Naam uitgave mag niet leeg zijn",Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             val selectedPersons = adapter.selectedPersonIds.map {  db.getPersonWithId(it)}.filterNotNull()
             if(selectedPersons.isEmpty()){
                 Toast.makeText(this.context,"Selecter minstens 1 persoon",Toast.LENGTH_LONG).show()
@@ -76,28 +79,11 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
         rec.layoutManager = GridLayoutManager(this.context,2)
     }
 
+    //Don't do anything, single turf is not possible in this dialog, because selection is always on.
     override fun handleSingleTurf(person: Person) {
-//        val selectedPersons = adapter.selectedPersonIds.size
-//
-//        val amountPerPerson = 0
-//        db.doTransactionWithSelectedProduct(person,amountPerPerson.toFloat())
-//
-//        val changed = AchievementManager.updateAchievementsAfterTurf(person)
-//        (activity as MainActivity).showAchievements(changed)
-//
-//
-//        db.selectFirstTurfProduct()
-//
-//        //amountAdapter.resetAmountToFirst()
-//
-//        //scroll to the top, because the item is added at the top
-//        //transActionRec.scrollToPosition(0)
-//        //mergeTransactionsHandler.postDelayed(mergeTransactionsRunnable, 30 * 1000)
-
     }
 
     override fun onSelectionChanged(selecting: Boolean) {
-
     }
 
     companion object{
