@@ -83,7 +83,7 @@ class HuisETDB(val realm: Realm) {
             val t = Transaction.create(person, selectedProduct, amount, false)
 
             realm.copyToRealmOrUpdate(t)
-            person.addTransaction(t)
+            t.execute(realm)
         }
     }
 
@@ -173,8 +173,8 @@ class HuisETDB(val realm: Realm) {
         var savedTrans:Transaction? = null
         realm.executeTransaction{
             val trans = Transaction.create(person, product, amount, buy)
-            person.addTransaction(trans)
             savedTrans = realm.copyToRealmOrUpdate(trans)
+            savedTrans!!.execute(realm)
         }
         return savedTrans!!
     }
@@ -182,8 +182,8 @@ class HuisETDB(val realm: Realm) {
     fun createAndSaveTransaction(transaction: Transaction): Transaction {
         var savedTrans:Transaction? = null
         realm.executeTransaction {
-            transaction.getPerson(realm, transaction.personId).addTransaction(transaction)
             savedTrans = realm.copyToRealmOrUpdate(transaction)
+            transaction.execute(realm)
         }
         return savedTrans!!
     }
@@ -312,7 +312,7 @@ class HuisETDB(val realm: Realm) {
 
     fun deleteTransaction(trans: Transaction) {
         realm.executeSafe {
-            trans.getPerson(realm, trans.personId).undoTransaction(trans)
+            trans.undo(realm)
             trans.deleteFromRealm()
         }
     }

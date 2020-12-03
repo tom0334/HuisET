@@ -130,12 +130,24 @@ public class Transaction extends RealmObject {
     }
 
     public void execute(Realm realm){
+        doOrUndoTransaction(realm,false);
+    }
+    public void undo(Realm realm){
+        doOrUndoTransaction(realm, true);
+    }
+
+    //This will apply the transaction price to the person and persons involved in the side effects
+    //it will reverse it when undo == true
+    private void doOrUndoTransaction(Realm realm, boolean undo){
+        int undoSign = undo? -1 : 1;
         Person mainPerson = this.getPerson(realm,personId);
         int mainPersonSign = this.isBuy() ? 1 : -1;
-        mainPerson.addToBalance(mainPersonSign * this.price);
+        mainPerson.addToBalance(undoSign * mainPersonSign * this.price);
         for(TransactionSideEffect sideEffect : this.sideEffects){
             int sign = sideEffect.isBuy() ? 1 : -1;
-            sideEffect.getPerson(realm).addToBalance(sign * sideEffect.getPrice());
+            sideEffect.getPerson(realm).addToBalance(undoSign * sign * sideEffect.getPrice());
         }
     }
+
+
 }
