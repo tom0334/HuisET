@@ -454,8 +454,6 @@ class HuisETDB(val realm: Realm) {
         }
 
         realm.executeTransaction {
-            transactionSideEffects.forEach { realm.copyToRealm(it) }
-
             val paidPersonTrans = Transaction.create(personThatPaid,  price,transactionSideEffects, title,true)
             realm.copyToRealm(paidPersonTrans)
 
