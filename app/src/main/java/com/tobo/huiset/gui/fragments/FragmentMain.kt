@@ -229,7 +229,14 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
             val savedTransaction = db.copyFromRealm(trans)
 
-            val snackbar = Snackbar.make(view, "${trans.amount.toFormattedAmount()} ${if (trans.product == null) "Transactie" else trans.messageOrProductName} van ${trans.getPerson(realm, trans.personId).name} verwijderd", Snackbar.LENGTH_LONG)
+
+            val snackbarText = if(trans.product == null){
+                "Eenmalige inkoop \"${trans.messageOrProductName}\" van ${trans.getPerson(realm, trans.personId).name} verwijderd"
+            }else{
+                "${trans.amount.toFormattedAmount()} ${trans.messageOrProductName} van ${trans.getPerson(realm, trans.personId).name} verwijderd"
+            }
+
+            val snackbar = Snackbar.make(view, snackbarText, Snackbar.LENGTH_LONG)
                 .setAction("Undo") {
                     db.createAndSaveTransaction(savedTransaction)
                 }
