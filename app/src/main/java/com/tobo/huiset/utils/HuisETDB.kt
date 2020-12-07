@@ -277,8 +277,8 @@ class HuisETDB(val realm: Realm) {
         while((i +1) in recentTransactions.indices){
             val first = recentTransactions[i]!!
             val other = recentTransactions[i+1]!!
-
-            if(first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId){
+            //If productID is null, that means that its a custom turf that will never be merged
+            if(first.productId != null && first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId){
                 realm.executeTransaction {
                     first.amount += other.amount
                     first.price += other.price
