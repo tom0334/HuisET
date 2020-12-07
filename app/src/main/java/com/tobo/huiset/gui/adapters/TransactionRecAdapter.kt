@@ -45,6 +45,10 @@ class TransactionRecAdapter(
         if (trans.otherPersonId != null) {
             holder.productTv.text = "Aan ${trans.getPerson(realmInstance, trans.otherPersonId).name}"
         }
+        else if (trans.productId == null){
+            //it's a custom turf
+            holder.productTv.text= trans.messageOrProductName
+        }
         else {
             holder.productTv.text = "${trans.amount.toFormattedAmount()} ${trans.messageOrProductName}"
         }
