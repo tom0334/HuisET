@@ -75,10 +75,12 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
         initRec(view)
     }
 
+    //This will let the parent know that a custom turf was done, so it resets the view for a new
+    //purchase
     private fun sendOnCustomTurfFinished(payingPersonId: String, price: Int) {
         try{
             val parent = parentFragment as CustomTurfDialogFragmentParent
-            parent.onCustomTurfDone(payingPersonId,price
+            parent.onCustomTurfDone(payingPersonId,price)
         }catch (e: Exception){
             Log.e(TAG,"Parent of custom turfDialogFragment needs to implement CustomTurfDialogFragmentParent interface")
         }
@@ -96,7 +98,7 @@ class CustomTurfDialogFragment : DialogFragment(), TurfRecAdapter.TurfHandler {
     //Don't do anything, single turf is not possible in this dialog, because selection is always on.
     override fun handleSingleTurf(person: Person) {
     }
-
+    //nothing needs to be done, the selection is only used when the OK button is pressed
     override fun onSelectionChanged(selecting: Boolean) {
     }
 
