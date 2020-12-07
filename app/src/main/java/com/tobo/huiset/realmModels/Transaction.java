@@ -129,6 +129,11 @@ public class Transaction extends RealmObject {
         return message != null ? message : getProduct().getName();
     }
 
+    public void deleteFromRealmIncludingSideEffects(){
+        this.sideEffects.deleteAllFromRealm();
+        this.deleteFromRealm();
+    }
+
     public void execute(Realm realm){
         doOrUndoTransaction(realm,false);
     }

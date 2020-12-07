@@ -245,7 +245,6 @@ class HuisETDB(val realm: Realm) {
     }
 
     fun removeProduct(oldProduct: Product) {
-
         realm.executeSafe {
             if (realm.where(Transaction::class.java)
                     .equalTo("productId", oldProduct.id)
@@ -282,7 +281,7 @@ class HuisETDB(val realm: Realm) {
                 realm.executeTransaction {
                     first.amount += other.amount
                     first.price += other.price
-                    other.deleteFromRealm()
+                    other.deleteFromRealmIncludingSideEffects()
                     recentTransactions.removeAt(i +1)
                 }
                 //Either delete the item that was merged or go on to the next one.
@@ -311,10 +310,10 @@ class HuisETDB(val realm: Realm) {
         }
     }
 
-    fun deleteTransaction(trans: Transaction) {
+    fun undoAndDeleteTransactionIncludingSideEffects(trans: Transaction) {
         realm.executeSafe {
             trans.undo(realm)
-            trans.deleteFromRealm()
+            trans.deleteFromRealmIncludingSideEffects()
         }
     }
 
@@ -455,6 +454,7 @@ class HuisETDB(val realm: Realm) {
 
         realm.executeTransaction {
             val paidPersonTrans = Transaction.create(personThatPaid,  price,transactionSideEffects, title,true)
+            //This also copies the side effects
             realm.copyToRealm(paidPersonTrans)
 
             //now update the balances of everyone

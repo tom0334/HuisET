@@ -247,7 +247,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
 
             snackbar.show()
 
-            db.deleteTransaction(trans)
+            db.undoAndDeleteTransactionIncludingSideEffects(trans)
 
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
