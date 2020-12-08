@@ -152,5 +152,7 @@ public class Transaction extends RealmObject {
         }
     }
 
-
+    public RealmList<TransactionSideEffect> getSideEffects() {
+        return sideEffects;
+    }
 }

@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-
     android:layout_margin="10dp"
     android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <LinearLayout
+        android:layout_marginBottom="4dp"
         android:orientation="vertical"
             android:id="@+id/omschrijving"
             android:layout_alignParentLeft="true"
@@ -57,25 +55,53 @@
     <TextView
         android:paddingRight="8dp"
         android:paddingLeft="8dp"
-            android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/transCustomDivider"
         android:fontFamily="sans-serif-condensed"
         android:id="@+id/main_transactionRec_timeSince"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textAlignment="center"
+        android:gravity="center_vertical"
             android:layout_toLeftOf="@id/main_transactionRec_deleteButton"
             android:maxLines="2"
         tools:text="2 weken geleden" />
 
 
     <ImageButton
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/transCustomDivider"
         android:id="@+id/main_transactionRec_deleteButton"
-        android:background="#fff"
+        android:background="@color/transparant"
         android:src="@drawable/baseline_delete_outline_black_36"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
         android:layout_width="36dp"
         android:layout_height="36dp" />
+
+    <View
+        android:id="@+id/transCustomDivider"
+        android:layout_below="@+id/omschrijving"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dfdfdf"/>
+
+    <TextView
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="2dp"
+        android:id="@+id/paidForTitle"
+        android:layout_below="@id/transCustomDivider"
+        android:fontFamily="sans-serif-black"
+        android:text="Betaald voor:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_below="@id/paidForTitle"
+        android:orientation="vertical"
+        android:id="@+id/sideEffectsContainer"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
 
 </RelativeLayout>
