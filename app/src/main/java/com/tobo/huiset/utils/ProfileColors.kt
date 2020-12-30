@@ -28,7 +28,9 @@ object ProfileColors {
         }
 
         //how often used color is used.
-        val occurances: Map<String, Int> = usedColors.groupBy { it }.mapValues { it.value.size }
+        val occurances: Map<String, Int> = usedColors
+            .filter { it != huisrekeningColor }
+            .groupBy { it }.mapValues { it.value.size }
         //else find the one that is used the least
         return occurances.minBy { mapEntry -> mapEntry.value }!!.key
     }
