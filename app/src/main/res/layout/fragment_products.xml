@@ -1,21 +1,19 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_height="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/productsTabRec"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_product"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:backgroundTint="@color/secondaryColor"
-            android:src="@drawable/baseline_add_white_48"/>
+        android:id="@+id/add_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:backgroundTint="@color/secondaryColor"
+        android:src="@drawable/baseline_add_white_48" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

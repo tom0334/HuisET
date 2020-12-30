@@ -37,14 +37,14 @@
                 android:textColor="@color/white"
                 android:layout_marginBottom="32dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/intro_slide_option_no"
                 android:checked="true"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </RadioGroup>
     </LinearLayout>

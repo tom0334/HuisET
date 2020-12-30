@@ -1,85 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="horizontal"
-        android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="47.5dp"
-        >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_margin="16dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="47.5dp">
 
     <ImageView
-            android:tint="#BCBCBC"
-            android:id="@+id/MTcheckedImage"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/baseline_done_white_48"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_alignParentLeft="true"
-            android:contentDescription="Select" />
+        android:tint="#BCBCBC"
+        android:id="@+id/MTcheckedImage"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_done_white_48"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentLeft="true"
+        android:contentDescription="Select" />
 
     <View
-            android:id="@+id/MTpersonRec_item_color"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:layout_width="4dp"
-            android:background="@color/secondaryLightColor"
-            android:layout_height="32dp"
-            android:layout_toRightOf="@id/MTcheckedImage"
-            android:layout_marginEnd="16dp" />
+        android:id="@+id/MTpersonRec_item_color"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:layout_width="4dp"
+        android:background="@color/secondaryLightColor"
+        android:layout_height="32dp"
+        android:layout_toRightOf="@id/MTcheckedImage"
+        android:layout_marginEnd="16dp" />
 
     <ImageView
-            android:id="@+id/MTpersonRec_item_icon"
+        android:id="@+id/MTpersonRec_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_home_black_24"
+        android:layout_toRightOf="@id/MTpersonRec_item_color"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/MTpersonRec_item_icon"
+        android:layout_toLeftOf="@id/MTpersonRecItem_balance"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/MTpersonRecItem_name"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Hayek lange naam brooooooooooooeder" />
+
+        <TextView
+            android:id="@+id/MTpersonRecItem_selected"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_home_black_24"
-            android:layout_toRightOf="@id/MTpersonRec_item_color"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            />
-
-    <LinearLayout android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/MTpersonRec_item_icon"
-            android:layout_toLeftOf="@id/MTpersonRecItem_balance"
-            android:orientation="vertical">
-
-        <TextView
-                android:id="@+id/MTpersonRecItem_name"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="18sp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                tools:text="Hayek lange naam brooooooooooooeder"
-                />
-
-        <TextView
-                android:id="@+id/MTpersonRecItem_selected"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="14sp"
-                android:textStyle="italic"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Geselecteerd"
-                />
+            tools:text="Geselecteerd" />
 
     </LinearLayout>
 
 
     <TextView
-            android:id="@+id/MTpersonRecItem_balance"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            tools:text ="€4.00"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+        android:id="@+id/MTpersonRecItem_balance"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        tools:text="€4.00"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
 
 
 </RelativeLayout>

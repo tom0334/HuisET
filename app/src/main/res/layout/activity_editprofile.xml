@@ -1,85 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/editProfileView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:clickable="true"
-        android:onClick="hideKeyboard"
-        android:orientation="vertical">
+    android:id="@+id/editProfileView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:clickable="true"
+    android:onClick="hideKeyboard"
+    android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:id="@+id/nameWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Naam"
-                android:inputType="textCapWords"
-                android:imeOptions="actionDone"
-                android:maxLines="1" />
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Naam"
+            android:inputType="textCapWords"
+            android:imeOptions="actionDone"
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-            android:id="@+id/radiogroup_guest_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Type:" />
+        android:id="@+id/radiogroup_guest_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Type:" />
 
     <RadioGroup
-            android:id="@+id/radiogroup_guest"
-            android:layout_width="match_parent"
+        android:id="@+id/radiogroup_guest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioRoommate"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:text="Huisgenoot" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radioRoommate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Huisgenoot" />
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radioGuest"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Gast" />
+            android:id="@+id/radioGuest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Gast" />
 
     </RadioGroup>
 
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Zichtbaarheid:" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Zichtbaarheid:" />
 
     <RadioGroup
-            android:id="@+id/radiogroup_showPerson"
-            android:layout_width="match_parent"
+        android:id="@+id/radiogroup_showPerson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioShowPerson"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Tonen" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radioShowPerson"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Tonen" />
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radioHidePerson"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Verbergen" />
+            android:id="@+id/radioHidePerson"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Verbergen" />
 
     </RadioGroup>
 
