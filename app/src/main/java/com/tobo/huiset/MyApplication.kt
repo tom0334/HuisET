@@ -7,6 +7,7 @@ import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.activities.PREFS_INTRO_SHOWN
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.realmModels.TransactionSideEffect
 import com.tobo.huiset.utils.ProfileColors
 import com.tobo.huiset.utils.extensions.edit
 import io.realm.*
@@ -41,7 +42,7 @@ class MyApplication : Application() {
         // The Realm file will be located in Context.getFilesDir() with name "myrealm.realm"
         val config = RealmConfiguration.Builder()
             .name("myrealm.realm")
-            .schemaVersion(2)
+            .schemaVersion(3)
             .migration(getMigration())
             .build()
 
@@ -73,6 +74,7 @@ class MyApplication : Application() {
 
                     currentVersion++
                 }
+
                 if (currentVersion == 1L) {
                     val products = realm.where("Product").findAll()
 
@@ -84,6 +86,37 @@ class MyApplication : Application() {
                         if (p.getInt("species") == 1) {
                             p.set("species", Product.SPECIES_BEER)
                         }
+                    }
+
+                    currentVersion++
+                }
+
+                if (currentVersion == 2L) {
+
+                    val transactionSideEffectSchema = schema.create("TransactionSideEffect")
+                    transactionSideEffectSchema.apply {
+                        addField("personId", String::class.java)
+                        addField("price", Int::class.java)
+                        addField("buy", Boolean::class.java)
+                    }
+
+                    schema.get("Transaction")?.apply {
+                        addRealmListField("sideEffects", transactionSideEffectSchema)
+                        addField("message", String::class.java)
+                    }
+
+                    val transactions = realm.where("Transaction").findAll()
+                    val moneyTransfers = transactions.filter {it.getString("otherPersonId") !=null }
+
+                    moneyTransfers.forEach {
+                        it.setString("message", "Overgemaakt")
+                        val sideEffect = realm.createObject("TransactionSideEffect")
+                        sideEffect.apply {
+                            setString("personId",it.getString("otherPersonId"))
+                            setInt("price",it.getInt("price"))
+                            setBoolean("buy", false)
+                        }
+                        it.getList("sideEffects").add(sideEffect)
                     }
 
                     currentVersion++
