@@ -17,7 +17,7 @@ public class Product extends RealmObject {
     public static final int SPECIES_OTHER = 3;
 
     @PrimaryKey
-    private final String id = UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString(); // may not be final
     private String name;
     private int price;
     private int kind;   // what kind of product it is (Only turfable, only buyable or both)
