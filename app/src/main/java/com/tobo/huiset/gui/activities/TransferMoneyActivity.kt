@@ -15,7 +15,9 @@ import com.tobo.huiset.gui.adapters.TransferPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.realmModels.TransactionSideEffect
 import com.tobo.huiset.utils.extensions.toCurrencyString
+import kotlinx.android.synthetic.main.amount_main_rec_item.*
 
 class TransferMoneyActivity : HuisEtActivity() {
 
@@ -140,35 +142,34 @@ class TransferMoneyActivity : HuisEtActivity() {
         else amountOfPersonsSelected--
     }
 
-    fun someonePaidSomeone(payer: Person, receiver: Person, money: Int, undo: Boolean) {
-
-        if (!undo) {
-            val product = Product.create(
-                "Overgemaakt",
-                money,
-                Product.KIND_NEITHER,
-                13,
-                Product.SPECIES_OTHER,
-                1
-            )
-
-            val transaction: Transaction = if (money > 0) {
-                Transaction.createTransfer(payer, receiver, money, product)
-            } else {
-                Transaction.createTransfer(receiver, payer, -money, product)
-            }
-
-            db.removeProduct(product)
-
-            transactionMap[payer] = transaction
-            amountOfPersonsPaid++
-            amountOfMoneyPaid += if (money >= 0) money else -money
-        } else {
-            transactionMap.remove(payer)
-            amountOfPersonsPaid--
-
-            amountOfMoneyPaid += if (money >= 0) -money else money
+    fun someonePaidSomeone(personThatNeedsToBeSettled: Person, otherPerson: Person, money: Int) {
+        var payer:Person
+        var receiver:Person
+        
+        if(personThatNeedsToBeSettled.balance < 0){
+            payer = personThatNeedsToBeSettled
+            receiver = otherPerson
+        }else{
+            payer = otherPerson
+            receiver = personThatNeedsToBeSettled
         }
 
+        val transaction: Transaction = Transaction.create(
+            payer,
+            money,
+            listOf(TransactionSideEffect.create(receiver.id, money, false)),
+            "Overgemaakt",
+            true
+        )
+        
+        transactionMap[personThatNeedsToBeSettled] = transaction
+        amountOfPersonsPaid++
+        amountOfMoneyPaid += if (money >= 0) money else -money
+    }
+    
+    fun undoSomeonePaid(payer: Person, money: Int){
+        transactionMap.remove(payer)
+        amountOfPersonsPaid--
+        amountOfMoneyPaid += if (money >= 0) -money else money
     }
 }
