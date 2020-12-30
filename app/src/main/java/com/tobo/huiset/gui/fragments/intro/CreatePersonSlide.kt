@@ -21,8 +21,7 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
 
     override fun isPolicyRespected(): Boolean {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
-        return db.getFirstNonHuisrekeningPerson() != null
-                || HandyFunctions.nameValidate(editText.text.toString(), editText, db, true, 0)
+        return HandyFunctions.nameValidate(editText.text.toString(), editText, db, true, 0)
     }
 
     override fun onUserIllegallyRequestedNextPage() {
@@ -50,15 +49,12 @@ class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismiss
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val name = editText.text.toString()
 
-        if (db.getFirstNonHuisrekeningPerson() == null) {
-            if (HandyFunctions.nameValidate(name, editText, db, true, 0)) {
-                val realm = Realm.getDefaultInstance()
-                val db = HuisETDB(realm)
-                db.createOrUpdateIntroPerson(name, false, false, false, context!!)
+        // name validation is done in isPolicyRespected()
+        val realm = Realm.getDefaultInstance()
+        val db = HuisETDB(realm)
+        db.createOrUpdateIntroPerson(name, false, false, false, context!!)
 
-                editText.setText("")
-            }
-        }
+        editText.setText("")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

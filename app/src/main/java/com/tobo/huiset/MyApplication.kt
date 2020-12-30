@@ -91,6 +91,7 @@ class MyApplication : Application() {
                     currentVersion++
                 }
 
+
                 if (currentVersion == 2L) {
 
                     val transactionSideEffectSchema = schema.create("TransactionSideEffect")
@@ -122,6 +123,18 @@ class MyApplication : Application() {
                     currentVersion++
                 }
 
+                if (currentVersion == 3L) {
+                    val persons = realm.where("Person").findAll()
+                    // Profiles that aren't huisRekening get the colour orange instead of black.
+                    persons.forEach { p ->
+                        if (p.getString("color") == ProfileColors.huisrekeningColor
+                            && !p.getBoolean("huisRekening")) {
+                            p.set("color", "#FFA000")
+                        }
+                    }
+                    
+                    currentVersion++
+                }
             }
         }
 

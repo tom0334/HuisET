@@ -166,7 +166,7 @@ class GroteBoodschap : BaseAchievement() {
             .filter { it.product?.species == Product.SPECIES_BEER }
             .filter { it.product?.buyPerAmount == 24 }
 
-        val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
+        val doubleCreateBuy = crateBuys.find { it.amount >= 48 }
 
         if (doubleCreateBuy != null) return doubleCreateBuy.time
         return null
@@ -191,7 +191,7 @@ class ReparatieBiertje : BaseAchievement() {
                 .filter { entry -> entry.value.amountOfProducts() > 10 }
                 .map { entry -> entry.value[0].toboTime }
 
-        val morningBeers = helpData.beerTurfTransactionsByPerson.filter { it.toboTime.hour < 12 }
+        val morningBeers = helpData.beerTurfTransactionsByPerson.filter { it.toboTime.hour in 7..11 }
 
         for (drinkDay in drankEnoughDays) {
             val repair = morningBeers.find { mb -> mb.toboTime.is1DayLaterThan(drinkDay) }

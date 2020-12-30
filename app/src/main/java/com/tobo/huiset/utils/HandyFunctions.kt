@@ -59,8 +59,9 @@ object HandyFunctions {
 
         // name is too long
         val maxNameLength = 20
-        if (name.length > maxNameLength) {
-            editText.error = "Naam mag niet langer dan $maxNameLength tekens zijn"
+        val tooLong = name.length - maxNameLength
+        if (tooLong > 0) {
+            editText.error = "Naam is $tooLong tekens te lang (max $maxNameLength)"
             return false
         }
 
