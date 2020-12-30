@@ -15,6 +15,7 @@ import com.tobo.huiset.gui.adapters.TransferPersonRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.realmModels.TransactionSideEffect
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
 class TransferMoneyActivity : HuisEtActivity() {
@@ -153,9 +154,21 @@ class TransferMoneyActivity : HuisEtActivity() {
             )
 
             val transaction: Transaction = if (money > 0) {
-                Transaction.createTransfer(payer, receiver, money, product)
+                Transaction.create(
+                    payer,
+                    money,
+                    listOf(TransactionSideEffect.create(receiver.id, money, false)),
+                    "Overgemaakt",
+                    true
+                )
             } else {
-                Transaction.createTransfer(receiver, payer, -money, product)
+                Transaction.create(
+                    receiver,
+                    -money,
+                    listOf(TransactionSideEffect.create(payer.id, -money, false)),
+                    "Overgemaakt",
+                    true
+                )
             }
 
             db.removeProduct(product)
