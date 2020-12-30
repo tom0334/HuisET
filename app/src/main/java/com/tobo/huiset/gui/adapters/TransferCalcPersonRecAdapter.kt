@@ -17,6 +17,7 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
+import java.lang.Math.abs
 
 /**
  * Shows persons in a recyclerview. These should be updated automatically when the objects are changed in realm
@@ -135,19 +136,12 @@ class TransferCalcPersonRecAdapter(
                 transferMoneyActivity.someonePaidSomeone(
                     person,
                     otherPerson,
-                    moneyToTransfer,
-                    false
-                )
+                    abs(moneyToTransfer))
 
                 notifyItemChanged(position)
             } else {
                 val otherPersonUndo = personMatchMap[person]!!
-                transferMoneyActivity.someonePaidSomeone(
-                    person,
-                    otherPersonUndo,
-                    hasPaidMap[person]!!,
-                    true
-                )
+                transferMoneyActivity.undoSomeonePaid(person,hasPaidMap[person]!!)
 
                 if (hasPaidMap[person]!! > 0) {
                     theoreticalBalanceList.remove(
