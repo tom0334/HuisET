@@ -15,7 +15,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
@@ -24,7 +23,6 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.extensions.getDisplayWith
-import kotlinx.android.synthetic.main.activity_main.*
 import nl.dionsegijn.konfetti.KonfettiView
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
@@ -42,9 +40,13 @@ class MainActivity : CelebratingHuisEtActivity() {
     private lateinit var fragments: List<HuisEtFragment>
     private var currentFragmentIndex = 0
 
-    private val fullScreenMode get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_FULLSCREEN_ID,false)
+    private val fullScreenMode
+        get() = PreferenceManager.getDefaultSharedPreferences(this)
+            .getBoolean(PREFS_FULLSCREEN_ID, false)
 
-    private val hideAppBar get() = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREFS_HIDEAPPBAR_ID,false)
+    private val hideAppBar
+        get() = PreferenceManager.getDefaultSharedPreferences(this)
+            .getBoolean(PREFS_HIDEAPPBAR_ID, false)
 
     // for hiding the appbar and navbar in fullscreen mode
     private val systemUIHandler = Handler()
@@ -88,7 +90,7 @@ class MainActivity : CelebratingHuisEtActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == MAINACTIVITY_REQUESTCODE_SETTINGS){
+        if (requestCode == MAINACTIVITY_REQUESTCODE_SETTINGS) {
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
             this.finish()
@@ -146,7 +148,7 @@ class MainActivity : CelebratingHuisEtActivity() {
                     0
                 }
             }
-            showFragment(fragToShow,true)
+            showFragment(fragToShow, true)
             return@setOnNavigationItemSelectedListener true
         }
     }
@@ -177,7 +179,11 @@ class MainActivity : CelebratingHuisEtActivity() {
             val transaction = supportFragmentManager.beginTransaction()
 
             // add them only if they weren't added yet.
-            if (savedInstanceState == null) transaction.add(R.id.main_container, fragments[i], getFragTagFromIndex(i))
+            if (savedInstanceState == null) transaction.add(
+                R.id.main_container,
+                fragments[i],
+                getFragTagFromIndex(i)
+            )
 
             //hide all but the current one
             if (i != currentFragmentIndex) transaction.hide(fragments[i])
@@ -185,7 +191,7 @@ class MainActivity : CelebratingHuisEtActivity() {
         }
     }
 
-    fun showFragment(newFragIndex: Int, userTapped:Boolean) {
+    fun showFragment(newFragIndex: Int, userTapped: Boolean) {
         supportFragmentManager.beginTransaction()
             .hide(fragments[currentFragmentIndex])
             .show(fragments[newFragIndex])
@@ -199,7 +205,7 @@ class MainActivity : CelebratingHuisEtActivity() {
 
     override fun onBackPressed() {
         val handled = fragments[currentFragmentIndex].onBackButtonPressed()
-        if(handled) return
+        if (handled) return
         super.onBackPressed()
 
     }
@@ -241,7 +247,7 @@ class MainActivity : CelebratingHuisEtActivity() {
 
     private fun hideSystemUI() {
         val decorView = window.decorView
-        if(hideAppBar){
+        if (hideAppBar) {
             supportActionBar!!.hide()
             decorView.systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -252,7 +258,7 @@ class MainActivity : CelebratingHuisEtActivity() {
                             or View.SYSTEM_UI_FLAG_FULLSCREEN// hide status bar
                             or View.SYSTEM_UI_FLAG_IMMERSIVE
                     )
-        }else{
+        } else {
             //same but without stable
             decorView.systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -265,7 +271,7 @@ class MainActivity : CelebratingHuisEtActivity() {
     }
 
 
-    fun showTurfConfetti(p: Person){
+    fun showTurfConfetti(p: Person) {
         val viewKonfetti = findViewById<KonfettiView>(R.id.viewKonfetti)
         viewKonfetti.build()
             .addColors(Color.parseColor(p.color))
@@ -273,18 +279,17 @@ class MainActivity : CelebratingHuisEtActivity() {
             .setSpeed(1f, 5f)
             .setFadeOutEnabled(true)
             .setTimeToLive(2000L)
-            .addShapes( Shape.CIRCLE, Shape.RECT)
+            .addShapes(Shape.CIRCLE, Shape.RECT)
             .addSizes(Size(12))
             .setPosition(-50f, this.getDisplayWith() + 50f, 0f, -50f)
             .burst(300)
     }
 
 
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (fullScreenMode) {
-            if(hideAppBar) supportActionBar!!.hide() else supportActionBar!!.show()
+            if (hideAppBar) supportActionBar!!.hide() else supportActionBar!!.show()
             systemUIHandler.removeCallbacks(hideSysRunnable)
             systemUIHandler.postDelayed(hideSysRunnable, 1000)
         }
@@ -296,8 +301,6 @@ class MainActivity : CelebratingHuisEtActivity() {
     override fun getSnackbarBottomMargin(): Int {
         return this.findViewById<View>(R.id.bottomNavigation).height
     }
-
-
 
 
 }

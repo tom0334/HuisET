@@ -19,13 +19,13 @@ import io.realm.Realm
 
 class YesNoIntroFragment : Fragment(), SlideDismissListener {
     private lateinit var title: String
-    private lateinit var description:String
-    private lateinit var yesText:String
-    private lateinit var noText:String
+    private lateinit var description: String
+    private lateinit var yesText: String
+    private lateinit var noText: String
 
-    private var selection:Boolean = false
+    private var selection: Boolean = false
 
-    override fun onSlideDismissed(){
+    override fun onSlideDismissed() {
         val realm = Realm.getDefaultInstance()
         val db = HuisETDB(realm)
         db.setHuisRekeningActive(selection)
@@ -47,7 +47,8 @@ class YesNoIntroFragment : Fragment(), SlideDismissListener {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.intro_slide_yes_no, container, false)
     }
 

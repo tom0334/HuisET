@@ -15,10 +15,10 @@ import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
-import com.tobo.huiset.gui.fragments.CustomTurfDialogFragment
 import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
+import com.tobo.huiset.gui.fragments.CustomTurfDialogFragment
 import com.tobo.huiset.gui.fragments.CustomTurfDialogFragmentParent
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
@@ -26,18 +26,19 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
 
-class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
+class FragmentPurchases : HuisEtFragment(), CustomTurfDialogFragmentParent {
 
 
     private var pickedPersonId: String? = null
     private var totalPurchasePrice: Int = 0
-    set(value) {
-        field = value
-        view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = "Totaal: ${value.toCurrencyString()}"
-    }
+        set(value) {
+            field = value
+            view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text =
+                "Totaal: ${value.toCurrencyString()}"
+        }
 
     //Called when a turf is done by both the customTurfDialogFragment
-    override fun onCustomTurfDone(personId: String, price: Int){
+    override fun onCustomTurfDone(personId: String, price: Int) {
         onTurfDone(db.getPersonWithId(personId)!!, price.toCurrencyString())
     }
 
@@ -54,7 +55,11 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
             field = value
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_purchases, container, false)
     }
 
@@ -63,7 +68,8 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
         super.onViewCreated(view, savedInstanceState)
         initProfileRec(view)
         initProductsRec(view)
-        view.findViewById<TextView>(R.id.purchaseMoneyCounter).text = "Totaal: ${totalPurchasePrice.toCurrencyString()}"
+        view.findViewById<TextView>(R.id.purchaseMoneyCounter).text =
+            "Totaal: ${totalPurchasePrice.toCurrencyString()}"
 
         val decFAB = view.findViewById<FloatingActionButton>(R.id.decreaseFAB)
         decFAB.setOnClickListener {
@@ -73,8 +79,8 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
         decreasing = false
     }
 
-    override fun onTabReactivated(userTapped:Boolean){
-        if(userTapped)
+    override fun onTabReactivated(userTapped: Boolean) {
+        if (userTapped)
             reset()
 
         val decFAB = view!!.findViewById<FloatingActionButton>(R.id.decreaseFAB)
@@ -93,7 +99,12 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
 
     private fun initProfileRec(view: View) {
         val pickUserRec = view.findViewById<RecyclerView>(R.id.pickUserRec)
-        pickUserRec.addItemDecoration(DividerItemDecoration(pickUserRec.context, DividerItemDecoration.VERTICAL))
+        pickUserRec.addItemDecoration(
+            DividerItemDecoration(
+                pickUserRec.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         val profiles = db.findAllCurrentPersons(true)
 
@@ -108,7 +119,12 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
     private fun initProductsRec(view: View) {
         val pickProductsRec = view.findViewById<RecyclerView>(R.id.pickProductsRec)
         pickProductsRec.visibility = View.VISIBLE
-        pickProductsRec.addItemDecoration(DividerItemDecoration(pickProductsRec.context, DividerItemDecoration.VERTICAL))
+        pickProductsRec.addItemDecoration(
+            DividerItemDecoration(
+                pickProductsRec.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         val products = db.findAllCurrentProducts(Product.KIND_BUYABLE)
 
@@ -128,22 +144,20 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
             }
             if (!anythingBought) {
                 Toast.makeText(context, "Geen producten geselecteerd", Toast.LENGTH_SHORT).show()
-            }
-            else{
+            } else {
                 onTurfDone(person, totalPurchasePrice.toCurrencyString())
             }
         }
     }
 
     private fun onTurfDone(person: Person, formattedpriceString: String) {
-        Toast.makeText(context, "Inkoop van $formattedpriceString opgeslagen", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Inkoop van $formattedpriceString opgeslagen", Toast.LENGTH_SHORT)
+            .show()
         reset()
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
         val changes = AchievementManager.updateAchievementsAfterBuy(person)
         (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
     }
-
-
 
 
     private fun setPersonAndUpdate(newPickedId: String?) {
@@ -171,10 +185,10 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
 
     fun onCreateNewProductClicked() {
         val intent = Intent(this.context, EditProductActivity::class.java)
-        startActivityForResult(intent,2)
+        startActivityForResult(intent, 2)
     }
-    
-    private fun reset(){
+
+    private fun reset() {
         // this resets the chosen person to none, putting you back to the pick person screen
         setPersonAndUpdate(null)
         // clear amounts in recyclerview
@@ -185,13 +199,13 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("pickedPersonId", pickedPersonId)
-        outState.putInt("totalPurchasePrice",totalPurchasePrice)
+        outState.putInt("totalPurchasePrice", totalPurchasePrice)
         prodRecAdapter.saveOutState(outState)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if(savedInstanceState!= null){
+        if (savedInstanceState != null) {
             totalPurchasePrice = savedInstanceState.getInt("totalPurchasePrice")
             pickedPersonId = savedInstanceState.getString("pickedPersonId")
             setPersonAndUpdate(pickedPersonId)
@@ -200,7 +214,7 @@ class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
     }
 
     fun startCustomTurf() {
-        if(pickedPersonId == null) return
+        if (pickedPersonId == null) return
         val alertDialog = CustomTurfDialogFragment.newInstance(pickedPersonId!!)
         alertDialog.show(this.childFragmentManager, "fragment_alert")
     }

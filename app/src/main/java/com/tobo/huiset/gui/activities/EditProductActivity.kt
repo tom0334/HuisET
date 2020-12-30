@@ -10,13 +10,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
+import com.google.android.material.textfield.TextInputEditText
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.realmModels.Product
+import com.tobo.huiset.utils.HandyFunctions
 import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toNumberDecimal
-import com.google.android.material.textfield.TextInputEditText
-import com.tobo.huiset.utils.HandyFunctions
 
 
 /**
@@ -41,7 +41,7 @@ class EditProductActivity : HuisEtActivity() {
         if (extras != null) {
             val oldId = extras.getString("PRODUCT_ID")
             oldProduct = realm.where(Product::class.java).equalTo("id", oldId).findFirst()!!
-            
+
             val nameEditText = findViewById<EditText>(R.id.name)
             nameEditText.setText(oldProduct!!.name)
             nameEditText.requestFocus()
@@ -66,8 +66,7 @@ class EditProductActivity : HuisEtActivity() {
             findViewById<EditText>(R.id.buyPerAmount).setText(oldProduct!!.buyPerAmount.toString())
 
             new = false
-        }
-        else {
+        } else {
             showSoftKeyboard(findViewById(R.id.name))
         }
     }
@@ -113,7 +112,11 @@ class EditProductActivity : HuisEtActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Weet je zeker dat je ${oldProduct!!.name} wil verwijderen?")
             .setPositiveButton("verwijderen") { _, _ ->
-                Toast.makeText(this, "Product ${oldProduct!!.name} is verwijderd", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Product ${oldProduct!!.name} is verwijderd",
+                    Toast.LENGTH_SHORT
+                ).show()
                 db.removeProduct(oldProduct!!)
                 db.updateProductRows()
                 this.finish()
@@ -137,14 +140,16 @@ class EditProductActivity : HuisEtActivity() {
 
         if (!HandyFunctions.nameValidate(newName, nameEditText, db, new, 1)
             || !HandyFunctions.priceValidate(priceString, priceEditText)
-            || !HandyFunctions.buyPerAmountValidate(amountString, amountEditText)) {
+            || !HandyFunctions.buyPerAmountValidate(amountString, amountEditText)
+        ) {
             return
         }
 
         val newPrice = HandyFunctions.euroToCent(priceString)
         val newAmount = amountString.toInt()
 
-        val selectedKindButton = findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
+        val selectedKindButton =
+            findViewById<RadioGroup>(R.id.radiogroup_kindProd).checkedRadioButtonId
         val newKind = when (selectedKindButton) {
             R.id.radio_OnlyTurf_Prod -> Product.KIND_TURFABLE
             R.id.radio_OnlyBuy_Prod -> Product.KIND_BUYABLE
@@ -155,7 +160,8 @@ class EditProductActivity : HuisEtActivity() {
         db.updateProductRows()
         val newRow = db.findAllCurrentProducts(Product.KIND_BOTH).size
 
-        val selectedSpeciesButton = findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
+        val selectedSpeciesButton =
+            findViewById<RadioGroup>(R.id.radiogroup_productSpecies).checkedRadioButtonId
         val newSpecies = when (selectedSpeciesButton) {
             R.id.radio_beerProduct -> Product.SPECIES_BEER
             R.id.radio_snackProduct -> Product.SPECIES_SNACK

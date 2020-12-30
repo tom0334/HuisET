@@ -1,16 +1,17 @@
 package com.tobo.huiset.realmModels;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 public class Person extends RealmObject {
 
     @PrimaryKey
-    private String id = UUID.randomUUID().toString();
+    private final String id = UUID.randomUUID().toString();
 
     private int balance = 0;
     private String name;
@@ -21,7 +22,7 @@ public class Person extends RealmObject {
     private boolean deleted = false;
     private boolean huisRekening;
 
-    private RealmList<AchievementCompletion> completions = new RealmList<>();
+    private final RealmList<AchievementCompletion> completions = new RealmList<>();
 
     private boolean selectedInHistoryView;
 
@@ -46,7 +47,11 @@ public class Person extends RealmObject {
         return this.name;
     }
 
-    public void addAchievement(AchievementCompletion a){
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void addAchievement(AchievementCompletion a) {
         this.completions.add(a);
     }
 
@@ -78,20 +83,16 @@ public class Person extends RealmObject {
         return show;
     }
 
+    public void setShow(boolean show) {
+        this.show = show;
+    }
+
     public String getColor() {
         return color;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public void setShow(boolean show) {
-        this.show = show;
     }
 
     public boolean isDeleted() {

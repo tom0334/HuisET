@@ -67,8 +67,7 @@ class EditProfileActivity : HuisEtActivity() {
             }
 
             new = false
-        }
-        else {
+        } else {
             showSoftKeyboard(findViewById(R.id.name))
         }
 
@@ -105,7 +104,11 @@ class EditProfileActivity : HuisEtActivity() {
             oldProfile!!.balance != 0 -> {
                 val view = findViewById<View>(R.id.editProfileView)
                 hideKeyboard(view)
-                Snackbar.make(view, "Dit persoon moet eerst afrekenen voordat hij verwijderd kan worden", Snackbar.LENGTH_LONG).setAction("Afrekenen", View.OnClickListener {
+                Snackbar.make(
+                    view,
+                    "Dit persoon moet eerst afrekenen voordat hij verwijderd kan worden",
+                    Snackbar.LENGTH_LONG
+                ).setAction("Afrekenen", View.OnClickListener {
                     val intent = Intent(this, TransferMoneyActivity::class.java)
                     startActivity(intent)
                 }).show()
@@ -113,7 +116,11 @@ class EditProfileActivity : HuisEtActivity() {
             oldProfile!!.isHuisRekening -> {
                 val view = findViewById<View>(R.id.editProfileView)
                 hideKeyboard(view)
-                Snackbar.make(view, "De huisrekening kan alleen uitgezet worden via de instellingen", Snackbar.LENGTH_LONG).setAction("Instellingen", View.OnClickListener {
+                Snackbar.make(
+                    view,
+                    "De huisrekening kan alleen uitgezet worden via de instellingen",
+                    Snackbar.LENGTH_LONG
+                ).setAction("Instellingen", View.OnClickListener {
                     val intent = Intent(this, SettingsActivity::class.java)
                     startActivity(intent)
                 }).show()
@@ -123,7 +130,11 @@ class EditProfileActivity : HuisEtActivity() {
                 val builder = AlertDialog.Builder(this)
                 builder.setMessage("Weet je zeker dat je ${oldProfile!!.name} wil verwijderen?")
                     .setPositiveButton("verwijderen") { _, _ ->
-                        Toast.makeText(this, "Profiel ${oldProfile!!.name} is verwijderd", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Profiel ${oldProfile!!.name} is verwijderd",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         db.removeProfile(oldProfile!!)
                         db.updateProfileRows()
                         this.finish()
@@ -150,7 +161,8 @@ class EditProfileActivity : HuisEtActivity() {
         val radioGuestGroup = findViewById<RadioGroup>(R.id.radiogroup_guest).checkedRadioButtonId
         val guestBool = (radioGuestGroup == R.id.radioGuest)
 
-        val radioShowGroup = findViewById<RadioGroup>(R.id.radiogroup_showPerson).checkedRadioButtonId
+        val radioShowGroup =
+            findViewById<RadioGroup>(R.id.radiogroup_showPerson).checkedRadioButtonId
         val showBool = (radioShowGroup == R.id.radioShowPerson)
 
         db.updateProfileRows()
@@ -159,7 +171,7 @@ class EditProfileActivity : HuisEtActivity() {
         realm.executeTransaction {
             if (new) {
                 val newColorString = ProfileColors.getNextColor(db)
-                val person = Person.create(newName, newColorString, guestBool, showBool, row,false)
+                val person = Person.create(newName, newColorString, guestBool, showBool, row, false)
                 realm.copyToRealm(person)
             } else {
                 oldProfile!!.name = newName

@@ -1,14 +1,16 @@
 package com.tobo.huiset.utils;
 
 import android.view.View;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.tobo.huiset.R;
 
 
 /**
  * Created by Hugo Visser.
  * Please see http://www.littlerobots.nl/blog/Handle-Android-RecyclerView-Clicks/
- *
+ * <p>
  * Modified by Filippo Beraldo:
  * - Added OnDoubleClickListener in place of the standard OnClickListener.
  */
@@ -16,7 +18,7 @@ import com.tobo.huiset.R;
 public class ItemDoubleClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
-    private OnDoubleClickListener mOnDoubleClickListener = new OnDoubleClickListener() {
+    private final OnDoubleClickListener mOnDoubleClickListener = new OnDoubleClickListener() {
         @Override
         public void onDoubleClick(View v) {
             if (mOnItemClickListener != null) {
@@ -34,7 +36,7 @@ public class ItemDoubleClickSupport {
         }
     };
 
-    private RecyclerView.OnChildAttachStateChangeListener mAttachListener
+    private final RecyclerView.OnChildAttachStateChangeListener mAttachListener
             = new RecyclerView.OnChildAttachStateChangeListener() {
         @Override
         public void onChildViewAttachedToWindow(View view) {
@@ -83,6 +85,7 @@ public class ItemDoubleClickSupport {
 
     public interface OnItemClickListener {
         void onItemClicked(RecyclerView recyclerView, int position, View v);
+
         void onItemDoubleClicked(RecyclerView recyclerView, int position, View v);
     }
 }

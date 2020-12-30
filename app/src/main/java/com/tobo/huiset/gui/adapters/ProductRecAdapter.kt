@@ -1,7 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
 import FragmentProducts
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,8 @@ class ProductRecAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(fragmentProducts.context).inflate(R.layout.product_rec_item, parent, false)
+        val view = LayoutInflater.from(fragmentProducts.context)
+            .inflate(R.layout.product_rec_item, parent, false)
         return ProductViewHolder(view)
     }
 
@@ -58,7 +58,8 @@ class ProductRecAdapter(
         holder.upIv.setOnClickListener {
             fragmentProducts.updateRows()
             realm.executeTransaction {
-                val other = realm.where(Product::class.java).equalTo("row", product.row - 1).findFirst()
+                val other =
+                    realm.where(Product::class.java).equalTo("row", product.row - 1).findFirst()
                 if (other != null) {
                     other.row += 1
                     product.row -= 1
@@ -70,7 +71,8 @@ class ProductRecAdapter(
         holder.downIv.setOnClickListener {
             fragmentProducts.updateRows()
             realm.executeTransaction {
-                val other = realm.where(Product::class.java).equalTo("row", product.row + 1).findFirst()
+                val other =
+                    realm.where(Product::class.java).equalTo("row", product.row + 1).findFirst()
                 if (other != null) {
                     other.row -= 1
                     product.row += 1

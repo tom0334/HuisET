@@ -18,14 +18,13 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.sumByFloat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.roundToInt
 
 class FragmentHistory : HuisEtFragment() {
 
     val SHOW_BOUGHT = 0
     val SHOW_TURFED = 1
     val SHOW_NETTO = 2
-    
+
     private var showBuy = SHOW_NETTO
 
     private lateinit var personAdap: HistoryPersonRecAdapter
@@ -35,7 +34,17 @@ class FragmentHistory : HuisEtFragment() {
 
 
     private val timeNames =
-        arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar", "Altijd")
+        arrayOf<CharSequence>(
+            "1 uur",
+            "8 uur",
+            "1 dag",
+            "1 week",
+            "1 maand",
+            "3 maanden",
+            "6 maanden",
+            "1 jaar",
+            "Altijd"
+        )
 
     private val TIMEDIFF_ONE_HOUR = 0
     private val TIMEDIFF_EIGHT_HOURS = 1
@@ -49,11 +58,15 @@ class FragmentHistory : HuisEtFragment() {
 
     private var timeDiffSelected: Int = TIMEDIFF_ALWAYS
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
-    override fun onTabReactivated(userTapped: Boolean){
+    override fun onTabReactivated(userTapped: Boolean) {
         showBuy = SHOW_NETTO
         val radioGroup = view!!.findViewById<RadioGroup>(R.id.radiogroup_history_bought)
         radioGroup.check(R.id.radioHistoryNetto)
@@ -150,7 +163,12 @@ class FragmentHistory : HuisEtFragment() {
     private fun setupPersonRec(view: View) {
         val historyPersonRec = view.findViewById<RecyclerView>(R.id.historyPersonRec)
         personAdap = HistoryPersonRecAdapter(mutableListOf(), this.context!!, realm)
-        historyPersonRec.addItemDecoration(DividerItemDecoration(historyPersonRec.context, DividerItemDecoration.VERTICAL))
+        historyPersonRec.addItemDecoration(
+            DividerItemDecoration(
+                historyPersonRec.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         historyPersonRec.adapter = personAdap
         historyPersonRec.layoutManager = LinearLayoutManager(this.context!!)
 
@@ -179,14 +197,14 @@ class FragmentHistory : HuisEtFragment() {
 
             val selectedPerson = db.getSelectedPersonInHistory()
 
-            noDataTextView.text = when{
+            noDataTextView.text = when {
                 selectedPerson != null && showBuy == SHOW_BOUGHT -> "${selectedPerson.name} heeft niets gekocht deze periode!"
                 selectedPerson == null && showBuy == SHOW_BOUGHT -> "Niemand heeft iets gekocht deze periode!"
                 selectedPerson != null && showBuy == SHOW_TURFED -> "${selectedPerson.name} heeft niets geturft deze periode!"
                 selectedPerson == null && showBuy == SHOW_TURFED -> "Niemand heeft iets geturft deze periode!"
                 selectedPerson != null && showBuy == SHOW_NETTO -> "De balans van ${selectedPerson.name} is niet veranderd deze periode!"
                 selectedPerson == null && showBuy == SHOW_NETTO -> "De totale balans is niet veranderd deze periode!"
-                else-> "Niemand heeft iets gekocht deze periode!"
+                else -> "Niemand heeft iets gekocht deze periode!"
 
             }
         } else {
@@ -198,7 +216,7 @@ class FragmentHistory : HuisEtFragment() {
         this.historyAdapter.notifyDataSetChanged()
     }
 
-    private fun updatePersons(){
+    private fun updatePersons() {
         val persons = mutableListOf<Person?>(null)
         persons.addAll(db.findPersonsIncludingDeletedExceptHuisrekening())
         personAdap.items.clear()
@@ -221,10 +239,12 @@ class FragmentHistory : HuisEtFragment() {
         val selectedPerson = db.getSelectedPersonInHistory()
         val transactions = when (selectedPerson) {
             null -> realm.where(Transaction::class.java).findAll()
-            else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id).findAll()
+            else -> realm.where(Transaction::class.java).equalTo("personId", selectedPerson.id)
+                .findAll()
         }
 
-        val inTimeSpan = transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
+        val inTimeSpan =
+            transactions.where().between("time", earlyTimePoint, lateTimePoint).findAll()
 
         /**
          * class key starts with a lowercase letter, because it can't be found otherwise
@@ -234,12 +254,14 @@ class FragmentHistory : HuisEtFragment() {
         fun Transaction.tokey(): key {
             return key(this.productId, this.isBuy)
         }
+
         var res = inTimeSpan
             .asSequence()
             .filter { it.isBuy == (showBuy == SHOW_BOUGHT) }
             .filter { it.product != null }
             .groupBy { it.tokey() }
-            .map { (key, values) -> HistoryItem(
+            .map { (key, values) ->
+                HistoryItem(
                     db.getProductWithId(key.productId)!!.name,
                     values.sumByFloat { it.amount },
                     values.sumBy { it.balanceImpact },
@@ -339,7 +361,10 @@ class FragmentHistory : HuisEtFragment() {
             TIMEDIFF_THREE_MONTHS -> cal.add(Calendar.MONTH, multiplier * 3)
             TIMEDIFF_HALF_YEAR -> cal.add(Calendar.MONTH, multiplier * 6)
             TIMEDIFF_YEAR -> cal.add(Calendar.YEAR, multiplier * 1)
-            TIMEDIFF_ALWAYS -> cal.add(Calendar.YEAR, multiplier * Calendar.getInstance().get(Calendar.YEAR))
+            TIMEDIFF_ALWAYS -> cal.add(
+                Calendar.YEAR,
+                multiplier * Calendar.getInstance().get(Calendar.YEAR)
+            )
         }
         return cal.time.time
     }

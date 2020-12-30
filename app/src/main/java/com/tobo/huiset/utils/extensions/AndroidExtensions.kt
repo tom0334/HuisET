@@ -3,17 +3,16 @@ package com.tobo.huiset.utils.extensions
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.graphics.Point
 import android.util.TypedValue
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.tobo.huiset.utils.ToboTime
 import java.text.SimpleDateFormat
-import kotlin.math.roundToInt
 
 fun Int.toPixel(context: Context): Int {
     val r = context.resources
-    val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), r.displayMetrics)
+    val pixels =
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), r.displayMetrics)
     return pixels.toInt()
 }
 
@@ -34,16 +33,15 @@ fun Long.toMixedTimeString(): String {
     val hoursAgo = minutesAgo / 60
     val daysAgo = hoursAgo / 24
 
-    if(daysAgo <= 7){
+    if (daysAgo <= 7) {
         return this.toTimeAgoString(false)
-    }
-    else{
+    } else {
         val format = SimpleDateFormat("EEEE d MMM yyyy")
         return format.format(this)
     }
 }
 
-fun Long.toTimeAgoString(includeNewLine:Boolean):String{
+fun Long.toTimeAgoString(includeNewLine: Boolean): String {
     val secondsAgo = (System.currentTimeMillis() - this) / 1000
     val minutesAgo = secondsAgo / 60
     val hoursAgo = minutesAgo / 60
@@ -101,6 +99,7 @@ inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit)
     operation(editor)
     editor.apply()
 }
+
 fun AppCompatActivity.getDisplayWith(): Float {
     return resources.displayMetrics.widthPixels.toFloat()
 }
@@ -114,7 +113,7 @@ fun AppCompatActivity.getDisplayHeight(): Float {
 /**
  * Returns the sum of all values produced by [selector] function applied to each element in the collection.
  */
- inline fun <T> Iterable<T>.sumByFloat(selector: (T) -> Float): Float{
+inline fun <T> Iterable<T>.sumByFloat(selector: (T) -> Float): Float {
     var sum: Float = 0.0f
     for (element in this) {
         sum += selector(element)
@@ -126,12 +125,12 @@ fun AppCompatActivity.getDisplayHeight(): Float {
 fun Float.toFormattedAmount(): String {
     var formatted = "%.2f".format(this)
     //remove the last one, that is the  zero in "123.50". Then
-    while(formatted.last() === '0'){
+    while (formatted.last() === '0') {
         formatted = formatted.dropLast(1)
     }
 
     //remove the trailing . or , if needed
-    if(! formatted.last().isDigit()){
+    if (!formatted.last().isDigit()) {
         formatted = formatted.dropLast(1)
     }
 

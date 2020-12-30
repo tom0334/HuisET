@@ -29,11 +29,15 @@ class TransactionRecAdapter(
     private val realmInstance: Realm,
     autoUpdate: Boolean,
     val deleteButtonCallback: (Transaction, Person) -> Unit
-) : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(data, autoUpdate) {
+) : RealmRecyclerViewAdapter<Transaction, TransactionRecAdapter.TransactionViewHolder>(
+    data,
+    autoUpdate
+) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.transaction_rec_item, parent, false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.transaction_rec_item, parent, false)
         return TransactionViewHolder(view)
     }
 
@@ -44,14 +48,14 @@ class TransactionRecAdapter(
         holder.nameTv.text = person?.name
         holder.timeAgo.text = trans.time.toTimeAgoString(includeNewLine = true)
         if (trans.otherPersonId != null) {
-            holder.productTv.text = "Aan ${trans.getPerson(realmInstance, trans.otherPersonId).name}"
-        }
-        else if (trans.productId == null){
+            holder.productTv.text =
+                "Aan ${trans.getPerson(realmInstance, trans.otherPersonId).name}"
+        } else if (trans.productId == null) {
             //it's a custom turf
-            holder.productTv.text= trans.messageOrProductName
-        }
-        else {
-            holder.productTv.text = "${trans.amount.toFormattedAmount()} ${trans.messageOrProductName}"
+            holder.productTv.text = trans.messageOrProductName
+        } else {
+            holder.productTv.text =
+                "${trans.amount.toFormattedAmount()} ${trans.messageOrProductName}"
         }
 
         if (trans.isBuy) {
@@ -59,7 +63,12 @@ class TransactionRecAdapter(
             holder.priceTv.setTextColorFromHex((1).getBalanceColorString())
         } else {
             holder.priceTv.text = "${trans.price.toCurrencyString()}"
-            holder.priceTv.setTextColor(ContextCompat.getColor(context, R.color.androidStandardTextColor))
+            holder.priceTv.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.androidStandardTextColor
+                )
+            )
         }
 
         holder.deleteButton.setOnClickListener {
@@ -75,22 +84,24 @@ class TransactionRecAdapter(
         //removeallviewsINLAYOUT is different, and doesn't do that.
         holder.sideEffectContainer.removeAllViewsInLayout()
 
-        if(trans.sideEffects.size > 0){
+        if (trans.sideEffects.size > 0) {
             holder.sideEffectContainerTitle.visibility = View.VISIBLE
             holder.sideEffectContainer.visibility = View.VISIBLE
             holder.divider.visibility = View.VISIBLE
 
             //Add each sideEffect to this view
             trans.sideEffects.forEach {
-                val inflatedView  = LayoutInflater.from(context).inflate(R.layout.transaction_rec_sideeffect_item, null)
-                inflatedView.findViewById<TextView>(R.id.personName).text = it.getPerson(realmInstance).name
+                val inflatedView = LayoutInflater.from(context)
+                    .inflate(R.layout.transaction_rec_sideeffect_item, null)
+                inflatedView.findViewById<TextView>(R.id.personName).text =
+                    it.getPerson(realmInstance).name
                 inflatedView.findViewById<TextView>(R.id.amount).apply {
                     text = it.balanceImpact.toCurrencyString()
                     setTextColor(Color.parseColor(it.balanceImpact.getBalanceColorString()))
                 }
                 holder.sideEffectContainer.addView(inflatedView)
             }
-        }else{
+        } else {
             holder.sideEffectContainerTitle.visibility = View.GONE
             holder.sideEffectContainer.visibility = View.GONE
             holder.divider.visibility = View.INVISIBLE
@@ -107,7 +118,8 @@ class TransactionRecAdapter(
         val priceTv = itemView.findViewById<TextView>(R.id.main_transactionRec_price)!!
         val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)!!
         val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)!!
-        val deleteButton = itemView.findViewById<ImageButton>(R.id.main_transactionRec_deleteButton)!!
+        val deleteButton =
+            itemView.findViewById<ImageButton>(R.id.main_transactionRec_deleteButton)!!
         val sideEffectContainer = itemView.findViewById<LinearLayout>(R.id.sideEffectsContainer)
         val sideEffectContainerTitle = itemView.findViewById<TextView>(R.id.paidForTitle)
         val divider = itemView.findViewById<View>(R.id.transCustomDivider)

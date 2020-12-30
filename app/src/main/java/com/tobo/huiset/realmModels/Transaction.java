@@ -1,22 +1,23 @@
 package com.tobo.huiset.realmModels;
 
 import com.tobo.huiset.utils.ToboTime;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 public class Transaction extends RealmObject {
 
     @PrimaryKey
-    private String id = UUID.randomUUID().toString();
+    private final String id = UUID.randomUUID().toString();
 
-    private long time = System.currentTimeMillis();
+    private final long time = System.currentTimeMillis();
     private String personId;
     private String productId;
     private int price;
@@ -24,7 +25,7 @@ public class Transaction extends RealmObject {
     private boolean buy;
 
     private String otherPersonId = null;
-    private RealmList<TransactionSideEffect> sideEffects = new RealmList<>();
+    private final RealmList<TransactionSideEffect> sideEffects = new RealmList<>();
     private String message;
 
     public Transaction() {
@@ -37,7 +38,7 @@ public class Transaction extends RealmObject {
         t.buy = buy;
         t.amount = buy ? product.getBuyPerAmount() * amount : amount;
         int divideBy = buy ? 1 : product.getBuyPerAmount();
-        t.price =  Math.round((float) product.getPrice() / divideBy * amount);
+        t.price = Math.round((float) product.getPrice() / divideBy * amount);
         return t;
     }
 
@@ -45,7 +46,7 @@ public class Transaction extends RealmObject {
         Transaction t = new Transaction();
         t.personId = person.getId();
         t.buy = buy;
-        t.price =  price;
+        t.price = price;
         t.message = message;
         t.sideEffects.addAll(sideEffects);
         return t;
@@ -79,8 +80,8 @@ public class Transaction extends RealmObject {
         return productId;
     }
 
-    public int getBalanceImpact(){
-        if(isBuy()) return  price;
+    public int getBalanceImpact() {
+        if (isBuy()) return price;
         else return -1 * price;
     }
 
@@ -125,29 +126,30 @@ public class Transaction extends RealmObject {
         this.otherPersonId = otherPersonId;
     }
 
-    public String getMessageOrProductName(){
+    public String getMessageOrProductName() {
         return message != null ? message : getProduct().getName();
     }
 
-    public void deleteFromRealmIncludingSideEffects(){
+    public void deleteFromRealmIncludingSideEffects() {
         this.sideEffects.deleteAllFromRealm();
         this.deleteFromRealm();
     }
 
-    public void execute(Realm realm){
-        doOrUndoTransaction(realm,false);
+    public void execute(Realm realm) {
+        doOrUndoTransaction(realm, false);
     }
-    public void undo(Realm realm){
+
+    public void undo(Realm realm) {
         doOrUndoTransaction(realm, true);
     }
 
     //This will apply the transaction price to the person and persons involved in the side effects
     //it will reverse it when undo == true
-    private void doOrUndoTransaction(Realm realm, boolean undo){
-        int undoSign = undo? -1 : 1;
-        Person mainPerson = this.getPerson(realm,personId);
+    private void doOrUndoTransaction(Realm realm, boolean undo) {
+        int undoSign = undo ? -1 : 1;
+        Person mainPerson = this.getPerson(realm, personId);
         mainPerson.addToBalance(undoSign * this.getBalanceImpact());
-        for(TransactionSideEffect sideEffect : this.sideEffects){
+        for (TransactionSideEffect sideEffect : this.sideEffects) {
             sideEffect.getPerson(realm).addToBalance(undoSign * sideEffect.getBalanceImpact());
         }
     }
