@@ -298,9 +298,9 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 
         return when{
-            amountOfProfilesToShow > 12 && dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
-            amountOfProfilesToShow > 6 && dpWidth > 900 -> 3
-            amountOfProfilesToShow >= 2 && dpWidth > 500 -> 2
+            amountOfProfilesToShow >= 7 && dpWidth > 950 -> 4 // large tablets in landscape
+            amountOfProfilesToShow >= 5 && dpWidth > 900 -> 3
+            amountOfProfilesToShow >= 3 && dpWidth > 500 -> 2
             else -> 1
         }
 
