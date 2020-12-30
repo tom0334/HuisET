@@ -25,13 +25,14 @@ class FragmentHistory : HuisEtFragment() {
     val SHOW_BOUGHT = 0
     val SHOW_TURFED = 1
     val SHOW_NETTO = 2
+    
+    private var showBuy = SHOW_NETTO
 
     private lateinit var personAdap: HistoryPersonRecAdapter
     private lateinit var historyAdapter: HistoryAdapter
     private var lateTimePoint: Long = 0
     private var earlyTimePoint: Long = 0
 
-    private var showBuy = SHOW_TURFED
 
     private val timeNames =
         arrayOf<CharSequence>("1 uur", "8 uur", "1 dag", "1 week", "1 maand", "3 maanden", "6 maanden", "1 jaar", "Altijd")
@@ -46,13 +47,19 @@ class FragmentHistory : HuisEtFragment() {
     private val TIMEDIFF_YEAR = 7
     private val TIMEDIFF_ALWAYS = 8
 
-    private var timeDiffSelected: Int = TIMEDIFF_ONE_DAY
+    private var timeDiffSelected: Int = TIMEDIFF_ALWAYS
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
     override fun onTabReactivated(userTapped: Boolean){
+        showBuy = SHOW_NETTO
+        val radioGroup = view!!.findViewById<RadioGroup>(R.id.radiogroup_history_bought)
+        radioGroup.check(R.id.radioHistoryNetto)
+        timeDiffSelected = TIMEDIFF_ALWAYS
+        db.selectPersonInHistory(null)
+
         initTimePoints(view!!)
         updatePersons()
         updateHistory()
@@ -109,7 +116,7 @@ class FragmentHistory : HuisEtFragment() {
                 R.id.radioHistoryBought -> SHOW_BOUGHT
                 R.id.radioHistoryGeturft -> SHOW_TURFED
                 R.id.radioHistoryNetto -> SHOW_NETTO
-                else -> SHOW_TURFED
+                else -> SHOW_NETTO
             }
             updateHistory()
             updateTimePointsText()

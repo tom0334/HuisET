@@ -144,7 +144,6 @@
                 android:id="@+id/radioHistoryGeturft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:layout_weight="1"
                 android:text="Geturft" />
 
@@ -152,6 +151,7 @@
                     android:id="@+id/radioHistoryNetto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:layout_weight="1"
                     android:text="Netto"
                     />
