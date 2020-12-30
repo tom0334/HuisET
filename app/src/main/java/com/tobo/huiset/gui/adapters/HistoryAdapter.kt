@@ -37,24 +37,42 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
 
         val itemAmount = item.amount.toFormattedAmount()
         val layoutParams = holder.itemLayout.layoutParams as RecyclerView.LayoutParams
+        val displayMetrics = context.resources.displayMetrics
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
         when (holder.productNameTv.text) {
             "Balans" -> {
                 holder.amountTv.text = if (itemAmount.toInt() <= 1) "" else "${itemAmount}p"
                 setAllTextColors(holder, ContextCompat.getColor(context, R.color.greyHintTextColor))
-                layoutParams.topMargin = 0
-                layoutParams.bottomMargin = 0
+                if (dpWidth > 900) { // for tablets
+                    layoutParams.topMargin = 0
+                    layoutParams.bottomMargin = 18
+                } else {
+                    layoutParams.topMargin = 0
+                    layoutParams.bottomMargin = 0
+                }
             }
             "Ontvangen", "Overgemaakt" -> {
                 holder.amountTv.text = ""
                 setAllTextColors(holder, ContextCompat.getColor(context, R.color.greyHintTextColor))
-                layoutParams.topMargin = 40
-                layoutParams.bottomMargin = 56
+                if (dpWidth > 900) {
+                    layoutParams.topMargin = 0
+                    layoutParams.bottomMargin = 18
+                } else {
+                    layoutParams.topMargin = 40
+                    layoutParams.bottomMargin = 56
+                }
             }
             else -> {
                 holder.amountTv.text = itemAmount
                 setAllTextColors(holder, holder.defaultRecColor)
-                layoutParams.topMargin = 56
-                layoutParams.bottomMargin = 0
+                if (dpWidth > 900) {
+                    layoutParams.topMargin = 18
+                    layoutParams.bottomMargin = 0
+                } else {
+                    layoutParams.topMargin = 56
+                    layoutParams.bottomMargin = 0
+                }
             }
         }
     }
