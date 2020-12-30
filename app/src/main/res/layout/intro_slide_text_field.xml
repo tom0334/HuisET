@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/primaryColor"
     android:paddingBottom="@dimen/appIntro2BottomBarHeight"
-        android:onClick="hideKeyboard"
-        android:orientation="vertical">
+    android:onClick="hideKeyboard"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
@@ -39,7 +39,6 @@
             android:imeOptions="actionDone"
             android:textColor="@color/white"
             android:textColorHint="@color/greyHintTextColor" />
-
 
 
     </LinearLayout>

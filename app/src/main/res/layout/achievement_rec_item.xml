@@ -35,14 +35,13 @@
             android:layout_marginTop="4dp"
             android:background="#dedede"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp" />
 
         <LinearLayout
             android:id="@+id/achivement_person_container"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="wrap_content">
-        </LinearLayout>
+            android:layout_height="wrap_content"></LinearLayout>
 
         <TextView
             android:fontFamily="sans-serif-light"

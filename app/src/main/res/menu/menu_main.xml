@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/stats"
-            android:icon="@drawable/baseline_timeline_white_48"
-            android:title="statistieken"
-            app:showAsAction="always" />
+        android:id="@+id/stats"
+        android:icon="@drawable/baseline_timeline_white_48"
+        android:title="statistieken"
+        app:showAsAction="always" />
     <item
-            android:id="@+id/achievements"
-            android:icon="@drawable/ic_trophy_white_48dp"
-            android:title="achievements"
-            app:showAsAction="always" />
+        android:id="@+id/achievements"
+        android:icon="@drawable/ic_trophy_white_48dp"
+        android:title="achievements"
+        app:showAsAction="always" />
     <item
-            android:id="@+id/transfermoney"
-            android:icon="@drawable/ic_cash_register_white_48dp"
-            android:title="overmaken"
-            app:showAsAction="always" />
+        android:id="@+id/transfermoney"
+        android:icon="@drawable/ic_cash_register_white_48dp"
+        android:title="overmaken"
+        app:showAsAction="always" />
     <item
-            android:id="@+id/settings"
-            android:icon="@drawable/round_settings_white_48"
-            android:title="instellingen"
-            app:showAsAction="ifRoom" />
+        android:id="@+id/settings"
+        android:icon="@drawable/round_settings_white_48"
+        android:title="instellingen"
+        app:showAsAction="ifRoom" />
 </menu>

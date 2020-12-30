@@ -8,8 +8,7 @@
     android:layout_gravity="center_horizontal"
     android:orientation="horizontal"
     android:minWidth="100dp"
-    app:cardBackgroundColor="@color/primaryColor"
-    >
+    app:cardBackgroundColor="@color/primaryColor">
 
 
     <LinearLayout
@@ -18,8 +17,7 @@
         android:orientation="vertical"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TextView
             android:textColor="@android:color/white"
@@ -28,13 +26,12 @@
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:maxWidth="125dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:maxWidth="125dp"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
-            tools:text="hele lange woorden moeten hier afgeknipt worden"
-            />
+            tools:text="hele lange woorden moeten hier afgeknipt worden" />
 
         <TextView
             android:textSize="12sp"
@@ -44,7 +41,7 @@
             android:textColor="@android:color/white"
             android:id="@+id/productMainRecItem_price"
             android:gravity="center_vertical"
-            tools:text ="€4.00"
+            tools:text="€4.00"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 

@@ -1,61 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
 
-              android:layout_margin="16dp"
-              android:layout_gravity="center_horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="40dp"
->
-
-    <TextView
-            android:id="@+id/productRecItem_purch_amount"
-            android:gravity="center_vertical"
-            android:fontFamily="sans-serif-medium"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:textSize="16sp"
-            android:text="3"
-            android:paddingRight="6dp"
-            />
+    android:layout_margin="16dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
 
     <TextView
-            android:id="@+id/productRecItem_amount"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:textSize="14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/productRecItem_purch_amount"
-            android:text="x24"
-            android:maxLines="1"
-            android:paddingRight="4dp"
-            android:layout_toEndOf="@id/productRecItem_purch_amount"
-            />
+        android:id="@+id/productRecItem_purch_amount"
+        android:gravity="center_vertical"
+        android:fontFamily="sans-serif-medium"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:textSize="16sp"
+        android:text="3"
+        android:paddingRight="6dp" />
 
     <TextView
-            android:id="@+id/productRecItem_name"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="16sp"
-            android:layout_toRightOf="@id/productRecItem_amount"
-            android:layout_toLeftOf="@id/productRecItem_price"
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingRight="4dp"
-            tools:text="Stel nou eens dat hier een extreem lang product zou staan he, wat zou je er aan doen dan"
-    />
+        android:id="@+id/productRecItem_amount"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/productRecItem_purch_amount"
+        android:text="x24"
+        android:maxLines="1"
+        android:paddingRight="4dp"
+        android:layout_toEndOf="@id/productRecItem_purch_amount" />
 
     <TextView
-            android:id="@+id/productRecItem_price"
-            android:gravity="center_vertical"
-            android:layout_alignParentRight="true"
-            tools:text ="€0,44"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+        android:id="@+id/productRecItem_name"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp"
+        android:layout_toRightOf="@id/productRecItem_amount"
+        android:layout_toLeftOf="@id/productRecItem_price"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingRight="4dp"
+        tools:text="Stel nou eens dat hier een extreem lang product zou staan he, wat zou je er aan doen dan" />
+
+    <TextView
+        android:id="@+id/productRecItem_price"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
+        tools:text="€0,44"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

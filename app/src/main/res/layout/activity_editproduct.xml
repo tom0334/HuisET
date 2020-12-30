@@ -1,148 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_margin="@dimen/activity_horizontal_margin"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:clickable="true"
-              android:onClick="hideKeyboard"
->
+    android:orientation="vertical"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:onClick="hideKeyboard">
 
     <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:id="@+id/nameWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Naam"
-                android:imeOptions="actionNext"
-                android:inputType="textCapWords"
-        />
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Naam"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/priceWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:id="@+id/priceWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/price"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="numberDecimal"
-                android:digits="0123456789,."
-                android:hint="Prijs totaal (in euro)"
-                android:imeOptions="actionDone"
-                />
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:digits="0123456789,."
+            android:hint="Prijs totaal (in euro)"
+            android:imeOptions="actionDone" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/buyPerAmountWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:id="@+id/buyPerAmountWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/buyPerAmount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="numberDecimal"
-                android:digits="0123456789"
-                android:hint="Aantal per verpakking"
-                android:imeOptions="actionNext"
-        />
+            android:id="@+id/buyPerAmount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            android:hint="Aantal per verpakking"
+            android:imeOptions="actionNext" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Zichtbaarheid:"
-            android:padding="5dp"
-    />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zichtbaarheid:"
+        android:padding="5dp" />
+
     <RadioGroup
-            android:id="@+id/radiogroup_kindProd"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-    >
+        android:id="@+id/radiogroup_kindProd"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_OnlyTurf_Prod"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Alleen turfbaar"/>
+            android:id="@+id/radio_OnlyTurf_Prod"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Alleen turfbaar" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_OnlyBuy_Prod"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="Alleen inkoopbaar"/>
+            android:id="@+id/radio_OnlyBuy_Prod"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="Alleen inkoopbaar" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_Both_Prod"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Beide"/>
+            android:id="@+id/radio_Both_Prod"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Beide" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_Neither_Prod"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="Geen"/>
+            android:id="@+id/radio_Neither_Prod"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="Geen" />
 
     </RadioGroup>
 
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Soort product:"
-            android:padding="5dp"
-    />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Soort product:"
+        android:padding="5dp" />
 
     <RadioGroup
-            android:id="@+id/radiogroup_productSpecies"
-            android:layout_width="match_parent"
+        android:id="@+id/radiogroup_productSpecies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radio_beerProduct"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-    >
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Bier" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_beerProduct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Bier"/>
+            android:id="@+id/radio_snackProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Snack" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_snackProduct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Snack"/>
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radio_otherProduct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Overig"/>
+            android:id="@+id/radio_otherProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Overig" />
 
     </RadioGroup>
 

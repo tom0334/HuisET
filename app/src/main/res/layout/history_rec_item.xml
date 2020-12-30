@@ -5,10 +5,9 @@
     android:id="@+id/historyView_item"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="dimen/his"
-    android:layout_marginRight="16dp"
-    >
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="dimen/his"
+    android:layout_marginRight="16dp">
 
     <View
         android:id="@+id/historyView_item_divider"
@@ -16,41 +15,39 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="48dp"
-        />
+        android:layout_marginBottom="48dp" />
 
 
     <TextView
         android:layout_alignParentLeft="true"
         android:textSize="20sp"
-            android:layout_centerVertical="true"
+        android:layout_centerVertical="true"
         android:fontFamily="sans-serif-medium"
-        tools:text = "Enorm lange productnaam bismillah"
-            android:ellipsize="end"
-            android:maxLines="1"
+        tools:text="Enorm lange productnaam bismillah"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:id="@+id/historyView_product_name"
         android:layout_width="wrap_content"
-            android:layout_toLeftOf="@id/historyView_productAmount"
+        android:layout_toLeftOf="@id/historyView_productAmount"
         android:layout_height="wrap_content" />
 
     <TextView
         android:layout_toLeftOf="@id/historyView_total_price"
-            android:layout_centerVertical="true"
+        android:layout_centerVertical="true"
         android:fontFamily="sans-serif-medium"
         android:textSize="20sp"
-        tools:text = "500"
+        tools:text="500"
         android:id="@+id/historyView_productAmount"
-            android:layout_marginLeft="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
 
 
     <TextView
         android:gravity="right"
         android:minWidth="80dp"
-            android:layout_marginLeft="8dp"
-            android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:id="@+id/historyView_total_price"
         tools:text="$400000,30"

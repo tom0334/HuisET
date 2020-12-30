@@ -5,8 +5,7 @@
     android:layout_margin="16dp"
     android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    >
+    android:layout_height="40dp">
 
     <TextView
 
@@ -17,10 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="14sp"
-            android:ellipsize="end"
-            android:maxLines="1"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="Maak nieuw product"
-        android:textAllCaps="true"
-        />
+        android:textAllCaps="true" />
 
 </LinearLayout>

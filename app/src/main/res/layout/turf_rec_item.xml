@@ -14,13 +14,12 @@
         android:layout_height="match_parent">
 
         <ImageView
-                android:id="@+id/turfRecItem_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/baseline_home_black_24"
-                />
+            android:id="@+id/turfRecItem_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/baseline_home_black_24" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/turfRecItem_name"
