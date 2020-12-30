@@ -166,7 +166,7 @@ class GroteBoodschap : BaseAchievement() {
             .filter { it.product?.species == Product.SPECIES_BEER }
             .filter { it.product?.buyPerAmount == 24 }
 
-        val doubleCreateBuy = crateBuys.find { it.amount >= 2 }
+        val doubleCreateBuy = crateBuys.find { it.amount >= 48 }
 
         if (doubleCreateBuy != null) return doubleCreateBuy.time
         return null
