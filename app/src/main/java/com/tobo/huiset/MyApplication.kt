@@ -19,15 +19,15 @@ class MyApplication : Application() {
         setupRealm()
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        if(prefs.getBoolean("firstLaunch", true)){
+        if (prefs.getBoolean("firstLaunch", true)) {
             createInitialData()
             prefs.edit {
-                it.putBoolean("firstLaunch",false)
+                it.putBoolean("firstLaunch", false)
             }
         }
-        if(! prefs.getBoolean(PREFS_INTRO_SHOWN,false)){
+        if (!prefs.getBoolean(PREFS_INTRO_SHOWN, false)) {
             val intent = Intent(this, IntroActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
 
@@ -52,24 +52,26 @@ class MyApplication : Application() {
     private fun getMigration(): RealmMigration {
 
         class MyMigrations : RealmMigration {
-            override fun migrate(realm: DynamicRealm,oldVersion: Long, newVersion: Long ) {
+            override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
                 val schema = realm.schema
                 var currentVersion = oldVersion
                 if (currentVersion == 0L) {
 
                     val transactions = realm.where("Transaction").findAll()
-                    val oldAmounts  = transactions.groupBy { x: DynamicRealmObject -> x.getString("id") }.mapValues { entry ->  entry.value.first().getInt("amount")}
+                    val oldAmounts =
+                        transactions.groupBy { x: DynamicRealmObject -> x.getString("id") }
+                            .mapValues { entry -> entry.value.first().getInt("amount") }
 
                     schema.get("Transaction")?.apply {
                         removeField("amount")
-                        addField("amount",Float::class.java)
+                        addField("amount", Float::class.java)
                     }
-                    transactions.forEach { t->
+                    transactions.forEach { t ->
                         val id = t.getString("id")
                         t.setFloat("amount", oldAmounts.get(id)!!.toFloat())
                     }
 
-                    currentVersion ++
+                    currentVersion++
                 }
                 if (currentVersion == 1L) {
                     val products = realm.where("Product").findAll()
@@ -98,7 +100,8 @@ class MyApplication : Application() {
 
         //create a standard huisrekening thing
         realm.executeTransaction {
-            val huisRekening = Person.create("Huisrekening", ProfileColors.huisrekeningColor, false, true, 0,true)
+            val huisRekening =
+                Person.create("Huisrekening", ProfileColors.huisrekeningColor, false, true, 0, true)
             realm.copyToRealm(huisRekening)
         }
     }

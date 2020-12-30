@@ -35,7 +35,8 @@ class SettingsActivity : HuisEtActivity() {
             showOrHideAppBarSetting()
         }
     }
-    private fun initViewFields(){
+
+    private fun initViewFields() {
         hideAppBarSetting = findViewById(R.id.hideAppBarSetting)
         fullscreenSwitch = findViewById(R.id.fullScreenSwitch)
         hideAppBarSwitch = findViewById(R.id.hideAppBarSwitch)
@@ -59,8 +60,8 @@ class SettingsActivity : HuisEtActivity() {
     private fun showStatus() {
         fullscreenSwitch.isChecked = prefs.getBoolean(PREFS_FULLSCREEN_ID, false)
         hideAppBarSwitch.isChecked = prefs.getBoolean(PREFS_HIDEAPPBAR_ID, false)
-        turfConfettiSwitch.isChecked = prefs.getBoolean(PREFS_TURF_CONFETTI_ID,false)
-        huisRekeningSwitch.isChecked = ! db.getHuisRekening().isDeleted
+        turfConfettiSwitch.isChecked = prefs.getBoolean(PREFS_TURF_CONFETTI_ID, false)
+        huisRekeningSwitch.isChecked = !db.getHuisRekening().isDeleted
     }
 
     private fun saveChanges() {

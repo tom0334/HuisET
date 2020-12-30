@@ -22,11 +22,15 @@ class ProductMainRecAdapter(
     val context: Context,
     data: RealmResults<Product>?,
     autoUpdate: Boolean
-) : RealmRecyclerViewAdapter<Product, ProductMainRecAdapter.ProductMainViewHolder>(data, autoUpdate) {
+) : RealmRecyclerViewAdapter<Product, ProductMainRecAdapter.ProductMainViewHolder>(
+    data,
+    autoUpdate
+) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductMainViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.product_main_rec_item, parent, false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.product_main_rec_item, parent, false)
         return ProductMainViewHolder(view)
     }
 
@@ -34,9 +38,11 @@ class ProductMainRecAdapter(
         val product = data?.get(position) ?: return
 
         holder.nameTv.text = product.name
-        holder.priceTv.text = (product.price.toFloat() / product.buyPerAmount).roundToInt().toCurrencyString()
+        holder.priceTv.text =
+            (product.price.toFloat() / product.buyPerAmount).roundToInt().toCurrencyString()
 
-        val colorResId = if (product.isSelected) R.color.secondaryDarkColor else R.color.primaryDarkColor
+        val colorResId =
+            if (product.isSelected) R.color.secondaryDarkColor else R.color.primaryDarkColor
         holder.card.setBackgroundColor(ContextCompat.getColor(context, colorResId))
     }
 

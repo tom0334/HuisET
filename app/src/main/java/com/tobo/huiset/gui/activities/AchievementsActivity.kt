@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tobo.huiset.R
+import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.HuisEtActivity
 import com.tobo.huiset.gui.adapters.AchievementsAdapter
-import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 
@@ -25,23 +25,23 @@ class AchievementsActivity : HuisEtActivity() {
     }
 
 
-    private fun setupRec(){
+    private fun setupRec() {
         val persons = db.findAllCurrentPersons(true)
 
         val rec = findViewById<RecyclerView>(R.id.acievementsRec)
-        rec.adapter = AchievementsAdapter(AchievementManager.getAllAchievements(),persons, this)
+        rec.adapter = AchievementsAdapter(AchievementManager.getAllAchievements(), persons, this)
 
         val displayMetrics = resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 
-        val columns = when{
+        val columns = when {
             dpWidth > 1200 -> 4 // large 10 inch tablets in landscape
             dpWidth > 900 -> 3
             dpWidth > 600 -> 2 // 7 inch tablet in portrait
             else -> 1
         }
-        rec.layoutManager = GridLayoutManager(this,columns)
-        val spacing = ConsistentSpacingDecoration(16.toPixel(this),16.toPixel(this),columns)
+        rec.layoutManager = GridLayoutManager(this, columns)
+        val spacing = ConsistentSpacingDecoration(16.toPixel(this), 16.toPixel(this), columns)
         rec.addItemDecoration(spacing)
     }
 }

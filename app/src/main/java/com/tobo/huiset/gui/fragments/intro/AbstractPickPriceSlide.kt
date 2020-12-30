@@ -10,18 +10,19 @@ import com.tobo.huiset.gui.fragments.intro.SlideFactory.ARG_HINT
 import com.tobo.huiset.utils.HandyFunctions
 
 
-abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener, SlideShowListener {
+abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy,
+    SlideDismissListener, SlideShowListener {
 
-    abstract fun processPrice(price:Int)
-    abstract fun getInitialPrice():String
+    abstract fun processPrice(price: Int)
+    abstract fun getInitialPrice(): String
 
     private lateinit var hint: String
 
     override fun onSlideDismissed() {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
-        val priceString = editText.text.toString().replace(',','.')
+        val priceString = editText.text.toString().replace(',', '.')
 
-        if(HandyFunctions.priceValidate(priceString, editText)){
+        if (HandyFunctions.priceValidate(priceString, editText)) {
             this.processPrice(HandyFunctions.euroToCent(priceString))
         }
     }
@@ -29,7 +30,7 @@ abstract class AbstractPickPriceSlide : AbstractCustomIntroSlide(), ISlidePolicy
     override fun onSlideShown() {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)
         val text = getInitialPrice().toCharArray()
-        editText.setText(text,0,text.size)
+        editText.setText(text, 0, text.size)
         editText.setRawInputType(InputType.TYPE_CLASS_NUMBER)
     }
 

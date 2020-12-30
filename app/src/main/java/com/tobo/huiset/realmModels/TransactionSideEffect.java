@@ -5,7 +5,7 @@ import io.realm.RealmObject;
 
 /**
  * This contains an effect to the balance of an user, additional to the main person of a transaction
- *
+ * <p>
  * This is used for custom turfs for example, where the main person's balance increases and other
  * users' balance decreases. (The side effect is the other users)
  */
@@ -18,7 +18,7 @@ public class TransactionSideEffect extends RealmObject {
     public TransactionSideEffect() {
     }
 
-    public static TransactionSideEffect create(String personId, int price, boolean buy){
+    public static TransactionSideEffect create(String personId, int price, boolean buy) {
         TransactionSideEffect effect = new TransactionSideEffect();
         effect.personId = personId;
         effect.price = price;
@@ -31,7 +31,7 @@ public class TransactionSideEffect extends RealmObject {
         else return -1 * price;
     }
 
-    public Person getPerson(Realm realm){
+    public Person getPerson(Realm realm) {
         return realm.where(Person.class).equalTo("id", this.personId).findFirst();
     }
 

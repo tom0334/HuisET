@@ -16,11 +16,11 @@ import io.realm.Realm
 abstract class AbstractCustomIntroSlide : Fragment() {
 
     private lateinit var title: String
-    private lateinit var description:String
+    private lateinit var description: String
 
-    lateinit var db:HuisETDB
+    lateinit var db: HuisETDB
 
-    abstract fun getLayoutResId():Int
+    abstract fun getLayoutResId(): Int
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +37,9 @@ abstract class AbstractCustomIntroSlide : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate( getLayoutResId(), container, false)
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(getLayoutResId(), container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

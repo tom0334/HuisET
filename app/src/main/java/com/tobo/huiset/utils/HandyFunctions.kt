@@ -3,7 +3,6 @@ package com.tobo.huiset.utils
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
-import com.google.android.material.snackbar.Snackbar
 
 object HandyFunctions {
 
@@ -79,8 +78,7 @@ object HandyFunctions {
             }
             if (split[1].length == 1) {
                 result += Integer.parseInt(split[1]) * 10
-            }
-            else if (split[1].length == 2) {
+            } else if (split[1].length == 2) {
                 result += Integer.parseInt(split[1])
             }
         } else {

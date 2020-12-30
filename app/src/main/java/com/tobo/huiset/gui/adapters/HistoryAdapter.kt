@@ -1,7 +1,6 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +13,21 @@ import com.tobo.huiset.utils.extensions.toCurrencyString
 import com.tobo.huiset.utils.extensions.toFormattedAmount
 
 
-data class HistoryItem(val productName: String, val amount: Float, val price: Int, val total:Boolean)
+data class HistoryItem(
+    val productName: String,
+    val amount: Float,
+    val price: Int,
+    val total: Boolean
+)
 
 
 class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) :
     RecyclerView.Adapter<HistoryViewholder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewholder {
-        return HistoryViewholder(LayoutInflater.from(context).inflate(R.layout.history_rec_item, parent, false))
+        return HistoryViewholder(
+            LayoutInflater.from(context).inflate(R.layout.history_rec_item, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: HistoryViewholder, position: Int) {
@@ -29,9 +35,9 @@ class HistoryAdapter(val items: MutableList<HistoryItem>, val context: Context) 
         holder.productNameTv.text = item.productName
         holder.priceTv.text = item.price.toCurrencyString()
 
-        if(item.total) {
+        if (item.total) {
             holder.totalDivider.visibility = View.VISIBLE
-        }else{
+        } else {
             holder.totalDivider.visibility = View.GONE
         }
 

@@ -12,7 +12,6 @@ import com.tobo.huiset.extendables.HuisEtFragment
 import com.tobo.huiset.gui.activities.EditProfileActivity
 import com.tobo.huiset.gui.adapters.PersonRecAdapter
 import com.tobo.huiset.utils.ItemClickSupport
-import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.ItemDoubleClickSupport
 
 
@@ -21,7 +20,11 @@ import com.tobo.huiset.utils.ItemDoubleClickSupport
  */
 class FragmentProfiles : HuisEtFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         return inflater.inflate(R.layout.fragment_profiles, container, false)
     }
@@ -77,7 +80,11 @@ class FragmentProfiles : HuisEtFragment() {
                     }
                 }
 
-                override fun onItemDoubleClicked(recyclerView: RecyclerView, position: Int, v: View) {
+                override fun onItemDoubleClicked(
+                    recyclerView: RecyclerView,
+                    position: Int,
+                    v: View
+                ) {
                     val person = persons[position]!!
                     val prevShow = person.show
 

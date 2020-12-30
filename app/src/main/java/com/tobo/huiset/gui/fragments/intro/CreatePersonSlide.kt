@@ -13,10 +13,11 @@ import com.tobo.huiset.utils.HuisETDB
 import io.realm.Realm
 
 
-class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener, SlideShowListener {
+class CreatePersonSlide : AbstractCustomIntroSlide(), ISlidePolicy, SlideDismissListener,
+    SlideShowListener {
 
-    private lateinit var buttonText:String
-    private lateinit var hint:String
+    private lateinit var buttonText: String
+    private lateinit var hint: String
 
     override fun isPolicyRespected(): Boolean {
         val editText = view!!.findViewById<TextInputEditText>(R.id.intro_name)

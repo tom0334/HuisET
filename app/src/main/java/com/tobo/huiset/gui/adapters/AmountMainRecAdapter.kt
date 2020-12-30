@@ -33,7 +33,8 @@ class AmountMainRecAdapter(val items: List<Int>, val context: Context) :
             this.selectedPos = position
         }
 
-        val colorResId = if (position == selectedPos) R.color.secondaryDarkColor else R.color.primaryDarkColor
+        val colorResId =
+            if (position == selectedPos) R.color.secondaryDarkColor else R.color.primaryDarkColor
         holder.cardV.setBackgroundColor(ContextCompat.getColor(context, colorResId))
 
         holder.amountTv.text = items[position].toString()

@@ -2,7 +2,7 @@ package com.tobo.huiset.gui.fragments.intro
 
 import android.os.Bundle
 
-object SlideFactory{
+object SlideFactory {
 
     val ARG_TITLE = "slide_title"
     val ARG_DESCRIPTION = "slide_description"
@@ -11,7 +11,7 @@ object SlideFactory{
     val ARG_NO_TEXT = "no_text"
     val ARG_DEFAULT_CHOICE = "def_choice"
 
-    val ARG_HINT ="slide_hint"
+    val ARG_HINT = "slide_hint"
     val ARG_BUTTON_TEXT = "slide_createButtonText"
 
     fun newYesNoInstance(
@@ -26,10 +26,10 @@ object SlideFactory{
         val args = Bundle()
 
         args.putString(ARG_TITLE, title)
-        args.putString(ARG_DESCRIPTION,description)
-        args.putString(ARG_YES_TEXT,yesText)
-        args.putString(ARG_NO_TEXT,noText)
-        args.putBoolean(ARG_DEFAULT_CHOICE,defaultChoice)
+        args.putString(ARG_DESCRIPTION, description)
+        args.putString(ARG_YES_TEXT, yesText)
+        args.putString(ARG_NO_TEXT, noText)
+        args.putBoolean(ARG_DEFAULT_CHOICE, defaultChoice)
 
         yesNoIntroFragment.arguments = args
         return yesNoIntroFragment
@@ -39,11 +39,11 @@ object SlideFactory{
     fun newCreatePersonSlide(
         title: String,
         description: String,
-        buttonText:String,
-        hint:String
+        buttonText: String,
+        hint: String
     ): CreatePersonSlide {
 
-        val sampleSlide =  CreatePersonSlide()
+        val sampleSlide = CreatePersonSlide()
 
         val args = Bundle()
 

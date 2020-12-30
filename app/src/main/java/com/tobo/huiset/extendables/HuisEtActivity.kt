@@ -19,7 +19,7 @@ abstract class HuisEtActivity : AppCompatActivity() {
     //by lazy only creates it when needed, then keeps the same object
     val realm: Realm by lazy { Realm.getDefaultInstance() }
 
-    val db:HuisETDB by lazy {  HuisETDB(realm) }
+    val db: HuisETDB by lazy { HuisETDB(realm) }
 
 
     override fun onDestroy() {
@@ -30,7 +30,7 @@ abstract class HuisEtActivity : AppCompatActivity() {
     /**
      * Override this to add a custom margin to SnackBars.
      */
-    open fun getSnackbarBottomMargin(): Int{
+    open fun getSnackbarBottomMargin(): Int {
         return 0
     }
 

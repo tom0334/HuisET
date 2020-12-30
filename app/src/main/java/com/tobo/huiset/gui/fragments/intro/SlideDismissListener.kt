@@ -1,8 +1,9 @@
 package com.tobo.huiset.gui.fragments.intro
 
-interface SlideDismissListener{
+interface SlideDismissListener {
     fun onSlideDismissed()
 }
-interface SlideShowListener{
+
+interface SlideShowListener {
     fun onSlideShown()
 }
