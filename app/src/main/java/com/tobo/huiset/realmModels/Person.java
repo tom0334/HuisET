@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
 public class Person extends RealmObject {
 
     @PrimaryKey
-    private final String id = UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString(); // may not be final
 
     private int balance = 0;
     private String name;
@@ -22,7 +22,7 @@ public class Person extends RealmObject {
     private boolean deleted = false;
     private boolean huisRekening;
 
-    private final RealmList<AchievementCompletion> completions = new RealmList<>();
+    private RealmList<AchievementCompletion> completions = new RealmList<>(); // may not be final
 
     private boolean selectedInHistoryView;
 

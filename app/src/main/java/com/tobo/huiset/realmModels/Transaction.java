@@ -15,9 +15,9 @@ import io.realm.annotations.PrimaryKey;
 public class Transaction extends RealmObject {
 
     @PrimaryKey
-    private final String id = UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString(); // may not be final
 
-    private final long time = System.currentTimeMillis();
+    private long time = System.currentTimeMillis(); // may not be final
     private String personId;
     private String productId;
     private int price;
@@ -25,7 +25,7 @@ public class Transaction extends RealmObject {
     private boolean buy;
 
     private String otherPersonId = null;
-    private final RealmList<TransactionSideEffect> sideEffects = new RealmList<>();
+    private RealmList<TransactionSideEffect> sideEffects = new RealmList<>(); // may not be final
     private String message;
 
     public Transaction() {
