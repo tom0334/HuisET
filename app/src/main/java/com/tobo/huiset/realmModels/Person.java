@@ -50,32 +50,6 @@ public class Person extends RealmObject {
         this.completions.add(a);
     }
 
-
-    public void addTransaction(Transaction t) {
-        int price = t.getPrice();
-        if (t.isBuy()) {
-            this.balance += price;
-            if (t.getOtherPersonId() != null) {
-                t.getPerson(getRealm(), t.getOtherPersonId()).balance -= price;
-            }
-        } else {
-            this.balance -= price;
-        }
-    }
-
-    public void undoTransaction(Transaction t) {
-        int price = t.getPrice();
-        if (t.isBuy()) {
-            this.balance -= price;
-            if (t.getOtherPersonId() != null) {
-                t.getPerson(getRealm(), t.getOtherPersonId()).balance += price;
-            }
-        } else {
-            this.balance += price;
-        }
-    }
-
-
     public int getBalance() {
         return balance;
     }
@@ -144,4 +118,7 @@ public class Person extends RealmObject {
         return completions;
     }
 
+    public void addToBalance(int amount) {
+        this.balance += amount;
+    }
 }

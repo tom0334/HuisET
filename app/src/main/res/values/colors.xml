@@ -13,4 +13,5 @@
   <color name="grey">#BCBCBC</color>
   <color name="white">#ffffff</color>
   <color name="greyHintTextColor">#888</color>
+  <color name="transparant">#000000ff</color>
 </resources>

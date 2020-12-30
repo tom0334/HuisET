@@ -2,10 +2,14 @@ package com.tobo.huiset.realmModels;
 
 import com.tobo.huiset.utils.ToboTime;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 public class Transaction extends RealmObject {
 
@@ -20,6 +24,8 @@ public class Transaction extends RealmObject {
     private boolean buy;
 
     private String otherPersonId = null;
+    private RealmList<TransactionSideEffect> sideEffects = new RealmList<>();
+    private String message;
 
     public Transaction() {
     }
@@ -35,10 +41,21 @@ public class Transaction extends RealmObject {
         return t;
     }
 
+    static public Transaction create(Person person, int price, List<TransactionSideEffect> sideEffects, String message, boolean buy) {
+        Transaction t = new Transaction();
+        t.personId = person.getId();
+        t.buy = buy;
+        t.price =  price;
+        t.message = message;
+        t.sideEffects.addAll(sideEffects);
+        return t;
+    }
+
     static public Transaction createTransfer(Person person, Person receiver, int price, Product product) {
         Transaction t = new Transaction();
         t.personId = person.getId();
         t.productId = product.getId();
+
         t.buy = true;
         t.amount = 1;
         t.price = price;
@@ -62,7 +79,7 @@ public class Transaction extends RealmObject {
         return productId;
     }
 
-    public float getSaldoImpact(){
+    public int getBalanceImpact(){
         if(isBuy()) return  price;
         else return -1 * price;
     }
@@ -75,6 +92,7 @@ public class Transaction extends RealmObject {
         return realm.where(Person.class).equalTo("id", id).findFirst();
     }
 
+    @Nullable
     public Product getProduct() {
         return this.getRealm().where(Product.class).equalTo("id", this.productId).findFirst();
     }
@@ -105,5 +123,36 @@ public class Transaction extends RealmObject {
 
     public void setOtherPersonId(String otherPersonId) {
         this.otherPersonId = otherPersonId;
+    }
+
+    public String getMessageOrProductName(){
+        return message != null ? message : getProduct().getName();
+    }
+
+    public void deleteFromRealmIncludingSideEffects(){
+        this.sideEffects.deleteAllFromRealm();
+        this.deleteFromRealm();
+    }
+
+    public void execute(Realm realm){
+        doOrUndoTransaction(realm,false);
+    }
+    public void undo(Realm realm){
+        doOrUndoTransaction(realm, true);
+    }
+
+    //This will apply the transaction price to the person and persons involved in the side effects
+    //it will reverse it when undo == true
+    private void doOrUndoTransaction(Realm realm, boolean undo){
+        int undoSign = undo? -1 : 1;
+        Person mainPerson = this.getPerson(realm,personId);
+        mainPerson.addToBalance(undoSign * this.getBalanceImpact());
+        for(TransactionSideEffect sideEffect : this.sideEffects){
+            sideEffect.getPerson(realm).addToBalance(undoSign * sideEffect.getBalanceImpact());
+        }
+    }
+
+    public RealmList<TransactionSideEffect> getSideEffects() {
+        return sideEffects;
     }
 }

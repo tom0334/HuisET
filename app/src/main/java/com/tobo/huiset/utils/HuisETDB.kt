@@ -3,16 +3,15 @@ package com.tobo.huiset.utils
 import android.content.Context
 import android.widget.Toast
 import com.tobo.huiset.achievements.BaseAchievement
-import com.tobo.huiset.realmModels.AchievementCompletion
-import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.realmModels.Product
-import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.realmModels.*
 import com.tobo.huiset.utils.extensions.executeSafe
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
+import java.lang.IllegalArgumentException
+import kotlin.math.roundToInt
 
-class HuisETDB(private val realm: Realm) {
+class HuisETDB(val realm: Realm) {
 
 
     /**
@@ -85,7 +84,7 @@ class HuisETDB(private val realm: Realm) {
             val t = Transaction.create(person, selectedProduct, amount, false)
 
             realm.copyToRealmOrUpdate(t)
-            person.addTransaction(t)
+            t.execute(realm)
         }
     }
 
@@ -175,8 +174,8 @@ class HuisETDB(private val realm: Realm) {
         var savedTrans:Transaction? = null
         realm.executeTransaction{
             val trans = Transaction.create(person, product, amount, buy)
-            person.addTransaction(trans)
             savedTrans = realm.copyToRealmOrUpdate(trans)
+            savedTrans!!.execute(realm)
         }
         return savedTrans!!
     }
@@ -184,8 +183,8 @@ class HuisETDB(private val realm: Realm) {
     fun createAndSaveTransaction(transaction: Transaction): Transaction {
         var savedTrans:Transaction? = null
         realm.executeTransaction {
-            transaction.getPerson(realm, transaction.personId).addTransaction(transaction)
             savedTrans = realm.copyToRealmOrUpdate(transaction)
+            transaction.execute(realm)
         }
         return savedTrans!!
     }
@@ -246,7 +245,6 @@ class HuisETDB(private val realm: Realm) {
     }
 
     fun removeProduct(oldProduct: Product) {
-
         realm.executeSafe {
             if (realm.where(Transaction::class.java)
                     .equalTo("productId", oldProduct.id)
@@ -278,12 +276,12 @@ class HuisETDB(private val realm: Realm) {
         while((i +1) in recentTransactions.indices){
             val first = recentTransactions[i]!!
             val other = recentTransactions[i+1]!!
-
-            if(first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId){
+            //If productID is null, that means that its a custom turf that will never be merged
+            if(first.productId != null && first.isBuy == other.isBuy && first.productId == other.productId && first.personId == other.personId){
                 realm.executeTransaction {
                     first.amount += other.amount
                     first.price += other.price
-                    other.deleteFromRealm()
+                    other.deleteFromRealmIncludingSideEffects()
                     recentTransactions.removeAt(i +1)
                 }
                 //Either delete the item that was merged or go on to the next one.
@@ -312,10 +310,10 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
-    fun deleteTransaction(trans: Transaction) {
+    fun undoAndDeleteTransactionIncludingSideEffects(trans: Transaction) {
         realm.executeSafe {
-            trans.getPerson(realm, trans.personId).undoTransaction(trans)
-            trans.deleteFromRealm()
+            trans.undo(realm)
+            trans.deleteFromRealmIncludingSideEffects()
         }
     }
 
@@ -443,6 +441,27 @@ class HuisETDB(private val realm: Realm) {
         }
     }
 
+
+    fun doCustomTurf(price: Int, title: String, personsPaidFor: List<Person>, personThatPaid: Person) {
+        if(personsPaidFor.isEmpty()) throw IllegalArgumentException("PersonsPaidFor cannot be empty!")
+
+        //First, create the side effect objects that contain the info about which persons
+        //is paid for. (These may include the payer)
+        val pricePerPersonInCents = (price.toFloat() / personsPaidFor.size.toFloat()).roundToInt()
+        val transactionSideEffects = personsPaidFor.map {
+            TransactionSideEffect.create(it.id,pricePerPersonInCents,false)
+        }
+
+        realm.executeTransaction {
+            val paidPersonTrans = Transaction.create(personThatPaid,  price,transactionSideEffects, title,true)
+            //This also copies the side effects
+            realm.copyToRealm(paidPersonTrans)
+
+            //now update the balances of everyone
+            paidPersonTrans.execute(realm)
+        }
+    }
+
     fun createProduct(newName: String, newPrice: Int, newKind: Int, newRow: Int, newSpecies: Int, newAmount: Int) {
         realm.executeTransaction {
             val product = Product.create(newName, newPrice, newKind, newRow, newSpecies, newAmount)
@@ -476,3 +495,4 @@ class HuisETDB(private val realm: Realm) {
     }
 
 }
+

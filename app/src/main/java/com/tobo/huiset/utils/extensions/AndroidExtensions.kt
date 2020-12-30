@@ -71,27 +71,6 @@ fun Long.toTimeAgoString(includeNewLine:Boolean):String{
 
 fun Long.toToboTime(): ToboTime = ToboTime(this)
 
-
-fun String.euroToCent(): Int {
-    var result = 0
-
-    if (this.contains('.')) {
-        val split = this.split('.')
-        if (split[0] != "") {
-            result += Integer.parseInt(split[0]) * 100
-        }
-        if (split[1].length == 1) {
-            result += Integer.parseInt(split[1]) * 10
-        }
-        else if (split[1].length == 2) {
-            result += Integer.parseInt(split[1])
-        }
-    } else {
-        result += Integer.parseInt(this) * 100
-    }
-    return result
-}
-
 /**
  * green if positiv
  * black if equal aan 0

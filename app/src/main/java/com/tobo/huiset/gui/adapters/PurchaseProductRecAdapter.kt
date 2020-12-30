@@ -38,10 +38,12 @@ class PurchaseProductRecAdapter(
     companion object{
         private const val VIEW_TYPE_PRODUCT = 1
         private const val VIEW_TYPE_NEW_PRODUCT_BUTTON = 2
+        private const val VIEW_TYPE_TEMP_PRODUCT = 3
     }
 
     override fun getItemViewType(position: Int):Int = when(position ){
-        data?.size -> VIEW_TYPE_NEW_PRODUCT_BUTTON
+        0 -> VIEW_TYPE_TEMP_PRODUCT
+        data?.lastIndex?.plus(2) -> VIEW_TYPE_NEW_PRODUCT_BUTTON
         else -> VIEW_TYPE_PRODUCT
     }
 
@@ -54,6 +56,7 @@ class PurchaseProductRecAdapter(
         val layoutResId = when(viewType){
             VIEW_TYPE_PRODUCT -> R.layout.product_purchase_rec_item
             VIEW_TYPE_NEW_PRODUCT_BUTTON -> R.layout.product_purchase_rec_item_new_product
+            VIEW_TYPE_TEMP_PRODUCT -> R.layout.product_purchase_rec_item_custom_temp
             else -> throw IllegalArgumentException("Invalid view type")
         }
 
@@ -62,19 +65,31 @@ class PurchaseProductRecAdapter(
         return when(viewType){
             VIEW_TYPE_PRODUCT -> ProductViewHolder(view)
             VIEW_TYPE_NEW_PRODUCT_BUTTON -> NewProductRecViewHolder(view)
+            VIEW_TYPE_TEMP_PRODUCT -> TempProductRecViewHolder(view)
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(position == data?.size){
+        if(position == 0){
+            bindTempProductButton(holder as TempProductRecViewHolder)
+        }
+        //if it is the last item(plus 2 because of the
+        else if(data!= null && position == data!!.lastIndex + 2){
             bindNewProductButton(holder as NewProductRecViewHolder)
 
         }else{
-            val product = data?.get(position)
+            //minus one because of the first item is custom
+            val product = data?.get(position-1)
             if(product != null){
                 bindProduct(holder as ProductViewHolder,product, position)
             }
+        }
+    }
+
+    private fun bindTempProductButton(holder: TempProductRecViewHolder) {
+        holder.itemView.setOnClickListener {
+            fragmentPurchases.startCustomTurf()
         }
     }
 
@@ -139,9 +154,9 @@ class PurchaseProductRecAdapter(
 
 
 
-    //THE NEW PRODUCT BUTTON IS ALSO AN ITEM
+    //THE NEW PRODUCT BUTTON and the custom temp purchase are also buttons
     override fun getItemCount(): Int {
-        return if (data == null) 1 else data!!.size + 1
+        return if (data == null) 2 else data!!.size + 2
     }
 
     fun getFromMap(id: String): Int {
@@ -171,4 +186,7 @@ class PurchaseProductRecAdapter(
 
     class NewProductRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
+    class TempProductRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
+
 }
+

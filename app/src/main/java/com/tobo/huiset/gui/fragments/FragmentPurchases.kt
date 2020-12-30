@@ -15,15 +15,18 @@ import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
+import com.tobo.huiset.gui.fragments.CustomTurfDialogFragment
 import com.tobo.huiset.gui.activities.EditProductActivity
 import com.tobo.huiset.gui.adapters.PurchasePersonRecAdapter
 import com.tobo.huiset.gui.adapters.PurchaseProductRecAdapter
+import com.tobo.huiset.gui.fragments.CustomTurfDialogFragmentParent
+import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toCurrencyString
 
 
-class FragmentPurchases : HuisEtFragment() {
+class FragmentPurchases : HuisEtFragment() , CustomTurfDialogFragmentParent {
 
 
     private var pickedPersonId: String? = null
@@ -31,6 +34,11 @@ class FragmentPurchases : HuisEtFragment() {
     set(value) {
         field = value
         view?.findViewById<TextView>(R.id.purchaseMoneyCounter)?.text = "Totaal: ${value.toCurrencyString()}"
+    }
+
+    //Called when a turf is done by both the customTurfDialogFragment
+    override fun onCustomTurfDone(personId: String, price: Int){
+        onTurfDone(db.getPersonWithId(personId)!!, price.toCurrencyString())
     }
 
     private val prodRecAdapter get() = view!!.findViewById<RecyclerView>(R.id.pickProductsRec).adapter as PurchaseProductRecAdapter
@@ -121,16 +129,21 @@ class FragmentPurchases : HuisEtFragment() {
             if (!anythingBought) {
                 Toast.makeText(context, "Geen producten geselecteerd", Toast.LENGTH_SHORT).show()
             }
-            else {
-                Toast.makeText(context, "Inkoop van ${totalPurchasePrice.toCurrencyString()} opgeslagen", Toast.LENGTH_SHORT).show()
+            else{
+                onTurfDone(person, totalPurchasePrice.toCurrencyString())
             }
-            reset()
-            db.mergeTransactionsIfPossible(System.currentTimeMillis())
-            val changes = AchievementManager.updateAchievementsAfterBuy(person)
-            (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
-
         }
     }
+
+    private fun onTurfDone(person: Person, formattedpriceString: String) {
+        Toast.makeText(context, "Inkoop van $formattedpriceString opgeslagen", Toast.LENGTH_SHORT).show()
+        reset()
+        db.mergeTransactionsIfPossible(System.currentTimeMillis())
+        val changes = AchievementManager.updateAchievementsAfterBuy(person)
+        (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
+    }
+
+
 
 
     private fun setPersonAndUpdate(newPickedId: String?) {
@@ -186,6 +199,11 @@ class FragmentPurchases : HuisEtFragment() {
         }
     }
 
+    fun startCustomTurf() {
+        if(pickedPersonId == null) return
+        val alertDialog = CustomTurfDialogFragment.newInstance(pickedPersonId!!)
+        alertDialog.show(this.childFragmentManager, "fragment_alert")
+    }
 
 
 }

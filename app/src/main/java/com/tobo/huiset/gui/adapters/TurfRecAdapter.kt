@@ -38,11 +38,8 @@ class TurfRecAdapter(
         fun onSelectionChanged(selecting:Boolean)
     }
 
-
-
-
+    private var alwaysSelecting= false
     val db by lazy { HuisETDB(realm) }
-
     val selectedPersonIds = mutableSetOf<String>()
 
     private fun personIsSelected(person:Person) = selectedPersonIds.contains(person.id)
@@ -86,8 +83,8 @@ class TurfRecAdapter(
                 val reversed = ! personIsSelected(person)
                 setPersonSelected(person,position,reversed)
 
-                if(selectedPersonIds.isEmpty()){
-                    selecting = false
+                if(selectedPersonIds.isEmpty() ){
+                   stopSelecting()
                 }
 
             } else {
@@ -107,6 +104,9 @@ class TurfRecAdapter(
 
 
     fun onLongPress(person: Person, position: Int){
+        //if always selecting nothing needs to be done
+        if(alwaysSelecting) return
+
         selecting = ! selecting
 
         if(selecting){
@@ -126,6 +126,13 @@ class TurfRecAdapter(
             selectedPersonIds.remove(person.id)
         }
         this.notifyItemChanged(index)
+    }
+
+
+    fun stopSelecting(){
+        if(!alwaysSelecting){
+            selecting = false
+        }
     }
 
 
@@ -149,6 +156,11 @@ class TurfRecAdapter(
         }
         this.selecting = savedInstanceState.getBoolean("Selecting")
 
+    }
+
+    fun setAlwaysSelecting(b: Boolean) {
+        this.alwaysSelecting = b
+        this.selecting = true
     }
 
     class TurfRecViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

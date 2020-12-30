@@ -1,10 +1,12 @@
 package com.tobo.huiset.gui.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +39,6 @@ class TransactionRecAdapter(
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val trans = data?.get(position) ?: return
-
         val person = trans.getPerson(realmInstance, trans.personId)
 
         holder.nameTv.text = person?.name
@@ -45,8 +46,12 @@ class TransactionRecAdapter(
         if (trans.otherPersonId != null) {
             holder.productTv.text = "Aan ${trans.getPerson(realmInstance, trans.otherPersonId).name}"
         }
+        else if (trans.productId == null){
+            //it's a custom turf
+            holder.productTv.text= trans.messageOrProductName
+        }
         else {
-            holder.productTv.text = "${trans.amount.toFormattedAmount()} ${trans.product.name}"
+            holder.productTv.text = "${trans.amount.toFormattedAmount()} ${trans.messageOrProductName}"
         }
 
         if (trans.isBuy) {
@@ -61,6 +66,36 @@ class TransactionRecAdapter(
             deleteButtonCallback(trans, person)
         }
 
+
+        //The code below handles the custom turfs. It dynamically adds views to this recyclerviewItem
+        //This could also be done with a nested recyclerview, but since these custom turfs are
+        //relatively rare, i think this would be better for performance
+
+        //important: Don't call removeAllViews, as that calls requestLayout and invalidate!
+        //removeallviewsINLAYOUT is different, and doesn't do that.
+        holder.sideEffectContainer.removeAllViewsInLayout()
+
+        if(trans.sideEffects.size > 0){
+            holder.sideEffectContainerTitle.visibility = View.VISIBLE
+            holder.sideEffectContainer.visibility = View.VISIBLE
+            holder.divider.visibility = View.VISIBLE
+
+            //Add each sideEffect to this view
+            trans.sideEffects.forEach {
+                val inflatedView  = LayoutInflater.from(context).inflate(R.layout.transaction_rec_sideeffect_item, null)
+                inflatedView.findViewById<TextView>(R.id.personName).text = it.getPerson(realmInstance).name
+                inflatedView.findViewById<TextView>(R.id.amount).apply {
+                    text = it.balanceImpact.toCurrencyString()
+                    setTextColor(Color.parseColor(it.balanceImpact.getBalanceColorString()))
+                }
+                holder.sideEffectContainer.addView(inflatedView)
+            }
+        }else{
+            holder.sideEffectContainerTitle.visibility = View.GONE
+            holder.sideEffectContainer.visibility = View.GONE
+            holder.divider.visibility = View.INVISIBLE
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -73,5 +108,8 @@ class TransactionRecAdapter(
         val productTv = itemView.findViewById<TextView>(R.id.main_transactionRec_productName)!!
         val timeAgo = itemView.findViewById<TextView>(R.id.main_transactionRec_timeSince)!!
         val deleteButton = itemView.findViewById<ImageButton>(R.id.main_transactionRec_deleteButton)!!
+        val sideEffectContainer = itemView.findViewById<LinearLayout>(R.id.sideEffectsContainer)
+        val sideEffectContainerTitle = itemView.findViewById<TextView>(R.id.paidForTitle)
+        val divider = itemView.findViewById<View>(R.id.transCustomDivider)
     }
 }
