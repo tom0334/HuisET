@@ -274,7 +274,7 @@ class FragmentHistory : HuisEtFragment() {
                     t
                 }
             }.toMutableList()
-            res = res.union(buyRes).toMutableList()
+            res = res.union(buyRes).filter { it.amount != 0f }.toMutableList()
         }
         if (res.isEmpty()) return emptyList()
 
