@@ -153,15 +153,6 @@ class TransferMoneyActivity : HuisEtActivity() {
             payer = otherPerson
             receiver = personThatNeedsToBeSettled
         }
-        
-        val product = Product.create(
-            "Overgemaakt",
-            money,
-            Product.KIND_NEITHER,
-            13,
-            Product.SPECIES_OTHER,
-            1
-        )
 
         val transaction: Transaction = Transaction.create(
             payer,
@@ -170,9 +161,7 @@ class TransferMoneyActivity : HuisEtActivity() {
             "Overgemaakt",
             true
         )
-
-        db.removeProduct(product)
-
+        
         transactionMap[personThatNeedsToBeSettled] = transaction
         amountOfPersonsPaid++
         amountOfMoneyPaid += if (money >= 0) money else -money
