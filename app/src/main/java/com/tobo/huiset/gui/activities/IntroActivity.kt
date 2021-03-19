@@ -73,6 +73,7 @@ class IntroActivity : AppIntro2() {
         prefs.edit {
             it.putBoolean(PREFS_INTRO_SHOWN, true)
             it.putBoolean(PREFS_TURF_CONFETTI_ID, true)
+            it.putBoolean(PREFS_RECALCULATE_ACHIEVEMENTS_AFTER_REMOVE, false)
         }
 
         this.finish()

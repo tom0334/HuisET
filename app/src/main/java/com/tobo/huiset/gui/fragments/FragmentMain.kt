@@ -17,9 +17,7 @@ import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.extendables.HuisEtFragment
-import com.tobo.huiset.gui.activities.MainActivity
-import com.tobo.huiset.gui.activities.PREFS_INTRO_SHOWN
-import com.tobo.huiset.gui.activities.PREFS_TURF_CONFETTI_ID
+import com.tobo.huiset.gui.activities.*
 import com.tobo.huiset.gui.adapters.AmountMainRecAdapter
 import com.tobo.huiset.gui.adapters.ProductMainRecAdapter
 import com.tobo.huiset.gui.adapters.TransactionRecAdapter
@@ -289,12 +287,14 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
             //Keep track of what achievements were added, and show that in the activity
-            val added = mutableListOf<AchievementCompletion>()
-            db.findAllCurrentPersons(true).forEach { _ ->
-                added.addAll(AchievementManager.checkAgainForPerson(person))
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            if (prefs.getBoolean(PREFS_RECALCULATE_ACHIEVEMENTS_AFTER_REMOVE, false)) {
+                val added = mutableListOf<AchievementCompletion>()
+                db.findAllCurrentPersons(true).forEach { _ ->
+                    added.addAll(AchievementManager.checkAgainForPerson(person))
+                }
+                (this.activity as CelebratingHuisEtActivity).showAchievements(added)
             }
-            (this.activity as CelebratingHuisEtActivity).showAchievements(added)
-
         }
 
 
