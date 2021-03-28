@@ -4,12 +4,25 @@
     android:orientation="horizontal"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historyPersonRec"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent" />
+    <LinearLayout
+            android:layout_weight="1.1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <Button
+                android:id="@+id/history_whoToShow"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:text="Toon:\nZichtbaar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyPersonRec"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
