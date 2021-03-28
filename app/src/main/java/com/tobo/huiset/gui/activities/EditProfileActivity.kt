@@ -12,9 +12,13 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.tobo.huiset.R
 import com.tobo.huiset.extendables.HuisEtActivity
+import com.tobo.huiset.gui.adapters.PersonAchievementRecAdapter
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.utils.HandyFunctions
 import com.tobo.huiset.utils.ProfileColors
@@ -66,11 +70,15 @@ class EditProfileActivity : HuisEtActivity() {
                 showRadioGroup.check(R.id.radioHidePerson)
             }
 
+            val allAchievements = db.findPersonalAchievementsFor(oldProfile!!)
+            val rec = findViewById<RecyclerView>(R.id.personalAchievementsRec)
+            rec.adapter = PersonAchievementRecAdapter(this, db, allAchievements, true)
+            rec.layoutManager = LinearLayoutManager(this)
+
             new = false
         } else {
             showSoftKeyboard(findViewById(R.id.name))
         }
-
     }
 
     // create an action bar button
