@@ -15,12 +15,6 @@ class AchievementsActivity : HuisEtActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_achievements)
-
-        //When new achievements are added, it needs to check to see if they were achieved
-        db.findAllCurrentPersons(false).forEach {
-            AchievementManager.updateAllForPerson(it)
-        }
-
         setupRec()
     }
 

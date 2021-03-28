@@ -3,17 +3,21 @@ package com.tobo.huiset
 import android.app.Application
 import android.content.Intent
 import android.preference.PreferenceManager
+import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.activities.PREFS_INTRO_SHOWN
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.TransactionSideEffect
+import com.tobo.huiset.utils.HuisETDB
 import com.tobo.huiset.utils.ProfileColors
 import com.tobo.huiset.utils.extensions.edit
 import io.realm.*
 
 
 class MyApplication : Application() {
+
+    var needToRecalculateAchievements = false
 
     override fun onCreate() {
         super.onCreate()
@@ -31,8 +35,6 @@ class MyApplication : Application() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
-
-
     }
 
     private fun setupRealm() {
@@ -42,12 +44,26 @@ class MyApplication : Application() {
         // The Realm file will be located in Context.getFilesDir() with name "myrealm.realm"
         val config = RealmConfiguration.Builder()
             .name("myrealm.realm")
-            .schemaVersion(3)
+            .schemaVersion(4)
             .migration(getMigration())
             .build()
 
-        // Set the config as default configuration
+        // Set the config as default configurationcan
         Realm.setDefaultConfiguration(config)
+
+
+        //When we add a new achievement or fix a bug in a achievement, the "Cache" needs to be cleared after fixing it.
+        //all achievements are recalculated  to make sure there are no mistakes
+
+        //If we don't this right now  it will show confetti when it notices
+        // an achievement was previously achieved.
+        if(needToRecalculateAchievements){
+            val db = HuisETDB(Realm.getDefaultInstance())
+            db.findAllCurrentPersons(true).forEach {
+                AchievementManager.updateAllForPerson(it)
+            }
+            db.close()
+        }
     }
 
     private fun getMigration(): RealmMigration {
@@ -133,6 +149,12 @@ class MyApplication : Application() {
                         }
                     }
                     
+                    currentVersion++
+                }
+
+                //The app used to have a bug where it saved achievements twice. This was fixed in 1.3.1
+                if(currentVersion == 4L){
+                    needToRecalculateAchievements = true
                     currentVersion++
                 }
             }
