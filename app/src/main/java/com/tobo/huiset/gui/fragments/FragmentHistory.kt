@@ -18,6 +18,7 @@ import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.sumByFloat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 class FragmentHistory : HuisEtFragment() {
 
@@ -303,7 +304,7 @@ class FragmentHistory : HuisEtFragment() {
                     t
                 }
             }.toMutableList()
-            res = res.union(buyRes).filter { it.amount != 0f }.toMutableList()
+            res = res.union(buyRes).filter { it.amount.roundToInt() != 0 }.toMutableList()
         }
         if (res.isEmpty()) return emptyList()
 
