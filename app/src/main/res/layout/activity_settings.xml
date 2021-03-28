@@ -152,6 +152,39 @@
                     android:layout_alignParentRight="true" />
             </RelativeLayout>
 
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/recalculateAfterRemoveText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Achiements berekenen na verwijderen"
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="16sp" />
+
+                <TextView
+                        android:id="@+id/recalculateAfterRemoveExplain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/recalculateAfterRemoveText"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@id/recalculateAfterRemoveSwitch"
+                        android:text="LET OP: product verwijderen zal slomer gaan.\nHierdoor worden achievements opnieuw berekend nadat een product wordt verwijderd." />
+
+                <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/recalculateAfterRemoveSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true" />
+            </RelativeLayout>
 
         </LinearLayout>
 
