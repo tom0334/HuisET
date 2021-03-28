@@ -48,7 +48,7 @@ class MyApplication : Application() {
             .migration(getMigration())
             .build()
 
-        // Set the config as default configurationcan
+        // Set the config as default configuration
         Realm.setDefaultConfiguration(config)
 
 
