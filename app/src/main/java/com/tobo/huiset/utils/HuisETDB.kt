@@ -328,7 +328,6 @@ class HuisETDB(val realm: Realm) {
     ): AchievementCompletion {
         realm.beginTransaction()
         val comp = AchievementCompletion.create(achievement.id, completionTimeStamp, person.id)
-        realm.copyToRealm(comp)
         person.addAchievement(comp)
         realm.commitTransaction()
         return comp
