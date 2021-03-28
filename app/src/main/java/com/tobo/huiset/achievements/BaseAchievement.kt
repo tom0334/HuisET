@@ -21,6 +21,7 @@ abstract class BaseAchievement {
     ): Long?
 
     fun update(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion? {
+        //is already previously achieved
         if (wasAchieved(person)) return null
 
         val completionTimeStamp = checkIfAchieved(person, helpData) ?: return null
