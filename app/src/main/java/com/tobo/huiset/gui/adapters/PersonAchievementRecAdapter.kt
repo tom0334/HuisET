@@ -48,6 +48,5 @@ class PersonAchievementRecAdapter(
     class PersonAchievementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTv = itemView.findViewById<TextView>(R.id.personAchievement_name)!!
         val dateTv = itemView.findViewById<TextView>(R.id.personAchievement_date)!!
-        // todo: add text for if no Achievements are unlocked
     }
 }

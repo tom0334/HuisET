@@ -71,6 +71,12 @@ class EditProfileActivity : HuisEtActivity() {
             }
 
             val allAchievements = db.findPersonalAchievementsFor(oldProfile!!)
+            findViewById<TextView>(R.id.personalAchievementsText).text =
+                if (allAchievements.isNullOrEmpty()) {
+                    "Deze persoon heeft nog geen achievements behaald."
+                } else {
+                    "Achievements behaald:"
+                }
             val rec = findViewById<RecyclerView>(R.id.personalAchievementsRec)
             rec.adapter = PersonAchievementRecAdapter(this, db, allAchievements, true)
             rec.layoutManager = LinearLayoutManager(this)
