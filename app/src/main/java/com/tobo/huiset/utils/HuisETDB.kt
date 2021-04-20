@@ -321,18 +321,6 @@ class HuisETDB(val realm: Realm) {
         }
     }
 
-    fun createAndSaveAchievementCompletion(
-        achievement: BaseAchievement,
-        completionTimeStamp: Long,
-        person: Person
-    ): AchievementCompletion {
-        realm.beginTransaction()
-        val comp = AchievementCompletion.create(achievement.id, completionTimeStamp, person.id)
-        person.addAchievement(comp)
-        realm.commitTransaction()
-        return comp
-    }
-
     fun findAllPersonsAbleToTransfer(): RealmResults<Person>? {
         return realm.where(Person::class.java)
             .equalTo("deleted", false)

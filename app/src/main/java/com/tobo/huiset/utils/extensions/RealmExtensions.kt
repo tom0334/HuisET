@@ -6,12 +6,14 @@ import io.realm.Realm
 import io.realm.RealmObject
 
 
-fun Realm.executeSafe(transaction: (Realm) -> Unit) {
+fun Realm.executeSafe(transaction: (Realm) -> Unit):Boolean {
     try {
         this.executeTransaction(transaction)
     } catch (e: Exception) {
         Log.e("REALMTRANSACTION", "RealmTransaction failed", e)
+        return false
     }
+    return true
 
 }
 
