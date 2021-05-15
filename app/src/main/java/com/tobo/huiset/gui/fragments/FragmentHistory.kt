@@ -123,6 +123,20 @@ class FragmentHistory : HuisEtFragment() {
             showPickPeriodDialog()
         }
 
+        var whoShown = 0
+        val whoToShowButton = view.findViewById<Button>(R.id.history_whoToShow)
+        whoToShowButton.setOnClickListener {
+            whoToShowButton.text = when (++whoShown) {
+                1 -> "Toon\nHuidig"
+                2 -> "Toon\nIedereen"
+                else -> {
+                    whoShown = 0
+                    "Toon\nZichtbaar"
+                }
+            }
+            updatePersons(whoShown)
+        }
+
         val radioGroup = view.findViewById<RadioGroup>(R.id.radiogroup_history_bought)
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -217,9 +231,15 @@ class FragmentHistory : HuisEtFragment() {
         this.historyAdapter.notifyDataSetChanged()
     }
 
-    private fun updatePersons() {
+    private fun updatePersons(whoShown: Int = 0) {
         val persons = mutableListOf<Person?>(null)
-        persons.addAll(db.findPersonsIncludingDeletedExceptHuisrekening())
+        val personsToAdd = when (whoShown) {
+            0 -> db.findPersonsExceptHuisrekening(includeDeleted = false, includeHidden = false)
+            1 -> db.findPersonsExceptHuisrekening(includeDeleted = false, includeHidden = true)
+            2 -> db.findPersonsExceptHuisrekening(includeDeleted = true, includeHidden = true)
+            else -> db.findPersonsExceptHuisrekening(includeDeleted = true, includeHidden = true)
+        }
+        persons.addAll(personsToAdd)
         personAdap.items.clear()
         personAdap.items.addAll(persons)
         personAdap.notifyDataSetChanged()
