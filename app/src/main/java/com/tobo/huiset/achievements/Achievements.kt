@@ -468,23 +468,7 @@ object AchievementManager {
     fun getAchievementForCompletion(completion: AchievementCompletion): BaseAchievement {
         return getAllAchievements().find { completion.achievement == it.id }!!
     }
-
-/*    fun checkAgainForPerson(person: Person): List<AchievementCompletion> {
-        val beforeIds = person.completions.map { it.achievement }
-
-        person.getDb().removeAllAchievementCompletionsForPerson(person)
-
-        //finds them back
-        val after = findNewCompletionsForPerson(person)
-        val afterIds = after.map { it.achievement }
-
-        //Minus does not work as expected on a list of achivementcompletions. Has something to do with equals i think.
-        //This works around that, just look for equal ids and then find the completion object back
-        val newIds = afterIds.minus(beforeIds)
-
-        return after.filter { newIds.contains(it.achievement) }
-    }*/
-
+    
 }
 
 data class AchievementUpdateHelpData(private val person: Person) {
