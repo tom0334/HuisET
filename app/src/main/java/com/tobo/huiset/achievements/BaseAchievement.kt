@@ -2,7 +2,6 @@ package com.tobo.huiset.achievements
 
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
-import com.tobo.huiset.utils.extensions.getDb
 
 abstract class BaseAchievement {
     abstract val id: Int
@@ -20,14 +19,11 @@ abstract class BaseAchievement {
         helpData: AchievementUpdateHelpData
     ): Long?
 
-    fun update(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion? {
-        //is already previously achieved
-        if (wasAchieved(person)) return null
-
+    fun getNewCompletionIfCompleted(person: Person, helpData: AchievementUpdateHelpData): AchievementCompletion? {
         val completionTimeStamp = checkIfAchieved(person, helpData) ?: return null
 
-        return person.getDb().createAndSaveAchievementCompletion(this, completionTimeStamp, person)
-
+        //NOT saved in the database yet
+        return AchievementCompletion.create(id, completionTimeStamp, person.id)
     }
 
     fun wasAchieved(person: Person): Boolean {

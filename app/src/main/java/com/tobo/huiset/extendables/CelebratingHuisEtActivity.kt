@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
 import com.tobo.huiset.realmModels.AchievementCompletion
+import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.getDisplayHeight
 import com.tobo.huiset.utils.extensions.getDisplayWith
 import nl.dionsegijn.konfetti.KonfettiView
@@ -19,14 +20,25 @@ import nl.dionsegijn.konfetti.models.Size
 abstract class CelebratingHuisEtActivity : HuisEtActivity() {
 
     fun showAchievements(changed: List<AchievementCompletion>) {
-        changed.forEach {
-            val a = AchievementManager.getAchievementForCompletion(it)
+
+        if (changed.size > 3) {
             Toast.makeText(
                 this,
-                "Achievement unlocked door ${it.getPerson(realm).name}:\n\"${a.name}\"",
+                "${changed.size} achievements unlocked!",
                 Toast.LENGTH_LONG
             ).show()
+        } else {
+            changed.forEach {
+                val a = AchievementManager.getAchievementForCompletion(it)
+                Toast.makeText(
+                    this,
+                    "Achievement unlocked door ${it.getPerson(realm).name}:\n\"${a.name}\"",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
+
+
         if (changed.size > 0) {
 
             //this is more aggressive confetti than one that shows when turfing something

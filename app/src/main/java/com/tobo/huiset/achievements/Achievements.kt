@@ -1,12 +1,20 @@
 package com.tobo.huiset.achievements
 
+import android.os.Handler
+import android.os.Looper
+import com.tobo.huiset.extendables.CelebratingHuisEtActivity
 import com.tobo.huiset.realmModels.AchievementCompletion
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.realmModels.Transaction
+import com.tobo.huiset.utils.HuisETDB
 import com.tobo.huiset.utils.ToboTime
+import com.tobo.huiset.utils.extensions.executeSafe
 import com.tobo.huiset.utils.extensions.getDb
+import io.realm.Realm
+import java.lang.ref.WeakReference
 import java.util.*
+import java.util.concurrent.Executors
 
 
 /**
@@ -333,15 +341,16 @@ object AchievementManager {
     }
 
     /**
-     * Updates all achievements for a perseon. Returns a list of completions if new ones exist
+     * Returns a list of new completions
      */
-    fun updateAllForPerson(person: Person): List<AchievementCompletion> {
-        return updateForPerson(getAllAchievements(), person)
+    fun findNewCompletionsForPerson(person: Person): List<AchievementCompletion> {
+        return findNewCompletions(getAllAchievements(), person)
     }
 
-    private fun updateForPerson(
+    private fun findNewCompletions(
         achievementsToUpdate: List<BaseAchievement>,
-        person: Person
+        person: Person,
+        useCache: Boolean = true
     ): List<AchievementCompletion> {
         if (person.isHuisRekening) {
             return emptyList()
@@ -351,7 +360,9 @@ object AchievementManager {
         val helpData = AchievementUpdateHelpData(person)
 
         for (a in achievementsToUpdate) {
-            val completion = a.update(person, helpData)
+            //we don't need to check this if no cache is to be used.
+            if( useCache && a.wasAchieved(person))continue
+            val completion = a.getNewCompletionIfCompleted(person, helpData)
             if (completion != null) {
                 completions.add(completion)
             }
@@ -359,36 +370,103 @@ object AchievementManager {
         return completions.toList()
     }
 
-    fun updateAchievementsAfterLaunch(person: Person): List<AchievementCompletion> {
-        return updateForPerson(getAllAchievements().filter { it.updateOnLaunch }, person)
+
+    fun updateInBackground(activityRef: WeakReference<CelebratingHuisEtActivity>, updateFunctionToCall: (db:HuisETDB) -> AchievementUpdateResult ){
+        val executor = Executors.newSingleThreadExecutor()
+        val handler = Handler(Looper.getMainLooper())
+
+        executor.execute {
+            val realm = Realm.getDefaultInstance()
+            val db = HuisETDB(realm)
+            val result = updateFunctionToCall(db)
+
+            handler.post {
+                if(activityRef.get()!= null){
+                    val succes = attemptToSaveAchievementChanges(result, activityRef.get()!!)
+                    //If the realm is closed or the activity is finishing then don't bother to try and
+                    //show that it has completed, because it will be recalculated anyway.
+                    if(succes){
+                        activityRef.get()?.showAchievements(result.newAchievementCompletions)
+                    }
+                }
+            }
+        }
     }
 
-    fun updateAchievementsAfterTurf(person: Person): List<AchievementCompletion> {
-        return updateForPerson(getAllAchievements().filter { it.updateOnTurf }, person)
+    private fun attemptToSaveAchievementChanges(result: AchievementUpdateResult, act: CelebratingHuisEtActivity): Boolean {
+        val succes = act.realm.executeSafe {
+            result.newAchievementCompletions.forEach {
+                val person = act.db.getPersonWithId(it.personID)
+                person?.completions?.add(it)
+            }
+            result.achievementCompletionsToBeRemoved.forEach {comp ->
+                val person = act.db.getPersonWithId(comp.personID)
+                val objInRealm = person?.completions?.find { comp.personID == it.personID && comp.achievement == it.achievement && comp.timeStamp == it.timeStamp }
+                objInRealm?.deleteFromRealm()
+            }
+        }
+        return succes
     }
 
-    fun updateAchievementsAfterBuy(person: Person): List<AchievementCompletion> {
-        return updateForPerson(getAllAchievements().filter { it.updateOnBuy }, person)
+
+    fun newUpdateAchievementsAfterLaunch(db: HuisETDB): AchievementUpdateResult {
+        val changes = mutableListOf<AchievementCompletion>()
+        db.findAllCurrentPersons(true).forEach {
+            val newForPerson = findNewCompletions(getAllAchievements().filter { it.updateOnLaunch }, it)
+            changes.addAll(newForPerson)
+        }
+        return AchievementUpdateResult(changes)
     }
+
+    fun newUpdateAchievementsAfterTurf(db: HuisETDB): AchievementUpdateResult {
+        val changes = mutableListOf<AchievementCompletion>()
+        db.findAllCurrentPersons(true).forEach {
+            val newForPerson = findNewCompletions(getAllAchievements().filter { it.updateOnTurf }, it)
+            changes.addAll(newForPerson)
+        }
+        return AchievementUpdateResult(changes)
+    }
+
+    fun newUpdateAchievementsAfterBuy(db: HuisETDB): AchievementUpdateResult {
+        val changes = mutableListOf<AchievementCompletion>()
+        db.findAllCurrentPersons(true).forEach {
+            val newForPerson = findNewCompletions(getAllAchievements().filter { it.updateOnBuy }, it)
+            changes.addAll(newForPerson)
+        }
+        return AchievementUpdateResult(changes)
+    }
+
+
+    fun newUpdateAchievementsForPersonAfterRemoveTransaction(db: HuisETDB): AchievementUpdateResult {
+
+        val newCompletions = mutableListOf<AchievementCompletion>()
+        val completionsToBeRemoved = mutableListOf<AchievementCompletion>()
+
+        for (person in db.findAllCurrentPersons(true)) {
+            val before = person.completions
+            val beforeIds = before.map { it.achievement }
+
+            //finds them back
+            val after =  findNewCompletions(getAllAchievements(),person, useCache = false)
+            val afterIds = after.map { it.achievement }
+
+            //Minus does not work as expected on a list of achivementcompletions. Has something to do with equals i think.
+            //This works around that, just look for equal ids and then find the completion object back
+            val newIds = afterIds.minus(beforeIds)
+
+            newCompletions.addAll(after.filter { newIds.contains(it.achievement) })
+
+
+            //Now find the ones that are removed.
+            completionsToBeRemoved.addAll( before.filter { ! newIds.contains(it.achievement) })
+        }
+        return AchievementUpdateResult(newCompletions,completionsToBeRemoved)
+    }
+
+
 
     fun getAchievementForCompletion(completion: AchievementCompletion): BaseAchievement {
         return getAllAchievements().find { completion.achievement == it.id }!!
-    }
-
-    fun checkAgainForPerson(person: Person): List<AchievementCompletion> {
-        val beforeIds = person.completions.map { it.achievement }
-
-        person.getDb().removeAllAchievementCompletionsForPerson(person)
-
-        //finds them back
-        val after = updateAllForPerson(person)
-        val afterIds = after.map { it.achievement }
-
-        //Minus does not work as expected on a list of achivementcompletions. Has something to do with equals i think.
-        //This works around that, just look for equal ids and then find the completion object back
-        val newIds = afterIds.minus(beforeIds)
-
-        return after.filter { newIds.contains(it.achievement) }
     }
 
 }
@@ -412,4 +490,9 @@ data class AchievementUpdateHelpData(private val person: Person) {
     }
 
 }
+
+data class AchievementUpdateResult(
+    val newAchievementCompletions: List<AchievementCompletion>,
+    val achievementCompletionsToBeRemoved: List<AchievementCompletion> = listOf()
+)
 

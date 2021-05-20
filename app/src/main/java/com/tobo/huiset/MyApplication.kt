@@ -8,7 +8,6 @@ import com.tobo.huiset.gui.activities.IntroActivity
 import com.tobo.huiset.gui.activities.PREFS_INTRO_SHOWN
 import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
-import com.tobo.huiset.realmModels.TransactionSideEffect
 import com.tobo.huiset.utils.HuisETDB
 import com.tobo.huiset.utils.ProfileColors
 import com.tobo.huiset.utils.extensions.edit
@@ -60,7 +59,7 @@ class MyApplication : Application() {
         if(needToRecalculateAchievements){
             val db = HuisETDB(Realm.getDefaultInstance())
             db.findAllCurrentPersons(true).forEach {
-                AchievementManager.updateAllForPerson(it)
+                AchievementManager.findNewCompletionsForPerson(it)
             }
             db.close()
         }

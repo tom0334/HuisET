@@ -33,6 +33,7 @@ import com.tobo.huiset.utils.extensions.toFormattedAmount
 import com.tobo.huiset.utils.extensions.toPixel
 import f.tom.consistentspacingdecoration.ConsistentSpacingDecoration
 import io.realm.Sort
+import java.lang.ref.WeakReference
 
 
 class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
@@ -289,11 +290,10 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
             //When removing transactions, it can happen that some achievements should not have been completed.
             //It can also happen that removing a transaction has the result of unlocking an achivement for someone else or himself
             //Keep track of what achievements were added, and show that in the activity
-            val added = mutableListOf<AchievementCompletion>()
-            db.findAllCurrentPersons(true).forEach { _ ->
-                added.addAll(AchievementManager.checkAgainForPerson(person))
-            }
-            (this.activity as CelebratingHuisEtActivity).showAchievements(added)
+            //todo check safe
+            val activity = this.activity
+            AchievementManager.updateInBackground( WeakReference(activity as CelebratingHuisEtActivity), AchievementManager::newUpdateAchievementsForPersonAfterRemoveTransaction)
+
 
         }
 
@@ -399,10 +399,10 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         val transActionRec = view!!.findViewById<RecyclerView>(R.id.recentRecyclerView)
 
         db.doTransactionWithSelectedProduct(person, amountAdapter.getSelectedAmount().toFloat())
-        val changed = AchievementManager.updateAchievementsAfterTurf(person)
-        (activity as MainActivity).showAchievements(changed)
 
-        if (changed.isEmpty() && showConfettiOnTurf) {
+        AchievementManager.updateInBackground(WeakReference(this.activity as CelebratingHuisEtActivity),AchievementManager::newUpdateAchievementsAfterTurf)
+
+        if (showConfettiOnTurf) {
             (activity as MainActivity).showTurfConfetti(person)
         }
 
@@ -427,15 +427,7 @@ class FragmentMain : HuisEtFragment(), TurfRecAdapter.TurfHandler {
         db.doTransactionWithMultiplePersons(persons, amount.toFloat())
 
 
-        persons.forEach { person ->
-            val changed = AchievementManager.updateAchievementsAfterTurf(person)
-            (activity as MainActivity).showAchievements(changed)
-
-            if (changed.isEmpty() && showConfettiOnTurf) {
-                (activity as MainActivity).showTurfConfetti(person)
-            }
-        }
-
+        AchievementManager.updateInBackground(WeakReference(this.activity as CelebratingHuisEtActivity),AchievementManager::newUpdateAchievementsAfterTurf)
 
         db.selectFirstTurfProduct()
 

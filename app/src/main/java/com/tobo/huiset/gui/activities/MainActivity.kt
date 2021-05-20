@@ -15,6 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tobo.huiset.R
 import com.tobo.huiset.achievements.AchievementManager
@@ -26,6 +27,7 @@ import com.tobo.huiset.utils.extensions.getDisplayWith
 import nl.dionsegijn.konfetti.KonfettiView
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
+import java.lang.ref.WeakReference
 
 private const val NUM_FRAGMENTS = 5
 private const val OUTSTATE_CURRENTFRAGINDEX = "currentFragmentIndex"
@@ -80,12 +82,13 @@ class MainActivity : CelebratingHuisEtActivity() {
 
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
 
-        val changes = mutableListOf<AchievementCompletion>()
-        db.findAllCurrentPersons(true).forEach {
-            val new = AchievementManager.updateAchievementsAfterLaunch(it)
-            changes.addAll(new)
-        }
-        showAchievements(changes)
+        realm.beginTransaction()
+        realm.where(AchievementCompletion::class.java).findAll().deleteAllFromRealm()
+        realm.commitTransaction()
+
+        Toast.makeText(this,"Deleted everything", Toast.LENGTH_SHORT).show()
+
+        AchievementManager.updateInBackground(WeakReference(this),AchievementManager::newUpdateAchievementsAfterLaunch)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

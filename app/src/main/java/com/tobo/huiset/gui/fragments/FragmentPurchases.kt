@@ -24,6 +24,7 @@ import com.tobo.huiset.realmModels.Person
 import com.tobo.huiset.realmModels.Product
 import com.tobo.huiset.utils.ItemClickSupport
 import com.tobo.huiset.utils.extensions.toCurrencyString
+import java.lang.ref.WeakReference
 
 
 class FragmentPurchases : HuisEtFragment(), CustomTurfDialogFragmentParent {
@@ -155,8 +156,7 @@ class FragmentPurchases : HuisEtFragment(), CustomTurfDialogFragmentParent {
             .show()
         reset()
         db.mergeTransactionsIfPossible(System.currentTimeMillis())
-        val changes = AchievementManager.updateAchievementsAfterBuy(person)
-        (this.activity as CelebratingHuisEtActivity).showAchievements(changes)
+        AchievementManager.updateInBackground(WeakReference(this.activity as CelebratingHuisEtActivity),AchievementManager::newUpdateAchievementsAfterBuy)
     }
 
 
