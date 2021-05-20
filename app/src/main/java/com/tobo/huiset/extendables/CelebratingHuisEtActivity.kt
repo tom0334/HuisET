@@ -24,7 +24,7 @@ abstract class CelebratingHuisEtActivity : HuisEtActivity() {
         if (changed.size > 3) {
             Toast.makeText(
                 this,
-                "${changed.size} achievments unlocked!",
+                "${changed.size} achievements unlocked!",
                 Toast.LENGTH_LONG
             ).show()
         } else {

@@ -468,7 +468,7 @@ object AchievementManager {
     fun getAchievementForCompletion(completion: AchievementCompletion): BaseAchievement {
         return getAllAchievements().find { completion.achievement == it.id }!!
     }
-    
+
 }
 
 data class AchievementUpdateHelpData(private val person: Person) {
