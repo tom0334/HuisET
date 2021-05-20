@@ -517,5 +517,13 @@ class HuisETDB(val realm: Realm) {
             .findFirst()
     }
 
+    fun findPersonalAchievementsFor(oldProfile: Person): RealmResults<AchievementCompletion>? {
+        return realm.where(AchievementCompletion::class.java)
+            .equalTo("personID", oldProfile.id)
+            .distinct("personID", "achievement")
+            .sort("achievement")
+            .findAll()
+    }
+
 }
 

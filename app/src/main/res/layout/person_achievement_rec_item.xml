@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="47.5dp">
+
+    <ImageView
+            android:id="@+id/personAchievement_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_trophy_black_48dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentLeft="true" />
+
+    <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/personAchievement_icon"
+            android:layout_alignParentRight="true">
+
+        <TextView
+                    android:id="@+id/personAchievement_name"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Hele lange naam komt hier te staan" />
+
+        <TextView
+                android:id="@+id/personAchievement_date"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="04-10-2021" />
+
+    </LinearLayout>
+</RelativeLayout>
