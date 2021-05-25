@@ -8,11 +8,11 @@ apply plugin: 'kotlin-android-extensions'
 
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.tobo.huiset"
         minSdkVersion 15
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 5
         versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -32,15 +32,15 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation "androidx.recyclerview:recyclerview:1.2.0"
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'io.realm:android-adapters:3.1.0'
     implementation 'com.github.tom0334:ConsistentSpacingDecoration:1.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'nl.dionsegijn:konfetti:1.1.3'
     implementation 'com.github.AppIntro:AppIntro:5.1.0'

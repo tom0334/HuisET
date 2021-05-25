@@ -68,13 +68,15 @@ class MainActivity : CelebratingHuisEtActivity() {
             hideSystemUI()
             setSystemUIListener()
         } else {
-            systemUIHandler.removeCallbacks(null)
+            //token = null removes all
+            systemUIHandler.removeCallbacksAndMessages(null)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        systemUIHandler.removeCallbacks(null)
+        //token = null removes all
+        systemUIHandler.removeCallbacksAndMessages(null)
     }
 
     override fun onResume() {
@@ -213,9 +215,9 @@ class MainActivity : CelebratingHuisEtActivity() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState!!.putInt(OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex)
+        outState.putInt(OUTSTATE_CURRENTFRAGINDEX, currentFragmentIndex)
     }
 
 
