@@ -45,6 +45,8 @@ class MyApplication : Application() {
             .name("myrealm.realm")
             .schemaVersion(4)
             .migration(getMigration())
+            .allowQueriesOnUiThread(true)
+            .allowWritesOnUiThread(true)
             .build()
 
         // Set the config as default configuration
